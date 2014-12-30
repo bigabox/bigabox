@@ -1,0 +1,363 @@
+<%  
+   		 @one_theme = EventTheme.one_theme(@event[:id])
+		 if @one_theme
+		 	theme_id = @one_theme[:theme_id]
+		 else @one_theme = Theme.find_first_theme
+		 	theme_id = @one_theme[:id]
+		 end
+ 
+   %>
+
+<style>
+	#next2{
+		right: -10px;
+	}
+	#prev2{
+		left: -10px;
+	}
+	
+	.select_theme_class{
+ 		height: 79%;
+	    padding: 10px;
+	    position: absolute;
+	    width: 100px;
+	    z-index: 999;
+	    cursor: pointer;
+	    border: 1px solid red;
+	    bottom: 0px;
+ 	}
+</style>
+
+<script type="text/javascript">
+		
+  $(document).ready(function() {
+  	set_color_picker();
+  	
+  	//$('.onclick').click(function(){ alert('1'); });
+  	setTimeout(function() {
+	      // Do something after 5 seconds
+	      set_theme_ajax(<%= theme_id %>);
+	}, 1000);
+  	 
+ });
+         
+ 	  
+function close_colorbox(){
+	
+	
+	document.getElementById('event_theme_header_text_display').value = head1;
+	document.getElementById('event_theme_footer_text_display').value = foot1;
+	
+	document.getElementById('header_text_html').innerHTML = head1;
+	document.getElementById('footer_text_html').innerHTML = foot1;
+	
+
+	parent.jQuery.colorbox.close();
+}				
+	
+        
+ function save_theme_header_footer(){
+ 		var head = document.getElementById('header_text_display').value;
+ 		var foot = document.getElementById('footer_text_display').value;
+ 		
+ 		document.getElementById('event_theme_header_text_display').value = head;
+ 		document.getElementById('event_theme_footer_text_display').value = foot;
+ 		
+ 		document.getElementById('header_text_html').innerHTML = head;
+ 		document.getElementById('footer_text_html').innerHTML = foot;
+ 		
+ 	    parent.jQuery.colorbox.close();
+ } 
+
+function set_event_theme(val){
+	
+	//alert(val);
+	$('#progressbar').show();
+	document.getElementById('event_theme_id').value = val;
+	//theme_sel_
+	 $(".theme_main").removeClass("selected");
+	 $("#theme_sel_"+val).addClass("selected");
+	 
+        var theme_path = '/events/change_event_theme/';
+        var theme_id = val;
+        $.ajax({
+            type: "GET",
+            data: {theme_id: theme_id}, 
+            url: theme_path+theme_id,
+            success: function(data) {
+             //  alert(data);
+                $("#change_event_theme").html(data);
+                set_color_picker();
+                
+            }
+        });
+        
+       set_theme_ajax(theme_id);
+        
+        
+   
+}
+ 
+ function set_theme_ajax(theme_id){
+ 	 var page_path = '/events/event_theme_page/';
+        var event_id = '<%= @event[:id] %>';
+        $.ajax({
+            type: "GET",
+            data: {event_id: event_id, theme_id: theme_id}, 
+            url: page_path+event_id,
+            success: function(data) {
+             //  alert(data);
+                $("#event_theme_page").html(data);
+                $('#progressbar').hide();
+            }
+        });
+ }
+ 
+  function set_allow_facebook(ele){
+ 	if(ele.checked==true){
+ 		$('#allow_facebook_id').show();
+ 	}else{
+ 		$('#allow_facebook_id').hide();
+ 	}
+  }     
+      
+  function set_display_attendee(ele){
+  	
+  	if(ele.checked==true){
+  		
+ 		$('#display_attendee_anchor').trigger('click');
+ 	}
+  }
+  
+  
+function set_submit_type(type){
+	document.getElementById('submit_type').value = type;
+	
+}
+   
+    </script> 
+	
+<%= form_tag({:controller => 'events', :action => 'theme'}, :id => 'theme_form', :name => 'theme_form') do %> 
+
+<section>
+	<div class="main">
+		
+		<div style="display: none;">
+	        
+	         <div id="login-box" class="popup_Content">
+	             <a href="javascript:" id="pack1" onclick="$('#packdiv1').show(); $('#packdiv2').hide(); $('#pack1').css('color','#3C3C3C'); $('#pack2').css('color','#7AB922');  " style="color: #3C3C3C;"> <%= I18n.t 'theme.custom_header' %> </a> | 
+	             <a href="javascript:"  onclick="$('#packdiv2').show(); $('#packdiv1').hide();  $('#pack2').css('color','#3C3C3C'); $('#pack1').css('color','#7AB922'); " id="pack2"> <%= I18n.t 'theme.custom_footer' %> </a>
+	             <div id="packdiv1" class="org_button_cp1">
+	             	<textarea name="header_text_display" id="header_text_display" class="TW97p"><%= @one_theme[:header_text_display] %></textarea>
+	             </div>
+	             <div id="packdiv2" class="org_button_cp1" style="display: none;">
+	             	<textarea name="footer_text_display" id="footer_text_display" class="TW97p" ><%= @one_theme[:footer_text_display] %></textarea>
+	             </div>
+	             	<input type="hidden" name="event_theme[header_text_display]" id="event_theme_header_text_display" value="<%= @one_theme[:header_text_display] %>" />
+	             	<input type="hidden" name="event_theme[footer_text_display]" id="event_theme_footer_text_display" value="<%= @one_theme[:footer_text_display] %>" />
+	                
+	             <br />
+	                <a href="javascript://" onclick="save_theme_header_footer();" class="btn"><%= I18n.t 'button.save'%></a>
+          			<a class="btn black_bg" href="javascript://" onclick="close_colorbox();"><%= I18n.t 'button.cancel'%></a>
+	         </div>
+	         
+	   </div>	
+	   
+	   <% if flash[:notice] -%>
+	      <div class="errors marT40">
+	      	<p><%= flash[:notice] %></p>
+	      </div>
+	
+	   <% end -%>
+	   
+    	<div class="mtitle marT40">
+            <h1><%= I18n.t 'theme.personalize_your_theme'%></h1>             
+        </div>
+    	<div class="shadow marT20 pad20">
+        	<div class="event_design">
+                <div class="leftcol">
+                    <div class="mtitle">
+                        <h3><%= I18n.t 'theme.choose_a_theme'%></h3>             
+                    </div>
+                 
+                    <%  @theme = Theme.all %> 
+                    <div class="pr marT20">                    	
+                    	<ul id="foo2" class="elastislide-horizontal">
+                            <%   i=0
+                 				for th in @theme %>
+                            	<li class="TW150 fl" id="change_theme_<%= th[:id] %>">
+                            		
+									    <div class="theme_main <% if(th[:id]==theme_id) %> selected <% end %>" style="background: <%= th[:background] %>; " id="theme_sel_<%= th[:id] %>">
+									        <div class="theme_head" style="background: <%= th[:event_title] %>; "></div>
+									        <div class="table_class" style="background: <%= th[:box_background] %>;border-color:<%= th[:box_border] %>;">
+									            <div class="table_head" style="background:<%= th[:box_header] %>; border-bottom: 1px solid <%= th[:box_border] %>;"><h2 style="background: <%= th[:header_text] %>; ">
+									                <h2 style="background: <%= th[:header_text] %>; "></h2> 
+									                <div class="clear"></div>
+									            </div>
+									            <table width="100%" cellspacing="3px">
+									                <tr><td style="background: <%= th[:body_text] %>; "></td></tr>
+									                <tr><td style="background: <%= th[:body_text] %>; "></td></tr>
+									                <tr><td style="background: <%= th[:body_text] %>; "></td></tr>
+									                <tr><td style=" width: 30%; background: <%= th[:body_text] %>; "></td></tr>
+									            </table>    
+									        </div>        
+									    </div>
+									
+					                 <script>
+									
+										if (navigator && navigator.userAgent && navigator.userAgent != null)
+										{
+											var strUserAgent = navigator.userAgent.toLowerCase();
+											var arrMatches = strUserAgent.match(/(iphone|ipod|ipad)/);//alert(strUserAgent);
+											if (arrMatches)
+											{//alert(strUserAgent);
+												$("#theme_sel_<%= th[:id] %>").unbind("touchstart").on('touchstart', function () {
+												//alert("iphone");
+												set_event_theme('<%= th[:id] %>');
+											});
+											
+											}
+											else
+											{
+												$("#theme_sel_<%= th[:id] %>").unbind("click").click( function () {
+												//alert("click 1");
+													set_event_theme('<%= th[:id] %>');
+												});
+											}
+										}
+										else
+										{
+											$("#theme_sel_<%= th[:id] %>").unbind("click").click(function () {
+												//alert("click 2");
+												set_event_theme('<%= th[:id] %>');
+											});
+										}
+
+									</script>
+									
+					                 
+                            	</li>
+                            <% end %>
+                            
+                        </ul>     
+                        <div class="clear"></div>
+						<a id="prev2" class="prev" href="#">&lt;</a>
+						<a id="next2" class="next" href="#">&gt;</a>
+						<div id="pager2" class="pager"></div>
+						                       
+                    </div> 
+                    
+                </div>
+                <div class="rightcol change_event_theme">            	
+                    <div class="mtitle">
+                        <h3><%= I18n.t 'theme.or_design_your_own'%></h3>             
+                    </div>
+                    
+                    <div id="change_event_theme">
+			            <%= render(:partial => "change_event_theme" , :object => :collection) %>
+	                </div>
+                    
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="event_design_links">
+            	<span class="design_links_checkbox">
+                    <a href="<%= APP_CONFIG['development']['site_url'] %>/events/event_display_attendee/<%= @event[:id] %>" style="display: none;" class="rr" id="display_attendee_anchor">&nbsp;</a>
+		            <input type="hidden" name="event[display_attendee]" value="0" />
+		            <input type="checkbox" name="event[display_attendee]" value="1" <% if @event[:display_attendee]==1 %> checked="checked" <% end %> onclick="set_display_attendee(this)" />
+                    <span><%= I18n.t 'theme.display_attendees'%></span>
+                </span>
+            	<span class="design_links_checkbox">
+                    <input type="hidden" name="event[allow_facebook]" value="0" />
+              		<input type="checkbox" name="event[allow_facebook]" value="1" <% if @event[:allow_facebook]==1 %> checked="checked" <% end %>   onclick="set_allow_facebook(this)" />
+                    <span><%= I18n.t 'theme.allow_visitors'%></span>
+                </span>
+                <strong><a href="#login-box" class="inline" ><%= I18n.t 'theme.add_cutom_html'%></a></strong>
+                <div class="clear"></div>
+            </div>
+        </div>     
+    </div>
+    
+    
+    <div class="marT40 textcenter" id="progressbar" style="display: none;" ><img src="<%= APP_CONFIG['development']['app_url'] %>fancybox_loading.gif" alt="" /></div>   
+	<div id="event_theme_page" class="marT40 topbrdr">   
+		<div class="min_height"><div class="pad15 textcenter" >
+			<img src="<%= APP_CONFIG['development']['app_url'] %>loader1.gif" alt="" />
+		</div> </div>    
+		
+	</div>
+		
+		<div class="main">
+			  <div  class="fr marT25">
+	          <input type="hidden" name="event_id" id="event_id" value="<%= @event[:id] %>" />
+	          <input type="hidden" name="event_theme[theme_id]" id="event_theme_id" value="<%= @one_theme[:id] %>" />
+			  <input type="hidden" value="" name="submit_type" id="submit_type">
+	 
+	            
+			 <%= submit_tag (I18n.t 'button.save'), :class => 'submit_btn', :onclick => 'set_submit_type("save")' %>
+			 <%= submit_tag (I18n.t 'button.preview'), :class => 'submit_btn marL10', :onclick => 'set_submit_type("view")' %>           
+			 <% if @event[:active]==0 %>
+			 <%= submit_tag (I18n.t 'button.make_event_live'), :class => 'submit_btn marL10', :onclick => 'set_submit_type("live")' %>
+			 <% end %>      <div class="clear"></div>
+              
+            </div><div class="clear"></div>
+		</div>
+			
+              
+</section>
+
+<% end %>
+
+
+<script type="text/javascript" language="javascript" src="<%= APP_CONFIG['development']['js_url'] %>jquery.carouFredSel-6.2.0-packed.js"></script>
+
+	
+   
+ <script src="<%= APP_CONFIG['development']['js_url'] %>js/jquery.colorbox.js" type="text/javascript"></script>    
+ <link href="<%= APP_CONFIG['development']['css_url'] %>colorbox.css" media="all" rel="stylesheet" type="text/css" />
+ 
+<script>
+	var head1 = $('#header_text_html').html();
+		var foot1 = $('#footer_text_html').html();
+		
+        $(document).ready(function() {
+           
+           
+				
+				$("#showbrowse").click(function(){
+		/*sldup*/
+			if($("#browsecont").is(':visible'))
+			{
+			
+				$("#browsecont").slideUp();
+				$("#showbrowse").removeClass('sldup');
+				$("#showbrowse").addClass('sldown');
+			}
+			else
+			{
+				$("#browsecont").slideDown();
+				$("#showbrowse").removeClass('sldown');
+				$("#showbrowse").addClass('sldup');
+			}
+		
+		});
+		
+		
+		/**** pop up *****/
+	 $(".rr").colorbox(); 	
+	 $(".inline").colorbox({inline:true});	
+
+  	
+				
+			
+ 
+ });
+ 
+</script>
+
+
+<% if @event[:id]!=nil && @event[:id]!='' && @event[:id]!=0 && @event[:id]!='0' %>
+	<% @edit_menu_class = 'Design' %>
+	<%= render(:partial => "manage_event/edit_menu" , :object => :collection) %> 
+	<div class="clear "></div>
+<% end %>

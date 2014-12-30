@@ -1,0 +1,142 @@
+
+<script type="text/javascript">
+function confirm_close_account(){
+	$("#otherreasonInfo").text('');
+	$("#closeInfo").text('');
+	$("#passwordInfo").text('');
+	
+	 var chkval = '', chkcnt = 0; 
+	 var chks = document.getElementsByName('reason[]');		
+	  	for (var i = 0; i < chks.length; i++)
+        {
+              
+              if(chks[i].checked==true){
+              	chkcnt = 1;
+              	if(chks[i].value=='other'){
+              		
+              		if(document.getElementById('other_reason').value!=''){
+              			
+              			document.getElementById('reason_close').value=document.getElementById('other_reason').value;
+              		
+              		}else{
+              			
+              			$("#other_reason").focus();
+              			$("#otherreasonInfo").text("<%= I18n.t 'manage_account_close_account.please_provide_reson_you_are_leaving'%>");
+              			$("#otherreasonInfo").addClass("error1");
+              			return false;
+              		}
+              		
+              	}else{
+              		document.getElementById('reason_close').value=chks[i].value;
+              	}
+              	
+              }
+         }
+         if(chkcnt==0){
+         		$("#otherreasonInfo").text("<%= I18n.t 'manage_account_close_account.please_provide_reson_you_are_leaving'%>");
+         		$("#otherreasonInfo").addClass("error1");
+         		return false;
+         }
+         
+         if($("#close").val()!='CLOSE'){
+         	$("#closeInfo").text("<%= I18n.t 'manage_account_close_account.plase_enter_close_text_box'%>");
+         	$("#closeInfo").addClass("error1");
+         	return false;	
+         }
+         
+         if($("#password").val()==''){
+         	$("#passwordInfo").text("<%= I18n.t 'manage_account_close_account.plase_enter_current_pwd'%>");
+         	$("#passwordInfo").addClass("error1");
+         	return false;	
+         }
+                		
+	return true;		
+}
+</script>
+
+<section>
+	<%= render(:partial => "account_top" , :object => :collection) %>    
+      
+	<div class="main marTB40">
+    	<%= form_tag({:controller => 'manage_account', :action => 'close_account'}, :id => 'closeaccountForm', :name => 'closeaccountForm') do %> 
+
+    
+                    <% if flash[:notice] -%>
+				      <div class="errors" >
+				      	<p><%= flash[:notice] %></p>
+				      </div>
+				
+				   <% end -%>
+    	<div class="leftcol">    	
+            <div class="mtitle">
+            	<h3><%= I18n.t 'manage_account_close_account.close'%> <span><%= I18n.t 'account_sidebar.account'%></span></h3>
+            </div>
+            <div class="shadow marT10 pad20">
+            	<p class="marB15"><%= I18n.t 'manage_account_close_account.thank_you_for_using'%> <%= @site[:site_name] %> <%= I18n.t 'manage_account_close_account.event_if_there_anything_keep_please_let_know'%></p>
+            	<label class="font_size15"><%= I18n.t 'manage_account_close_account.please_take_moment_let_know_you_are_leaving'%></label>
+                <div class="form marT10 marB15">
+                    
+					<input type="radio" value="I do not recall signing up for <%= @site[:site_name] %>" id="radio1" name="reason[]" <% if params[:reason_close] == 'I do not recall signing up for '+@site[:site_name] %> checked="checked" <% end %>>
+				    <%= I18n.t 'manage_account_close_account.i_do_recall_signing_up_for'%> <%= @site[:site_name] %> 
+                    <div class="clear"></div>
+                    
+                    <input type="radio" value="The product is too difficult to use" id="radio2" name="reason[]" <% if params[:reason_close] == 'The product is too difficult to use' %> checked="checked" <% end %>>
+		          	<%= I18n.t 'manage_account_close_account.the_product_too_difficult'%>
+                    <div class="clear"></div>
+                    
+                    <input type="radio" value="I chose a different solution" id="radio3" name="reason[]" <% if params[:reason_close] == 'I chose a different solution' %> checked="checked" <% end %>>
+			        <%= I18n.t 'manage_account_close_account.i_chose_different_solution'%>
+                    <div class="clear"></div> 
+                    
+                    <input type="radio" value="The pricing is too high" id="radio4" name="reason[]" <% if params[:reason_close] == 'The pricing is too high' %> checked="checked" <% end %>>
+		           	<%= I18n.t 'manage_account_close_account.the_pricing_too_high'%>
+                    <div class="clear"></div> 
+                    
+                    <input type="radio" value="The product lacks the necessary features" id="radio5" name="reason[]" <% if params[:reason_close] == 'The product lacks the necessary features' %> checked="checked" <% end %>>
+		         	<%= I18n.t 'manage_account_close_account.the_product_laks_necessary_features'%>
+                    <div class="clear"></div>
+                    
+                    <input type="radio" value="The pricing is confusing" id="radio6" name="reason[]" <% if params[:reason_close] == 'The pricing is confusing' %> checked="checked" <% end %>>
+		         	<%= I18n.t 'manage_account_close_account.the_pricing_confusing'%>
+                    <div class="clear"></div>
+                    
+                    <input type="radio" value="I do not host events" id="radio7" name="reason[]" <% if params[:reason_close] == 'I do not host events' %> checked="checked" <% end %>>
+		            <%= I18n.t 'manage_account_close_account.i_do_not_host_event'%>
+                    <div class="clear"></div>
+                    
+                    <input type="radio" value="other" id="radio8" name="reason[]" <% if params[:reason_close] == 'other' %> checked="checked" <% end %>>
+		       		<%= I18n.t 'manage_account_close_account.other_please_explain'%>
+                    <div class="clear"></div>
+                    
+                    <input type="text" name="other_reason" id="other_reason" class="textbox" value=""  />
+                    <div id="otherreasonInfo"></div><br />
+                    
+                </div>
+                <div class="clear"></div>
+                <label class="font_size15"><%= I18n.t 'manage_account_close_account.please_enter_close_your_pwd_below_confirm_that_wish_close_account'%></label>
+                <div class="form marT10">
+                	<label><%= I18n.t 'manage_account_close_account.type_close'%> </label><input type="text"  name="close" id="close" value="<%= params[:close] %>"  class="textbox W150" />
+                    <div id="closeInfo" style="margin-left: 30%;"></div>
+                    <div class="clear"></div>
+                    
+                    
+                    <label><%= I18n.t 'manage_account_close_account.enter_your_pwd'%></label><input type="password"  value="" name="password" id="password" class="textbox W150" />
+                    <div id="passwordInfo"  style="margin-left: 30%;"></div>
+                    
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="marT20" align="right">
+            	 <input type="hidden" value="" name="reason_close" id="reason_close" />      
+ 				 <%= submit_tag 'Close Now', :class => 'submit_btn', :id => 'closeaccountbtn', :onclick => 'return confirm_close_account();' %>
+ 			</div>            
+        </div>
+       <% end %> 
+        
+        <% @act_class = 'Close Account' %>         	
+    	<%= render(:partial => "account_sidebar" , :object => :collection) %>
+    	    
+      
+        <div class="clear"></div>
+    </div>    
+</section>

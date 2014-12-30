@@ -1,0 +1,2166 @@
+# You have to convert the words which are in "" on right side of ":". And replace it with the translated word.
+# Do not add any extra space or blank lines in this file.
+# Do not remove any keyword from this file.
+en:
+  hello: "Hello world"
+####  common 
+  meta_title:
+    event_view: "Event"
+    ticket_purchase: "Purchase Tickets"
+    affiliates: "Affiliate"
+    can_or: "Cancelled Orders"
+    can_list: "Contact Lists"
+    add_can_list: "Add New Contact List"
+    contacts_list: "Contact List"
+    my_event: "My Events"
+    set_event_title: "Set Event Details"
+    event_theme: "Event Theme"
+    set_event_details: "Set Event Details"
+    invite_list: "Invites List"
+    create_invite: "Create Invite "
+    add_attendee: "Add Attendee"
+    all_attendees_list: "All Attendees List"
+    my_tickets: "My Tickets"
+    meta_sign_up: "Sign Up"
+    cancel_order: "Cancel Order "
+    meta_login: "Login"
+    forgot_pwd: "Forgot Password"
+    set_pwd: "Set Password"
+    contact_us: "Contact Us"
+    view_order: "View Orders "
+    this_weekend_events: "This Weekend Events"
+    this_week_events: "This Week Events"
+    tomorrow_events: "Tomorrow Events"
+    today_events: "Today Events"
+    next_week_events: "Next Week Events"
+    this_month_events: "This Month Events"
+    all_price: "all_price"
+    free_events: "Free Events"
+    paid_donation_events: "'Paid/Donation Events'"
+    not_free: "not_free"
+    discover_events: "Discover Events"
+    manage_wallet: "Manage Wallet"
+    withdraw_wallet: "Withdraw Wallet"
+    
+    m_dashboard: "Dashboard"
+    m_customize_order_form: "Customize Order Form"
+    m_que_for_event: "Question for Event"
+    m_edit_order_confirmation: "Edit Order Confirmation"
+    m_edit_type_language: "Edit Type & Language"
+    m_add_news_updates: "Add News and Updates"
+    m_google_analytics: "Google Analytics"
+    m_orders: "Orders "
+    m_edit_orders: "Edit Orders "
+    m_waitlist_setting: "Waitlist Settings"
+    m_promotional_codes: "Promotional Codes"
+    m_edit_promotional_code: "Edit Promotional Code"
+    affiliate_programs: "Affiliate Programs"
+    edit_affiliate_code: "Edit Affiliate Code"
+    
+    manage_account: "Manage Account"
+    change_password: "Change Password"
+    credit_cards: "Credit Cards"
+    charges_credits: "Charges & Credits"
+    m_invoices: "Invoices"
+    m_email_preferences: "Email Preferences"
+    m_payment_accounts: "Payment Accounts"
+    multi_user_access: "Multi User Access"
+    m_unused_org: "Unused Organizers"
+    m_referral_program: "Referral Program"
+    m_affiliate_prg: "Affiliate Program"
+    
+  button:
+    send: "Send"
+    cancel: "Cancel"
+    search: "Search"
+    save: "Save"
+    preview: "Preview"
+    make_event_live: "Make Event Live"
+    edit: "Edit"
+    search: "Search"
+    send_schedule: "Send & Schedule"
+    save_draft: "Save as Draft"
+    add_update: "Add Update"
+    add: "Add"
+    
+  tooltip_title:
+    admin_fees_transffered_ticket_buy: "Admin Fees will be transferred to Ticket Buyer."
+    admin_fess_will_absorbed_ticket_price_take_event_org: "Admin Fees will be absorbed into Ticket Price and it will be taken from Event organizer's earnings."
+    admin_fees_cutomize_ticket_select_option_particular_ticket: "Admin fees will be customized per ticket. You have to select option into particular ticket's 'Settings'."
+    enter_fb_address_link_fbpage: "Enter your facebook address to include a link to your facebook page."
+    enter_twitter_address_include_link_twitter_page: "Enter your twitter address to include a link to your twitter page."
+      
+  user:
+    prefix: "Prefix"
+    fname: "First Name"
+    lname: "Last Name"
+    suffix: "Suffix"
+    email: "Email"
+    home_phone: "Home Phone"
+    cell_phone: "Cell Phone"
+    bill_add: "Billing Address"
+    country: "Country"
+    select_country: "Select Country"
+    add: "Address"
+    address_line_1: "Address Line 1"
+    address_line_2: "Address Line 2"
+    address_line_3: "Address Line 3"
+    add2: "Address 2"
+    city: "City"
+    state: "State"
+    select_state: "Select State"
+    zip: "Zip / Postal Code"
+    home_add: "Home Address"
+    ship_add: "Shipping Address"
+    work_add: "Working Address"
+    job: "Job Title"
+    company: "Company"
+    work_phone: "Work Phone"
+    blog: "Blog"
+    website: "Website"
+    other: "Other Information"
+    gender: "Gender"
+    bdate: "Birth Date" 
+    age: "Age"
+    que: "Other Questions"
+    wiever: "Wievers"
+    agree_wiever: "I agree to the above waiver"
+    apply_to: "Apply To"
+    payment: "Select payment gateway"
+    zipcode: "Zipcode"
+    
+###  event view page
+  event:
+    view:
+      redirect_err: "Your session has expired. Try ordering again."
+      event_hi: "HI,"
+      contact: "Contact"
+      us: "Us"
+      the_org: "the organizer"
+      for_info: "for event and ticket information."
+      event: "Event"
+      from: "From"
+      to: "To"
+      ticket: "Ticket"
+      information: "Information"
+      ticket_title: "Ticket Title"
+      sales_end: "Sales End"
+      price: "Price"
+      fee: "Fee"
+      available: "Available"
+      qty: "Quantity"
+      view_more: "View More"
+      hide: "Hide"
+      free: "Free"
+      na: "N/A"
+      sold_out: "Sold Out"
+      amount: "Enter Amount"
+      enter_promo: "Enter promotional code here if you have"
+      apply: "Apply"
+      login_first: "Login first to buy tickets."
+      login: "Login"
+      buy_tickets: "Buy Tickets"
+      no_tickets_purchase: "No tickets available for purchase now."
+      event_password_protected: "This event is password-protected"
+      event_password_protected_enter_password: "The host of this event has elected to password-protect these details. If you'd like to see more, please enter the password below."
+      incorrect_password: "Incorrect Password."
+      view_now: "View Now"
+      whos: "Who's"
+      going: "Going"
+      connect_with_facebook_friends: "Connect to see which of your Facebook friends are going."
+      connect_with_facebook: "Connect with Facebook"
+      share_it: "Share it to get some people on board!"
+      share_this: "Share This"
+      event_detail: "Event"
+      detail: "Detail"
+      save_this_event: "Save this Event"
+      people_saved: "people have saved this"
+      when: "When &"
+      where: "Where"
+      orga: "Orga"
+      nizer: "nizer"
+      unnamed_orga: "Unnamed Organizer "
+      contact_organizer: "Contact the Organizer"
+      view_organizer: "View organizer profile"
+      news: "News"
+      updates: "Updates"
+      
+      
+    purchase:
+      total: "Total"
+      total_amount: "Total Amount"
+      reg_info: "Registration Information"
+      ticket_buyer: "Ticket Buyer"
+      pay_now: "Pay Now"
+      click_here: "Click here if you're not automatically redirected in 10 seconds..."
+      pur_suc: "You have purchased tickets successfully."
+      new_pur: "New Ticket(s) purchased by "
+      of_event: " of Event "
+      pur_can: "Purchase process Failed..try again!!"
+      you_are_going: "You are going to  "
+      order_saved: "Your order has been saved to My Tickets."
+      order: "Order"
+      tickets: "Ticket(s)"
+      mail_sent_to: "A confirmation email has been sent to "
+      go_to: "Go To My Tickets"
+      you_can_use: "You can use "
+      all_kind: " to organize events of all kinds!"
+      from_local: "From a local performance to a charity gala, or even a 5K run, "
+      make_easy: "makes it easy for anyone to create an event page and manage who's coming."
+      hi: "Hi"
+      thanks: "Thanks"
+      unnamed_orga: "Unnamed Organizer"
+      que_abt: "Question about this "
+      orga: "organizer?"
+      contact: "Contact Us"
+      view_profile: "View Organizer Profile"
+      pdf_free: "Free"
+      pdf_paid: "Paid"
+      pdf_donation: "Donation"
+      print: "Print and bring this ticket with you." 
+      print_head: "PRINT THIS TICKET AND BRING WITH YOU."
+      date_time: "Date+Time"
+      loc: "Location"
+      order_info: "Order Info "
+      by: " by "
+      tic_type: "Ticket Type"
+      tic_qty: "Ticket Quantity"
+      do_you: "Do you organize Events?"
+      join: "Join Our team now!!"
+      attendees_successfully_added: "Attendees successfully added to event."
+      please_complete_registration_within: "Please complete registration within"
+      minutes_after: "minutes. After"
+      the_reservation_we_re_holding_will_be_released_to_others: "minutes, the reservation we're holding will be released to others."
+      note: "does not charge any fees for manual orders."
+      
+  #### organizer contact 
+  orga:
+    contact:
+      head: "Contact organizer"
+      name: "Name"
+      email: "Email"
+      msg: "Message"     
+      
+#####  validation starts      
+  validation:
+    ### common
+    common:
+      email_req: "Email field is required."
+      valid_email: "Type a valid e-mail."
+      no_records_available: "No records available."
+      can: "Cancel"
+      edit: "Edit"
+      
+   #####  event view page validation   
+    event_view:
+      order_info: "Invalid quantity.  Please enter a quantity of 1 or more Or amount."
+      enter_password: "Enter Password."
+      event_saved: "Event saved successfully."
+      can_not_save_own_event: "You cannot save your own event."
+      already_saved: "You have already saved this event." 
+      event_not_exists: "Event does not exist." 
+      enter_promo: "Enter a valid promotional code."
+      valid_promo: "Type only alpha-numeric characters  ., _ and @."
+      not_promo: "This promotional code does not exist for this event."
+      
+    orga_contact:
+      msg_sent: "Your Message sent successfully."
+      name_req: "Name field is required."
+      msg_req: "Message field is required."
+      
+    ticket_purchase:
+      prefix_req: "All Prefix field(s) are required."
+      fname_req: "All First Name field(s) are required."
+      lname_req: "All Last Name field(s) are required."
+      suffix_req: "All Suffix field(s) are required."
+      email_req: "All Email field(s) are required."
+      email_valid: "Type a valid E-mail in all Email field(s)."
+      home_phone: "All Home Phone field(s) are required."
+      cell_phone: "All Cell Phone field(s) are required."
+      bill_country: "All Billing Country field(s) are required."
+      bill_add: "All Billing Address field(s) are required."
+      bill_add2: "All Billing Address2 field(s) are required."
+      bill_city: "All Billing City field(s) are required."
+      bill_state: "All Billing State field(s) are required."
+      bill_zip: "All Billing Zip/Postal Code field(s) are required."   
+      home_country: "All Home Country field(s) are required."
+      home_add: "All Home Address field(s) are required."
+      home_add2: "All Home Address2 field(s) are required."
+      home_city: "All Home City field(s) are required."
+      home_state: "All Home State field(s) are required."
+      home_zip: "All Home Zip/Postal Code field(s) are required." 
+      ship_country: "All Shipping Country field(s) are required."
+      ship_add: "All Shipping Address field(s) are required."
+      ship_add2: "All Shipping Address2 field(s) are required."
+      ship_city: "All Shipping City field(s) are required."
+      ship_state: "All Shipping State field(s) are required."
+      ship_zip: "All Shipping Zip/Postal Code field(s) are required." 
+      work_country: "All Working Country field(s) are required."
+      work_add: "All Working Address field(s) are required."
+      work_add2: "All Working Address2 field(s) are required."
+      work_city: "All Working City field(s) are required."
+      work_state: "All Working State field(s) are required."
+      work_zip: "All Working Zip/Postal Code field(s) are required."
+      work_job: "All Job Title field(s) are required."
+      work_company: "All Company field(s) are required."
+      work_phone: "All Work Phone field(s) are required."
+      work_blog: "All Blog field(s) are required."
+      work_website: "All Website field(s) are required."
+      gender: "All Gender field(s) are required."
+      bdate: "All Birth Date field(s) are required."
+      age: "All Age field(s) are required."
+      starf: "All *  field(s) are required in Other Information."
+      starw: "All * field(s) are required in Waivers."
+      starall: "'*' field(s) are required. Enter all required Information." 
+
+######  placeholders 
+  place:
+    prefix: "Enter Prefix"
+    fname: "Enter First Name"
+    lname: "Enter Last Name"
+    suffix: "Enter Suffix"
+    email: "Enter Email"
+    home_phone: "Enter Home Phone"
+    cell_phone: "Enter Cell Phone"
+    bill_country: "Enter Billing Country"
+    bill_add: "Enter Billing Address"
+    bill_add2: "Enter Billing Address 2"
+    bill_city: "Enter Billing City"
+    bill_state: "Enter Billing State"
+    bill_zip: "Enter Billing Zip/Postal Code"
+    home_country: "Enter Home Country"
+    home_add: "Enter Home Address"
+    home_add2: "Enter Home Address 2"
+    home_city: "Enter Home City"
+    home_state: "Enter Home State"
+    home_zip: "Enter Home Zip/Postal Code"
+    ship_country: "Enter Shipping Country"
+    ship_add: "Enter Shipping Address"
+    ship_add2: "Enter Shipping Address 2"
+    ship_city: "Enter Shipping City"
+    ship_state: "Enter Shipping State"
+    ship_zip: "Enter Shipping Zip/Postal Code"
+    work_country: "Enter working Country"
+    work_add: "Enter Working Address"
+    work_add2: "Enter Working Address 2"
+    work_city: "Enter Working City"
+    work_state: "Enter Working State"
+    work_zip: "Enter Working Zip/Postal Code"
+    work_job: "Enter Work Job Title"
+    company: "Enter Company"
+    work_phone: "Enter Work Phone"
+    blog: "Enter Blog"
+    website: "Enter Website"
+    age: "Enter Age"
+    event_title: "Event Title"
+    venue_name: "Venue Name"
+    street_address: "Street Address"
+    general_admission: "General Admission"
+    search_event_by_venue_location: "Search Events by Venue or Location"
+    search_for_category: "Search for Category or Events"
+    enter_a_location: "Enter a Location"
+    
+    enter_first_name: "Enter your First Name"
+    enter_last_name: "Enter your Last Name"
+    enter_your_email: "Enter your Email"
+    enter_your_home_phone: "Enter your Home Phone"
+    enter_your_cell_phone: "Enter your Cell Phone"
+    enter_your_billing_country: "Enter your Billing Country"
+    enter_your_billing_add: "Enter your Billing Address"
+    enter_your_billing_add2: "Enter your Billing Address 2"
+    enter_billing_state: "Enter your Billing State"
+    enter_your_billing_zip_postal: "Enter your Billing Zip/Postal Code"
+    enter_your_home_country: "Enter your Home Country"
+    enter_your_home_address: "Enter your Home Address"
+    enter_your_home_address2: "Enter your Home Address 2"
+    enter_your_home_state: "Enter your Home State"
+    enter_your_home_zip_postal_code: "Enter your Home Zip/Postal Code"
+    enter_your_shipping_country: "Enter your Shipping Country"
+    
+    enter_your_shipping_address: "Enter your Shipping Address"
+    enter_your_shipping_address2: "Enter your Shipping Address 2"
+    enter_your_shipping_state: "Enter your Shipping State"
+    enter_your_shipping_zip_postal: "Enter your Shipping Zip/Postal Code"
+    enter_your_working_country: "Enter your Working Country"
+    enter_your_working_add: "Enter your Working Address"
+    enter_your_working_add2: "Enter your Working Address 2"
+    enter_your_working_state: "Enter your Working State"
+    enter_your_working_zip_postal: "Enter your Working Zip/Postal Code"
+    enter_your_work_job_title: "Enter your Work Job Title"
+    enter_your_company: "Enter your Company"
+    enter_your_work_phone: "Enter your Work Phone"
+    enter_your_blog: "Enter your Blog"
+    enter_your_website: "Enter your Website"
+    enter_your_age: "Enter your Age"
+    name_email_company_jobtitle_blog: "Ex Name Email Order #"
+    enter_email: "Enter Email"
+    type_city_name: "Type City Name"
+    
+  ###  affiliates file 
+  affiliates:
+    affi: "Affiliates"
+    event: "Event"
+    referral Fee: "Referral Fee"
+    join: "Join"
+    need: "Need" 
+    help: "Help?"
+    additional_help: "additional help?"
+    org_an_event: "Organizing an event?"
+    sales: "Sales"
+    referral_fee: "Referral Fee"
+    
+  link:
+    create_contact: "How to create a contact list"
+    manage_contact: "How to manage your contacts"
+    import_contact: "How to import contacts from a file"
+  
+  join:
+    join_affi: "You cannot join your own affiliate program!"
+    conti: "Continue"
+  
+  notice:
+    already_join: "You have already joined this program."
+    success_join: "You joined this program successfully." 
+  
+  ### cancel_orders
+  cancel_order:
+    can: "Cancelled"
+    order: "Orders"
+    pen: "PENDING"
+    pad: "Paid"
+    
+  pen_paid_table:
+    en: "Event Name"
+    tn: "Ticket Name"
+    tq: "Ticket Qty"
+    amt: "Amount"
+    date: "Date"
+    order: "Order"
+
+  ### contact_lists
+    # _contact_sidebar
+  cont_sider: 
+    cont_nm_req: "Contact list name is required."
+    
+  search_part:
+    search_all: "Search across all"
+    place_holder: "Type contact list name"
+    need_help: "Need Help?"
+    
+    # contact_controller
+  notice:
+    con_create_notice: "Contact list created successfully."
+    con_copy_notice: "Contact list copied successfully."
+    con_delete_notice: "Record deleted from contact list successfully."
+    con_invitation_send_notice: "Invitation(s) sent successfully."
+  
+    # copy
+  copy:
+    js_script: "Contact list name is required."
+    con_list: "Copy Contact List"
+    enter_name: "Enter Name "
+  
+   #new
+  create:
+    con_list: "Create A Contact List"
+    step1: "Step 1:"
+    con_name: "Enter The Name of Your Contact List"
+    step2: "Step 2:"
+    add_contact: "Add Contacts from one of the following"
+    upload: "Upload emails from Csv file."
+    placeholder: "Choose a file from your computer"
+    browse: "Browse"
+    email: "Manually enter email addresses"
+    e_separated: "(enter emails separated by commas or line breaks)"
+     
+     #index
+  new:
+    js: "Select at least one contact list."
+    confirm: "Are you sure you want to delete this record?"
+    my: "My Contacts"
+    contacts: "Contacts"
+       
+    table:
+      select: "Select"
+      nm: "Contact List"
+      con: "Contacts"
+      create: "Created"
+      ql: "Quick Links"
+      st: "Status"
+         
+    send_invi_select: "Send Invitation to Selected"
+    create_new_contact: "Create New Contact List"
+    no_record: "No records are available with name like'"
+    contact_list: "'in Contact List."
+    sign: "'" 
+    my_con: "My Contacts"
+    let: "' lets me..."
+    info1: "Organize contacts for my events in one convenient place"
+    info2: "Send invites to contacts with just a few clicks"
+    info3: "View status of contacts that have been invited"
+    info4: "Import email addresses from Yahoo Mail, Gmail, Hotmail, Outlook and Excel"
+    create_contact_list: "Create A Contact List"    
+      
+    # select invite
+  select_invite: 
+    select_invitation: "Select Invitation"  
+    you_have_not_scheduled_any_invitation: "You have not scheduled any invitations for Live events yet."
+    
+   ### contacts
+    # action
+  action:
+    num: "Sr. No."
+    email: "Email"
+    first_name: "First Name"
+    last_name: "Last Name"
+    action: "Action"
+    
+    #add_new 
+  jscript:
+    contact_name_require: "Contact list name is required."
+    upload_csv: "Upload Csv file."
+    invalid_file: "File type is invalid. upload Csv file."
+    atleast_one_record: "Enter at least one record for contact list."
+    valid_email: "All Email Id should be valid."
+    
+  add_new:
+    add_following: "Add Contacts from one of the following"
+    upload_email_from_csv: "Upload emails from Csv file."
+    browse: "Browse"
+    manualy_email_address: "Manually enter email addresses"
+    separated_email: "(enter emails separated by commas or line breaks)"
+    
+    #copy_contact
+  copy_contact:
+    copy_js: "Contact List Name is required."
+    contact_list: "Copy Contact List"
+    enter_name: "Enter Name "
+    
+    #list_contact
+  list_script:
+    list_js: "Contact list name is required."
+    please_valid_email: "Type a valid e-mail please"
+    delete_confirm: "Are you sure you want to delete this record?"
+    unsubscribe_confirm: "Are you sure you want to unsubscribe this record?"
+    atleast_one_record: "Select at least one record from list."
+    are_delete_record: "Are you sure you want to delete selected Record(s)?"
+    
+    rn_contact: "Rename Contact List"
+    new_contact: "Add New Contact"      
+    unsubscribed: "Unsubscribed"
+    never_emailed: "Never Emailed"
+   
+  edit_contact:
+    edit_cont: "Edit Contact Record"
+    re_name: "Rename"
+    last_emailed: "Last Emailed"
+    new_select: "Select"
+    
+  contact_link:
+    select_all: "Select All"
+    clear_selected: "Clear Selected"
+    export_selected: "Export Selected"
+    delete_selected: "Delete Selected"
+    send_invitation_selected: "Send Invitation to Selected"
+    copy_selected_another_list: "Copy selected to another list"
+    no_contact_record_available: "No contact record available."
+    
+    #contacts controller
+  contact_controller:
+    products_imported: "Products imported."
+    already_error: "Contact list name has already been taken"
+    contact_record_unsubscribed: "Contact record unsubscribed successfully."
+    contact_record_deleted_successfully: "Contact record deleted successfully."
+    contact_record_deleted: "Contact record unsubscribed successfully."
+    record_deleted_successfully: "Record(s) deleted from contacts successfully."
+    invitation_send: "Invitation(s) sent successfully."
+    contact_record_successfully: "Record added to contact list successfully."
+    success: "success"
+    error: "error"
+    new_record_successfully: "Records save to new list successfully."
+    
+    ### errors
+    #error_404
+  error_404:
+    exception: "Exception"
+    go_to_home: "Go to Home"
+    sorry_page_requested_not_found: "Sorry, the Page you requested could not be found"
+    tried_to_access: "Tried to access"
+    error_raise: "error was raised for path."
+    error: "Error"
+    back_to_home: "Back To Home"
+  
+    #error_500
+  error_500:
+    page_not_found: "Page does not exist on site with this URL"
+    sorry_record_requested_not_found: "Sorry, the Record you requested could not be found"
+
+    ###events
+     #evet_controller
+  event_controller:
+    unnamed_organizer: "Unnamed Organizer"
+    event_details_save_successfully: "Event details saved successfully."
+    event_saved_successfully_submitted: "Event details saved successfully and submitted for making live. Wait for administrator approval."
+    error_creating_try_again: "Error in creating event, Try agian."
+    event_design_save_successfully: "Event design saved successfully."
+    not_allowed_edit_event_theme: "You are not allowed to edit this event theme."
+    not_access_page: "You don't have permission to access this page." 
+    url_already_taken: "Event url link has already been taken."
+    not_allowed_view_event: "You are not allowed to view this event ..  "
+    
+    #_change_event_theme
+  change_event:
+    event_title: "Event Title"
+    background: "Background"
+    header_text: "Header Text"
+    box_background: "Box Background"
+    body_text: "Body Text"
+    box_border: "Box Border" 
+    color_link: "Links"
+    box_header: "Box Header"
+
+    #create_event
+  create_data_hint:
+    data_hint_contact_list: "Contact List"
+    data_hint_copy: "Copy"
+    data_hint_delete: "Delete"
+    data_hint_invite: "Invite"
+    data_hint_edit: "Edit"
+    data_hint_Unsubscribe: "Unsubscribe"
+    data_hint_manage: "Manage"
+    data_hint_view: "View"
+    data_hint_publish: "Publish"
+    
+  day:
+    monday: "Monday"
+    tuesday: "Tuesday"
+    wednesday: "Wednesday"
+    thursday: "Thursday"
+    friday: "Friday"
+    saturday: "Saturday"
+    sunday: "Sunday"
+    
+  number:
+    first: "First"  
+    second: "Second"
+    third: "Third"
+    fourth: "Fourth"
+    fifth: "Fifth"
+    last: "Last"
+
+    #create event
+  create_event:
+    ticket_sales: "Ticket Sales"
+    start_sales: "Start Sales"
+    now: "Now"
+    end_sales: "End Sales"
+    before_event: "1 hour before event starts"
+    min_purchase_permitted: "Min purchase permitted"
+    max_purchase_permitted: "Max purchase permitted"
+    rm: "Remove"
+    rm_logo: "Are you sure you want to remove this Logo?"
+    address_required: "Address Field is required."
+    date_not_proper: "The repeat end date cannot be before the event start date."
+    
+    every: "Every"
+    months: "months"
+    day: "Day"
+    msg_of_the_month: "of the month"
+    to: "to"
+    until: "until"
+    of_every_month: "of every month"
+    msg_weeks: "weeks"
+    
+    never: "Never"
+    daily: "Daily"
+    weekly: "Weekly"
+    monthly: "Monthly"
+    other_specific: "Other (be specific)"
+    
+    choose_atleast_one: "Please choose at least one day."
+    please_custom_date: "Please add custom dates to your repeating event."
+    repeat_date: "The repeat end date cannot be before the event start date."
+    event_start_date: "Event Start Date is required."
+    event_end_date: "Event End Date is required."
+    
+    #add event details
+    add_event_details:  "Add your Event Details"
+    expert_tips: " Expert Tips"
+    your_event_title: "Your Event Title"
+    max_character: "Maximum 75 characters"
+    character_left: "characters left."
+    venue_name: "Venue Name"
+    running_an: "Running an"
+    online_event: "online event"
+    street_address: "Street Address"
+    not_find_location: "Can't find your location?"
+    show_map_event: "Show map on event view page"
+    location: "Location"
+    your_event_map_not_appear: "Your event is online-only. Maps will not appear for online events."
+    add_an_address: "Add an address"
+    date: "Date"
+    time: "Time"
+    customer_date_time: "Custom dates and times are set for this event."
+    this_event_repeats: "This Event Repeats"
+    event_repeats: "Event Repeats"
+    event_location: "Event Location"
+    address: "Address"
+    time_setting: "Time Settings"
+    more_time_zone: "More Time Zones"
+    select_time_zone: "Select Timezone"
+    event_page_setting: "Event Page Setting"
+    display_start_time_event_page: "Display start time on event page"
+    display_end_time_event_page: "Display end time on event page"
+    display_time_zone_event_page: "Display time zone on event page"
+    
+    when_event_repeat: "When does the event repeat?"
+    repeat_every: "Repeat Every"
+    day_s: "Day(s)"
+    ends_after: "Ends After"
+    week_s: "Week(s)"
+    repeat_on: "Repeat On "
+    
+    repaat_on_the: "Repeat on the"
+    of_the_month: "of the month"
+    select_by_date: "Select by Date"
+    day_of_the_month: "day of the month"
+    select_by_day_of_week: "Select by Day of Week"
+    repeat_every: "Repeat Every"
+    month_s: "Month(s)"
+    event_starts: "Event Starts"
+    event_ends: "Event Ends"
+    display_end_date_on_regi_page: "Display end date on registration page"
+    add_date: "Add Date"
+    note: "Note: Past event dates and event with ticket sales cannot be modified."
+    upload_logo: "Upload Logo"
+    your_jpg_gif_png_not_exceed_2mb: "Your image must be JPG, GIF, or PNG format and not exceed 2MB."
+    event_description: "Event Description"
+    org_host: "Organization / Host"
+    select_org: "Select Organizer"
+    select_organizer: "select Organizer"
+    add_new: "Add new"
+    org_host_descri: "Organization / Host Description"
+    include_link_social_page: "Include a link to my social pages e.g. Facebook, Twitter"
+    facebook_com: "http://facebook.com/"
+    twitter_com: "http://twitter.com/"
+    
+  event_day:
+    mon: "Mon"
+    tue: "Tue"
+    wed: "Wed"
+    thu: "Thu"
+    fri: "Fri"
+    sat: "Sat"
+    sun: "Sun"
+      
+    #2. Create Tickets
+  ticket_part:
+    sold: "Ticket(s) Sold"
+    already_sold: "Quantity cannot be less than the tickets already sold."
+    create_tickets: "Create Tickets"
+    add_ticket: "Add a ticket"
+    ticket_tips: "Ticket Tips"
+    ticket_free: "Free"
+    ticket_paid: "Paid"
+    ticket_donation: "Donation"
+    ticket_confirm: "Are you sure you want to delete this ticket?"
+    strat_date_not_greater_end_date: "Ticket start sale date should not be greater than end sale date."
+    end_date_not_greater_end_date: "Ticket end sale date should not be greater than event end date."
+    delete_ticket: "Are you sure you want to delete this ticket?"
+    incomplete: "Incomplete"
+    add_ticket_here: "Add Ticket Here."
+    ticket_name: "Ticket Name"
+    ticket_quantity: "Ticket Quantity"
+    ticket_price: "Ticket Price"
+    fee: "Fee"
+    buyer_total: "Buyer Total"
+    sales_status: "Sales Status"
+    setting: "Setting"
+    action: "Action"
+    ticket_description: "Ticket Description"
+    hide_description: "Hide description on event pages"
+    sales_starts: "Sales Starts"
+    sales_ends: "Sales Ends"
+    ticket_permited_by_order: "Tickets permitted per order"
+    min: "Minimum"
+    max: "Maximum"
+    apply: "Apply"
+    service_fees: "Service Fees"
+    donations: "Donation"
+    settings: "Settings"
+    pass_on_the_fees_to_the_ticket_buyer: "Pass on the fees to the ticket buyer"
+    absorb_the_fees_into_the_ticket_price: "Absorb the fees into the ticket price"
+    event_capacity: "Event Capacity"
+    i_Would_like_to: "I Would like to"
+    pass_on_fees_to_the_buyer: "Pass on fees to the buyer"
+    absorb_the_fees: "Absorb the fees"
+    customize_per_ticket_type: "Customize per ticket type"
+    checked: "checked"
+    this_event_private_not_listed_event_directory_search_engine: "This event is private and will not be listed in our event directory or on search engines."
+    invitation_only_attendees_must_receive: "Invitation Only- Attendees must receive an"
+    email_invitation_to_register: "email invitation to register."
+    
+  promote_event_page:
+    promote_your_event_page: "Promote your Event Page"
+    promote_tips: "Promote Tips"
+    publicize_keep_it_private: "Publicize, or keep it private"
+    public_page: "Public Page"
+    private_page: "Private Page"
+    private_text: "This event is private and will not be listed in our event directory or on search engines."
+    attendees_facebook_twitter_linkedin: "Attendees can share the event with their friends on Facebook, Twitter and LinkedIn."
+    invitation_only_eventbrite_email: "Invitation Only- Attendees must receive an Eventbrite email invitation to register."
+    password_protected: "Password Protected"
+    search_categories: "Search Categories"
+    select_category: "Select Category"
+    select_subcategory: "Select Subcategory"
+    remaining_ticket: "Remaining Tickets"
+    show_num_of_ticket_remaining: "Show the number of tickets remaining on the registration page"
+    customize_web_address: "Customize Web Address"
+    
+    # download_excel
+  download_excel:
+    sr_num: "Sr. No."
+    order_num: "Order No."
+    purchase_date: "Purchase Date" 
+    no_purchase_available: "No purchase available."
+    no_events_available: "No events available."
+    
+    #event display attendee
+  event_display_attendee:
+    display_attendee_info: "Display Attendee Information"
+    these_field_require: "These fields require the collection of additional information during registration."
+    ticket_ordered: "Ticket Ordered"
+    city_home_add: "City (home address)"
+    state_home_add: "State (home address)"
+    city_work_add: "City (work address)"
+    state_work_add: "State (work address)"
+    
+    #theme
+  theme:
+    custom_header: "Custom Header"
+    custom_footer: "Custom footer"
+    personalize_your_theme: "Personalize your theme"
+    choose_a_theme: "Choose a theme"
+    or_design_your_own: "Or design your own"
+    display_attendees: "Display Attendees"
+    allow_visitors: "Allow visitors to see which of their Facebook friends are going"
+    add_cutom_html: "Add Custom HTML"
+
+  #index
+  event_title:
+    events: "Events"
+    unnamed_org_event: "Unnamed Organizer's Events"
+    my_events: "My Events"
+    referred_events: "Referred Events"
+    
+  event_index:
+    filter_events_by_organizer: "Filter events by organizer"
+    all_events: "All events"
+    status: "Status"
+    sold: "Sold"
+    draft: "Draft"
+    live_events: "Live Events"
+    live: "Live"
+    completed_events: "Completed Events"
+    completed: "Completed"
+    cancel: "Cancel"
+    cancelled_events: "Cancelled Events(1)"
+    no_events_created: "No events created."
+    you_not_have_events: "You do not have any events."
+    create_new_event: "To create a new event,"
+    latest: "Latest"
+    update: "Update"
+    regi_terminology: "Registration terminology"
+    customize_your_order_form: "Customize your order form"
+    event_dashboard: "Event Dashboard"
+    new_event_page _colors: "New Event Page colors"
+    themes: "themes"
+    learn_about_all: "Learn about all the new features we've"
+    recently_launched: "recently launched"
+
+    ### invites 
+      # add_attendee
+  invite_add_attendee:
+    invalid_quantity: "Invalid quantity.  Please enter a quantity of 1 or more Or amount."
+    add_attendee_add: "Add"
+    event_db_attendees: "Attendees"
+    ticket_type: "Ticket Type"
+    view_more: "View More"
+    no_ticket_available: "No tickets available for assigning the attendee."
+    payment_type: "Payment Type"
+    paid_with_check: "Paid with cheque"
+    paid_with_cash: "Paid with cash"
+    paid_directly_online_with_PayPal: "Paid directly online with PayPal"
+    paid_online_non_PayPal: "Paid online non-PayPal"
+    paid_by_google_checkout: "Paid by Google Checkout"
+    complimentary: "Complimentary"
+    no_payment_necessary: "No payment necessary"
+    other: "Other"
+    other_small: "Other"
+    notes: "Notes"
+    total_paid: "Total Paid"
+    amount_paid: "Amount Paid"
+    
+      #add_guests
+  add_guests:
+    already_email: "All email you have entered are already exist."
+    add_guest: "Add Guests"
+    add_guests_from_following: "Step 1: Add Guests from one of the following:"
+    manually_email: "Manually enter email addresses"
+    enter_email_separated: "(enter emails separated by commas or line breaks)"
+
+    #attendees
+  attendees:
+    one_two_three: "123"
+    all: "All"
+    attendees: "Attendees"
+    quick_actions: "Quick Actions"
+    edit_ticket_buyer: "Edit Ticket Buyer"
+    cancel_this_order: "Cancel this Order"
+    view_attendee_report: "View Attendee Details"
+    resend_confirmation_email: "Resend Confirmation Email"
+    print_tickets: "Print Tickets"
+    no_attendees_available: "No attendees available."
+    
+  #create 
+  invite_create:
+    enter_name_sender: "Enter name of sender."
+    enter_reply_to_email: "Enter reply to email."
+    type_valid_email: "Type a valid e-mail please"
+    enter_subject_line: "Enter subject line."
+    enter_valid_email: "Enter valid email."
+    select_atleast_one: "Select at least one record for delete."
+    create_your: "Create your"
+    invitations: "invitations!"
+    name_of_sender: "Name of Sender"
+    reply_to: "Reply To"
+    subject_line: "Subject Line"
+    customize: "Customize"
+    edit_message: "Edit Message"
+    customize_invitations: "Customize Invitations"
+    change_invitation_color: "Change invitation colors and sharing options."
+    text_color: "Text Color"
+    background_color: "Background Color"
+    link_color: "Link Color"
+    show_event_image: "Show Event Image"
+    show_facebook_share: "Show Facebook Share"
+    show_twitter_share: "Show Twitter Share"
+    show_salutation: "Show Salutation"
+    create_hello: "Hello"
+    greetings: "Greetings"
+    dear: "Dear"
+    none: "None"
+    done: "DONE"
+    personalize_your_invitation: "Personalize your invitation."
+    create_attendee: "Attendee"
+    your_invitaion_to_following: "You are invited to the following event:"
+    event_to_time_date_location: "Event to be held at the following time, date, and location:"
+    you_can_only_create_invites_on_a_live_event: "You cannot schedule any invitations for Live events yet."
+    you_can_only_create_invites_on_a_draft_event: "You can schedule invitations only for Live events."
+    start_date: "Start Date"
+    end_date: "End Date"
+    attend_event: "Attend Event"
+    view_map: "View Map"
+    your_event_pwd_is: "Your event password is:"
+    this_event_pwd_protected: "This event is password-protected. Register with the password above to attend this event."
+    share_this_event: "Share this event on"
+    facebook: "Facebook"
+    invite_and: "and"
+    twitter: "Twitter"
+    send_invitation_to: "Send a test invitation to"
+    who_should: "Who should"
+    come: "come?"
+    remove_selected: "Remove Selected"
+    plus_add_guests: "+ Add Guests"
+    send_and: "Send and"
+    schedule: "schedule"
+    immediately: "Immediately"
+    select_date: "Select Date"
+    days: "Day(s)"
+    hours: "Hour(s)"
+    before_my_event: "Before my event"
+    
+    #edit_guest
+  edit_guest:
+    enter_fname: "Enter first name."
+    enter_lname: "Enter last name."
+    enter_valid_email: "Enter valid Email."
+    email_should_be_valid: "Email should be valid."
+    edit_info: "Edit Information"
+    
+    #invite_index
+  invite_index:
+    manage_your: "Manage Your"
+    scheduled: "Scheduled"
+    subject: "Subject"
+    created_at: "Created At"
+    no_email_invitations_sceduled: "No email invitations scheduled yet."
+    no_email_invitation_draft: "No email invitations in draft yet."
+    create_invitation: "Create Invitations"
+    
+    #invite_controller
+  invite_controller:
+    email_successfully: "Invitation email sent successfully."
+    invite_email_send_successfully: "Invitation email sent successfully."
+    invite_saved_draft_successfully: "Invitation saved in draft successfully."
+    invite_deleted: "Invitation deleted successfully."
+
+   ### Layouts
+    #admin
+  layout_admin:
+    admin: "Admin"
+    copy_right: "Copyright"
+  
+  #application
+  application:
+    home: "HOME"
+    find_events: "FIND EVENTS"
+    create_an_event: "CREATE AN EVENT"
+    how_it_works: "HOW IT WORKS"
+    log_in: "LOG IN"
+    sign_up: "SIGN UP"
+    appli_create_an_event: "Create an Event"
+    my_profile: "My Profile"
+    my_tickets: "My Tickets"
+    my_account: "MY ACCOUNT"
+    logout: "LOGOUT"
+    
+    ##My tickets 
+     #sidebar
+  side_bar:
+    user_not_login: "User cancelled login or did not fully authorize."
+    social: "Social"
+    connect_to_see_attending: "Connect to see the events your friends are attending."
+    all_recommendations: "All Recommendations"
+    few_orders: "Few Orders"
+    
+    #my_ticket index
+  myticket_index:
+    myticket_my: "My"
+    mytickets_tickets: "Tickets"
+    current: "Current"
+    select_print_tickets: "Select an order to print tickets, request a refund, or contact the organizer."
+    set_up_your_awesome: "Set up your own awesome event in a few easy and simple steps!"
+    get_stared: "Get Stared"
+    all_orders: "All Orders"
+    recommened: "Recommended"
+    this_week: "This Week"
+    no_recommened_event_this_week: "No recommended events for this week."
+    view_order: "View Order"
+    
+    #my_ticket view
+  myticket_view:
+    cancel_order: "Are you sure you want to cancel this order?"  
+    for: "For"
+    view_free: "(Free)"
+    view_paid: "(Paid)"
+    view_donation: "(Donation)"
+    contact_the_host: "Contact the Host"
+    cancel_order: "Cancel Orders"
+
+    ###organizers
+      #show
+  org_show:
+    event_held: "Events Held"
+    top_categories: "Top Categories"
+    primary_location: "Primary Location:"
+    about: "About"
+    organizer: "Organizer"
+    check_out_evnets_org: "Check out events and organizer information for"
+    current_events: "Current Events"
+    attend: "Attend"
+    currently: "Currently"
+    not_have_any_live: "not have any events"
+    past_events: "Past Events"
+    featured: "Featured"
+    show_view: "View"
+    search_results_for: "Search results for"
+    
+    ### pages
+      #page index
+  page_index:
+    no_contant_link_available: "No content available for this link."
+    
+  ###Home
+    # footer
+  home_footer:
+    click_me: "Click Me"
+    plan: "Plan"
+    using: "Using"
+    all_right_reserved: "All Rights Reserved"
+    terms_of_services: "Terms of Service"
+    privacy_policy: "Privacy Policy"
+    google_plus: "Google Plus"
+    linked_in: "Linkedin"
+    yahoo: "Yahoo"
+    
+   #home contact_us
+  home_contact_us:
+    feel_free_to_talk: "Feel free to talk to us. We're listening!"
+    org_an_event: "Organizing an event? Call"
+    attending_an_event: "Attending an event and need tech support?"
+    calling_outside_the_us: "Calling outside the US?"
+    call_us_anytime: "Call us anytime - day or night!"
+    tell_us_more: "Tell us more, so we can better assist you:"
+    tell_us_more: "Tell us more,"
+    so_we_can_better_assist_you: "so we can better assist you"
+    call: "Call"
+    dial: "Dial"
+    
+  home_js:
+    this_field_is_required: "This field is required."
+    type_valid_email_please: "Type a valid E-mail please."
+    i_am: "I am"
+    select_one: "Select One"
+    an_event_org: "an Event Organizer"
+    an_event_attendee: "an Event Attendee"
+    category_of_my_question: "Category of my question"
+    login_and_password: "Login and password"
+    event_page_design: "Event page design"
+    fees_payments_invoices: "Fees, payments and invoices"
+    collecting_viewing_attendee: "Collecting and viewing attendee info"
+    promoting_an_event: "Promoting an event"
+    management_tools: "Management tools"
+    sales_i_m_organizing: "Sales - I am organizing a large event"
+    unsubscribe: "Unsubscribe"
+    unable_to_register: "Unable to Register"
+    order_confirmation_tickets: "Orders Confirmation/ Tickets"
+    details_about_event: "Details about an event"
+    refund: "Refund"
+    email_address: "Email Address"
+    event_name_url: "Event Name/URL"
+    subject: "Subject"
+    details: "Details"
+    how_to_send_email_invitation: "How to send email invitations"
+    we_have_improved: "We've improved this feature! To learn more, visit the tutorials below."
+
+  ###home facebook login
+    #facebook_login
+  facebook_login:
+    set_your: "Set your"
+    pwd_here: "Password here"
+    details_here: "personal details here"
+    pwd: "Password"
+    skip_this_step: "Skip This Step"
+    update: "Update"
+
+    #forgot_password
+  forgot_pwd:
+    forget: "Forget"
+    back_to_login: "Back to Login"
+    forgot_log_in: "Log in"
+    forgot_using: "using"
+    log_in_with: "Log in with"
+    connect_with_twitter: "Connect with Twitter"
+  
+    #index
+  home_index:
+    in: "in"
+    Upcoming: "Upcoming"
+    change_your_location: "Change your location"
+    org_by: "Organized by"
+    un_org: "Unnammed Organizer"
+    view_more_events: "View more events"
+    make_your: "Make your"
+    event_success: "Event a Success"
+    is: "is"
+    sign_up_get_started: "to sign up and get started."
+    enter_your_email_id: "Enter your email Id"
+  
+    #login
+  home_login:
+    start_now: "Start now"
+    free_easy: "it's free and easy"
+    remember_me: "Remember me"
+    cannot_access: "Can't access your account?"
+    small_sign_up: "Sign up"
+    by_clickin_sign_up: 'By clicking "Sign up", I confirm that I agree with the '
+    term_service: "terms of service"
+    login_and: "and"
+    content: "content"
+    attending_event: "Attending an event?"
+    login_click_here: "Click here"
+    to_access_your_order: "to access your order"
+    login_or: "or"
+
+    #logout
+  home_logout:
+    small_home: "Home"
+    small_logout: "logout"
+    find_me_in: "Find me in"
+    
+    #set_new_password
+  set_new_password:
+    reset: "Reset"
+    new_pwd: "New Password"
+    confirm_pwd: "Confirm Password"
+    or: "or"
+    set: "Set"
+
+    #sign_up
+  home_signup:
+    start_now_free_easy: "Start now, it's free and easy"
+    sign_up_using: "sign up using"
+    already_registered: "Already registered?"
+    want_to_know_more: "Want to know more?"
+    find_out_how: "Find out how"
+    home_can: "can"
+    help_you: "help you "
+    sell_out_your_event: "sell out your event!"
+    give_us_call: "Give us a call, we'd love to chat."
+
+    #home_controller
+  home_controller:
+    home_js: "You have signed up successfully. Verification email sent on your email Id. Verify your account to login here."
+    you_join_successfully: "You joined this program successfully."
+    you_register_logged: "You have registered & logged in successfully."
+    you_logged_in_successfully: "You have logged in successfully."
+    your_account_inactivate: "Your account is inactive. Contact administrator to activate it."
+    something_wrong_yor_facebook_amount_try_again: "Something went wrong with your facebook account. Try again or Login/Signup through Site."
+    invalid_user_pwd_combination: "Invalid user/password combination"
+    we_send_email_instructions: "We sent you an e-mail with instructions for password recovery. Please, check your email."
+    invalid_email_address: "Invalid email address. Account with this email address does not exist."
+    your_account_activated: "Your account activated successfully."
+    your_account_does_not_exists: "User account does not exist. Please, try again."
+    password_reset_successfully: "Password set successfully."
+    your_pwd_time_limit_expired: "Your password recovery time limit has been expired. Please send again."
+    your_pwd_recovery_does_not_exists: "Your set password request does not exist or expired."
+    your_que_send_successfully_admin_contact: "Your question sent successfully. Administrator will contact you soon."
+    you_logged_out_successfully: "You have logged out successfully."
+    email_exists_update_info: "This email already exists. Information will be updated to existing account!"
+    
+  ### purchases
+    #cancel
+  purchases:
+    cancel_js: "Select at least one ticket to cancel."
+    quantity_of: "Quantity of"
+    enter_quantity_of: "Enter Quantity of "
+  
+    #show
+  purchases_show:
+    work_info: "Work Information"
+    phone: "Phone"
+    
+    #purchases_controller
+  purchase_controller:
+    order_cancel: "Order cancelled successfully."
+    conformation_email_successfully: "Confirmation email sent successfully."
+
+  ### Search 
+    #Search index
+  search_index:
+    local: "Local"
+    near: "near"
+    all_dates: "All Dates"
+    today: "Today"
+    tomorrow: "Tomorrow"
+    this_week: "This Week"
+    this_weekend: "This Weekend"
+    next_week: "Next Week"
+    this_month: "This Month"
+    all_prices: "All Prices"
+    organized_by: "Organized by"
+    category: "Category"
+    all_categories: "All Categories"
+    architecture: "Architecture"
+    art: "Art"
+    design: "Design"
+    diy_crafts: "DIY & Crafts"
+    no_events_found_here: "No events found Here."
+
+  ### tips
+    #tip file
+  tip:
+    no_tips_available: "No tips available."
+
+  ###user_mail
+    #api_key_generated
+  api_key_generated:
+    your_api_key_generated: "Your API Key is generated successfully at"
+    api_key_is: "API Key is"
+    thanks_for_joining: "Thanks for joining and have a great day!"
+    system_admin: "System Administrator."
+
+    #create_event_email
+  create_event_email:
+    you_successfully_created_new_event: "You have successfully created new event to"
+    event_title_is: "Event title is"
+    to_see_to_the_site: "To see the event to the site, just follow this link"
+
+   #forgot_pwd_email
+  forgot_pwd_email:
+    request_pwd_successfully: "You request for forgot password genearted successfully. Click on below link to reset your Password."
+    forgot_link: "Link"
+   
+  #multi_user_access
+  multi_user_access:
+    you_are_invited_to: "You are invited to"
+    click_below_link: "Click on below link to set your Password."
+
+  #send invite email
+  send_invite_email:
+    welcome_to: "Welcome to"
+    you_have_successfully_signed: "You have successfully signed up to "
+    your_email_id_is: "your Email Id is"
+    to_login_site_follow_link: "To login to the site, just follow this link"
+       
+   ### users
+   #change_org_theme
+  change_org_theme:
+    preview_window: "Preview Window"
+    this_preview_page_colors: "This is a preview of your profile page colors."
+    selecting_color_changed: "Selecting a color swatch to the left enables the colors to be changed."
+  
+  #user form
+  user_form:
+    prohibited_this_user: "prohibited this user from being saved"
+    
+  #user edit  
+  user_edit:
+    editing_user: "Editing user"
+    
+  #user index   
+  user_index:
+    listing_users: "Listing users"
+  
+  #user new
+  user_new:
+    new_user: "New user"  
+  
+  #user profile
+  user_profile:
+    event_logo_not_valid: "Event logo type is not valid."
+    not_authorized_to_upload: "You are not authorized to upload the image"
+    enter_valid_alpha_numeric: "Enter a valid alpha-numeric data."
+    type_valid_alpha_numeric: "Type a valid alpha-numeric data."
+    unnamed: "Unnamed"
+    add_new_org: "Add New Organizer"
+    manage_org: "Manage Organizer"
+    profile: "Profile"
+    create_single_destination: "Create a single destination for all of your events."
+    org_name: "Organizer name"
+    about_the_org: "About the organizer"
+    description: "description"
+    also_use_this_description: "Also use this description for event pages"
+    optional_org_settings: "Optional Organizer settings"
+    select_info_you_want_to_display: "Select the information you want to display on this organizer's profile page."
+    org_info: "Organizer info"
+    show_my_website: "Show my website"
+    show_no_of_event_held: "Show number of events held"
+    show_top_event_categories: "Show top event categories"
+    show_top_event_locations: "Show top event locations"
+    event_info: "Event info"
+    display_only_events_this_org: "Display only events by this organizer"
+    display_all_my_events: "Display all of my events"
+    featured_event: "Featured Event"
+    select_event: "Select Event"
+    org_page_url: "Organizer Page Url"
+    profile_change: "Change"
+    promote_your_profile: "Promote your profile page on your website"
+    quickly_install_button: "Quickly install a button that links to your "
+    profile_page: "profile page."
+    choose_button: "Choose a button"
+    profile_copy: "Copy"
+    paste_this_code_on_website: "paste this code for use on your website"
+    add_social_network_profile: "Add social networks to your profile"
+    integrate_social_networking_feed_in_profile: "Integrate social networking feeds onto my profile page"
+    fb_page_link: "Facebook Page Link"
+    add_my_twitter_username: "Add my twitter username or search feed"
+    user_name: "Username"
+    search_query: "Search Query"
+    customize_profile_colors: "Customize your profile colors"
+    choose_template: "Choose an eventbrite clone template"
+    choose_custom_colors_bg: "Choose custom colors / background"
+    advanced: "Advanced"
+    color_display_options: "Color display options"
+    always_apply_selected_page_colors: "Always apply the selected profile page colors"
+    apply_my_event_page_to_visiting_page: "Apply my event page colors when visiting from an event page"
+
+    #user controller
+  users_controller:
+    org_account_updated: "Organizer account Updated successfully."
+    org_info_save_successfully: "Organizer information saved successfully."
+    user_successfully_created: "User was successfully created."
+    user_successfully_updated: "User was successfully updated."
+    
+  ###Wallet index
+    # index
+  wallet_index:
+    atleast_one_record_withdraw: "Select at least one record to withdraw."
+    earnings: "Earnings"
+    event_earn: "Event Earn"
+    due: "Due"
+    withdraw_amt: "Withdraw Amount"
+    refferral_event: "Referral Earn"
+    referral_code: "Referral Code"
+    capital_due: "DUE"
+    capital_paid: "PAID"
+    affilliate_earn: "Affiliate Earn"
+    affiliate_code: "Affiliate Code"
+    chk_all: "Check All"
+    un_all: "Uncheck All"
+    
+   #withdraw  
+  wallet_withdraw:  
+    not_withdraw_amt: "You cannot withdraw amount greater than"
+    enter_valid_amt: "Enter valid amount."
+    withdraw: "Withdraw"
+    add_amt: "Add Amount"
+    confirm: "Confirm"
+    select_withdraw_mode: "Select Withdrawal Mode"
+    paypal: "Paypal"
+    net_banking: "Net Banking"
+    bank: "Bank"
+    nm: "Name"
+    ifsc: "IFSC Code"
+    holder: "A/c Holder Name"
+    accnum: "Account Number"
+    br: "Branch"
+    cheque: "Cheque"
+    detail: "Details"
+    gateway_name: "Gateway Name"
+    gateway_account: "Gateway Account"
+    my_wallet: "My Wallet"
+    wallet: "Wallet"
+    trxndetail: "Transaction Details"
+    amt: "Withdraw Amount"
+    trxnfees: "Transaction Fees"
+    you_will_get: "You will get"
+    gateway_name: "Gateway Name"
+    gateway_acc: "Gateway Account"
+    note: "Note: Processing fees will be charged on your withdrawal amount during this process."
+
+  #wallet controller
+  wallet_controller:
+    withdraw_request_send: "Withdraw request sent successfully."
+
+  ### tickets
+  #add attendee
+  add_attendee:
+    add_attendee_attendee: "Attendees"
+    fnm_fields_required: "First name fields are required."
+    lnm_fields_required: "Last name fields are required."
+    email_fields_required: "Email fields are required."
+    home_city_field_required: "Home City fields are required."
+    home_state_field_required: "Home State fields are required."
+    work_city_field_required: "Work City fields are required."
+    work_state_field_required: "Work State fields are required."
+    job_title_field_required: "Job title fields are required."
+    company_field_required: "Company fields are required."
+    blog_field_required: "Blog fields are required."
+    website_field_required: "Website fields are required."
+    attendee_info: "Attendee Information"
+    waivers: "Waivers"
+    bill_state: "bill_state"
+    home_state: "home_state"
+    
+  #ticket order  
+  tickets_order:
+    credit_card_no_require: "Credit card number field is required."
+    expire_date_field_require: "Expire date field is required."
+    ccv_be_3_digit_no: "CCV should be 3 digit number."
+    ccv_be_3_digit_numeric_only: "CCV should be 3 digit numeric value only."
+    fname_field_required: "First name field is required."
+    lname_field_required: "Last name field is required."
+    city_field_require: "City field is required."
+    state_field_required: "State field is required."
+    zip_code_required: "Zip code field is required."
+    country_code_required: "Country field is required."
+    fill_your: "Fill Your"
+    credit_card_num: "Credit Card Number"
+    expire_date: "Expire Date"
+    CCV: "CCV"
+    zip_code: "Zip Code"
+
+    ###manage event
+    #common banner
+  common_banner:  
+    sure_cancel_event: "Are you sure you want to cancel this event?"
+    permanently_delete_event: "Are you sure you want to permanently delete this event?"
+    small_draft: "draft"
+    complete: "Complete"
+    delete: "Delete"
+    find_attendees: "Find Attendees by Name or Email"
+    
+    #edit menu
+  edit_menu:
+    design: "Design"
+    manage: "Manage"
+    
+    #manage event sidebar
+  manage_event_sidebar:
+    cusomize_order_form: "Customize Order Form"
+    edit_order_confirmations: "Edit Order Confirmations"
+    event_type: "Event Type"
+    language: "Language"
+    add_news_and_updates: "Add News and Updates"
+    invite: "Invite"
+    manage_invitations: "Manage Invitations"
+    analyze: "Analyze"
+    google_analytics: "Google Analytics"
+    add_attendees: "Add Attendees"
+    all_attendees: "All Attendees"
+    waitlist: "Waitlist"
+    waitlist_settings: "Waitlist Settings"
+    sell: "Sell"
+    create_promotional_codes: "Create Promotional Codes"
+    create_affiliate_programs: "Create Affiliate Programs"
+    create_button_widget: "Create Button Widget"
+    create_form_widget: "Create Form Widget"
+    button_widget: "Button"
+    widgets: "Widgets"
+
+    #add affiliate code
+  add_affiliate_code:
+    enter_valid_affiliate_code: "Enter a valid affiliate code."
+    only_alpha_numeric_char: "Type only alpha-numeric characters."
+    enter_amt_percentage_referral_fee: "Please enter either an amount or a percentage for Referral fee."
+    create_a_new: "Create a New"
+    affiliate_program: "Affiliate Program"
+    code_of_affiliate_program: "Code of your affiliate program"
+    spaces_apostrophes_non_numeric_not_allowed: "Spaces, apostrophes and non-alphanumeric characters are not allowed."
+    ex_earlybirdspecial_membersonly_dc121232: "(Examples: earlybirdspecial, membersonly, dc121232, etc.)"
+    off_ticket_price: "off ticket price"
+    make_public: "Make Public"
+    public_affiliates_page: "public affiliates page"
+    
+    #add promotional code
+  add_promotional_code:
+    type_only_alpha_numeric_character: "Type only alpha-numeric characters  "
+    enter_amt_or_percentage_ticket_price: "Please enter either an amount or a percentage off the ticket price."
+    select_atleast_one_ticket: "Please select at least one ticket type."
+    dont_have_any_ticket: "You do not have any tickets for selecting. This code cannot be generated."
+    discount_amt_should_not_greater_or equal_select_ticket_price: "Discount amount should not be greater than or equal to selected tickets price."
+    enter_num_use_promotional_code: "Enter number of uses for promotional code."
+    promotional_code: "Promotional Codes"
+    code_type: "Code Type"
+    discount: "Discount"
+    disc_amt: "Amount"
+    access: "Access"
+    code: "Code"
+    spaces_apostrophes_non_numeric_not_allowed_with_example: "Spaces, apostrophes and non-alpha numeric characters (except '_', '@' and '.') are not allowed. (Examples: johnsmith@gmail.com, earlybirdspecial_08, DC121232)"
+    file_must_be_csv_upto_3000_code_separated_comma_maxi_256_spaces_apostrophes_non_numeric_not_allowed_with_example: "File must be *.csv and can contain up to 3,000 codes, separated by commas or listed on separate lines. Maximum of 256 characters per code. Spaces, apostrophes and non-alphanumeric characters (except '_', '@' and '.') are not allowed."
+    discount_amt: "Discount Amount"
+    applies_to: "Applies To"
+    all_ticket_types: "All Ticket Types"
+    discount_code_only_applied_paid_tickets: "Discount Codes can only be applied to paid tickets on-sale."
+    access_code_applied_hidden_tickets: "Access Codes can only be applied to hidden tickets."
+    not_hidden: "nothidden"
+    uses: "Uses"
+    unlimited: "Unlimited"
+    starts: "Starts"
+    minutes_before_event_starts: "Minute(s) before the event starts."
+    ends: "Ends"
+    when_sales_end: "When sales end"
+    minutes_before_event_end: "Minute(s) before the event ends."
+    tip: "Tip"
+    after_creating_promotional_code_embed_code_in_link_publish_website_email_blog_etc: "After creating a promotional code you can embed that code in a link to publish on your website, blog, an email, etc. by using the format below. This link will allow the registrant to see the discounted prices or hidden tickets on the event page without having to enter the code."
+    disc_rate_less_than_or_equal_100: "Discount rate should be less than or equal to 100."
+    enter_start_date: "Please select start date."
+    enter_end_date: "Please select end date."
+    enter_date: "Please enter date."
+    uses_less_than_or_equal_selected_ticket_qty: "Number of uses should be less than or equal to selected tickets quantity."
+    validate_start_end_date: "End date should be greater than start date."
+   
+  
+  # copy
+  manage_event_copy:
+    new_event_name_is_required: "New event name is required."
+    copy_this_event: "Copy This Event"
+    may_event_quickly_create_new_event_same_description: "May copy this event to quickly create a new event with the same description, ticket types, survey, and dates."
+    you_may_also_whatever_change_new_event: "You may also make whatever changes are necessary to the new event, both before and after publishing."
+    you_must_press_publish_event_button_attendee_registration: "You must press the Publish Event button on the next page before the new event will be available for attendee registrations."
+    new_event_name: "New Event Name"
+
+  #customize order form
+  customize_order_form:
+    customize_order: "Customize Order"
+    form: "Form"
+    what_info_you_collect: "What type of information do you want to collect?"
+    you_have_3_option: "You have 3 options"
+    collect_only:  "Collect only"
+    basic_info: "basic information"
+    email_name: "email, name"
+    collect_info_below_for_the: "Collect information below for the"
+    ticket_buyer_only: "ticket buyer only"
+    collect_info_below_for: "Collect information below for"
+    each_attendee: "each attendee"
+    which_ticket_type_collect_info: "For which ticket types do you want to collect information?"
+    deselect_all: "Deselect All"
+    info_to_collect: "Information to collect"
+    include: "Include"  
+    required: "Required"
+    mr_mrs_etc: "Mr., Mrs., etc."
+    address_info: "Address Information"
+    other_info: "Other Info"
+    work: "work"
+    company: "Company"
+    organization: "Organization"
+    work_address: "Work Address"
+    are_you_sure_delete_this_que: "Are you sure you want to delete this question?"
+    add_que: "Add Question"
+    registration: "Registration"
+    options: "Options"
+    optional_setting: "Optional Settings"
+    title_your_attendee_info_page: "Title for your attendee info page"
+    instructions_for_your_attendees: "Instructions for your attendees"
+    registeration_time_limit: "Registration time limit"
+    off_ticket_price: " % off ticket price "
+    ticket_option: "Ticket delivery options"
+    eticket: "eTickets"
+    will_call_pickup: "Will call pickup"
+    msg_display_after_ticket_sales: "Message to display after ticket sales have ended"
+    attendee_manage: "Attendee Management"
+    allow_attendee_update_info_after_registration: "Allow attendee to update information after registration"
+    refund_policy: "Refund Policy"
+    allow_attendee_request_refund_purchased_tickets: "Allow attendee to request refunds for purchased tickets"
+    customize_minutes: "minutes"
+    tool_tip_collect_info_ticket_buyer: "Collect information from just the ticket buyer or from all attendees (tickets purchased)."
+    tool_tip_include_msg_registration_process: "Include a message to your attendees regarding the registration process."
+    tool_tip_attendee_transaction_time_limit: "The Attendee transaction time limit locks tickets as pending transaction for the time period specified until the attendee completes the registration or time limit has been exceeded."
+    tool_tip_if_transaction_does_not_occur: "If the transaction does not occur in specified time limit then ticket will be released. This is to prevent overselling of tickets."
+    tool_tip_allow_ticket_buyer: "Allow the ticket buyer to select an alternative ticket delivery method"
+    enter_0_to_disable_registration_time: "Enter 0 or leave blank to disable registration time"
+    time_should_be_greate_than_one: "Registration time should be numeric and greater than or equal to 0." 
+    select_at_least_one_ticket: "Select at least 1 ticket."
+      
+  #edit order confirmation
+  edit_order_confirmation:
+    edit_order: "Edit order"
+    confirmations: "Confirmations"
+    customize_email: "Customize Email"
+    your_attendees_receive_email_registration_confirming_order: "Your attendees will receive an email after registration confirming their order."
+    default_reply_email_address: "Default 'reply-to' email address"
+    attachments: "Attachments"
+    attache_pdf_tickets_confirmation_email: "Attach PDF tickets in confirmation email"
+    msg_display_confirmation_email: "Message to be displayed on confirmation email:"
+    msg_display_confirmation_webpage: "Message to be displayed on confirmation webpage:"
+    msg_On_PDF_Tickets: "Message to be displayed on PDF Ticket"
+    note_plain_text_only: "Note: Plain text only"
+    view_email_pdf_ticket_example: "View email and PDF Ticket example"
+    customize_confirmation_webpage: "Customize order confirmation webpage"
+    your_attendees_also_config_page_when_order_completed: "Your attendees will also be taken to a confirmation page within their browser when their order is completed."
+    redirect_users_your_own_webpage: "Redirect users to your own webpage"
+    once_the_order_processed_text_below_enter_website: "once the order is processed, clear all of the text below and enter your website URL (including the http://)"
+    note_html_available: "Note: HTML available."
+
+  #google analytic
+  google_analytic:
+    enter_valid_google_analytic_code: "Enter a valid google analytic code."
+    enter_google_analytics_ua_num: "Enter google analytics UA number"
+    about_google_analytics: "About Google Analytics"
+    if_you_use_google_analytics_full_ua_num: "If you use google analytics enter your full UA number."
+    for_example_ua: "For example UA-000000-0"
+    for_info_set_up_account: "For more information or to set up an account go to:"
+    google_analytics: "http://www.google.com/analytics"
+  
+    # index 
+  manage_event_index:
+    dashboard: "Dashboard"
+    page_url: "Page URL"
+    days_to_event: "Days to Event"
+    page_views: "Page Views"
+    ticket_sold: "Tickets Sold"
+    tickets_available: "Tickets Available"
+    download_purchase_report: "Download Purchase Report"
+    total_sales: "Total Sales"
+    gross_sales: "Gross Sales"
+    total_manual_sales: "Total Manual Sales"
+    capital_total_sales: "TOTAL SALES"
+    fees_paid: "Fees Paid"
+    total_net_sales: "Total Net Sales"
+    email_invitation_sent: "Email Invitations Sent"
+    send_invitation: "Send Invitations"
+    recent_orders: "Recent Orders"
+    no_order_this_event_yet: "No orders for this event yet."
+    recent_attendees: "Recent Attendees"
+    no_attendees_this_evnet_yet: "No attendees for this event yet ."
+    page_link: "Page Link"
+
+    #list affiliate code
+  list_affiliate_code:
+    mange_affiliate_programs: "Manage Affiliate Programs"
+    create_more_codes: "Create More Codes"
+    affiliate_name: "Affiliate Name"
+    visits: "Visits"
+    sales: "Sales"
+    paid: "Paid"
+    actions: "Actions"
+    are_sure_delete_code: "Are you sure you want to delete this code?"
+
+    #list promotional
+  list_promotional_code:
+    manage_promotional_codes: "Manage promotional codes"
+    discount_codes: "Discount Codes"
+    discount_code: "Discount Code"
+    access_code: "Access Code"
+    started: "Started"
+    small_days: "Day(s)"
+    minutes: "Minute(s) "
+    before_event: "before event"
+    no_limits: "No Limits"
+    access_codes: "Access Codes"
+    
+    # new and updates
+  new_and_updates:
+    no_update_added_yet: "No updates added yet."
+  
+    # orders
+  manage_event_orders:
+    download_excel_report: "Download Excel Report"
+    date_range: "Date Range"
+    since_sales_started: "Since sales started"
+    this_week: "This week"
+    this_month: "This month"
+    this_year: "This year"
+    custom_date_range: "Custom date range"
+    sort_by: "Sort By"
+    date_descending: "Date Descending"
+    date_ascending: "Date Ascending"
+    email_ascending: "Email Ascending"
+    email_descending: "Email Descending"
+    amount_ascending: "Amount Ascending"
+    amount_descending: "Amount Descending"
+    per_page: "Per Page"
+    qty: "Qty"
+    search_for_orders: "Search for Orders"
+    ordered_by: "Ordered by"
+    new_on: "on"
+    total: "TOTAL"
+  
+    # Question
+  manage_event_question:
+    question_field_required: "Question field is required."
+    all_options_fields_required_if_you_want_fill: "All options fields are required. If you do not want to fill it then click on cross image for that option."
+    waiver_field_required: "Waiver field is required."
+    select_atleast_1_ticket: "Select at least 1 ticket."
+    you_must_aleast_one_choice: "You must have at least one choice."
+    edit_a: "Edit a"
+    create_new: "Create New"
+    Question: "Question"
+    question_type: "Question type"
+    add_choice_limit: "Add Choice Limit"
+    disable_choice_limit: "Disable Choice Limit"
+    options_available: "Options available"
+    add_another_option: "Add another option"
+    show_que_for_specific_ticket_types: "Show this question for specific ticket types"
+    show_attendee_answer_this_que_order_confirmation: "Show the attendee answer to this question on the order confirmation"
+
+  # type and language
+  type_and_language:
+    set_event_type: "Set event type"
+    attendees_will_see_settings_select: "Attendees will see the settings you select"
+    ticketed_event: "Ticketed Event"  
+    choose_option_ticket_eg_example: "Choose this option if your event is a ticketed event (e.g. music and performing arts, comedy, festival, etc.).Example terms: Buy Tickets, Ticket Information, Ticket Type"
+    registration_event: "Registration Event"
+    choose_option_registration_event_eg: "Choose this option if your event is a registration event (e.g. conference, endurance event, etc.)."
+    example_registration_info_type: "Example terms: Register, Registration Information, Registration Type"
+    language_regional_settings: "Language and Regional Settings"
+    your_event_display_date_time_language: "Your event will display in the date, time, and language format of your choice."
+    save_changes: "Save Changes"
+    
+  #waitlist enable
+  waitlist_setting:
+    waitlist_enable: "Waitlist Enable"
+    waitlist_trigger: "Waitlist Trigger"
+    activate_waitlist_ticket_sells_out: "Activate waitlist when this ticket type sells out"
+    capacity: "Capacity"
+    active_waitlist_total_event_capacity: "Activate waitlist when total event capacity is exceeded"
+    maximum_waitlist_size: "Maximum Waitlist Size"
+    zero_for_unlimited: "Zero for unlimited"
+    attendee_info_collected: "Attendee Information Collected"
+    full_name: "Full Name"
+    phone_number: "Phone Number"
+    edit_waitlist_response_ticket_release_msg: "Edit the Waitlist Response and Ticket Release Messages"
+    you_editing_auto_response_msg: "You are Editing the Auto-Response Message"
+    edit_waitlist_ticket_release_msg: "Edit the Waitlist Ticket Release Message"
+    maximum_time_attendee_ticket_release_msg: "Maximum Time Attendee Has to Respond to Ticket Release Message"
+    until_next_waitlist_postion_contacted: "Until next waitlist position is contacted"
+    enable: "Enable"
+    disable: "Disable"
+    
+    #manage event controller
+  manage_event_controller:
+    info_save_successfully: "Information saved successfully."
+    que_added_order_successfully: "Question is added to order form successfully."
+    que_deleted_order_successfully: "Question is deleted from order form successfully."
+    update_is_required: "Update is required."
+    update_added_successfully: "Update added successfully."
+    update_updated_successfully: "Update updated successfully."
+    update_delete_successfully: "Update deleted successfully."
+    google_analytics_saved_successfully: "Google analytics code saved successfully."
+    order_info_updated_successfully: "Order information updated successfully."
+    waitlist_settings_saved_successfully: "Waitlist settings saved successfully."
+    edit_promotional_code: "Edit Promotional Code"
+    promotional_code_added_successfully: "Promotional code added successfully."
+    promotional_code_may_already_exist: "Note: Some codes may not be added if they already exist."
+    promotional_code_updated_successfully: "Promotional code updated successfully."
+    promotional_code_deleted_successfully: "Promotional code deleted successfully."
+    affiliate_code_added_successfully: "Affiliate code added successfully."
+    affiliate_code_updated_successfully: "Affiliate code updated successfully."
+    affiliate_code_deleted_successfully: "Affiliate code deleted successfully."
+    event_copied_successfully: "Event copied successfully."
+    event_cancelled_successfully: "Event cancelled successfully."
+    event_submitted_publishing_wait_admin_approval: "Event submitted for Publishing. Wait for administrator approval."
+    event_published_successfully: "Event published successfully."
+    event_deleted_successfully: "Event deleted successfully."
+    que_added_order_error: "Question is already exits or any problem occurres in question"
+    que_added_order_update: "Question is updated successfully..  "
+    ### manage account
+  # manage account
+  account_sidebar:
+    account: "Account"
+    contact_info: "Contact Info"
+    change_pwd: "Change Password"
+    email_preferences: "Email Preferences"
+    payment_account: "Payment Accounts"
+    multi_user_access: "Multi-User Access"
+    unused_org: "Unused Organizers"
+    referral_program: "Referral Program"
+    affiliate_program: "Affiliate Program"
+    my_earnings: "My Earnings"
+    account_cancelled_orders: "Cancelled Orders"
+    close_account: "Close Account"
+    preferences: "Preferences"
+  #account top 
+  account_top:
+    account_since: "account since" 
+   
+   # add user form  
+  add_user_form:
+    email_address_valid: "E-mail address is valid!"
+    edit_permissions_for: "Edit Permissions for"
+    add_new_email_address_to_this_account: "Add New Email Address To This Account"
+    give_user_access_your_account_add_user_email: "To give a user access to your account, add a user's email address. They will be sent a link that lets them setup a password for their account."
+    add_user_form_user: "User"
+    grant_this_user_access_to: "Grant this user access to"
+    selected_events_only: "Selected events only"
+    select_all_events: "Select All Events"
+    deselect_all_events: "Deselect All Events"
+    actions_this_user_perform: "Actions this user can perform"
+    all_actions: "All actions"
+    selected_actions_only: "Selected actions only"
+    create_new_events: "Create new events"
+    edit_event_details_including_payment_options: "Edit event details not including the payment options "
+    edit_ticket_types: "Edit ticket types"
+    customize_registration_page: "Customize the registration page"
+    edit_payment_options_eg: "Edit payment options (e.g. PayPal , Authorize.net)"
+    view_order_attendee_repots: "View order and attendee reports (read-only)"
+    manage_orders_and_attendees: "Manage orders and attendees"
+    manage_discount_codes: "Manage discount codes"
+    manage_affiliate_links: "Manage affiliate links"
+    send_invites_manage_contacts: "Send invites, manage contacts"
+    email_attendees: "email attendees"
+    view_fees_and_invoices: "View fees and invoices"
+    check_in_attendees: "Check in Attendees"
+    at_the_door: "At the Door"
+    access_and_edit_org_profile: "Access and edit Organizer Profile"
+    auto_assign_num_to_attendees: "Auto-Assign Assign Numbers to attendees"
+    this_user_receive_copy_of: "This user should receive a copy of"
+    all_emails: "All emails"
+    selected_emails_only: "Selected emails only"
+    order_confirmations: "Order confirmations"
+    monthly_invoices: "Monthly invoices"
+    contact_the_organizer: "Contact the Organizer"
+    no_emails: "No emails"
+    
+    # manage account affiliates
+  manage_account_affiliates:
+    refferal_link: "Referral Link"
+    site_visits: "SITE VISITS"
+    tickets_sold: "TICKETS SOLD"
+    capital_sales: "SALES"
+    your_share: "YOUR SHARE"
+    you_have_not_join_affiliates_till: "You have not joined any affiliates till now."
+    join_now: "Join Now"
+    affiliate_program: "Affiliate Program"
+    faq_s: "FAQ's"
+    
+    #apikey
+  manage_account_apikey: 
+    your_api_user_key: "Your API User Key"
+    what_is_api_user_key: "What is an API User Key?"
+    user_key_unique_assigned: "The user key is a unique string assigned by" 
+    which_identifies_user_API_call: "which identifies the user making an API call."
+    only_this: "This"
+    replaces: "replaces"
+    basic_user_pwd_authentication: "basic username/password authentication"
+    a_valid_user_key_recommended_user_authentication: "A valid user key is the recommended method for user authentication with the"
+    API: "API."
+    how_different_application_key: "How is this different than an Application Key?"
+    the_application_key_string_assigned_by: "The application key is a string assigned by"
+    which_identifies_application_making_method_call: "which identifies the application making the method call."
+    you_might_have_many_keys_only_have_one_user_key: "You might have many application keys, but you will only have one user key."
+    more_details_on_the: "More details on the"
+    only_api: "API"
+    request_application_key: "Request an application key"
+
+    #charges
+  manage_account_charges:
+    charges: "Charges"
+    credits: "Credits"
+    you_have_no_charges_or_credits_your_account: "You have no charges or credits to your account."
+    
+    #close_account
+  manage_account_close_account:
+    please_provide_reson_you_are_leaving: "Please provide reason why you are leaving."    
+    plase_enter_close_text_box: 'Please enter "CLOSE" in the text box.'
+    plase_enter_current_pwd: "Please enter your current password."
+    close: "Close"
+    thank_you_for_using: "Thank you for using"
+    event_if_there_anything_keep_please_let_know: "Events. If there is anything we can do to keep you with us, please let us know."
+    please_take_moment_let_know_you_are_leaving: "Please take a moment to let us know why you are leaving"
+    i_do_recall_signing_up_for: "I do not recall signing up for"
+    the_product_too_difficult: "The product is too difficult to use"
+    i_chose_different_solution: "I chose a different solution"
+    the_pricing_too_high: "The pricing is too high"
+    the_product_laks_necessary_features: "The product lacks the necessary features"
+    the_pricing_confusing: "The pricing is confusing"
+    i_do_not_host_event: "I do not host events"
+    other_please_explain: "Other (Please explain)"
+    please_enter_close_your_pwd_below_confirm_that_wish_close_account: 'Please enter "CLOSE" and your password below to confirm that you wish to close your account'
+    type_close: "Type CLOSE"
+    enter_your_pwd: "Enter your password"
+    
+  #close page
+  manage_account_close_page:
+    your_account_closed_now_thanks: "Your account closed now. Thanks for being with us."
+  
+    #credit card
+  manage_account_credit_card:
+    saved_credit_cards: "Saved Credit Cards"
+    you_have_no_credit_cards_saved: "You have no credit cards saved."
+
+    #emails 
+  manage_account_emails:
+    attendings: "Attending"
+    news_and_update_event_created_event_organizers: "News and updates about events created by event organizers"
+    buyer_info: "Buyer Information"
+    updates_about_new: "Updates about new"
+    features_and_announcements: "features and announcements"
+    a_digest_of_personalized_event_recommendations: "A digest of personalized event recommendations"
+    picks: "Picks"
+    unsubscribe_from_all: "Unsubscribe from all"
+    newsletters_and_updates_for_attendees: "newsletters and updates for attendees"
+    notifications: "Notifications"
+    when_friends_buy_tickets_or_register_events_near_me: "When friends buy tickets or register for events near me"
+    organizing: "Organizing"
+    helpful_update_and_tips_org_events: "Helpful updates and tips for organizing events on"
+    account_clone: "clone"
+    important_reminders_for_my_next_event: "Important reminders for my next event"
+    order_confirmation_from_my_attendees: "Order confirmations from my attendees"
+    save_preferences: "Save Preferences"
+    
+    # invoices
+  manage_account_invoices:
+    invoices: "Invoices"
+    you_no_invoices_generated: "You have no invoices generated"
+
+  #multi users
+  manage_account_multi_user:
+    are_you_sure_want_to_delete_this_user: "Are you sure you want to delete this user?"
+    email_address_access_this_account: "Email Addresses With Access To This Account"
+    administrator: "Administrator"
+    add_email: "Add Email"
+
+  # manage account password
+  manage_account_password:
+    old_pwd: "Old Password"
+
+  #payaccounts
+  payaccounts:
+    this_update_paypal_address_all_events_currently: "This will update the PayPal email address for all your events currenty using"
+    as_the_paypal_email_ok_to_confirm: 'as the PayPal email address. Click "Ok" to confirm.'
+    paypal_email_address_used_your_events: "PayPal email address used for your events"
+    used_in: "Used in"
+    small_events: "events"
+    show: "Show"
+    paypal_account_used_for: "PayPal account used for"
+    referral payouts: "referral payouts"
+
+  #referral program
+  manage_account_referral_program:
+    enter_valid_alpha_numeric_referral_code: "Enter a valid alpha-numeric referral code."
+    your_referral_link_created_successfully: "Your referral link has been created successfully."
+    type_valid_alpha_numeric_referral_code: "Type a valid alpha-numeric referral code."
+    create_unique_link: "Create a unique link"
+    promote_your_link: "Promote your link"
+    examples: "Examples"
+    post_on_your_website: "Post on your website"
+    email_to_prospective_event_holders: "Email to prospective event holders"
+    account_signups: "ACCOUNT SIGNUPS"
+    paypal: "PayPal"
+    small_account: "Account"
+    pleace_specify_the_paypal_account_which_like_referral_bonuses_if_you_have_account: "Please specify the PayPal account to which you would like your referral bonuses deposited each month. If you do not have a PayPal account, you can"
+    create_one_now: "create one now"
+    paypal_email_address: "PayPal email address"
+
+  #requestapi
+  requestapi:
+    application_keys: "Application Keys"
+    my_api_keys: "My API Keys"
+    no_keys_currently_associated_with_account: "No keys are currently associated with this account."
+    request_a_new_key: "Request a new key"
+    contact_info: "Contact information"
+    title_role: "Title/Role"
+    company_name: "Company Name"
+    application_details: "Application Details"
+    application_url: "Application URL"
+    auth_redirect_url: "OAuth Redirect URL"
+    application_name: "nombre de la aplicación"
+    requestapi_description: "descripción"
+    is_appli_commercial: "¿Es este comercial de solicitud?"
+    add_this_our_public_list_api_application: "Agregue esto a nuestra lista pública de la API?"
+    no: "No"
+    yes: "sí"
+    i_have_read_the: "He leído la"
+    terms_of_use: "Términos de uso"
+    and_agree_their_terms: "y estoy de acuerdo con sus términos."
+    developer_resources: "Recursos para desarrolladores"
+    site_developer: "Site Developer"
+    api_getting_started_guide: "API Guía de inicio"
+    api_methods: "Métodos API"
+    api_clients: "clientes API"
+    authentication: "autenticación"
+    developer_terms_of_use: "Desarrollador condiciones de uso"
+    branding_guidelines: "Directrices sobre marcas"
+    announcements: "Noticias"
+    api_discussion: "API Discusión"
+    open_source: "Open Source"
+    application_showcase: "Showcase Aplicación"
+
+  #unuse org
+  unuse_org:
+    want_to_delete_org: "Are you sure you want to delete this organizer?"
+    unused: "Unused"
+    organizers: "Organizers"
+    followings_org_created_not_use_any_events_if_planning_to_use_them: "The following organizers were created but are not in use in any of your events. If you are not planning to use them,"
+    you_may_want_delete_them_your_account: "you may want to delete them from your account."
+    no_unused_org_available: "No unused organizers available"
+    
+    # manage account index
+  manage_account_index:
+    pwd_is_required: "Password is required"
+    pwd_is_valid: "Password is valid."
+    pwd_should_8_25_char_on_digit_one_lowercase_one_upercase_one_special: "Password should be 8-25 characters, containing at least one digit, one lower case, one upper case, one special character."
+    your_account: "Your account"
+    small_address: "email address"
+    new_email_address: "New Email Address"
+    your_current_pwd: "Your Current Password"
+
+    #application controller
+  application_controller:
+    can_not_access_pages_from_domain: "Cannot access these pages from that domain."
+    please_login_access_page: "Please login to access this page."
+    set_your_login_details_first: "Set your login details first."
+    your_account_deactivated_by_admin: "Your account is deactivated by administrator."
+    multiple_tickets: "Multiple Tickets"
+    
+    #auth controller
+  auth_controller:
+    somethings_wrong_connecting_process_try_again: "Something wrong in connecting Process. Try again or Login/Signup through site."
+
+    #manage account controller
+  manage_account_controller:
+    verification_email_sent_new_email_address: "Verification email sent to your new email address. Verify your account to use your new email id for login."
+    your_email_id_has_been_saved: "Your email id has been saved."
+    your_pwd_doesnot_match_records_email_changed: "Your password doesn't match our records. Your email hasn't been changed."
+    email_change_request_does_not_exists_try_again: "Email change request does not exist. Please, try again."
+    your_details_saved_successfully: "Your details has been saved successfully."
+    your_pwd_updated_successfully: "Your password updated successfully."
+    old_pwd_entered_wrong_pwd_not_changed: "The old password you entered is wrong. Your password isn't changed."
+    your_email_preferences_update_successfully: "Your email preferences updated successfully."
+    your_paypal_email_update_successfully: "Your PayPal email address updated successfully."
+    new_multi_user_account_has_been_created_login_instructions_sent_address_provided: "New multi-user account has been created. An email with login instructions has been sent to the email address provided."
+    your_user_permission_have_saved: "Your user permissions have been saved."
+    org_account_deleted_successfully: "Organizer account deleted successfully."
+    user_account_updated_successfully: "User account updated successfully."
+    your_api_generated_successfully: "Your API Key generated successfully."
+    invalid_pwd_try_again: "Invalid password. try again."
+    user_account_deleted_successfully: "User account deleted successfully."
+    approved: "Approved"
+
+    #validation of js 
+  validation_js:
+    event_title_is_required: "Event title field is required."
+    vanue_name_field_is_required: "Venue name field is required."
+    street_address_field_is_required: "Street address field is required."
+    event_start_date_is_required: "Event start date is required."
+    event_end_date_is_required: "Event end date is required."
+    end_date_minimum_three_hours_greater_start_date: "Event end date should be minimum 3 hours greater than event start date."
+    end_date_greater_start_date: "Event end date should be greater than event start date."
+    evevt_logo_is_required: "Event logo is required."
+    event_details_is_required: "Event details is required."
+    org_host_is_required: "Organization/Host is required."
+    ticket_name_field_is_required_all_tickets: "Ticket name field is required for all tickets."
+    ticket_qty_field_is_required_all_tickets: "Ticket quantity Field is required for all tickets."
+    ticekt_price_field_is_required_all_paid_tickets: "Ticket price Field is required for all paid tickets."
+    ticket_start_sale_date_not_greater_end_sale_date_all_ticekts: "Ticket start sale date shloud not be greater than end sale date for all tickets."
+    ticket_end_sale_not_greater_event_end_date_all_tickets: "Ticket end sale date shloud not be greater than event end date for all tickets."
+    company_name_field_is_required: "Company name field is required."    
+    phone_number_field_is_required: "Phone number field is required."
+    application_url_field_is_required: "Application URL field is required."
+    type_valid_application_url: "Type a valid application URL."
+    type_vlid_oauth_redirect_url: "Type a valid OAuth Redirect URL."
+    application_name_field_is_required: "Application name field is required."
+    description_field_is_required: "Description field is required."
+    accept_terms_conditions: "Accept terms & conditions."
+    org_name_field_is_required: "Organizer name field is required."
+    org_logo_is_required: "Organizer logo is required."
+    about_org_field_is_required: "About the organizer field is required."
+    website_field_is_required: "Website field is required."
+    type_valid_website_url: "Type a valid website URL."
+    minimum_one_category_is_required: "Minimum one category is required."
+    minimum_one_city_is_required: "Minimum one city is required."
+    
+    type_only_alpha_numeric_char: "Type only alpha-numeric characters and. "
+    type_only_alpha_numeric_char_and: "Type only alpha-numeric characters and '_'."
+    pwd_does_not_match: "Passwords doesn't match!"
+    confirm_pwd_match: "Confirm password is match."
+    value_cant_be_blank: "Please selact date."
+    
+  custom_validation:
+    field_req: "field is required."
+    enter_valid_zipcode: "Enter valid zipcode."
+    valid_zip: "Valid zipcode."
+    enter_valid_ten_digit: "Enter valid 10 digit number."
+    valid_number: "Valid number."
+    enter_valid_less_than_15_digit: "Enter valid and less than 15 digit number."
+  
+  event_controllernot_access_page: "You don't have permission to access this page." 
+  
+  button_widget:
+    buy_tickets: "Buy Tickets"
+    on1: "on"
+    reg_now: "Register Now"
+    click_register: "Click and Register"
+    other: "Other"
+    generate_code: "Click 'Generate' to generate code for your Halfevent button."  
+        
+  invoice_pdf:
+    
+    invoice_help: "Halfevent Help Center"
+    invoice: "Invoice"
+    invoice_event: "Event:"
+    invoice_date: "Invoice Date:"
+    invoice_to: "Invoice To:"
+    invoice_number: "Invoice Number:"
+    please_quote_invoice_number_for_payment_and_correspondence: "please quote invoice number for payment and correspondence."
+    invoice_from: "Invoice From:"
+    ticketing_by: "Ticketing by"
+    thank_you_for_your_order: "Thank You for your order."
+    ticket_title: "Ticket Title"
+    price: "Price"
+    quantity: "Quantity"
+    fee: "Fee"
+    total: "Total"
+    time_of_supply: "Order Date :"
+    total_net: "Total (net):"
+    invoice_amount: "Invoice Amount:"
+    event_desc: "Halfevent, Inc. on behalf of the organizer, charged $6.95 for "
+    event_desc1: "to your credit/debit card. The invoice amount will appear on your credit/debit card as"
+    event_desc2: "in the next few days."
+    thank_you: "Thank You"
+    halfevent_help_center: "Halfevent Help Center"
+    description: "Halfevent is not the seller of goods or services that this invoice is related to and acts only as a limited commercial agent on behalf of HALFEVENT HELP CENTER. Your payment of the amounts set forth on this invoice that are processed by Halfevent pays The Debt you awe to HALFEVENT HELP CENTER for the amounts concerned.HALFEVENT HELP CENTER is obliged to provide the goods or services purchased whether or not they have yet recevied the funds from Halfevent. However, in carrying out its duties as limited commercial agent of HALFEVENT HELP CENTER, Halfevent assumes no liability for acts or omissions or otherwise in respect of HALFEVENT HELP CENTER."
+    

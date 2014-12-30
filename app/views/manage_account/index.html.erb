@@ -1,0 +1,554 @@
+<%
+    @country = Country.find_all_country()
+	
+ %>
+<script src="<%= APP_CONFIG['development']['js_url'] %>js/custom_validation.js" type="text/javascript"></script>  
+<script>
+$(document).ready(function(){
+	
+	$('.loginanchor').click(function(){
+		$('.tabs').show('slow');
+	});
+	
+	
+	
+});
+$('#closedd').click(function(){
+		document.getElementById('tabs').style.display="none";
+	});
+	
+
+function check_validations(){
+		var email_reg_exp= /^[a-zA-Z0-9]+[a-zA-Z0-9_.-]+[a-zA-Z0-9_-]+@[a-zA-Z0-9]+[a-zA-Z0-9.-]+[a-zA-Z0-9]+.[a-z]{2,4}$/;
+		var useremailInfo = $('#useremailInfo');
+		var passwordInfo = $('#userPasswordInfo');	
+		$('#login_err').hide();
+			
+			if(validateEmail() && validatePassword()){
+				return true;
+			}else{
+				return false;
+			}	
+			//validation functions
+			function validateEmail(){
+				//testing regular expression
+				var a = $("#new_email_address").val();
+				var filter = email_reg_exp;
+				//if it's valid email
+				//alert(a);
+				if(filter.test(a)){
+						
+					useremailInfo.text('<%= I18n.t 'add_user_form.email_address_valid' %>');
+					useremailInfo.removeClass("error1");
+					useremailInfo.addClass("success");
+					return true;
+				}
+				//if it's NOT valid
+				else{
+					
+					useremailInfo.text('<%= I18n.t 'list_script.please_valid_email' %>');
+					useremailInfo.removeClass("success");
+					useremailInfo.addClass("error1");
+					
+					return false;
+				}
+			}
+			
+			function validatePassword(){
+				
+				var password = $("#password");	
+		
+				var filter = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z](?=.*\W).{8,25}$/;
+		
+				if(password.val()==''){
+					passwordInfo.removeClass('<%= I18n.t 'contact_controller.success' %>');
+					passwordInfo.text('<%= I18n.t 'manage_account_index.pwd_is_required' %>');
+					passwordInfo.addClass("error1");
+					return false;
+				}
+				else if(filter.test(password.val())){
+					passwordInfo.text('<%= I18n.t 'manage_account_index.pwd_is_valid' %>');
+					passwordInfo.removeClass("error1");
+					passwordInfo.addClass('<%= I18n.t 'contact_controller.success' %>');
+					
+					return true;
+				}
+				//if it's NOT valid
+				else{
+					passwordInfo.removeClass('<%= I18n.t 'contact_controller.success' %>');
+					passwordInfo.text('<%= I18n.t 'manage_account_index.pwd_should_8_25_char_on_digit_one_lowercase_one_upercase_one_special' %>');
+					passwordInfo.addClass("error1");
+					return false;
+				}
+				
+			}
+			
+			
+	}
+	
+	function check_info_validations(){
+		$('#firstnamelInfo').text("");
+		$('#lastnameInfo').text("");
+		
+		if($('#first_name').val()==''){
+			$('#first_name').focus();
+			$('#firstnamelInfo').text('<%= I18n.t 'tickets_order.fname_field_required' %>');
+			$('#firstnamelInfo').addClass("error1");
+			return false;
+		}
+		
+		if($('#last_name').val()==''){
+			$('#last_name').focus();
+			$('#lastnameInfo').text('<%= I18n.t 'tickets_order.lname_field_required' %>');
+			$('#lastnameInfo').addClass("error1");
+			return false;
+		}
+		
+		return true;
+	}
+</script>        
+<script>
+  function seepopup()
+  {
+     $('#show').slideDown();
+	 $('#change_btn').hide();	
+  }
+ 
+ 
+ function cancel_email(){
+ 	$('#show').hide(); 
+ 	$('#change_btn').show(); 
+ 	$('#new_email_address').val(''); 
+ 	$('#password').val(''); 
+ 	$('.errors').hide();
+ 	$('#useremailInfo').text('');
+ 	$('#userPasswordInfo').text('');
+ }
+</script>
+<style>
+	.error1, .success{
+		margin-left: 30%; 
+	}
+</style>
+<section>
+	 <%= render(:partial => "account_top" , :object => :collection) %>    
+            
+           
+       
+	<div class="main marTB40">
+    	<div class="leftcol">
+        	          	
+<%= form_tag({:controller => 'manage_account', :action => 'save_email'}, :id => 'account_frm', :name => 'account_frm') do %> 
+
+ 
+                <% if flash[:notice] -%>
+			      <div class="errors">
+			      	<p><%= flash[:notice] %></p>
+			      </div>
+			
+			   <% end -%>
+			   
+			   
+	             <% if flash[:notice1] -%>
+			      <div class="notice">
+			      	<p><%= flash[:notice1] %></p>
+			      </div>
+			
+			   <% end -%>
+            
+ 
+  				<% if (@user.errors.full_messages != []) then -%>
+				     <ul class="errors">
+				      <% @user.errors.full_messages.each do |t| %>
+				  		<li><%= t %></li>
+					  <% end %>
+				    </ul>
+			    <% end -%>  
+        	
+        	<div class="mtitle">
+            	<h3><%= I18n.t 'manage_account_index.your_account' %> <span><%= I18n.t 'manage_account_index.small_address' %></span></h3>
+            </div>
+            <div class="shadow marT10 pad20 account_email">
+            	<div>
+                	<div class="acc_email font_size15"><%= @user[:email] %></div> 
+                    <div class="change_btn"><a href="javascript:" class="btn" onclick="seepopup()" id="change_btn"><%= I18n.t 'user_profile.profile_change'%></a></div>
+                    <div class="clear"></div>
+                </div>
+                
+                <div id="show" style="display: none;">
+                	<div class="form">
+	                	<label ><%= I18n.t 'manage_account_index.new_email_address' %></label>
+		                <%= text_field_tag :email, @user[:email], :class => 'textbox', :name => 'user[new_email]', :id => 'new_email_address' %>
+		            	<div id="useremailInfo" style="margin-left: 30%;"></div>
+		            	
+		                <label><%= I18n.t 'manage_account_index.your_current_pwd' %></label>
+		                <input type="password" name="user[password]" id="password" value="" class="textbox" />
+		                <div id="userPasswordInfo" style="margin-left: 30%;"></div>
+		                
+					</div><div class="clear"></div>
+					<div class="marT20" align="right">
+		            	<%= submit_tag (I18n.t 'wallet_withdraw.confirm'), :class => 'submit_btn', :id => 'resetbtn', :onclick => 'return check_validations();' %>
+		            	<a href="javascript://" class="btn black_bg" onclick="cancel_email();" style="padding: 16px 20px;"><%= I18n.t 'button.cancel'%></a>
+		            </div>
+                    
+                </div>
+                
+            </div>
+  <% end %>          
+  <%= form_tag({:controller => 'manage_account', :action => 'save_address'}, :id => 'account_frm', :name => 'account_frm') do %>          
+            <div class="mtitle marT40">
+            	<h3><%= I18n.t 'event.view.contact' %> <span><%= I18n.t 'event.view.information' %></span></h3>
+            </div>
+            <div class="shadow marT10 pad20">
+            	<div class="form">
+                	<label><%= I18n.t 'user.prefix'%></label>
+                    <%= text_field_tag :prefix, @user[:prefix], :class => 'textbox W150', :name => 'user[prefix]', :id => 'prefix' %>
+                    <div class="clear"></div>
+                    
+                	<label><%= I18n.t 'user.fname'%></label>
+                    <%= text_field_tag :first_name, @user[:first_name], :class => 'textbox', :name => 'user[first_name]', :id => 'first_name' %>
+                    <div id="firstnamelInfo" ></div>
+                    
+                	<label><%= I18n.t 'user.lname'%></label>
+                    <%= text_field_tag :last_name, @user[:last_name], :class => 'textbox', :name => 'user[last_name]', :id => 'last_name' %>
+                    <div id="lastnameInfo" ></div>
+                    
+                	<label><%= I18n.t 'user.suffix'%></label>
+                    <%= text_field_tag :suffix, @user[:suffix], :class => 'textbox W150', :name => 'user[suffix]', :id => 'suffix' %>
+                	<div class="clear"></div>
+                	
+                	<label><%= I18n.t 'user.home_phone'%></label>
+                    <%= text_field_tag :home_phone, @user[:home_phone], :class => 'textbox', :name => 'user[home_phone]', :id => 'home_phone' , :onchange => 'return validatePhoneno(this,"homephoneIfo");' %>
+                	<div id="homephoneIfo"></div>
+                	
+                	<label><%= I18n.t 'user.cell_phone'%></label>
+                    <%= text_field_tag :cell_phone, @user[:cell_phone], :class => 'textbox', :name => 'user[cell_phone]', :id => 'cell_phone' , :onchange => 'return validateMobileno(this,"cellphoneIfo");'%>
+                    <div id="cellphoneIfo"></div>
+                    
+                     <label><%= I18n.t 'user.gender'%></label>
+                            <%= select_tag :gender, options_for_select(User::GENDER,@user_address[:gender]), :name => 'user_address[gender]', :id => 'user_gender', :class => 'selectbox W50P_T' %>
+                            
+                    <label><%= I18n.t 'user.bdate'%></label>
+                    <% sy = Time.now.year - 100
+					   ey = Time.now.year %>
+					
+					 <%= text_field_tag :birth_date, @user_address[:birth_date], :class => 'date_only textbox TW25p ', :name => 'user_address[birth_date]', :id => 'birth_date' %>
+					         
+					     <script>
+							$(function() {
+								$('#birth_date').datepicker({
+									ampm: false,dateFormat:'yy-mm-dd',
+									changeMonth: true,changeYear: true,yearRange: '<%= sy %>:<%= ey %>', dateFormat: "yy-mm-dd",
+									maxDate: 0
+								});
+								$('#ui-datepicker-div').hide();
+							});
+						</script> 
+						
+                </div>
+                <div class="clear"></div>
+            </div>
+            
+             <script type="text/javascript">
+				function set_state(val, type){
+					
+					
+				        var state_path = '/manage_account/state_selection/';
+				        var country_id = val;
+				        $.ajax({
+				            type: "GET",
+				            data: {country_id: country_id, add_type: type}, 
+				            url: state_path+country_id,
+				            success: function(data) {
+				             //  alert(data);
+				                $("#"+type+"_state_list").html(data);
+				            }
+				        });
+				   
+				}
+				
+				function apply_address(ele,type){
+					if(ele.checked==true){
+						$('#'+type+'_add1').val($('#home_add1').val());
+						$('#'+type+'_add2').val($('#home_add2').val());
+						$('#user_address_'+type+'_country').val($('#user_address_home_country').val());
+						set_state($('#user_address_home_country').val(), type);
+						
+						setTimeout( "$('#user_address_"+type+"_state').val($('#user_address_home_state').val()) ",2000 );
+						
+						$('#'+type+'_city').val($('#home_city').val());
+						$('#'+type+'_zip').val($('#home_zip').val());
+					}	
+				}
+			</script>           
+
+            <div class="mtitle marT40">
+            	<h3><%= I18n.t 'create_event.address'%></h3>
+            </div>
+            <div class="shadow marT10">
+            	<div class="responsive-tabs contact-info-tab">
+                    <h2><%= I18n.t 'user.home_add'%></h2>
+                    <div>
+                    	<div class="form" id="home_address_div">
+		                	<label><%= I18n.t 'user.add'%></label>
+		                    <%= text_field_tag :home_add1, @user_address[:home_add1], :class => 'textbox', :name => 'user_address[home_add1]', :id => 'home_add1' %>
+		                    <div class="clear"></div>
+		                	
+		                	<label><%= I18n.t 'user.add2'%></label>
+		                    <%= text_field_tag :home_add2, @user_address[:home_add2], :class => 'textbox', :name => 'user_address[home_add2]', :id => 'home_add2' %>
+		                	
+		                	<label><%= I18n.t 'user.country'%></label>
+		                    <% if @country.count > 0 %>
+		                      		<select class="selectbox" name="user_address[home_country]" id="user_address_home_country" onchange="set_state(this.value, 'home')">
+										  <option value="">-- <%= I18n.t 'user.select_country'%> --</option>
+										  <% for ct in @country %>
+										    <option value="<%= ct[:country_name] %>" <% if(ct[:country_name] == @user_address[:home_country]) %> selected="selected" <% end %>><%= ct[:country_name] %></option>
+										  <% end %>
+									  </select>
+							  <% else %>
+		                      			<%= text_field_tag :home_country, @user_address[:home_country], :class => 'textbox', :name => 'user_address[home_country]', :id => 'home_country' %> 
+		                      <% end %>
+		                    
+		                    <%
+		                        if @user_address[:home_country] == 0 || @user_address[:home_country] == nil || @user_address[:home_country] == ''
+				
+									@state = State.find_all_state()
+							    else
+									
+									@state = State.find_state_by_country(@user_address[:home_country])
+							    end	
+								
+		                      %>
+		                	
+		                	<label class="fl marT25"><%= I18n.t 'user.state'%></label>
+		                	<div id="home_state_list" class="fl TW70p">
+		                      <% if @state.count > 0 %>
+		                      		<select class="selectbox" name="user_address[home_state]" id="user_address_home_state">
+										  <option value="">-- <%= I18n.t 'user.select_state'%> --</option>
+										  <% for st in @state %>
+										    <option value="<%= st[:state_name] %>" <% if(st[:state_name] == @user_address[:home_state]) %> selected="selected" <% end %>><%= st[:state_name] %></option>
+										  <% end %>
+									  </select>
+							  <% else %>
+		                      			<%= text_field_tag :home_state, @user_address[:home_state], :class => 'textbox', :name => 'user_address[home_state]', :id => 'home_state' %> 
+		                      <% end %>
+		                  </div>
+		                  <div class="clear"></div>
+		                      
+		                	<label><%= I18n.t 'user.city'%></label>
+		                	<%= text_field_tag :home_city, @user_address[:home_city], :class => 'textbox', :name => 'user_address[home_city]', :id => 'home_city' %>
+		                	
+		                	<label><%= I18n.t 'user.zip'%></label>
+		                    <%= text_field_tag :home_zip, @user_address[:home_zip], :class => 'textbox', :name => 'user_address[home_zip]', :id => 'home_zip', :onkeyup => 'return validateZipcode(this,"homezipInfo");' %>
+		                	<div id="homezipInfo"></div><div class="clear"></div><br />
+		                	
+		                	<label><%= I18n.t 'user.apply_to'%></label>
+		                    <input type="checkbox" name="apply_home" onclick="apply_address(this,'bill');" />&nbsp;&nbsp;<span><%= I18n.t 'user.bill_add'%></span>&nbsp;&nbsp;
+		                    <input type="checkbox" name="apply_home" onclick="apply_address(this,'ship');" />&nbsp;&nbsp;<span><%= I18n.t 'user.ship_add'%></span>&nbsp;&nbsp;
+		                    <input type="checkbox" name="apply_home" onclick="apply_address(this,'work');" />&nbsp;&nbsp;<span><%= I18n.t 'user.work_add'%></span>
+		                     <div class="clear"> </div>
+		                </div> 
+                    	<div class="clear"></div>                          
+                    </div>
+                            
+                    <h2><%= I18n.t 'user.bill_add'%></h2>
+                    <div>
+                    	<div class="form" id="bill_address_div">
+		                	<label><%= I18n.t 'user.add'%></label>
+		                    <%= text_field_tag :bill_add1, @user_address[:bill_add1], :class => 'textbox', :name => 'user_address[bill_add1]', :id => 'bill_add1' %>
+		                    <div class="clear"></div>
+		                	
+		                	<label><%= I18n.t 'user.add2'%></label>
+		                    <%= text_field_tag :bill_add2, @user_address[:bill_add2], :class => 'textbox', :name => 'user_address[bill_add2]', :id => 'bill_add2' %>
+		                	
+		                	<label><%= I18n.t 'user.country'%></label>
+		                    <% if @country.count > 0 %>
+		                      		<select class="selectbox" name="user_address[bill_country]" id="user_address_bill_country" onchange="set_state(this.value, 'bill')">
+										  <option value="">-- <%= I18n.t 'user.select_country'%> --</option>
+										  <% for ct in @country %>
+										    <option value="<%= ct[:country_name] %>" <% if(ct[:country_name] == @user_address[:bill_country]) %> selected="selected" <% end %>><%= ct[:country_name] %></option>
+										  <% end %>
+									  </select>
+							  <% else %>
+		                      			<%= text_field_tag :bill_country, @user_address[:bill_country], :class => 'textbox', :name => 'user_address[bill_country]', :id => 'bill_country' %> 
+		                      <% end %>
+		                      
+		                	<%
+		                        if @user_address[:bill_country] == 0 || @user_address[:bill_country] == nil || @user_address[:bill_country] == ''
+				
+									@state = State.find_all_state()
+							    else
+									
+									@state = State.find_state_by_country(@user_address[:bill_country])
+							    end	
+								
+		                      %>
+		                	<label class="fl marT25"><%= I18n.t 'user.state'%></label>
+		                    <div id="bill_state_list" class="fl TW70p">
+			                      <% if @state.count > 0 %>
+			                      		<select class="selectbox" name="user_address[bill_state]" id="user_address_bill_state">
+											  <option value="">-- <%= I18n.t 'user.select_state'%> --</option>
+											  <% for st in @state %>
+											    <option value="<%= st[:state_name] %>" <% if(st[:state_name] == @user_address[:bill_state]) %> selected="selected" <% end %>><%= st[:state_name] %></option>
+											  <% end %>
+										  </select>
+								  <% else %>
+			                      			<%= text_field_tag :bill_state, @user_address[:bill_state], :class => 'textbox', :name => 'user_address[bill_state]', :id => 'bill_state' %> 
+			                      <% end %>
+		                      </div>
+		                      <div class="clear"></div>
+		                	<label><%= I18n.t 'user.city'%></label>
+		                    <%= text_field_tag :bill_city, @user_address[:bill_city], :class => 'textbox', :name => 'user_address[bill_city]', :id => 'bill_city' %>
+		                    
+		                	<label><%= I18n.t 'user.zip'%></label>
+		                    <%= text_field_tag :bill_zip, @user_address[:bill_zip], :class => 'textbox', :name => 'user_address[bill_zip]', :id => 'bill_zip', :onkeyup => 'return validateZipcode(this,"billzipInfo");' %>
+		                	<div id="billzipInfo"></div>
+		                </div> 
+                    	<div class="clear"></div>   
+                    </div>         
+                    
+                    <h2><%= I18n.t 'user.ship_add'%></h2>
+                    <div>
+                    	<div class="form" id="ship_address_div">
+		                	<label><%= I18n.t 'user.add'%></label>
+		                    <%= text_field_tag :ship_add1, @user_address[:ship_add1], :class => 'textbox', :name => 'user_address[ship_add1]', :id => 'ship_add1' %>
+		                    <div class="clear"></div>
+		                	
+		                	<label><%= I18n.t 'user.add2'%></label>
+		                    <%= text_field_tag :ship_add2, @user_address[:ship_add2], :class => 'textbox', :name => 'user_address[ship_add2]', :id => 'ship_add2' %>
+		                	
+		                	<label><%= I18n.t 'user.country'%></label>
+		                    <% if @country.count > 0 %>
+		                      		<select class="selectbox" name="user_address[ship_country]" id="user_address_ship_country" onchange="set_state(this.value, 'ship')">
+										  <option value="">-- <%= I18n.t 'user.select_country'%> --</option>
+										  <% for ct in @country %>
+										    <option value="<%= ct[:country_name] %>" <% if(ct[:country_name] == @user_address[:ship_country]) %> selected="selected" <% end %>><%= ct[:country_name] %></option>
+										  <% end %>
+									  </select>
+							  <% else %>
+		                      			<%= text_field_tag :ship_country, @user_address[:ship_country], :class => 'textbox', :name => 'user_address[ship_country]', :id => 'ship_country' %> 
+		                      <% end %>
+		                	  <%
+		                        if @user_address[:ship_country] == 0 || @user_address[:ship_country] == nil || @user_address[:ship_country] == ''
+				
+									@state = State.find_all_state()
+							    else
+									
+									@state = State.find_state_by_country(@user_address[:ship_country])
+							    end	
+								
+		                      %>
+		                	<label class="fl marT25"><%= I18n.t 'user.state'%></label>
+		                    <div id="ship_state_list" class="fl TW70p">
+		                      <% if @state.count > 0 %>
+		                      		<select class="selectbox" name="user_address[ship_state]" id="user_address_ship_state">
+										  <option value="">-- <%= I18n.t 'user.select_state'%> --</option>
+										  <% for st in @state %>
+										    <option value="<%= st[:state_name] %>" <% if(st[:state_name] == @user_address[:ship_state]) %> selected="selected" <% end %>><%= st[:state_name] %></option>
+										  <% end %>
+									  </select>
+							  <% else %>
+		                      			<%= text_field_tag :ship_state, @user_address[:ship_state], :class => 'textbox', :name => 'user_address[ship_state]', :id => 'ship_state' %> 
+		                      <% end %>
+		                  </div>
+		                    <div class="clear"></div>  
+		                	<label><%= I18n.t 'user.city'%></label>
+		                    <%= text_field_tag :ship_city, @user_address[:ship_city], :class => 'textbox', :name => 'user_address[ship_city]', :id => 'ship_city' %>
+		                	
+		                	<label><%= I18n.t 'user.zip'%></label>
+		                    <%= text_field_tag :ship_zip, @user_address[:ship_zip], :class => 'textbox', :name => 'user_address[ship_zip]', :id => 'ship_zip', :onkeyup => 'return validateZipcode(this,"shipzipInfo");' %>
+		                    <div id="shipzipInfo"></div>
+		                </div>   
+                    	<div class="clear"></div> 
+                    </div>
+                           
+                	 <h2><%= I18n.t 'user.work_add'%></h2>
+                    <div>
+	                    	<div class="form" id="work_address_div">
+	                            <label><%= I18n.t 'user.job'%></label>
+	                            <%= text_field_tag :work_job_title, @user_address[:work_job_title], :class => 'textbox', :name => 'user_address[work_job_title]', :id => 'work_job_title' %>
+	                            
+	                            <label><%= I18n.t 'user.company'%></label>
+	                            <%= text_field_tag :work_company, @user_address[:work_company], :class => 'textbox', :name => 'user_address[work_company]', :id => 'work_company' %>
+	                            
+	                            <label><%= I18n.t 'user.add'%></label>
+	                            <%= text_field_tag :work_add1, @user_address[:work_add1], :class => 'textbox', :name => 'user_address[work_add1]', :id => 'work_add1' %>
+	                            
+	                            <label><%= I18n.t 'user.add2'%></label>
+	                            <%= text_field_tag :work_add2, @user_address[:work_add2], :class => 'textbox', :name => 'user_address[work_add2]', :id => 'work_add2' %>
+	                            
+	                            <label><%= I18n.t 'user.country'%></label>
+	                            <% if @country.count > 0 %>
+			                      		<select class="selectbox" name="user_address[work_country]" id="user_address_work_country" onchange="set_state(this.value, 'work')">
+											  <option value="">-- <%= I18n.t 'user.select_country'%> --</option>
+											  <% for ct in @country %>
+											    <option value="<%= ct[:country_name] %>" <% if(ct[:country_name] == @user_address[:work_country]) %> selected="selected" <% end %>><%= ct[:country_name] %></option>
+											  <% end %>
+										  </select>
+								  <% else %>
+			                      			<%= text_field_tag :work_country, @user_address[:work_country], :class => 'textbox', :name => 'user_address[work_country]', :id => 'work_country' %> 
+			                      <% end %>
+	                            <%
+			                        if @user_address[:work_country] == 0 || @user_address[:work_country] == nil || @user_address[:work_country] == ''
+					
+										@state = State.find_all_state()
+								    else
+										
+										@state = State.find_state_by_country(@user_address[:work_country])
+								    end	
+									
+			                      %>
+	                            <label class="fl marT25"><%= I18n.t 'user.state'%></label>
+	                              <div id="work_state_list" class="fl TW70p">
+				                      <% if @state.count > 0 %>
+				                      		<select class="selectbox" name="user_address[work_state]" id="user_address_work_state">
+												  <option value="">-- <%= I18n.t 'user.select_state'%> --</option>
+												  <% for st in @state %>
+												    <option value="<%= st[:state_name] %>" <% if(st[:state_name] == @user_address[:work_state]) %> selected="selected" <% end %>><%= st[:state_name] %></option>
+												  <% end %>
+											  </select>
+									  <% else %>
+				                      			<%= text_field_tag :work_state, @user_address[:work_state], :class => 'textbox', :name => 'user_address[work_state]', :id => 'work_state' %> 
+				                      <% end %>
+			                      </div>
+	                            <div class="clear"></div>
+	                            <label><%= I18n.t 'user.city'%></label>
+	                            <%= text_field_tag :work_city, @user_address[:work_city], :class => 'textbox', :name => 'user_address[work_city]', :id => 'work_city' %>
+	                            
+	                            <label><%= I18n.t 'user.zip'%></label>
+	                            <%= text_field_tag :work_zip, @user_address[:work_zip], :class => 'textbox', :name => 'user_address[work_zip]', :id => 'work_zip', :onkeyup => 'return validateZipcode(this,"workzipInfo");' %>
+	                            <div id="workzipInfo"></div>
+	                                                  
+	                            <label><%= I18n.t 'purchases_show.phone'%></label>
+	                            <%= text_field_tag :work_phone, @user_address[:work_phone], :class => 'textbox', :name => 'user_address[work_phone]', :id => 'work_phone' %>
+	                            
+	                            <label><%= I18n.t 'user.blog'%></label>
+	                            <%= text_field_tag :work_blog, @user_address[:work_blog], :class => 'textbox', :name => 'user_address[work_blog]', :id => 'work_blog' %>
+	                            
+	                            <label><%= I18n.t 'user.website'%></label>
+	                            <%= text_field_tag :work_website, @user_address[:work_website], :class => 'textbox', :name => 'user_address[work_website]', :id => 'work_website' %>
+	                        </div> 
+	                    	<div class="clear"></div>                          
+	                    </div>  
+                </div>
+            </div>
+            
+                     
+           
+            <div class="marT20" align="right">
+            	<input type="hidden" name="user_address[user_id]" id="user_id" value="<%= @user[:id] %>" /> 
+            	<input type="submit" id="submit" name="submit" value=<%= I18n.t 'button.save'%> class="submit_btn" onclick="return check_info_validations();" />
+            </div>
+        
+        </div>
+  <% end %>      
+        	 
+	<% @act_class = 'Contact Info' %>         	
+    <%= render(:partial => "account_sidebar" , :object => :collection) %>    
+            
+           
+       
+       
+        <div class="clear"></div>
+    </div>    
+</section>

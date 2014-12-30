@@ -1,0 +1,221 @@
+<% @act_class = 'Create Promotional Codes' %>         	
+<%= render(:partial => "common_banner" , :object => :collection) %>
+
+<style>
+@media (max-width: 768px) {
+	.all_promo_codes td:nth-of-type(1):before { content: "<%= I18n.t 'list_promotional_code.discount_code'%>";}	
+	.all_promo_codes td:nth-of-type(2):before { content: "<%= I18n.t 'add_promotional_code.disc_amt'%>"; }
+	.all_promo_codes td:nth-of-type(3):before { content: "<%= I18n.t 'add_promotional_code.starts'%>"; }
+	.all_promo_codes td:nth-of-type(4):before { content: "<%= I18n.t 'add_promotional_code.ends'%>"; }
+	.all_promo_codes td:nth-of-type(5):before { content: "<%= I18n.t 'event.view.available'%>"; }
+	.all_promo_codes td:nth-of-type(6):before { content: "<%= I18n.t 'list_affiliate_code.actions' %>"; }
+}
+</style>
+
+<section>
+	<div class="main">
+    	     
+    	<div class="left_columm">
+    	<div class="marT60">
+        	<div class="mtitle">
+            	<h1><%= I18n.t 'list_promotional_code.manage_promotional_codes'%></h1>             
+            </div> 
+         <div class="shadow pad7 marT25">   
+            	<a href="<%= APP_CONFIG['development']['site_url'] %>manage_event/edit_code/<%= @event[:id] %>" class="btn fr"><%= I18n.t 'list_affiliate_code.create_more_codes'%></a>
+            	<div class="clear"></div>
+<% if @disc_codes.count > 0 
+	i=1
+	 
+%><div class="shadow pad7 marT25">
+	<br /><h3><%= I18n.t 'list_promotional_code.discount_codes'%></h3><br />
+            <table class="all_promo_codes table">
+                <thead>
+                <tr align="left">
+                    <th><%= I18n.t 'list_promotional_code.discount_code'%></th>
+                    <th><%= I18n.t 'add_promotional_code.disc_amt' %> </th>
+                    <th><%= I18n.t 'add_promotional_code.starts'%></th>
+                    <th><%= I18n.t 'add_promotional_code.ends'%></th>
+                    <th><%= I18n.t 'event.view.available'%></th>
+                    <th><%= I18n.t 'list_affiliate_code.actions' %></th>
+                </tr>
+                </thead>
+                <tbody>
+                
+                <% for code in @disc_codes %>
+                    <tr>
+                    	<td><%= code[:code] %> </td>
+                        <td><% if code[:disc_amt]!=nil && code[:disc_amt]!='' %> <%= set_currency(code[:disc_amt]) %> <% else %>  <%= code[:disc_perc] %>% <% end %></td>
+                        <td>
+                        	<% if code[:start_now]==0 %>
+                        		<%= I18n.t 'list_promotional_code.started' %>
+                        	<% elsif code[:start_now]==1 %>
+                        		<%= code[:start_date_time].strftime(@site[:date_time_format]) %>
+                        	<% else %>
+                        		<% if code[:start_day]!=nil && code[:start_day]!='' %>
+                        			<%= code[:start_day] %> <%= I18n.t 'list_promotional_code.small_days' %>
+                        		<% end %>
+                        		
+                        		<% if code[:start_hour]!=nil && code[:start_hour]!='' %>
+                        			<%= code[:start_hour] %> <%= I18n.t 'invite_create.hours' %>
+                        		<% end %>
+                        		
+                        		<% if code[:start_minute]!=nil && code[:start_minute]!='' %>
+                        			<%= code[:start_minute] %> <%= I18n.t 'list_promotional_code.minutes' %>
+                        		<% end %>
+                        		<%= I18n.t 'list_promotional_code.before_event' %> 
+                        	<% end %>
+                        </td>
+                        <td>
+                        	<% if code[:end_now]==0 %>
+                        		<%= I18n.t 'add_promotional_code.when_sales_end' %>
+                        	<% elsif code[:end_now]==1 %>
+                        		<%= code[:end_date_time].strftime(@site[:date_time_format]) %>
+                        	<% else %>
+                        		<% if code[:end_day]!=nil && code[:end_day]!='' %>
+                        			<%= code[:end_day] %> <%= I18n.t 'list_promotional_code.small_days' %>
+                        		<% end %>
+                        		
+                        		<% if code[:end_hour]!=nil && code[:end_hour]!='' %>
+                        			<%= code[:end_hour] %> <%= I18n.t 'invite_create.hours' %>
+                        		<% end %>
+                        		
+                        		<% if code[:end_minute]!=nil && code[:end_minute]!='' %>
+                        			<%= code[:end_minute] %> <%= I18n.t 'list_promotional_code.minutes' %>
+                        		<% end %>
+                        		<%= I18n.t 'list_promotional_code.before_event' %> 
+                        	<% end %>
+                        </td>
+                        <td>
+	                        <% if code[:used_cnt] > code[:uses] 
+	                        	available = 0
+	                        %>
+		                        <%= available.to_i %>/<%= code[:uses] %>                        	
+	                        <% elsif code[:uses]==0 %>
+                        		<%= I18n.t 'list_promotional_code.no_limits' %>
+                        	<% elsif code[:uses]  %>
+                        		<%= code[:uses]-code[:used_cnt] %>/<%= code[:uses] %>
+                        	<% end %>
+                        </td>
+                        <td>
+                        	<a href="<%= APP_CONFIG['development']['site_url'] %>manage_event/edit_code/<%= code[:event_id] %>?code_id=<%= code[:id] %>"><%= I18n.t 'button.edit' %></a> | 
+                        	<a href="<%= APP_CONFIG['development']['site_url'] %>manage_event/delete_code/<%= code[:event_id] %>?code_id=<%= code[:id] %>" onclick="if(confirm('<%= I18n.t 'list_affiliate_code.are_sure_delete_code' %>')){ return true; }else{ return false; }"><%= I18n.t 'common_banner.delete' %></a>
+                        </td>
+                    </tr>
+                <% end %>
+	
+                </tbody>
+            </table>
+            
+            
+            <div class="clear"></div>
+ 
+
+		</div>
+	<% end %>	
+		
+		<% if @access_codes.count > 0 %>
+			<div class="shadow pad7 marT25">					
+				 	<br /><h3><%= I18n.t 'list_promotional_code.access_codes' %></h3><br />
+							 
+							
+							<table class="all_promo_codes table">
+					                <thead>
+					                	<tr>
+					                		<th><%= I18n.t 'list_promotional_code.access_code'%></th>					                    	
+					                       		<th><%= I18n.t 'add_promotional_code.starts'%></th>
+						                   	<th><%= I18n.t 'add_promotional_code.ends'%></th>
+						                   	<th><%= I18n.t 'event.view.available'%></th>
+						                   	<th><%= I18n.t 'list_affiliate_code.actions' %></th>
+					                    </tr>
+					                </thead>
+					                <tbody>	
+					                    
+					                    <% for acc in @access_codes %>
+						                    <tr>
+						                    	<td><%= acc[:code] %> </td>
+						                        
+						                        <td>
+						                        	<% if acc[:start_now]==0 %>
+						                        		<%= I18n.t 'list_promotional_code.started' %>
+						                        	<% elsif acc[:start_now]==1 %>
+						                        		<%= acc[:start_date_time].strftime(@site[:date_time_format]) %>
+						                        	<% else %>
+						                        		<% if acc[:start_day]!=nil && acc[:start_day]!='' %>
+						                        			<%= acc[:start_day] %> <%= I18n.t 'list_promotional_code.small_days' %>
+						                        		<% end %>
+						                        		
+						                        		<% if acc[:start_hour]!=nil && acc[:start_hour]!='' %>
+						                        			<%= acc[:start_hour] %> <%= I18n.t 'invite_create.hours' %>
+						                        		<% end %>
+						                        		
+						                        		<% if acc[:start_minute]!=nil && acc[:start_minute]!='' %>
+						                        			<%= acc[:start_minute] %> <%= I18n.t 'list_promotional_code.minutes' %> 
+						                        		<% end %>
+						                        		<%= I18n.t 'list_promotional_code.before_event' %>
+						                        	<% end %>
+						                        </td>
+						                        <td>
+						                        	<% if acc[:end_now]==0 %>
+						                        		<%= I18n.t 'add_promotional_code.when_sales_end' %>
+						                        	<% elsif acc[:end_now]==1 %>
+						                        		<%= acc[:end_date_time].strftime(@site[:date_time_format]) %>
+						                        	<% else %>
+						                        		<% if acc[:end_day]!=nil && acc[:end_day]!='' %>
+						                        			<%= acc[:end_day] %> <%= I18n.t 'list_promotional_code.small_days' %>
+						                        		<% end %>
+						                        		
+						                        		<% if acc[:end_hour]!=nil && acc[:end_hour]!='' %>
+						                        			<%= acc[:end_hour] %> <%= I18n.t 'invite_create.hours' %>
+						                        		<% end %>
+						                        		
+						                        		<% if acc[:end_minute]!=nil && acc[:end_minute]!='' %>
+						                        			<%= acc[:end_minute] %> <%= I18n.t 'list_promotional_code.minutes' %>
+						                        		<% end %>
+						                        		<%= I18n.t 'list_promotional_code.before_event' %> 
+						                        	<% end %>
+						                        </td>
+						                        <td>
+						                            
+							                        <% if acc[:used_cnt] > acc[:uses]
+							                        	available = 0
+							                        	 %>
+								                        <%= available.to_i %>/<%= acc[:uses] %> 
+						                        	<% elsif acc[:uses]==0 %>
+						                        		<%= I18n.t 'list_promotional_code.no_limits' %>
+						                        	<% else %>
+						                        		<%= acc[:uses]-acc[:used_cnt] %>/<%= acc[:uses] %>
+						                        	<% end %>
+						                        </td>
+						                        <td>
+						                        	<a href="<%= APP_CONFIG['development']['site_url'] %>manage_event/edit_code/<%= acc[:event_id] %>?code_id=<%= acc[:id] %>"><%= I18n.t 'button.edit' %></a> | 
+						                        	<a href="<%= APP_CONFIG['development']['site_url'] %>manage_event/delete_code/<%= acc[:event_id] %>?code_id=<%= acc[:id] %>" onclick="if(confirm(<%= I18n.t 'list_affiliate_code.are_sure_delete_code' %>)){ return true; }else{ return false; }"><%= I18n.t 'common_banner.delete'%></a>
+						                        </td>
+						                    </tr>
+					                    <% end %>
+					                    
+					               </tbody>   
+			          		</table> 
+			      <div class="clear"></div>
+		 
+		
+				</div>            
+			 <% end %>
+        
+      </div>  
+        </div>
+        
+           <div class="clear"></div>
+    	</div>  
+    	
+    	
+    	<%= render(:partial => "manage_event/manage_event_sidebar" , :object => :collection) %> 
+		<div class="clear"></div>
+        </div>
+           <div class="clear"></div>
+    
+</section>
+
+
+<% @edit_menu_class = 'Manage' %>
+<%= render(:partial => "manage_event/edit_menu" , :object => :collection) %> 
+<div class="clear "></div>

@@ -1,0 +1,18 @@
+
+<div id="closedd">
+	 <div id="page_we">
+	    <div id="content">
+     
+			 <% @act_class = 'Charges &amp; Credits' %>         	
+		     <%= render(:partial => "account_sidebar" , :object => :collection) %>    
+		   
+             <div class="content_right">
+         		<h2><%= I18n.t 'manage_account_charges.charges'%> &amp; <%= I18n.t 'manage_account_charges.credits'%></h2>
+     			<p style="text-align: center;"><%= I18n.t 'manage_account_charges.you_have_no_charges_or_credits_your_account'%></p>           
+ 			 </div>
+ 			 
+        </div>
+    </div>
+</div>
+	
+

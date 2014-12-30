@@ -1,0 +1,133 @@
+	
+<link href="<%= APP_CONFIG['development']['css_url'] %>colorbox.css" media="all" rel="stylesheet" type="text/css" />
+<script src="<%= APP_CONFIG['development']['js_url'] %>js/jquery.colorbox.js" type="text/javascript"></script>
+
+<script>
+	
+	function selectall(link_name)
+		{ 
+		
+			var text_val=document.getElementById(link_name);
+			
+			text_val.focus();
+			
+			text_val.select();
+			
+			if (!document.all) return; // IE only
+			
+			r= text_val.createTextRange();
+			
+			r.execCommand('Copy');
+			
+			
+		}
+	
+	
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+     	/**** pop up *****/
+	 		$(".rr").colorbox({width:"40%"});     
+		/************ pop up end ************/
+	});
+</script>
+<style>
+	@media (max-width: 768px) {
+		.affiliate_program td:nth-of-type(1):before { content: "<%= I18n.t 'manage_account_affiliates.site_visits'%>";  }
+		.affiliate_program td:nth-of-type(2):before { content: "<%= I18n.t 'manage_account_affiliates.tickets_sold'%>";  }
+		.affiliate_program td:nth-of-type(3):before { content: "<%= I18n.t 'list_affiliate_code.sales'%>"; }
+		.affiliate_program td:nth-of-type(4):before { content: "<%= I18n.t 'manage_account_affiliates.your_share'%>"; }
+		.affiliate_program td:nth-of-type(5):before { content: "<%= I18n.t 'wallet_index.capital_paid'%>"; }
+		.affiliate_program td:nth-of-type(6):before { content: "<%= I18n.t 'wallet_index.capital_due'%>"; }
+
+	}	
+</style>
+
+<section>
+	 <%= render(:partial => "account_top" , :object => :collection) %>    
+		   
+	<div class="main marTB40">
+		<div id="code_suc" style="display:none;"></div>
+				
+    	<div class="leftcol">
+    		
+    		<% if @affiliates.count > 0 %>
+					 		<% for a in @affiliates
+						 		
+						 		@aff = Affiliate.find(a[:affiliate_id])
+						 		
+						 		if Event.exists?(@aff[:event_id])
+		                 		
+		                 		@event = Event.find(@aff[:event_id])
+		                 		
+		                 		url_id = a[:id].to_s+'_'+a[:user_id].to_s+'_'+@aff[:id].to_s+'_'+@event[:id].to_s
+					 		 %>
+					 					          
+				            <div class="mtitle marT25">
+				            	<h3><%= @event[:event_title] %></h3>
+				                <% if @event[:organizer_id]!='' && @event[:organizer_id]!=nil %>
+				                	<a href="<%= APP_CONFIG['development']['site_url'] %>organizers/contact/<%= @event[:organizer_id] %>" class="rr"><%= I18n.t 'add_user_form.contact_the_organizer'%></a>
+				                <% end %>	
+				            </div>
+					 			
+					 		<div class="shadow marT10 pad20">
+				            	<div class="form" style="position:relative;">
+				                	<label><%= I18n.t 'manage_account_affiliates.refferal_link'%></label>
+				                    <input type="text" id="select_link<%= a[:id] %>" name="" class="textbox" value="<%= APP_CONFIG['development']['site_url'] %>affiliate/<%= Base64.encode64(url_id) %>" readonly="readonly"/>
+				                	 <a href="javascript:" onclick="selectall('select_link<%= a[:id] %>')" class="copy hint--bottom" data-hint="<%= I18n.t 'create_data_hint.data_hint_copy'%>"></a>
+				                </div>
+				                <div class="clear"></div>
+				                <div class="shadow affiliate_program pad3 marT25">
+				                    <table class="table">
+				                        <thead>
+				                        <tr>
+				                            <th><%= I18n.t 'manage_account_affiliates.site_visits'%></th>
+						 					<th><%= I18n.t 'manage_account_affiliates.tickets_sold'%></th>
+						 					<th><%= I18n.t 'manage_account_affiliates.capital_sales'%></th>
+						 					<th><%= I18n.t 'manage_account_affiliates.your_share'%></th>
+						 					<th><%= I18n.t 'wallet_index.capital_paid'%></th>
+						 					<th><%= I18n.t 'wallet_index.capital_due'%></th>
+				                        </tr>
+				                        </thead>
+				                        <tbody>                               
+				                        <tr>
+				                            <td class="textcenter"><%= a[:site_visits] %></td>
+						 					<td class="textcenter"><%= a[:ticket_sold] %></td>
+						 					<td><%= set_currency(a[:sales]) %></td>
+						 					<td><%= set_currency(a[:your_share]) %></td>
+						 					<td><%= set_currency(a[:paid]) %></td>
+						 					<td><%= set_currency(a[:your_share].to_f-a[:paid].to_f) %></td>
+				                        </tr>                             
+				                        </tbody>
+				                    </table>
+				                </div>
+				            </div>           
+				            
+					 		
+					 			 
+          						<% end %>	
+					 		<% end %>	
+					 <% else %>	
+						 <div class="shadow marT10 pad20">
+								<p><%= I18n.t 'manage_account_affiliates.you_have_not_join_affiliates_till'%> </p>
+								<a href="<%= APP_CONFIG['development']['site_url'] %>affiliates" class="btn"><%= I18n.t 'manage_account_affiliates.join_now'%></a>
+						</div>		
+					 <% end %>
+			
+            
+            
+            <div class="mtitle marT40">
+            	<h3><%= I18n.t 'manage_account_affiliates.affiliate_program'%> <span><%= I18n.t 'manage_account_affiliates.faq_s'%></span></h3>
+            </div>
+            <div class="shadow marT10 pad20">
+            	<% @aff_page = Page.find(31) %>
+            	<%= render :inline => @aff_page[:description] %>
+            </div> 
+        </div>
+         <% @act_class ='Affiliate Program' %>         	
+		 <%= render(:partial => "account_sidebar" , :object => :collection) %>    
+		   
+        <div class="clear"></div>
+    </div>    
+</section>

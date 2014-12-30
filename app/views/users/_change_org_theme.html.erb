@@ -1,0 +1,137 @@
+ <style>
+ 	.sp-preview{
+ 		height: 38px;
+ 		width: 105px;
+ 	}
+ 	.sp-dd{
+ 		height: 30px;
+ 		padding: 10px 0 0 0;
+ 	}
+ </style>
+  <div class="custom_color_profile">
+                        	<ul class="custom_colors">
+                   <li>
+                   		<div class="label"><%= I18n.t 'change_event.background'%></div>
+                        <input type='color' class="full" value="<%= @one_theme[:background] %>" onchange="set_preview_org(this,'org_background');"  /> 
+	                    <input type="hidden" name="org[background]" value="<%= @one_theme[:background] %>" id="org_background" />
+                   </li>
+                   
+                     <li>
+                   		<div class="label"><%= I18n.t 'change_event.header_text'%></div>
+                     	<input type='color' class="full" value="<%= @one_theme[:header_text] %>" onchange="set_preview_org(this,'org_header_text');"  />
+                     	<input type="hidden" name="org[header_text]" value="<%= @one_theme[:header_text] %>" id="org_header_text" />
+                   </li>
+                   
+                     <li>
+	                   <div class="label"><%= I18n.t 'change_event.box_background'%></div>
+	                   <input type='color' class="full" value="<%= @one_theme[:box_background] %>" onchange="set_preview_org(this,'org_box_background');"  />
+	                   <input type="hidden" name="org[box_background]" value="<%= @one_theme[:box_background] %>" id="org_box_background" />
+	                   
+                   </li>
+                   
+                     <li>
+	                   <div class="label"><%= I18n.t 'change_event.body_text'%></div>
+	                   <input type='color' class="full" value="<%= @one_theme[:body_text] %>" onchange="set_preview_org(this,'org_body_text');"  />
+	                   		<input type="hidden" name="org[body_text]" value="<%= @one_theme[:body_text] %>" id="org_body_text" />
+	                   
+                   </li>
+                   
+                     <li>
+                   <div class="label"><%= I18n.t 'change_event.box_border'%></div>
+                   <input type='color' class="full" value="<%= @one_theme[:box_border] %>" onchange="set_preview_org(this,'org_box_border');"  />
+                     	<input type="hidden" name="org[box_border]" value="<%= @one_theme[:box_border] %>" id="org_box_border" />
+                 
+                   </li>
+                   
+                     <li>
+                   <div class="label"><%= I18n.t 'change_event.color_link'%></div>
+                   <input type='color' class="full" value="<%= @one_theme[:links] %>" onchange="set_preview_org(this,'org_links');"  />
+                   		<input type="hidden" name="org[links]" value="<%= @one_theme[:links] %>;" id="org_links" />
+                 
+                   </li>
+                   
+                   <li>
+                   <div class="label"><%= I18n.t 'change_event.box_header'%></div>
+                   <input type='color' class="full" value="<%= @one_theme[:box_header] %>" onchange="set_preview_org(this,'org_box_header');"  />
+                     	<input type="hidden" name="org[box_header]" value="<%= @one_theme[:box_header] %>;" id="org_box_header" />
+                   
+                   </li>
+                   
+                  
+                 </ul>
+                        </div>
+                        <div class="preview_window_profile">
+                        	<div class="mtitle">
+                                <h3><%= I18n.t 'change_org_theme.preview_window'%></h3>
+                            </div>
+                            <div class="inner_preview" style="background-color:<%= @one_theme[:background] %>;">
+                            	<div class="box" style="background-color:<%= @one_theme[:box_background] %>; border:1px solid <%= @one_theme[:box_border] %>;" >
+                                	<h3 style="color:<%= @one_theme[:header_text] %>; background-color:<%= @one_theme[:box_header] %>; border-bottom:1px solid <%= @one_theme[:box_border] %>;"><%= I18n.t 'change_event.header_text'%></h3>
+                                    <p style="color:<%= @one_theme[:body_text] %>;">
+                                    	<%= I18n.t 'change_org_theme.this_preview_page_colors'%><br /><br />
+                                        <%= I18n.t 'change_org_theme.selecting_color_changed'%><br /><br />
+                                        <a href="javascript://" style="color:<%= @one_theme[:links] %>;"><%= I18n.t 'change_event.color_link'%> »</a>
+                                    
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clear"></div>
+                        
+                        
+<script type="text/javascript" src="<%= APP_CONFIG['development']['js_url'] %>new_picker/spectrum.js"></script>     
+	  
+	  <script type="text/javascript">
+	       function set_change_theme_apply(){
+		
+				 /*************** color picker *************/
+						                
+				$(".full").spectrum({
+				    className: "full-spectrum",
+				    maxPaletteSize: 10,
+				    preferredFormat: "hex",
+				    localStorageKey: "spectrum.demo",
+				    
+				});
+				
+			}
+				
+			function set_preview_org(ele,id){
+					var hex = ele.value;
+					
+					if(id=='org_background'){
+						$('#org_background').val(hex);
+						$('.inner_preview').css('backgroundColor', hex);
+					}
+					if(id=='org_header_text'){
+						$('#org_header_text').val(hex);
+						$('.box h3').css('color', hex);
+					}
+					if(id=='org_box_background'){
+						$('#org_box_background').val(hex);
+						$('.box').css('backgroundColor', hex);
+					}
+					if(id=='org_body_text'){
+						$('#org_body_text').val(hex);
+						$('.box p').css('color', hex);
+					}
+					if(id=='org_box_border'){
+						$('#org_box_border').val(hex);
+						$('.box').css('border', '1px solid ' + hex);
+						$('.box h3').css('borderBottom', '1px solid ' + hex);
+					}
+					if(id=='org_links'){
+						$('#org_links').val(hex);
+						$('.box a').css('color', hex);
+					}
+					if(id=='org_box_header'){
+						$('#org_box_header').val(hex);
+						$('.box h3').css('backgroundColor', hex);
+					}
+					
+			}
+	
+	</script>
+                         
+  
+  

@@ -1,0 +1,304 @@
+ <div class="header">
+            	<div class="ticket_article">
+                	 <div class="findevent_head_gradient"></div><div class="clear"></div>
+                     
+                     
+                     <div class="fl mtitle event_banner res-mtitle">
+                            <h1 class="fl"><%= I18n.t 'event.view.contact'%><span> <%= I18n.t 'event.view.us'%> </span></h1><br />
+                     </div>
+                     <div class="clear"></div>
+                    
+                </div>
+                <div><img src="<%= APP_CONFIG['development']['app_url'] %>shadow.png" /></div> 
+                <div class="clear"></div>
+                
+            </div>
+        </div> 
+    </div>  <div class="clear"></div>
+</header>
+<style>
+	.error1, .success{
+		margin-left:30%;
+	}
+</style> 
+               <script>
+function priority_message(msg){
+	
+	if(msg == 'attandance'){	
+		document.getElementById("priority_message_0").style.display = 'none';
+		document.getElementById("priority_message_1").style.display = 'none';
+		document.getElementById("priority_message_2").style.display = 'block';
+	}
+	else if(msg == 'other'){	
+		document.getElementById("priority_message_0").style.display = 'none';
+		document.getElementById("priority_message_1").style.display = 'block';
+		document.getElementById("priority_message_2").style.display = 'none';
+	} else if(msg == 'organizer'){
+		document.getElementById("priority_message_0").style.display = 'block';
+		document.getElementById("priority_message_1").style.display = 'none';
+		document.getElementById("priority_message_2").style.display = 'none';
+	}
+	 else if(msg == ''){
+		document.getElementById("priority_message_0").style.display = 'none';
+		document.getElementById("priority_message_1").style.display = 'none';
+		document.getElementById("priority_message_2").style.display = 'none';
+	}
+	
+}
+
+function contact_validation(){
+	
+	var iam = $('#i_am');
+	var my_question1 = $('#my_question1');
+	var my_question2 = $('#my_question2');
+	var my_question3 = $('#my_question3');
+	var first_name = $('#first_name');
+	var last_name = $('#last_name');
+	var email_address = $('#email_address');
+	var subject = $('#subject');
+	var description = $('#description');
+	
+	
+	var iamInfo = $('#iamInfo');
+	var myqueInfo = $('#myqueInfo');
+	var firstnameInfo = $('#firstnameInfo');
+	var lastnameInfo = $('#lastnameInfo');
+	var emailInfo = $('#emailInfo');
+	var subInfo = $('#subInfo');
+	var descInfo = $('#descInfo');
+	
+	
+	iamInfo.text("");
+	myqueInfo.text("");
+	firstnameInfo.text("");
+	lastnameInfo.text("");
+	emailInfo.text("");
+	subInfo.text("");
+	descInfo.text("");
+	
+	
+	if(iam.val()==''){
+		iam.focus();
+ 	 	iamInfo.text('This field is required.');
+		return false;
+ 	}
+ 	
+ 	if(my_question1.val()=='' && my_question2.val()=='' && my_question3.val()==''){
+		myqueInfo.text('This field is required.');
+		return false;
+ 	}
+ 	
+ 	if(first_name.val()==''){
+		first_name.focus();
+ 	 	firstnameInfo.text('<%= I18n.t "home_js.this_field_is_required"%>');
+		return false;
+ 	}
+ 	
+ 	if(last_name.val()==''){
+		last_name.focus();
+ 	 	lastnameInfo.text('<%= I18n.t "home_js.this_field_is_required"%>');
+		return false;
+ 	}
+ 	
+ 	if(email_address.val()==''){
+		email_address.focus();
+ 	 	emailInfo.text('<%= I18n.t "home_js.this_field_is_required"%>');
+		return false;
+ 	}
+ 	
+ 	var filter = /^[a-zA-Z0-9]+[a-zA-Z0-9_.-]+[a-zA-Z0-9_-]+@[a-zA-Z0-9]+[a-zA-Z0-9.-]+[a-zA-Z0-9]+.[a-z]{2,4}$/;
+ 	if(email_address.val()!=''){
+	 	if(!filter.test(email_address.val())){
+			email_address.focus();
+ 	 		emailInfo.text("<%= I18n.t "home_js.type_valid_email_please"%>");
+			return false;
+		}
+	}
+	
+ 	if(subject.val()==''){
+		subject.focus();
+ 	 	subInfo.text('<%= I18n.t "home_js.this_field_is_required"%>');
+		return false;
+ 	}
+ 	
+ 	if(description.val()==''){
+		description.focus();
+ 	 	descInfo.text('<%= I18n.t "home_js.this_field_is_required"%>');
+		return false;
+ 	}
+ 	 
+	return true;
+}
+</script>
+            
+<section>
+	
+	<div class="main">
+		 <% if flash[:notice1] -%>
+		      <div class="notice marT60">
+		      	<p><%= flash[:notice1] %></p>
+		      </div>
+		
+		   <% end -%>
+    	<div class="leftcol">
+        
+    	<div class="marT45">
+        	<div class="mtitle fl">
+            	<h1 class="fl"><span><%= I18n.t "home_contact_us.tell_us_more"%></span> <%= I18n.t "home_contact_us.so_we_can_better_assist_you"%></h1>
+            </div>
+            <div class="clear"></div>
+            <div class="shadow marT20 pad20">
+	         <%= form_tag({:controller => 'home', :action => 'contact_us'}, :id => 'contactusForm') do %>
+              
+            
+               	
+	            <div class="form">
+                        <label class="marT25"><%= I18n.t "home_js.i_am"%>  <span class="red">*</span></label>
+                        
+      					<select class="select_contact" name="con[i_am]"  id="i_am" onchange="getevent(this.value)">
+		                    <option value="" onclick="priority_message('');" selected="selected">- - <%= I18n.t "home_js.select_one"%> - -</option>
+		                    <option value="an Event Organizer" onclick="priority_message('organizer');"  ><%= I18n.t "home_js.an_event_org"%></option>
+		                    <option value="an Event Attendee" onclick="priority_message('attandance');"  ><%= I18n.t "home_js.an_event_attendee"%></option>
+		                    <option value="Other" onclick="priority_message('other');"  ><%= I18n.t "invite_add_attendee.other_small"%></option>
+		                 </select>
+                        <div id="iamInfo" class="error1"></div>
+                        
+                        <label class="marT25 fl"><%= I18n.t "home_js.category_of_my_question"%> <span class="red">*</span></label>
+                        <div  id="priority_message_0" style="display: block; " class="fl cate_q">
+			                  <select class="select_contact" name="con[my_question]" id="my_question1">
+			                    <option value="">- - <%= I18n.t "home_js.select_one"%> - -</option>
+			                    
+			                   
+			                    <option value="Login and password"><%= I18n.t "home_js.login_and_password"%></option>
+			                    <option value="Event page design"><%= I18n.t "home_js.event_page_design"%></option>
+			                    <option value="Fees, payments and invoices"><%= I18n.t "home_js.fees_payments_invoices"%></option>
+			                    <option value="Collecting and viewing attendee info"><%= I18n.t "home_js.collecting_viewing_attendee"%></option>
+			                    <option value="Promoting an event"><%= I18n.t "home_js.promoting_an_event"%></option>
+			                    <option value="Management tools"><%= I18n.t "home_js.management_tools"%></option>
+			                    <option value="Sales - I am organizing a large event"><%= I18n.t "home_js.sales_i_m_organizing"%></option>
+			                    <option value="Unsubscribe"><%= I18n.t "home_js.unsubscribe"%></option>
+			                    <option value="Other"><%= I18n.t "invite_add_attendee.other"%></option>
+			                    
+			                   
+			                  </select>
+		               </div>
+                  
+		               <div class="fl cate_q" id="priority_message_2" style="display:none;">
+			                   <select name="con[my_question]" id="my_question2" class="select_contact">
+			                    <option value="">- - <%= I18n.t "home_js.select_one"%>--</option>
+			                    
+			                   
+			                 
+			                   
+			                    <option value="Login and password"><%= I18n.t "home_js.login_and_password"%></option>
+			                    <option value="Event page design"><%= I18n.t "home_js.unable_to_register"%></option>
+			                    <option value="Fees, payments and invoices"><%= I18n.t "home_js.order_confirmation_tickets"%></option>
+			                    <option value="Collecting and viewing attendee info"><%= I18n.t "home_js.details_about_event"%></option>
+			                    <option value="Promoting an event"><%= I18n.t "home_js.refund"%></option>
+			                    <option value="Unsubscribe"><%= I18n.t "home_js.unsubscribe"%></option>
+			                    <option value="Other"><%= I18n.t "invite_add_attendee.other"%></option>
+			                  </select>
+		                  </div>
+		                  
+		                  <div id="priority_message_1" style="display:none;" class="fl cate_q">
+			                   <select name="con[my_question]" id="my_question3" class="select_contact">
+			                    <option  value="">- - <%= I18n.t "home_js.select_one"%> - -</option>
+			                    <option value="Other"><%= I18n.t "invite_add_attendee.other"%></option>
+			                  </select>
+		                  </div>
+		                  <div class="clear"></div>
+		                  <div id="myqueInfo" class="error1"></div>
+		                  
+		                  
+                        <label class="marT25"><%= I18n.t "user.fname"%> <span class="red">*</span></label>
+                        <input type="text" name="con[first_name]" id="first_name" value="<%= @user[:first_name] %>" class="textbox" />
+                  		<div id="firstnameInfo" class="error1"></div>
+                        
+                        <label class="marT25"><%= I18n.t "user.lname"%>  <span class="red">*</span></label>
+                        <input type="text" name="con[last_name]" id="last_name" value="<%= @user[:last_name] %>" class="textbox" />
+                  		<div id="lastnameInfo" class="error1"></div>
+                  
+                        
+                        <label class="marT25"><%= I18n.t "home_js.email_address"%> <span class="red">*</span></label>
+                        <input type="text" name="con[email]" id="email_address" value="<%= @user[:email] %>" class="textbox" />
+                  		<div id="emailInfo" class="error1"></div>
+                        
+                        <label class="marT25"><%= I18n.t "home_js.event_name_url"%></label>
+                        <input type="text" name="con[url]" id="event_url" class="textbox" />
+                  		<div id="urlInfo" class="error1"></div>
+                        
+                        <label class="marT25"><%= I18n.t "home_js.subject"%>  <span class="red">*</span></label>
+                        <input type="text" name="con[subject]" id="subject" class="textbox"/>
+                  		<div id="subInfo" class="error1"></div>
+                        
+                        <label class="marT25"><%= I18n.t "home_js.details"%>  <span class="red">*</span></label>
+                        <textarea name="con[details]" rows="8" id="description" class="textbox"></textarea>
+                  		<div id="descInfo" class="error1"></div>
+                        <div class="clear"></div>
+	            </div>
+	            <div class="marT20 fr">
+		             <input name="con[user_id]" value="<%= @user[:id] %>" type="hidden" />
+                  	 <input type="submit" onclick="return contact_validation();" value=<%= I18n.t 'event.purchase.contact'%> name="contact_submit" id="contact_submit" class="submit_btn">
+		        </div>
+	                            
+	          <% end %>  
+            <div class="clear"></div>
+            </div>
+            <div class="clear"></div>
+        </div>
+		
+
+        </div>
+        <div class="rightcol">
+        	<div class="marT45">
+            
+			<div class="mtitle marT45">
+            	<h1><%= I18n.t "affiliates.need"%> <span><%= I18n.t "affiliates.help"%></span></h1>
+              
+            </div>
+			<div class="shadow marT20 latest_update pad3" style="transform:">
+            	<ul>
+                	<li><a target="_blank" href="<%= APP_CONFIG['development']['site_url'] %>content/create_contact_list"><%= I18n.t "link.create_contact"%></a></li>
+                        <li><a target="_blank" href="<%= APP_CONFIG['development']['site_url'] %>content/manage_contacts"><%= I18n.t "link.manage_contact"%></a></li>
+                        <li><a target="_blank" href="<%= APP_CONFIG['development']['site_url'] %>content/import_contacts"><%= I18n.t "link.import_contact"%></a></li>
+                        <li><a target="_blank" href="<%= APP_CONFIG['development']['site_url'] %>content/invites"><%= I18n.t "home_js.how_to_send_email_invitation"%></a></li>
+                </ul>
+            </div>
+            
+            
+            <div class="mtitle marT45">
+            	<h1><%= I18n.t "affiliates.need"%> <span><%= I18n.t "affiliates.additional_help"%></span></h1>
+              
+            </div>
+            <div class="shadow marT20 pad20">
+            	
+                <div class="need_add" style="margin-top:0;">
+                	<%= I18n.t "affiliates.org_an_event"%>
+				<span><%= I18n.t 'home_contact_us.call'%> <%= @site[:event_help_line] %></span>
+				</div>
+                
+                <Div class="need_add">
+                <%= I18n.t 'home_contact_us.attending_an_event'%>
+				<span><%= I18n.t 'home_contact_us.call'%> <%= @site[:tech_support] %></span>
+                </Div>
+                
+                <div class="need_add">
+                <%= I18n.t 'home_contact_us.calling_outside_the_us'%> 
+                <span><%= I18n.t 'home_contact_us.dial'%> <%= @site[:outside_us_help] %></span>
+                <%= I18n.t 'home_contact_us.call_us_anytime'%>
+                </div>
+            </div>
+            
+            
+            
+			 <div class="clear"></div>
+             
+			
+			
+            </div>
+        </div>
+           <div class="clear"></div>
+    </div>
+    
+    
+</section>

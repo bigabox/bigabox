@@ -1,0 +1,60 @@
+<script>
+	$(document).ready(function() {
+		setTimeout(function(){	$('#paypal_auto_form').submit();	},2000)
+	});
+</script>			   
+<section>
+	<% 
+		#@total = paypal_amt(@total)
+		#@custom = @total.to_s+'#'+@user[:id].to_s+'#'+@pur[:id].to_s
+		@custom = @pay_amount.to_s+'#'+@user[:id].to_s+'#'+@pur[:id].to_s		
+		@amount = @pay_amount 
+	%>
+	<div class="main" style="min-height: 400px;">
+		<div class="event_detail marT60 pad3P">
+			<form method="post" action="<%= @Paypal_Url %>" name="paypal_auto_form" id="paypal_auto_form"/>
+			
+			<input type="hidden" name="rm" value="2" />
+			
+			
+			<input type="hidden" name="cmd" value="_xclick" />
+			
+			
+			<input type="hidden" name="currency_code" value="<%= @currency_code %>" />
+			
+			
+			<!-- <input type="hidden" name="quantity" value="<%= 1 %>" /> -->
+			
+			
+			<input type="hidden" name="business" value="<%= @business %>" />
+			
+			
+			<input type="hidden" name="return" value="<%= @return %>" />
+			
+			
+			<input type="hidden" name="cancel_return" value="<%= @cancel_return %>" />
+			
+			
+			<input type="hidden" name="notify_url" value="<%= @notify_url %>" />
+			
+			<input type="hidden" name="data-callback" value="<%= @notify_url %>" />
+			
+			
+			<input type="hidden" name="custom" value="<%= @custom %>" />
+			
+			
+			<input type="hidden" name="item_name" value="<%= @item_name %>" />
+			
+			
+			<input type="hidden" name="item_number" value="<%= @item_number %>" />
+			
+			
+			<input type="hidden" name="amount" value="<%= @amount %>" />
+			
+			<p><input type="submit" name="pp_submit" class="submit_btn" value="<%= I18n.t 'event.purchase.click_here' %>"  /></p>
+			
+			</form>
+		</div>
+	</div><div class="clear"></div>
+	
+</section>		

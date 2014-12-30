@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+  xmlns:o="urn:schemas-microsoft-com:office:office"
+  xmlns:x="urn:schemas-microsoft-com:office:excel"
+  xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
+  xmlns:html="http://www.w3.org/TR/REC-html40">
+  <% if @events.count > 0
+		    for event in @events 
+		    @orders = Purchase.find(:all , :conditions => ['event_id=? AND (ticket_id=0 or ticket_id=null) ' , event[:id]])
+		    %>
+  
+  <Worksheet ss:Name="<%= event[:event_title] %>">
+    <table>
+      <tr>
+        <th><Data ss:Type="String"><%= I18n.t 'download_excel.sr_num' %></Data></th>
+        <th><Data ss:Type="String"><%= I18n.t 'download_excel.order_num' %></Data></th>
+        <th><Data ss:Type="String"><%= I18n.t 'user.fname' %></Data></th>
+        <th><Data ss:Type="String"><%= I18n.t 'user.lname' %></Data></th>
+        <th><Data ss:Type="String"><%= I18n.t 'user.email' %></Data></th>
+        <th><Data ss:Type="String"><%= I18n.t 'user.home_phone' %></Data></th>
+        <th><Data ss:Type="String"><%= I18n.t 'user.cell_phone' %></Data></th>
+        <th><Data ss:Type="String"><%= I18n.t 'event.view.qty' %></Data></th>
+        <th><Data ss:Type="String"><%= I18n.t 'event.view.price' %></Data></th>
+        <th><Data ss:Type="String"><%= I18n.t 'event.view.purchase_date' %></Data></th>
+        
+      </tr>
+    <% 
+    i=1
+    	if @orders.count > 0
+		    for order in @orders %>
+		      <tr>
+		        <td><Data ss:Type="Number"><%= i %></Data></td>
+		        <td><Data ss:Type="Number"><%= order[:id] %></Data></td>
+		        <td><Data ss:Type="String"><%= order[:first_name] %></Data></td>
+		        <td><Data ss:Type="String"><%= order[:last_name] %></Data></td>
+		        <td><Data ss:Type="String"><%= order[:email] %></Data></td>
+		        <td><Data ss:Type="String"><%= order[:home_phone] %></Data></td>
+		        <td><Data ss:Type="String"><%= order[:cell_phone] %></Data></td>
+		        
+		        <td><Data ss:Type="Number"><%= order[:ticket_qty] %></Data></td>
+		        <td><Data ss:Type="String"><%= set_currency(order[:total]) %></Data></td>
+		        <td><Data ss:Type="String"><%= order[:created_at].strftime(@site[:date_time_format]) %></Data></td>
+		      </tr>
+		    <% 
+		    i+=1
+		    end
+    	else
+    		%>
+    			<tr><td><Data ss:Type="String"><%= I18n.t 'download_excel.no_purchase_available' %></Data></td></tr>
+    		<%
+    	end 
+    %>
+    
+    
+    </table>
+  </Worksheet>
+
+	<% end 
+	
+	else
+		%>
+			<Worksheet ss:Name="Events">
+			    <table>
+			      <tr>
+			        <td><Data ss:Type="String"><%= I18n.t 'download_excel.no_events_available' %></Data></td>
+			      </tr>
+			    </table>
+			</Worksheet>
+		<%
+	end	
+	%>
+</Workbook>
+

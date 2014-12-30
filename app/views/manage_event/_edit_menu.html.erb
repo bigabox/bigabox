@@ -1,0 +1,73 @@
+<style>
+	footer{
+		margin-bottom: 15px;
+	}
+	
+	.FooterB-style {
+		display:inline-block;
+		margin-bottom:65px;
+	}
+
+</style>
+<section>
+	<div class="footer_fix_menu">
+    	<div class="main margin0">
+       
+        	<div class="edit_menu fl">
+            	<ul>
+                	<li>
+                    	<a href="<%= APP_CONFIG['development']['site_url'] %>events/edit/<%= @event[:id] %>" <% if @edit_menu_class=='Edit' %> class="menu_selected" <% end %>>
+                    		<img src="<%= APP_CONFIG['development']['app_url'] %>nav_design.png" class="visible_tab_mob" />
+                        	<span class="visible_desktop"><%= I18n.t 'button.edit'%></span></a>
+                        
+                    </li>
+                    <li>
+                    	<a href="<%= APP_CONFIG['development']['site_url'] %>events/theme/<%= @event[:id] %>" <% if @edit_menu_class=='Design' %> class="menu_selected" <% end %>>
+                    		<img src="<%= APP_CONFIG['development']['app_url'] %>nav_edit.png" class="visible_tab_mob"/>
+                    		<span class="visible_desktop"> <%= I18n.t 'edit_menu.design'%></span></a>
+                    </li>
+                    <li>
+                    	<a href="<%= APP_CONFIG['development']['site_url'] %>manage_event/index/<%= @event[:id] %>" <% if @edit_menu_class=='Manage' %> class="menu_selected" <% end %>>
+                    		<img src="<%= APP_CONFIG['development']['app_url'] %>nav_manage.png" class="visible_tab_mob"/>
+                    		<span class="visible_desktop"> <%= I18n.t 'edit_menu.manage'%> </span></a>
+                    </li>
+                	
+              
+                </ul> 
+                 <div class="clear"></div>
+            </div>
+            <% 
+                if @event[:active]==0
+                	page_url = APP_CONFIG['development']['site_url']+'events/theme/'+@event[:id].to_s
+                else	
+	                if @event[:event_url_link]=='' || @event[:event_url_link]==nil 
+	             		page_url = APP_CONFIG['development']['site_url']+'events/view/'+@event[:id].to_s 
+	             	else
+	             		page_url = APP_CONFIG['development']['site_url']+'event/'+@event[:event_url_link]
+	             	end
+               end
+            %>
+            <% if @edit_menu_class=='Manage' %>
+            <div class="menu_btn fr">
+            	<% if @event[:active]==0 && @event[:cancel]==0 %>
+            	<a href="<%= APP_CONFIG['development']['site_url'] %>manage_event/publish/<%= @event[:id] %>" class="btn green_bg" > 
+            		<img src="<%= APP_CONFIG['development']['app_url'] %>nav_live.png" class="visible_tab_mob"/>
+            		<span class="visible_desktop"><%= I18n.t 'button.make_event_live'%></span>
+            	</a>
+            	<% end %>
+                <a href="<%= page_url %>" class="btn white_bg" >
+                	<img src="<%= APP_CONFIG['development']['app_url'] %>nav_preview.png" class="visible_tab_mob"/> 
+                	<span class="visible_desktop"><%= I18n.t 'button.preview'%></span>
+                </a>
+              	<div class="clear"></div>
+            </div>
+            <% end %>
+        	 <div class="clear"></div>
+        </div>
+        
+        
+       
+        <div class="clear"></div>
+    </div>
+	
+</section>

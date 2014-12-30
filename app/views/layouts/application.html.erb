@@ -1,0 +1,227 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	
+<% @site = SiteSetting.find(:first) 
+   	  @title_name = @site[:site_name]
+   	  if @meta_title
+   	  	@title_name = @meta_title+' - '+@site[:site_name]
+   	  end	
+   @page_url = request.url 
+   
+   %>
+   
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="description" content="<%= @site[:meta_description] %>" />
+<meta name="keywords" content="<%= @site[:meta_keyword] %>" />
+
+<meta property="og:site_name" content="<%= @site[:site_name] %>"/>
+<meta property="og:description" content="This is Test Discription .THis should showm"/>
+<meta property="og:type" content="article" />
+<meta property="og:url"content="<%= @page_url %>" />
+
+
+<title><%= @title_name %></title>
+
+	<!-- Common PHP file start-->
+	<%= render(:partial => "home/common" , :object => :collection) %> 	
+	<!-- Common PHP file end  -->
+	
+</head>
+
+<body>
+	  
+<div class="mainbg">
+	 <%= render(:partial => "home/theme" , :object => :collection) %> 	
+<header>	
+<% if session[:user_id] && session[:user_id] != nil %>		
+ <% @user = User.find(session[:user_id])  %>
+  <% @permission = Permission.find(:first, :conditions => ['user_id=? AND admin_id=?', @user[:id], @user[:ref_id]]) %>
+  
+  <%  @has = 0
+						  act="create_event"
+						  if @user[:ref_id]!=nil && @user[:ref_id]!='' && @user[:ref_id] > 0 
+							    @per_act = @permission[:action].split(',')
+							  if ((@permission[:action]=='all' || @per_act.include?(act)) )
+							      @has = 1
+							 else
+							      @has = 2
+							 end
+						  end	    	
+						  %>
+						  
+						  <%  @has_contact = 0
+						  act="send_invite"
+						  if @user[:ref_id]!=nil && @user[:ref_id]!='' && @user[:ref_id] > 0 
+							    @per_act = @permission[:action].split(',')
+							  if ((@permission[:action]=='all' || @per_act.include?(act)) )
+							      @has_contact = 1
+							 else
+							      @has_contact = 2
+							 end
+						  end	    	
+						  %>
+						  <%  @has_profile = 0
+						  act="org_profile"
+						  if @user[:ref_id]!=nil && @user[:ref_id]!='' && @user[:ref_id] > 0 
+							    @per_act = @permission[:action].split(',')
+							  if ((@permission[:action]=='all' || @per_act.include?(act)) )
+							      @has_profile = 1
+							 else
+							      @has_profile = 2
+							 end
+						  end	    	
+						  %>
+						  
+          <% end %>  
+	<div class="headerblank">
+        <div class="main">
+        <!-- Header Top starts -->	
+<style>
+.nav {
+	font-size:14px;
+	margin:25px 0;
+}
+</style>
+
+<div class="wrap"></div>
+        
+	        <div class="mobileMenu">
+			  <%
+			   		@how = Page.find('29')
+			   		@help = Page.find('14')
+			   %>
+			    <nav id="main-nav">
+			        <ul>
+			            <%   if(session[:user_id] == nil || session[:user_id] == '')  %>
+			            <li><a href="<%= APP_CONFIG['development']['site_url'] %>"><%= I18n.t 'application.home'%></a></li>
+			            <li><a href="<%= APP_CONFIG['development']['site_url'] %>search"><%= I18n.t 'application.find_events'%></a></li>
+			            <li><a href="<%= APP_CONFIG['development']['site_url'] %>my_tickets"><%= I18n.t 'attendees.print_tickets'%></a></li>
+			            <li><a href="<%= APP_CONFIG['development']['site_url'] %>events/create_event"><%= I18n.t 'application.create_an_event'%></a></li>
+			            <li><a href="<%= APP_CONFIG['development']['site_url'] %>content/<%= @how[:slug] %>"><%= I18n.t 'application.how_it_works'%></a></li>
+			            
+			            <li><a href="<%= APP_CONFIG['development']['site_url'] %>home/login#login"><%= I18n.t 'application.log_in'%></a></li>
+			            <li><a href="<%= APP_CONFIG['development']['site_url'] %>home/sign_up#signup"><%= I18n.t 'application.sign_up'%></a></li>
+			            <% else %>
+			            <% if @has == 1 || @has == 0 %>
+			            <li><a href="<%= APP_CONFIG['development']['site_url'] %>events/create_event"><%= I18n.t 'application.appli_create_an_event'%></a></li>
+			            <li><a href="<%= APP_CONFIG['development']['site_url'] %>events"><%= I18n.t 'event_title.my_events'%></a></li>
+			          <% else %>
+				           <%if @user[:ref_id]!=nil && @user[:ref_id]!='' && @user[:ref_id] > 0 %>
+				    <li><a href="<%= APP_CONFIG['development']['site_url'] %>events"><%= I18n.t 'event_title.my_events'%></a></li>
+				           <% end %> 
+			            <% end %>
+			            
+			            <% if @has_profile == 1 || @has_profile == 0 %>
+			            <li><a href="<%= APP_CONFIG['development']['site_url'] %>users/profile"><%= I18n.t 'application.my_profile'%></a></li>
+			            <% end %>
+			            <li><a href="<%= APP_CONFIG['development']['site_url'] %>my_tickets"><%= I18n.t 'application.my_tickets'%></a></li>
+			            <% if @has_contact == 1 || @has_contact == 0 %>
+			            <li><a href="<%= APP_CONFIG['development']['site_url'] %>contact_lists"><%= I18n.t 'new.my'%></a></li>
+			            <% end %>
+			            <li><a href="<%= APP_CONFIG['development']['site_url'] %>manage_account"><%= I18n.t 'application.my_account'%></a></li>
+			            <li><a href="<%= APP_CONFIG['development']['site_url'] %>logout"><%= I18n.t 'application.logout'%></a></li>
+			            <% end %>
+			        </ul>
+			    </nav>
+			</div>	
+			<div class="topheader">                
+				<nav id="mobile-bar"><a href="javascript://" id="build-menu-button"><img src="<%= APP_CONFIG['development']['app_url'] %>icon-menu.png" /></a></nav>
+			    <div class="logo">
+			    		<%
+							logo_img = APP_CONFIG['development']['app_url']+'themes/logo.png'
+							logo_img_hover = APP_CONFIG['development']['app_url']+'themes/logo.png'
+							
+				       		if(@site[:site_logo]!=nil)
+					            chk_img = check_img(@site[:site_logo],'other','orig')	
+					         	if chk_img!='0' && chk_img!=''
+								  logo_img = APP_CONFIG['development']['upload_url']+chk_img
+								end
+							end
+							
+							if(@site[:site_logo_hover]!=nil)
+					            chk_img = check_img(@site[:site_logo_hover],'other','orig')	
+					         	if chk_img!='0' && chk_img!=''
+								  logo_img_hover = APP_CONFIG['development']['upload_url']+chk_img
+								end
+							end
+						%>
+			    	  <a href="<%= APP_CONFIG['development']['site_url'] %>" onmouseover="$('#site_logo').attr('src','<%= logo_img_hover %>');" onmouseout="$('#site_logo').attr('src','<%= logo_img %>');" >
+						<img src="<%= logo_img %>" width="252" height="79" id="site_logo"  onmouseover="$('#site_logo').attr('src','<%= logo_img_hover %>');" onmouseout="$('#site_logo').attr('src','<%= logo_img %>');" />
+					  </a>
+			    </div>
+			    <div class="fr">
+			        <div class="login fr pr">
+			            <%   if(session[:user_id] == nil || session[:user_id] == '')  %>
+			            <ul>
+				            <li><a href="<%= APP_CONFIG['development']['site_url'] %>home/login#login" class="loginbtn"><span><%= I18n.t 'application.log_in'%></span></a></li>
+				            <li><a href="<%= APP_CONFIG['development']['site_url'] %>home/sign_up#signup" class="signupbtn"><span><%= I18n.t 'application.sign_up'%></span></a></li>
+				        </ul>
+			            <% else %>
+			            <a href="javascript://" class="acc_link"><span><%= I18n.t 'event.view.event_hi' %> <%= truncate(session[:user_email], :length => 16) %></span> <img src="<%= APP_CONFIG['development']['app_url'] %>arrow_down_w.png" /></a>
+			            <div class="acc_div">
+			                <ul>
+			                    <li><a href="<%= APP_CONFIG['development']['site_url'] %>manage_account" class="btn_acc"><span><%= I18n.t 'application.my_account'%></span></a></li>
+			                    <li><a href="<%= APP_CONFIG['development']['site_url'] %>logout" class="btn_log"><span><%= I18n.t 'application.logout'%></span></a></li>
+			                </ul>
+			            </div>
+			            <% end %>
+			        </div>
+			        <div class="clear"></div>
+			        <div class="nav fr">
+			            <ul>
+			                <%   if(session[:user_id] == nil || session[:user_id] == '')  %>
+			                <li><a href="<%= APP_CONFIG['development']['site_url'] %>search"><%= I18n.t 'application.find_events'%></a></li>
+				            <li><a href="<%= APP_CONFIG['development']['site_url'] %>my_tickets"><%= I18n.t 'attendees.print_tickets'%></a></li>
+				            <li><a href="<%= APP_CONFIG['development']['site_url'] %>events/create_event"><%= I18n.t 'application.create_an_event'%></a></li>
+				            <li><a href="<%= APP_CONFIG['development']['site_url'] %>content/<%= @how[:slug] %>"><%= I18n.t 'application.how_it_works'%></a></li>
+				            
+				            <% else %>
+				           <style>
+							.nav {
+								font-size:14px;
+								margin:25px 0;
+							}
+							</style>
+					<% if @has == 1 || @has == 0 %>		
+				            <li><a href="<%= APP_CONFIG['development']['site_url'] %>events/create_event"><%= I18n.t 'application.appli_create_an_event'%></a></li>
+				            <li><a href="<%= APP_CONFIG['development']['site_url'] %>events"><%= I18n.t 'event_title.my_events'%></a></li>
+				            <% else %>
+					        <%if @user[:ref_id]!=nil && @user[:ref_id]!='' && @user[:ref_id] > 0 %>
+					    <li><a href="<%= APP_CONFIG['development']['site_url'] %>events"><%= I18n.t 'event_title.my_events'%></a></li>
+					        <% end %> 
+				           <% end %>
+				            <% if @has_profile == 1 || @has_profile == 0 %>
+				            <li><a href="<%= APP_CONFIG['development']['site_url'] %>users/profile"><%= I18n.t 'application.my_profile'%></a></li>
+				            <% end %>
+				            <li><a href="<%= APP_CONFIG['development']['site_url'] %>my_tickets"><%= I18n.t 'application.my_tickets'%></a></li>
+				            <% if @has_contact == 1 || @has_contact == 0 %>
+				            <li><a href="<%= APP_CONFIG['development']['site_url'] %>contact_lists"><%= I18n.t 'new.my_con'%></a></li>
+				            <% end %>
+				         <% end %>
+			                <div class="clear"></div>
+			            </ul>
+			        </div>
+			    </div>
+			    <div class="clear"></div>
+			</div>
+		<!-- Header Top Ends -->
+		</div>
+    </div>
+</header>
+
+<!-- main content starts -->
+	
+	<div class="min_height"><div id="dvLoading" ></div> </div>
+	<div class="min_height" id="mainbg_div" style="display: none;">
+		<%= yield %>
+	</div>
+<!-- main content starts -->
+
+<!-- Footer Starts -->
+	<%= render(:partial => "home/footer" , :object => :collection) %> 
+<!-- Footer Ends -->
+<img src="<%= APP_CONFIG['development']['app_url'] %>themes/user_bg_hover.png" alt="" style="display: none;" />
+</div>
+</body>
+</html>

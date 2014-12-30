@@ -1,0 +1,125 @@
+<script>
+	function submit_mobile_login(){
+		var email_reg_exp= /^[a-zA-Z0-9]+[a-zA-Z0-9_.-]+[a-zA-Z0-9_-]+@[a-zA-Z0-9]+[a-zA-Z0-9.-]+[a-zA-Z0-9]+.[a-z]{2,4}$/;
+		var useremailInfo = $('#useremailInfo');
+		var passwordInfo = $('#userPasswordInfo');	
+		$('#login_err').hide();
+			
+			if(validateEmail() && validatePassword()){
+				var page_path = '/mobile_logins/post_login/';
+				   
+				    $.ajax({
+				        type: "POST",
+				        data: $('#loginForm').serialize(), 
+				        url: page_path,
+				        success: function(data) {
+				         		//alert(data);
+				         		if(data.status==1){
+				         			alert(data.msg);
+				         		}else{
+				         			$('#login_err').text(data.msg);
+				         			$('#login_err').show();
+				         		}
+				         	 }
+				        });
+			   return false;
+			}else{
+				return false;
+			}	
+			//validation functions
+			function validateEmail(){
+				//testing regular expression
+				var a = $("#user_email").val();
+				var filter = email_reg_exp;
+				//if it's valid email
+				//alert(a);
+				if(filter.test(a)){
+						
+					useremailInfo.text("E-mail address is valid!");
+					useremailInfo.removeClass("error1");
+					useremailInfo.addClass("success");
+					return true;
+				}
+				//if it's NOT valid
+				else{
+					
+					useremailInfo.text("Type a valid E-mail please");
+					useremailInfo.removeClass("success");
+					useremailInfo.addClass("error1");
+					
+					return false;
+				}
+			}
+			
+			function validatePassword(){
+				
+				var password = $("#user_password");	
+		
+				//it's NOT valid
+				if(password.val().length < 7){
+					
+					passwordInfo.text("At least 8 characters is required");
+					passwordInfo.removeClass("success");
+					passwordInfo.addClass("error1");
+					
+					return false;
+				}
+				//it's valid
+				else{			
+					
+					passwordInfo.text("Password is valid!");
+					passwordInfo.removeClass("error1");
+					passwordInfo.addClass("success");
+					return true;
+				}
+			}
+			
+			
+	}
+</script>
+<% @site = SiteSetting.find(:first) %>
+
+		
+<section>
+				
+			   
+	<div class="main marTB60">
+		<div id="login_err" class="errors" style="display: none;"></div> 
+    	
+    	<div class="leftcol">
+        	<div class="mtitle">
+            	<h1>Start now, <span>it's free and easy</span></h1>
+            </div>
+            <div class="shadow marT20 pad20">            	
+            	
+                    <h2>Log in</h2><br />
+                    <div class="login_signup">                    	
+                        
+                        <%= form_tag({:controller => 'mobile_logins', :action => 'index'}, :id => 'loginForm') do %>
+                            <div>
+                                <label>Email</label>
+                                <%= text_field_tag :user_email, params[:user_email], :class => 'textbox TW97p', :placeholder => 'Enter your Email ID' %>
+                            	<div id="useremailInfo"></div>
+                            </div>
+                            <div class="marT20">
+                                <label>Password</label>
+                                <%= password_field_tag :user_password, params[:user_password], :class => 'textbox TW97p' %>
+								<div id="userPasswordInfo"></div>
+                            </div>
+                            
+                            <div class="marT20 fr">
+                                <%= submit_tag "Log In", :class => 'submit_btn', :id => 'loginbtn', :onclick => 'return submit_mobile_login();' %>
+                            </div>
+                            <div class="clear"></div>
+                           <% end %> 
+                                         
+                    </div>
+                    
+                
+            </div>
+        </div>
+        
+        <div class="clear"></div>
+    </div>    
+</section>
+

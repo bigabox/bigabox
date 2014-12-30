@@ -1,0 +1,366 @@
+ <% 
+ 		
+ if params[:id]
+ 		form_id = 'edit_page'
+		form_act = 'update/'+params[:id].to_s
+		@user=User.find(@user_address[:user_id])
+		
+	else
+		form_id = 'new_user_address'
+		form_act = 'create'
+		@user=User.find(params[:user])
+	end	
+	@site = SiteSetting.find(:first)	 
+%> 
+ 
+ 
+ <%
+    @country = Country.find_all_country()
+	
+ %>
+ 
+<script type="text/javascript">
+ 
+ function set_state(val, type){
+					
+					
+				        var state_path = '/manage_account/state_selection/';
+				        var country_id = val;
+				        $.ajax({
+				            type: "GET",
+				            data: {country_id: country_id, add_type: type}, 
+				            url: state_path+country_id,
+				            success: function(data) {
+				             //  alert(data);
+				                $("#"+type+"_state_list").html(data);
+				            }
+				        });
+				   
+				}
+ 
+ function apply_address(ele,type){
+					if(ele.checked==true){
+						$('#'+type+'_add1').val($('#home_add1').val());
+						$('#'+type+'_add2').val($('#home_add2').val());
+						$('#user_address_'+type+'_country').val($('#user_address_home_country').val());
+						set_state($('#user_address_home_country').val(), type);
+						
+						setTimeout( "$('#user_address_"+type+"_state').val($('#user_address_home_state').val()) ",2000 );
+						
+						$('#'+type+'_city').val($('#home_city').val());
+						$('#'+type+'_zip').val($('#home_zip').val());
+					}	
+				}
+ 	
+</script> 
+<style>
+	.columns .first{
+		width: 31.7%;
+	}
+	.columns .second{
+		width: 48%;
+	}
+</style>
+ 
+<%= form_tag({:action => form_act}, :id => form_id, :novalidate => 'novalidate') do %> 
+	
+	<fieldset class="inputs">
+		<legend><span>Home Address</span></legend>
+		<ol>
+			<li class="string input optional stringish" id="user_address_home_add1_input">
+				<label class=" label" for="user_address_home_add1">Address</label>
+				<input id="home_add1" maxlength="255" name="user_address[home_add1]" type="text" value="<%=@user_address[:home_add1] %>" >
+
+		</li>
+		<li class="string input optional stringish" id="user_address_home_add2_input">
+			<label class=" label" for="user_address_home_add2">Address2</label>
+			<input id="home_add2" maxlength="255" name="user_address[home_add2]" type="text" value="<%=@user_address[:home_add2] %>">
+
+		</li>
+		
+		   	<li class="select input optional" id="user_address_home_country_input">
+		   		<label class=" label" for="user_address_home_country">Country</label>
+		   		<select id="user_address_home_country" name="user_address[home_country]" onchange="set_state(this.value, 'home')">
+		   		  <option value="">-- Select Country --</option>
+					<% for ct in @country %>
+					  <option value="<%= ct[:country_name] %>" <% if(ct[:country_name] == @user_address[:home_country]) %> selected="selected" <% end %>><%= ct[:country_name] %></option>
+					<% end %>
+			</select>
+
+		</li>
+		  <%
+		                        if @user_address[:home_country] == 0 || @user_address[:home_country] == nil || @user_address[:home_country] == ''
+				
+									@state = State.find_all_state()
+							    else
+									
+									@state = State.find_state_by_country(@user_address[:home_country])
+							    end	
+								
+		                      %>
+				
+		<li class="select input optional" id="user_address_home_state_input">
+			<label class=" label" for="user_address_home_state">State</label>
+			<div id="home_state_list" class="fl TW70p">
+			 <% if @state.count > 0 %>
+		       		<select name="user_address[home_state]" id="user_address_home_state">
+						  <option value="">-- Select State --</option>
+							  <% for st in @state %>
+			   			      <option value="<%= st[:state_name] %>" <% if(st[:state_name] == @user_address[:home_state]) %> selected="selected" <% end %>><%= st[:state_name] %></option>
+							  <% end %>
+					  </select>
+			  <% else %>
+		       			<%= text_field_tag :home_state, @user_address[:home_state], :class => 'textbox', :name => 'user_address[home_state]', :id => 'home_state' %> 
+		      <% end %>
+			</div>
+		</li>
+		
+		<li class="string input optional stringish" id="user_address_home_city_input">
+			<label class=" label" for="user_address_home_city">City</label>
+			<input id="home_city" maxlength="255" name="user_address[home_city]" type="text" value="<%= @user_address[:home_city] %>">
+		</li>
+	
+		<li class="string input optional stringish" id="user_address_home_zip_input">
+			<label class=" label" for="user_address_home_zip">Zipcode</label>
+			<input id="home_zip" maxlength="255" name="user_address[home_zip]" type="text" value="<%= @user_address[:home_zip] %>">
+		</li>
+			
+		</ol>
+		
+		<div style="margin-left: 20%;">
+		<label>Apply To</label>
+		                  <input type="checkbox" name="apply_home" onclick="apply_address(this,'bill');" />&nbsp;&nbsp;<span>Billing Address</span>&nbsp;&nbsp;
+		                    <input type="checkbox" name="apply_home" onclick="apply_address(this,'ship');" />&nbsp;&nbsp;<span>Shipping Address</span>&nbsp;&nbsp;
+		                    <input type="checkbox" name="apply_home" onclick="apply_address(this,'work');" />&nbsp;&nbsp;<span>Work Information</span>
+		                     <div class="clear"></div>
+		                     
+		 </div> 
+	</fieldset>
+	
+	
+	<fieldset class="inputs"><legend><span>Billing Address</span></legend>
+		<ol>
+			<li class="string input optional stringish" id="user_address_bill_add1_input">
+				<label class=" label" for="user_address_bill_add1">Address</label>
+				<input id="bill_add1" maxlength="255" name="user_address[bill_add1]" type="text" value="<%=@user_address[:bill_add1] %>">
+
+			</li>
+			<li class="string input optional stringish" id="user_address_bill_add2_input">
+				<label class=" label" for="user_address_bill_add2">Address2</label>
+				<input id="bill_add2" maxlength="255" name="user_address[bill_add2]" type="text" value="<%=@user_address[:bill_add2] %>">
+			
+			</li>
+			<li class="select input optional" id="user_address_bill_country_input">
+				<label class=" label" for="user_address_bill_country">Country</label>
+				<select id="user_address_bill_country" name="user_address[bill_country]" onchange="set_state(this.value, 'bill')">
+					 <option value="">-- Select Country --</option>
+					<% for ct in @country %>
+					  <option value="<%= ct[:country_name] %>" <% if(ct[:country_name] == @user_address[:bill_country]) %> selected="selected" <% end %>><%= ct[:country_name] %></option>
+					<% end %>
+				</select>
+			
+			</li>
+			
+			<%
+		                        if @user_address[:bill_country] == 0 || @user_address[:bill_country] == nil || @user_address[:bill_country] == ''
+				
+									@state = State.find_all_state()
+							    else
+									
+									@state = State.find_state_by_country(@user_address[:bill_country])
+							    end	
+								
+		                      %>
+			<li class="select input optional" id="user_address_bill_state_input">
+				<label class=" label" for="user_address_bill_state">State</label>
+				 <div id="bill_state_list" class="fl TW70p">
+				 <% if @state.count > 0 %>
+		       		<select name="user_address[bill_state]" id="user_address_bill_state">
+						  <option value="">-- Select State --</option>
+							  <% for st in @state %>
+			   			      <option value="<%= st[:state_name] %>" <% if(st[:state_name] == @user_address[:bill_state]) %> selected="selected" <% end %>><%= st[:state_name] %></option>
+							  <% end %>
+					  </select>
+			  <% else %>
+		       			<%= text_field_tag :bill_state, @user_address[:bill_state], :class => 'textbox', :name => 'user_address[bill_state]', :id => 'bill_state' %> 
+		      <% end %>
+			</div>
+			</li>
+			<li class="string input optional stringish" id="user_address_bill_city_input">
+				<label class=" label" for="user_address_bill_city">City</label>
+				<input id="bill_city" maxlength="255" name="user_address[bill_city]" type="text" value="<%= @user_address[:bill_city] %>">
+			
+			</li>
+			
+			<li class="string input optional stringish" id="user_address_bill_zip_input">
+				<label class=" label" for="user_address_bill_zip">Zipcode</label>
+				<input id="bill_zip" maxlength="255" name="user_address[bill_zip]" type="text" value="<%= @user_address[:home_zip] %>">
+			
+			</li>
+			
+		</ol>
+
+	</fieldset>
+	
+	
+	<fieldset class="inputs"><legend><span>Shipping Address</span></legend>
+		<ol>
+			<li class="string input optional stringish" id="user_address_ship_add1_input">
+				<label class=" label" for="user_address_ship_add1">Address</label>
+				<input id="ship_add1" maxlength="255" name="user_address[ship_add1]" type="text" value="<%=@user_address[:ship_add1] %>">
+
+			</li><li class="string input optional stringish" id="user_address_ship_add2_input">
+				<label class=" label" for="user_address_ship_add2">Address2</label>
+				<input id="ship_add2" maxlength="255" name="user_address[ship_add2]" type="text" value="<%=@user_address[:ship_add2] %>">
+			
+			</li>
+			<li class="select input optional" id="user_address_ship_country_input">
+				<label class=" label" for="user_address_ship_country">Country</label>
+				<select id="user_address_ship_country" name="user_address[ship_country]" onchange="set_state(this.value, 'ship')">
+				  <option value="">-- Select Country --</option>
+					<% for ct in @country %>
+					  <option value="<%= ct[:country_name] %>" <% if(ct[:country_name] == @user_address[:ship_country]) %> selected="selected" <% end %>><%= ct[:country_name] %></option>
+					<% end %>
+			</select>
+			
+			</li>
+			
+				<%
+		                        if @user_address[:ship_country] == 0 || @user_address[:ship_country] == nil || @user_address[:ship_country] == ''
+				
+									@state = State.find_all_state()
+							    else
+									
+									@state = State.find_state_by_country(@user_address[:ship_country])
+							    end	
+								
+		                      %>
+			
+			<li class="select input optional" id="user_address_ship_state_input">
+				<label class=" label" for="user_address_ship_state">State</label>
+				<div id="ship_state_list" class="fl TW70p">
+				 <% if @state.count > 0 %>
+		       		<select name="user_address[ship_state]" id="user_address_ship_state">
+						  <option value="">-- Select State --</option>
+							  <% for st in @state %>
+			   			      <option value="<%= st[:state_name] %>" <% if(st[:state_name] == @user_address[:ship_state]) %> selected="selected" <% end %>><%= st[:state_name] %></option>
+							  <% end %>
+					  </select>
+			  <% else %>
+		       			<%= text_field_tag :ship_state, @user_address[:ship_state], :class => 'textbox', :name => 'user_address[ship_state]', :id => 'ship_state' %> 
+		      <% end %>
+				</div>
+			</li><li class="string input optional stringish" id="user_address_ship_city_input">
+				<label class=" label" for="user_address_ship_city">City</label>
+				<input id="ship_city" maxlength="255" name="user_address[ship_city]" type="text" value="<%= @user_address[:ship_city] %>">
+			
+			</li><li class="string input optional stringish" id="user_address_ship_zip_input">
+				<label class=" label" for="user_address_ship_zip">Zipcode</label>
+				<input id="ship_zip" maxlength="255" name="user_address[ship_zip]" type="text" value="<%= @user_address[:ship_zip] %>">
+			
+			</li>
+		</ol>
+
+</fieldset>
+	
+	
+	<fieldset class="inputs"><legend><span>Working Address</span></legend>
+		<ol>
+			<li class="string input optional stringish" id="user_address_work_add1_input">
+				<label class=" label" for="user_address_work_add1">Address</label>
+				<input id="work_add1" maxlength="255" name="user_address[work_add1]" type="text" value="<%= @user_address[:work_add1] %>">
+
+			</li>
+			<li class="string input optional stringish" id="user_address_work_add2_input">
+				<label class=" label" for="user_address_work_add2">Address2</label>
+				<input id="work_add2" maxlength="255" name="user_address[work_add2]" type="text" value="<%= @user_address[:work_add2] %>">
+			
+			</li>
+			<li class="select input optional" id="user_address_work_country_input">
+				<label class=" label" for="user_address_work_country">Country</label>
+				<select id="user_address_work_country" name="user_address[work_country]" onchange="set_state(this.value, 'work')">
+					 <option value="">-- Select Country --</option>
+						<% for ct in @country %>
+						  <option value="<%= ct[:country_name] %>" <% if(ct[:country_name] == @user_address[:work_country]) %> selected="selected" <% end %>><%= ct[:country_name] %></option>
+						<% end %>
+				</select>
+			
+			</li>
+			
+				<%
+		                        if @user_address[:work_country] == 0 || @user_address[:work_country] == nil || @user_address[:work_country] == ''
+				
+									@state = State.find_all_state()
+							    else
+									
+									@state = State.find_state_by_country(@user_address[:work_country])
+							    end	
+								
+		                      %>
+			<li class="select input optional" id="user_address_work_state_input">
+				<label class=" label" for="user_address_work_state">State</label>
+				<div id="work_state_list" class="fl TW70p">
+				<% if @state.count > 0 %>
+		       		<select name="user_address[work_state]" id="user_address_work_state">
+						  <option value="">-- Select State --</option>
+							  <% for st in @state %>
+			   			      <option value="<%= st[:state_name] %>" <% if(st[:state_name] == @user_address[:work_state]) %> selected="selected" <% end %>><%= st[:state_name] %></option>
+							  <% end %>
+					  </select>
+			  <% else %>
+		       			<%= text_field_tag :work_state, @user_address[:work_state], :class => 'textbox', :name => 'user_address[work_state]', :id => 'work_state' %> 
+		      <% end %>
+				</div>
+			</li>
+			<li class="string input optional stringish" id="user_address_work_city_input">
+				<label class=" label" for="user_address_work_city">City</label>
+				<input id="work_city" maxlength="255" name="user_address[work_city]" type="text" value="<%= @user_address[:work_city] %>">
+			
+			</li>
+			<li class="string input optional stringish" id="user_address_work_zip_input">
+				<label class=" label" for="user_address_work_zip">Zipcode</label>
+				<input id="work_zip" maxlength="255" name="user_address[work_zip]" type="text" value="<%= @user_address[:work_zip] %>">
+			
+			</li>
+			<li class="string input optional stringish" id="user_address_work_job_title_input">
+				<label class=" label" for="user_address_work_job_title">Job Title</label>
+				<input id="user_address_work_job_title" maxlength="255" name="user_address[work_job_title]" type="text" value="<%= @user_address[:work_job_title] %>">
+			
+			</li>
+			
+			<li class="string input optional stringish" id="user_address_work_company_input">
+				<label class=" label" for="user_address_work_company">Company</label>
+				<input id="user_address_work_company" maxlength="255" name="user_address[work_company]" type="text" value="<%= @user_address[:work_company] %>">
+			
+			</li>
+			
+			<li class="phone input optional stringish" id="user_address_work_phone_input">
+				<label class=" label" for="user_address_work_phone">Phone</label>
+				<input id="user_address_work_phone" maxlength="255" name="user_address[work_phone]" type="tel" value="<%= @user_address[:work_phone] %>">
+			
+			</li>
+			
+			<li class="string input optional stringish" id="user_address_work_blog_input">
+				<label class=" label" for="user_address_work_blog">Blog</label>
+				<input id="user_address_work_blog" maxlength="255" name="user_address[work_blog]" type="text" value="<%= @user_address[:work_blog] %>">
+			
+			</li>
+			
+			<li class="string input optional stringish" id="user_address_work_website_input">
+				<label class=" label" for="user_address_work_website">Website</label>
+				<input id="user_address_work_website" maxlength="255" name="user_address[work_website]" type="text" value="<%= @user_address[:work_website] %>">
+			
+			</li>
+		</ol>
+	</fieldset>
+	
+	<input type="hidden" name="user_address[user_id]" id="user_id" value="<%= @user[:id]%>">
+	
+	<fieldset class="actions">
+		<ol>
+			<li class="action input_action " id="page_submit_action">
+				<input name="commit" type="submit" value="<% if params[:id] %>Update <% else %> Create<% end %> Page" />
+			</li>
+		</ol>
+	</fieldset>
+<% end %>

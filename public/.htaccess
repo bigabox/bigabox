@@ -1,0 +1,5 @@
+PassengerEnabled On
+#PassengerLoadShellEnvVars On
+PassengerAppRoot /home/sendstor/cherrytickets.com/eventdemo
+#PassengerRuby /usr/local/ruby20/bin/ruby
+#RackEnv development

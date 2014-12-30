@@ -1,0 +1,281 @@
+<style>
+	.my-earnings-tab ul li.responsive-tabs__list__item {
+		padding: 23px 47px!important;
+	}
+	.my-earnings-tab ul li.responsive-tabs__list__item--active {
+		padding: 23px 49px !important;
+	}
+
+</style>
+<style>
+	@media (max-width: 768px) {
+		.earnings td:nth-of-type(1):before { content: " ";  }
+		.earnings td:nth-of-type(2):before { content: "<%= I18n.t 'pen_paid_table.en'%>";  }
+		.earnings td:nth-of-type(3):before { content: "<%= I18n.t 'pen_paid_table.amt'%>";  }
+		.earnings td:nth-of-type(4):before { content: "<%= I18n.t 'ticket_part.ticket_paid'%>"; }
+		.earnings td:nth-of-type(5):before { content: "<%= I18n.t 'wallet_index.due'%>"; }
+		.earnings td:nth-of-type(6):before { content: "<%= I18n.t 'create_event.date'%>"; }
+		.earnings td:nth-of-type(7):before { content: "<%= I18n.t 'new.table.ql'%>"; }
+		
+		.referra_learnings td:nth-of-type(1):before { content: " ";  }
+		.referra_learnings td:nth-of-type(2):before { content: "<%= I18n.t 'wallet_index.referral_code'%>";  }
+		.referra_learnings td:nth-of-type(3):before { content: "<%= I18n.t 'pen_paid_table.amt'%>";  }
+		.referra_learnings td:nth-of-type(4):before { content: "<%= I18n.t 'ticket_part.ticket_paid'%>"; }
+		.referra_learnings td:nth-of-type(5):before { content: "<%= I18n.t 'wallet_index.due'%>"; }
+		.referra_learnings td:nth-of-type(6):before { content: "<%= I18n.t 'create_event.date'%>"; }
+		.referra_learnings td:nth-of-type(7):before { content: "<%= I18n.t 'new.table.ql'%>"; }
+		
+		.affiliate_earnings td:nth-of-type(1):before { content: " ";  }
+		.affiliate_earnings td:nth-of-type(2):before { content: "<%= I18n.t 'wallet_index.affiliate_code'%>";  }
+		.affiliate_earnings td:nth-of-type(3):before { content: "<%= I18n.t 'pen_paid_table.amt'%>";  }
+		.affiliate_earnings td:nth-of-type(4):before { content: "<%= I18n.t 'ticket_part.ticket_paid'%>"; }
+		.affiliate_earnings td:nth-of-type(5):before { content: "<%= I18n.t 'wallet_index.due'%>"; }
+		.affiliate_earnings td:nth-of-type(6):before { content: "<%= I18n.t 'create_event.date'%>"; }
+		.affiliate_earnings td:nth-of-type(7):before { content: "<%= I18n.t 'new.table.ql'%>"; }
+
+	}	
+</style>
+<script>
+	function check_with_submit(){
+		$('#witherror').text('');
+		var chks = document.getElementsByName('all_id[]');
+		var fl = true;
+		for (var i = 0; i < chks.length; i++)
+        {
+            if (chks[i].checked==true)
+            {
+                   fl = false;
+            }
+         }
+         
+         if(fl==true){
+         	$('#witherror').text('<%= I18n.t 'wallet_index.atleast_one_record_withdraw'%>');
+         	return false;
+         }else{
+         	return true;
+         }
+	}
+</script>
+<section>
+	<%= render(:partial => "/manage_account/account_top" , :object => :collection) %>    
+           
+	<div class="main marTB40">
+    	
+    	<% if flash[:notice1] -%>
+		      <div class="notice" >
+		      	<p><%= flash[:notice1] %></p>
+		      </div>
+		<% end -%>
+		
+    	<div class="leftcol">    	
+            <div class="mtitle">
+            	<h3><%= I18n.t 'myticket_index.myticket_my'%> <span><%= I18n.t 'wallet_index.earnings'%></span></h3>
+            </div>
+            <div class="shadow marT10">
+                <%= form_tag({:controller => 'wallet', :action => 'withdraw'}, :id => 'withdrawForm', :name => 'withdrawForm') do %> 	
+            	<div class="responsive-tabs my-earnings-tab">
+                    <h2><%= I18n.t 'wallet_index.event_earn'%></h2>
+                    <div>   
+                    	<div class="shadow earnings pad3">
+                    		<%	
+                    		k=0
+                    		if @event_wallet.count > 0	%>
+	                            <table class="table">
+	                                <thead>
+	                                <tr>
+	                                    <!--<th>&nbsp;</th>-->
+	                                    <th width="20%"><%= I18n.t 'pen_paid_table.en'%></th>
+	                                    <th><%= I18n.t 'pen_paid_table.amt'%></th>
+	                                    <th><%= I18n.t 'ticket_part.ticket_paid'%></th>
+	                                    <th><%= I18n.t 'wallet_index.due'%></th>
+	                                    <th><%= I18n.t 'create_event.date'%></th>
+	                                    <th><%= I18n.t 'new.table.st'%></th>
+	                                </tr>
+	                                </thead>
+	                                <tbody>
+	                               <%
+					 for eve in @event_wallet
+					 	if Event.exists?(eve[:event_id])
+						 	@event = Event.find(eve[:event_id])
+						 	@credit = Wallet.sum("credit", :conditions => ["event_id=? and user_id=?", eve[:event_id], session[:user_id]])
+						 	@due = WalletWithdraw.sum("due", :conditions => ["event_id=? and user_id=?", eve[:event_id], session[:user_id]])
+						 	@paid = WalletWithdraw.sum("paid", :conditions => ["event_id=? and user_id=?", eve[:event_id], session[:user_id]])
+						 	@dt = WalletWithdraw.find(:first, :conditions => ["event_id=? and user_id=?", eve[:event_id], session[:user_id]])
+						 	
+				 	%>
+				 	<% if @event[:active] ==1 && @event[:event_end_date_time] < Time.now.strftime('%Y-%m-%d %H:%M:%S')%>
+										 		<tr>
+											 		<!--<td><% if eve[:sent_with]==0 
+											 				k=1
+											 			%>
+											 				<input type="checkbox" class="event_check" name="all_id[]" vertical-align="center" value="<%= eve[:id] %>" />
+											 			<% end  %>&nbsp;</td>-->
+						 		<td><%= @event[:event_title] %></td>
+						 		<td><%= set_currency(@credit) %></td>
+						 		<td><% if @paid && @paid!=''%> <%= set_currency(@paid) %><% end %></td>
+								<td><% if @due && @due!=''%> <%= set_currency(@due) %><% end %></td>
+						 		<td><% if @paid==0 && @due==0 %><%= eve[:created_at].strftime(@site[:date_time_format]) %><% else %><%= @dt[:updated_at].strftime(@site[:date_time_format])%><% end %> </td>
+						 		<td>
+						 		<% #elsif eve[:sent_with]==0  
+					 				if @paid==0 && @due ==0 
+					 			%>													
+					 			<a href="<%= APP_CONFIG['development']['site_url'] %>wallet/withdraw_account/<%= eve[:event_id] %>"><%= I18n.t 'wallet_index.withdraw_amt'%></a>
+					 			<% elsif @paid==0 && @due!=0 %> <%= I18n.t 'wallet_index.capital_due'%>
+					 			<% else %> <%= I18n.t 'wallet_index.capital_paid'%>
+					 			
+					 			<% end %>
+											 		</td>
+										 		</tr>
+										 	<%
+										 	end # condition to check for completed event
+									 	end
+									 end
+									%>
+	                                                           
+	                                </tbody>
+	                            </table>
+                            	
+                            <% else %>
+                            	<div class="pad10 textcenter"><p><%= I18n.t 'validation.common.no_records_available'%></p></div>
+                            <% end %>
+                            <div class="clear"></div>
+                        </div> 
+                        <!--
+                        <% if @event_wallet.count > 0	%>
+                        <br /><p><a href="javascript://" onclick="$('.event_check').attr('checked','checked');"> <%= I18n.t 'wallet_index.chk_all'%> </a> / <a href="javascript://" onclick="$('.event_check').removeAttr('checked');"><%= I18n.t 'wallet_index.un_all' %></a></p>                                       
+                   		<% end %> -->
+                    </div>        
+                    
+                    
+                    <!--<h2><%= I18n.t 'wallet_index.refferral_event'%></h2>
+                    <div>
+                    	<div class="shadow referra_learnings pad3">
+                         <%	if @ref_wallet.count > 0 %>   
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                	<th>&nbsp;</th>
+                                    <th width="25%"><%= I18n.t 'wallet_index.referral_code'%></th>
+                                    <th><%= I18n.t 'pen_paid_table.amt'%></th>
+                                    <th><%= I18n.t 'ticket_part.ticket_paid'%></th>
+                                    <th><%= I18n.t 'wallet_index.due'%></th>
+                                    <th><%= I18n.t 'create_event.date'%></th>
+                                    <th><%= I18n.t 'new.table.ql'%></th>
+                                </tr>
+                                </thead>
+                                <tbody>                               
+                                <%
+									 for ref in @ref_wallet
+									 
+									 	if ReferralCode.exists?(ref[:ref_id])
+										 	@referral = ReferralCode.find(ref[:ref_id])
+										 	%>
+										 		<tr>
+											 		<td><% if ref[:sent_with]==0 
+											 				k=1
+											 			%>
+											 				<input type="checkbox" class="ref_check" name="all_id[]" value="<%= ref[:id] %>" />
+											 			<% end  %>&nbsp;</td>
+											 		<td><%= @referral[:code] %></td>
+											 		<td><%= set_currency(ref[:credit]) %></td>
+											 		<td><%= set_currency(ref[:paid]) %></td>
+											 		<td><%= set_currency(ref[:due]) %></td>
+											 		<td><%= ref[:created_at].strftime(@site[:date_time_format]) %></td>
+											 		<td>
+											 			<% if ref[:paid].to_f==ref[:credit].to_f %> <%= I18n.t 'ticket_part.capital_paid'%> 
+											 			<% elsif ref[:sent_with]==0 %>
+											 			<a href="<%= APP_CONFIG['development']['site_url'] %>wallet/withdraw/<%= ref[:id] %>"><%= I18n.t 'wallet_index.withdraw_amt'%></a>
+											 			<% else %> <%= I18n.t 'wallet_index.capital_due'%><% end %></td>
+										 		</tr>
+										 	<%
+									 	end
+									 end
+									 	%>
+                            
+                                </tbody>
+                            </table>
+                         <% else %>
+                         	<div class="pad10 textcenter"><p><%= I18n.t 'validation.common.no_records_available'%></p></div>
+                         <% end %>   
+                            <div class="clear"></div>
+                        </div>	
+                        <%	if @ref_wallet.count > 0 %>  
+                        <br /><p><a href="javascript://" onclick="$('.ref_check').attr('checked','checked');"> Check All </a> / <a href="javascript://" onclick="$('.ref_check').removeAttr('checked');">Uncheck All</a></p>   
+                    	<% end %>
+                    </div>-->         
+                    
+                    
+                    <!--<h2><%= I18n.t 'wallet_index.affilliate_earn'%></h2>
+                    <div>
+                    	<div class="shadow affiliate_earnings pad3">
+                    	<%	if @aff_wallet.count > 0	%>	
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>&nbsp;</th>
+                                    <th width="25%"><%= I18n.t 'wallet_index.affiliate_code'%></th>
+                                    <th><%= I18n.t 'pen_paid_table.amt'%></th>
+                                    <th><%= I18n.t 'ticket_part.ticket_paid'%></th>
+                                    <th><%= I18n.t 'wallet_index.due'%></th>
+                                    <th><%= I18n.t 'create_event.date'%></th>
+                                    <th><%= I18n.t 'new.table.ql'%></th>
+                                </tr>
+                                </thead>
+                                <tbody>                               
+                                
+                                <%
+									 for aff in @aff_wallet
+									 	@aff_user = UserJoin.find(aff[:aff_id])
+									 	if Affiliate.exists?(@aff_user[:affiliate_id])
+										 	@affiliate = Affiliate.find(@aff_user[:affiliate_id])
+										 	%>
+										 		<tr>
+											 		<td><% if aff[:sent_with]==0 
+											 					k=1
+											 			%>
+											 				<input type="checkbox" class="aff_check" name="all_id[]" value="<%= aff[:id] %>" />
+											 			<% end  %>&nbsp;</td>
+											 		<td><%= @affiliate[:name] %></td>
+											 		<td><%= set_currency(aff[:credit]) %></td>
+											 		<td><%= set_currency(aff[:paid]) %></td>
+											 		<td><%= set_currency(aff[:due]) %></td>
+											 		<td><%= aff[:created_at].strftime(@site[:date_time_format]) %></td>
+											 		<td><% if ref[:paid].to_f==ref[:credit].to_f %>  <%= I18n.t 'wallet_index.capital_paid'%> <% elsif aff[:sent_with]==0 %><a href="<%= APP_CONFIG['development']['site_url'] %>wallet/withdraw/<%= aff[:id] %>"><%= I18n.t 'wallet_index.withdraw_amt'%></a><% else %>  <%= I18n.t 'wallet_index.capital_due'%> <% end %></td>
+										 		</tr>
+										 	<%
+									 	end
+									 end
+									 	%>                            
+                                </tbody>
+                            </table>
+                        <% else %>
+                        	<div class="pad10 textcenter"><p><%= I18n.t 'validation.common.no_records_available'%></p></div>
+                        <% end %>    
+                            <div class="clear"></div>
+                        </div>
+                       <%	if @aff_wallet.count > 0	%>	
+                        <br /><p><a href="javascript://" onclick="$('.aff_check').attr('checked','checked');"> Check All </a> / <a href="javascript://" onclick="$('.aff_check').removeAttr('checked');">Uncheck All</a></p>
+                       <%	end	%>	 
+                    </div>--> 
+                          
+             	</div>
+             	<!--
+	            	<% if k==1 %>
+	            	<div class="marT15 pad15" align="right">
+		        		<div class="error1" id="witherror"></div><br />
+		        		<input type="submit" name="submit" id="submit" value=<%= I18n.t 'wallet_index.withdraw_amt'%> class="submit_btn" onclick="return check_with_submit();" />
+		        	</div>	
+		        	<% end %>
+		        	-->
+            	<% end %>
+            </div>
+            
+        	
+        </div>
+        <% @act_class = 'My Earnings' %>         	
+    	<%= render(:partial => "/manage_account/account_sidebar" , :object => :collection) %>    
+            
+           
+        <div class="clear"></div>
+    </div>    
+</section>

@@ -1,0 +1,350 @@
+<script type="text/javascript">
+$(document).ready(function(){	
+
+	if (!$.browser.opera) {
+
+		// select element styling
+		$('select.mapselect2').each(function(){
+			var title = $(this).attr('title');
+			if( $('option:selected', this).val() != ''  ) title = $('option:selected',this).text();
+			$(this)
+				.css({'z-index':10,'opacity':0,'-khtml-appearance':'none'})
+				.after('<span class="mapselect2">' + title + '</span>')
+				.change(function(){
+					val = $('option:selected',this).text();
+					$(this).next().text(val);
+				})
+		});
+
+	};
+	      $('.date_only').datepicker({
+				ampm: false,dateFormat:'yy-mm-dd',
+		  });
+	$('#ui-datepicker-div').hide();
+	
+	/* Code to display start and end date when custom date range is selected... */
+	var range = document.getElementById('date_range').value;
+	var sdate = '<%= params[:start_date] %>';
+	var edate = '<%= params[:end_date] %>';
+	
+	if (sdate !='' && edate != ''){
+	
+		if (range == 'custom'){
+			$('#custom_range').show(); 
+			document.getElementById('start_date').value = sdate;
+			document.getElementById('end_date').value = edate;
+			}
+	}
+	
+	/* End of code */
+	
+});
+
+
+function set_action(ele,id){
+	var act=ele.value;
+	var newurl="";	
+	var gotopage=true;									
+	if(act=='edit'){
+		newurl="<%= APP_CONFIG['development']['site_url'] %>manage_event/edit_order/"+id;
+	}
+	else if(act=='cancel'){
+		newurl="<%= APP_CONFIG['development']['site_url'] %>purchases/cancel/"+id;	
+	}
+	else if(act=='view'){
+		newurl="<%= APP_CONFIG['development']['site_url'] %>purchases/show/"+id;	
+	}
+	else if(act=='resend'){
+		newurl="<%= APP_CONFIG['development']['site_url'] %>purchases/resend/"+id;	
+	}
+	else if(act=='print'){
+		newurl="<%= APP_CONFIG['development']['site_url'] %>my_tickets/download_pdf/"+id;	
+	}else{
+		newurl="javascript:";
+	}
+	ele.value='';
+	$('option:selected', ele).removeAttr('selected');
+	document.getElementById("action_anchor").href=newurl;
+	//alert(document.getElementById("action_anchor").href);
+	 if(act=='cancel'){
+	 	var conact = confirm('<%= I18n.t 'myticket_view.cancel_order'%>');
+	 	if(conact){}
+	 	else{ gotopage=false; }
+	 }
+	 
+	  if(gotopage==true){
+	 	window.location.href = newurl;
+	 }
+	//$('#action_anchor').click();
+	
+}
+
+</script>        
+
+<% @act_class = 'Orders' %>         	
+<%= render(:partial => "common_banner" , :object => :collection) %>
+<style>
+	@media (max-width: 768px) {
+		.order_table td:nth-of-type(1):before { content: "Ticket Buyer"; }
+		.order_table td:nth-of-type(2):before { content: "Qty"; }
+		.order_table td:nth-of-type(3):before { content: "Tickets"; }
+		.order_table td:nth-of-type(4):before { content: "Paid"; }
+		.order_table td:nth-of-type(5):before { content: "Quick Actions"; }
+	}	
+</style>
+<section>
+
+	<div class="main">
+    	<div class="left_columm">
+    		 <% if flash[:notice] -%>
+			      <div class="errors marT60">
+			      	<p><%= flash[:notice] %></p>
+			      </div>
+			<% end -%>   
+			<a href="#" style="display: none;" id="action_anchor">123&nbsp;</a>	
+				<%= form_tag({:controller => 'manage_event', :action => 'orders'}, :id => 'resetForm', :name => 'resetForm') do %> 	
+						   
+        	<div class="mtitle marT60">
+            	<h1><%= I18n.t 'cancel_order.order'%></h1>   
+            	<a href="<%= APP_CONFIG['development']['site_url'] %>manage_event/orders/<%= @event[:id] %>.xls?date_range=<%= params[:date_range] %>&search=<%= params[:search] %>&sort_by=<%= params[:sort_by] %>&start_date=<%= params[:start_date] %>"><%= I18n.t 'manage_event_orders.download_excel_report'%></a>          
+            </div>            
+        	<div class="shadow marT40 pad3P">
+                <div class="form">
+                <label><%= I18n.t 'manage_event_orders.date_range'%></label>
+              <select class="selectbox" name="date_range" id="date_range" onchange="if(this.value=='custom'){ $('#custom_range').show(); }else{ $('#custom_range').hide(); $('#resetForm').submit(); }"> 
+                   <option value="start" <% if @date_range =="start" %> selected="selected" <% end %> ><%= I18n.t 'manage_event_orders.since_sales_started'%></option>
+                   <option value="week" <% if @date_range =="week" %> selected="selected" <% end %> ><%= I18n.t 'manage_event_orders.this_week'%></option>
+                    <option value="month" <% if @date_range =="month" %> selected="selected" <% end %> ><%= I18n.t 'manage_event_orders.this_month'%></option>
+                    <option value="year" <% if @date_range =="year" %> selected="selected" <% end %> ><%= I18n.t 'manage_event_orders.this_year'%></option>
+                    <option value="custom" <% if @date_range =="custom" %> selected="selected" <% end %> ><%= I18n.t 'manage_event_orders.custom_date_range'%></option>
+                  </select>   
+                 
+                 		<div id="custom_range" style="display: none;" class="marL305 wid90pr">
+                          	<input type="text" id="start_date" name="start_date" class="date_only textbox TW25p" onchange="if($('#end_date').val()!=''){  $('#resetForm').submit(); }" /> <strong> - </strong>
+                          	<input type="text" id="end_date" name="end_date" class="date_only textbox TW25p"   onchange="if($('#start_date').val()!=''){  $('#resetForm').submit(); }" />
+                        </div>             
+                
+                <label><%= I18n.t 'manage_event_orders.sort_by'%></label>
+                <select class="selectbox" name="sort_by" id="sort_by" onchange="$('#resetForm').submit();">
+                     <option value="date_desc" <% if @sort_by =="date_desc" %> selected="selected" <% end %> ><%= I18n.t 'manage_event_orders.date_descending'%></option>
+                    <option value="date_asc" <% if @sort_by =="date_desc" %> selected="selected" <% end %> ><%= I18n.t 'manage_event_orders.date_ascending'%></option>
+                    <option value="email_asc" <% if @sort_by =="email_asc" %> selected="selected" <% end %> ><%= I18n.t 'manage_event_orders.email_ascending'%></option>
+                    <option value="email_desc" <% if @sort_by =="email_desc" %> selected="selected" <% end %> ><%= I18n.t 'manage_event_orders.email_descending'%></option>
+                    <option value="amt_asc" <% if @sort_by =="amt_asc" %> selected="selected" <% end %> ><%= I18n.t 'manage_event_orders.amount_ascending'%></option>
+                    <option value="amt_desc" <% if @sort_by =="amt_desc" %> selected="selected" <% end %> ><%= I18n.t 'manage_event_orders.amount_descending'%></option>
+                  </select>   
+                
+                <label><%= I18n.t 'manage_event_orders.per_page'%></label>
+                <select class="selectbox" name="per_page" id="per_page" onchange="$('#resetForm').submit();">
+                     <option value="20" <% if @per_page=="20" %> selected="selected" <% end %> >20</option>
+                    <option value="50" <% if @per_page =="50" %> selected="selected" <% end %> >50</option>
+                    <option value="100" <% if @per_page =="100" %> selected="selected" <% end %> >100</option>
+                    <option value="200" <% if @per_page =="200" %> selected="selected" <% end %> >200</option>
+                    <option value="500" <% if @per_page =="500" %> selected="selected" <% end %> >500</option>
+                    
+                  </select>
+                <div class="clear"></div>
+                
+                <label><%= I18n.t 'manage_event_orders.search_for_orders'%></label>
+                <input type="text" class="textbox" name="search" id="search" placeholder="Ex: Order #, Email, etc."  value="<%= @search %>">
+                <a href="javascript:" class="btn marT20 fr" onclick="$('#resetForm').submit(); " ><%= I18n.t 'button.search'%></a>
+                
+                    
+                </div>
+              	<div class="clear"></div> 
+           </div>
+           
+           <% end %>
+           
+           
+           <div class="mtitle marT40">
+            	<h1><%= I18n.t 'cancel_order.order'%>: 
+            		<% if params[:date_range]=='week' %> <%= I18n.t 'myticket_index.this_week'%> 
+            		<% elsif params[:date_range]=='month' %> <%= I18n.t 'search_index.this_month'%>
+            		<% elsif params[:date_range]=='year' %> <%= I18n.t 'manage_event_orders.this_year'%> 
+					<% elsif params[:date_range]=='custom' %> 
+						<%=(params[:start_date].to_date).strftime(@site[:date_format]) %> to  
+						<%= (params[:end_date].to_date).strftime(@site[:date_format]) %> 
+					<% end %>
+				</h1>             
+            </div>            
+        	<div class="marT20">
+				        	
+				<% if @orders.count > 0 
+					i=1
+					
+					if params[:page].to_i > 0
+						i = ((params[:page].to_i-1) * params[:per_page].to_i)+1
+					end	
+					 for order in @orders	
+					 	
+				 if (order[:transaction_key] == order[:id] || order[:ticket_id] == 0) 	
+					 	
+				%>
+					
+                <div class="order_detail shadow pad3">
+                	<div class="upper_tab">
+                    	<div class="order_upper">
+                        	<div class="order_no">
+                            	<%= i %>.
+                            </div>
+                            <div class="order_by_detail">
+                            	<p><a href="<%= APP_CONFIG['development']['site_url'] %>manage_event/edit_order/<%= order[:id] %>"><%= I18n.t 'cancel_order.order'%> #<%= order[:id] %></a> 
+                            		<span>- <%= set_currency(order[:total]) %></span></p>
+                            			<% if order[:first_name] !=nil && order[:last_name] !=nil%>
+								<span><%= I18n.t 'manage_event_orders.ordered_by'%> <a href="<%= APP_CONFIG['development']['site_url'] %>manage_event/edit_order/<%= order[:id] %>"><%= order[:first_name]+' '+order[:last_name] %></a>
+						<%elsif order[:first_name] !=nil %>
+						  <span><%= I18n.t 'manage_event_orders.ordered_by'%> <a href="<%= APP_CONFIG['development']['site_url'] %>manage_event/edit_order/<%= order[:id] %>"><%= order[:first_name] %></a>
+
+						<%end%> 
+									( <a href="mailto:<%= order[:email] %>"><%= order[:email] %></a>) <br />
+								<%= I18n.t 'manage_event_orders.new_on'%> <%= order[:created_at].strftime(@site[:date_time_format]) %></span>
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                    
+                        
+                        <div class="order_action">
+                        	<select class="selectbox1" onchange="set_action(this, '<%= order[:id] %>')">
+                            	<option value=""><%= I18n.t 'attendees.quick_actions'%></option>
+                                <option value="edit"><%= I18n.t 'attendees.edit_ticket_buyer'%></option>
+                                <% 
+			                    @cancel_available = cancel_available(order[:created_at])
+			                    
+			                    if @cancel_available == 1 %>
+			                    	<option value="cancel"><%= I18n.t 'attendees.cancel_this_order'%></option>
+                                <% end %>	
+                                <option value="view"><%= I18n.t 'attendees.view_attendee_report'%></option>
+                                <option value="resend"><%= I18n.t 'attendees.resend_confirmation_email'%></option>
+                                <option value="print"><%= I18n.t 'attendees.print_tickets'%></option>
+                            </select>
+                        </div>
+                        
+                        <div class="clear"></div>
+                        
+                    </div>
+                    <div class="pan_bd">
+                    	<table class="order_table table">
+                            <thead>
+                            <tr>
+                                <th><%= I18n.t 'event.purchase.ticket_buyer'%></th>
+                                <th><%= I18n.t 'manage_event_orders.qty'%></th>
+                                <th><%= I18n.t 'myticket_index.mytickets_tickets'%></th>
+                                <th><%= I18n.t 'list_affiliate_code.paid'%></th>
+                                <th><%= I18n.t 'attendees.quick_actions'%></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <%
+		                
+						          if Ticket.exists?(order[:ticket_id]) && order[:transaction_key] == order[:id]
+						            
+							            @ticket = Ticket.find(order[:ticket_id])
+							  %>
+                             <tr>
+                                <td><strong><%= order[:first_name]+' '+order[:last_name] %></strong></td>
+                                <td><%= order[:ticket_qty] %></td>
+                                <td>
+                                	<% if @ticket[:free]==1 %>
+	                              		<%= @ticket[:free_ticket_name] %>
+	                              	<% elsif @ticket[:paid]==1 %>
+	                              		<%= @ticket[:paid_ticket_name] %>
+	                              	<% else %>
+	                              		<%= @ticket[:donation_ticket_name] %>
+	                              	<% end %>
+                                </td>
+                                <td><%= set_currency(order[:ticket_amt]) %></td>
+                                <td>
+                                    
+                                    <select class="selectbox1" onchange="set_action(this, '<%= order[:id] %>')">
+	                                	<option value=""><%= I18n.t 'attendees.quick_actions'%></option>
+		                                <option value="edit"><%= I18n.t 'attendees.edit_ticket_buyer'%></option>
+		                                <% 
+					                    @cancel_available = cancel_available(order[:created_at])
+					                    
+					                    if @cancel_available == 1 %>
+		                                	<option value="cancel">Cancel this Order</option>
+		                                <% end %>	
+		                                <option value="view"><%= I18n.t 'attendees.view_attendee_report'%></option>
+		                                <option value="resend"><%= I18n.t 'attendees.resend_confirmation_email'%></option>
+		                                <option value="print"><%= I18n.t 'attendees.print_tickets'%></option>
+		                              </select>
+		                             
+                            	</td>
+                            </tr> 
+                            <%    
+                               end #end if
+                               
+                               if order[:ticket_id] == 0 && order[:transaction_key] == nil
+                               @pur = Purchase.find(:all, :conditions => ['transaction_key = ?', order[:id]])     
+							          
+							           for p in @pur
+							            @ticket = Ticket.find(p[:ticket_id])	%>
+                               <tr>
+                                <td><strong><%= p[:first_name]+' '+ p[:last_name] %></strong></td>
+                                <td><%= p[:ticket_qty] %></td>
+                                <td>
+                                	<% if @ticket[:free]==1 %>
+	                              		<%= @ticket[:free_ticket_name] %>
+	                              	<% elsif @ticket[:paid]==1 %>
+	                              		<%= @ticket[:paid_ticket_name] %>
+	                              	<% else %>
+	                              		<%= @ticket[:donation_ticket_name] %>
+	                              	<% end %>
+                                </td>
+                                <td><%= set_currency(p[:ticket_amt]) %></td>
+                                <td>
+                                    
+                                    <select class="selectbox1" onchange="set_action(this, '<%= p[:id] %>')">
+	                                	<option value=""><%= I18n.t 'attendees.quick_actions'%></option>
+		                                <option value="edit"><%= I18n.t 'attendees.edit_ticket_buyer'%></option>
+		                                <% 
+					                    @cancel_available = cancel_available(order[:created_at])
+					                    
+					                    if @cancel_available == 1 %>
+		                                	<option value="cancel">Cancel this Order</option>
+		                                <% end %>	
+		                                <option value="view"><%= I18n.t 'attendees.view_attendee_report'%></option>
+		                                <option value="resend"><%= I18n.t 'attendees.resend_confirmation_email'%></option>
+		                                <option value="print"><%= I18n.t 'attendees.print_tickets'%></option>
+		                              </select>
+		                             
+                            	</td>
+                            </tr> 
+                  			<%			end # end innter for
+                  			   end # end ticket = 0 
+                            	# end k+=1 
+		                       # end
+		                      # end
+		                    %>                           
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="order_total">
+                    	<%= I18n.t 'manage_event_orders.total'%>:	<%= set_currency(order[:total])%>
+                    </div>
+                </div>
+                
+                <% 		i+=1
+                end 
+					end
+				else %>
+					<div class="order_detail shadow pad15"><p><%= I18n.t 'validation.common.no_records_available'%></p></div>
+					
+				<% end %>
+				<%= will_paginate @orders, :params => { :date_range => params[:date_range], :start_date => params[:start_date], :search => params[:search], :sort_by => params[:sort_by], :per_page => params[:per_page]} %>
+
+            </div>
+    	</div>  
+    	
+    	<%= render(:partial => "manage_event_sidebar" , :object => :collection) %>
+		<div class="clear"></div>
+        </div>
+           <div class="clear"></div>
+    
+    
+</section>
+
+<% @edit_menu_class = 'Manage' %>
+<%= render(:partial => "edit_menu" , :object => :collection) %> 
+<div class="clear "></div>

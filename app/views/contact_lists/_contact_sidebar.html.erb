@@ -1,0 +1,49 @@
+<div class="rightcol">
+	
+	<% if @contact_lists.count > 0 || params[:keyword] %>	
+    
+	    <script type="text/javascript">
+			function chk_name(){
+				var name = $('#keyword').val();
+		        
+		        if(name==''){
+		        	$('#keyword').focus();
+		        	$("#namerr1").html('<%= I18n.t 'cont_sider.cont_nm_req' %>');
+		        	return false;
+		        }
+		        return true;
+			}
+		</script>
+	    
+	    <div class="mtitle">
+	    	<h1><%= I18n.t 'search_part.search_all' %></span></h1>
+	    </div>
+	    <div class="latest_update">
+	    	<%= form_tag({:controller => 'contact_lists', :action => 'index'}, :id => 'searchForm', :name => 'searchForm') do %> 
+	        	<div class="form">
+	                <%= text_field_tag :keyword,'', :class => 'textbox TW97p', :placeholder => (I18n.t 'search_part.place_holder')  %>
+	            </div>
+	            <div class="clear"></div><div id="namerr1" class="error1"></div> 
+	            <div class="marT20" align="right">
+	        		<%= submit_tag (I18n.t 'button.search') , :class => 'submit_btn', :style => 'left:150px;', :id => 'resetbtn', :onclick => 'return chk_name();' %>
+	        	</div>
+	    	<% end %>
+	    </div>
+     	
+    <% else %>
+          
+        <div class="mtitle">
+	    	<h1><%= I18n.t 'search_part.need_help' %></span></h1>
+	    </div>
+	    <div class="shadow marT20 latest_update pad3">
+	    	<ul>
+	        	<li><a href="<%= APP_CONFIG['development']['site_url'] %>content/create_contact" target="_blank"><%= I18n.t 'link.create_contact' %></a></li>
+	        	<li><a href="<%= APP_CONFIG['development']['site_url'] %>content/manage_contact" target="_blank"><%= I18n.t 'link.manage_contact' %></a></li>
+	        	<li><a href="<%= APP_CONFIG['development']['site_url'] %>content/import_contact" target="_blank"><%= I18n.t 'link.import_contact' %></a></li>
+	        </ul>
+	    </div>  
+	
+	<% end %>
+
+</div>
+

@@ -1,0 +1,42 @@
+<div class="main">
+	<div class="header">
+    	<div class="ticket_article shadow marT80 smallonly_marT150 ">                	
+             <div class="fr article_right pad3 min_img_size">
+             	<%
+        # @event[:event_logo]= 'logo_052713ccaa_Desert.jpg'
+       	#image_check = image_tag('demo_image.png')
+       	image_check = 0
+       	
+       	 if(@event[:event_logo]!=nil)
+             img_full_path = check_img(@event[:event_logo],'event','thumb')	
+         	if img_full_path!='0' && img_full_path!='' 
+			  image_check = 1
+			  %>
+			  <img src="<%= APP_CONFIG['development']['upload_url'] %><%= img_full_path %>" alt="<%= @event[:event_title] %>" />
+			  <%
+			end
+		end
+			if image_check==0
+				%>
+				<img src="<%= APP_CONFIG['development']['app_url'] %>demo_image.png" alt="<%= @event[:event_title] %>" />
+				<%
+			end		
+				
+			
+         %>
+             	<div class="article_shadow "><img src="<%= APP_CONFIG['development']['app_url'] %>article_shadow.png" /></div>
+               
+             </div>
+             
+             <div class="fl mtitle article_left res-mtitle">
+                    <h1><%= @event[:event_title] %></h1>
+                    <h2><%= @event[:organizer_host] %></h2>
+                    <h2><span><%= I18n.t 'event.view.from' %> </span><%= @event[:event_start_date_time].strftime(@site[:date_time_format]) %> <span><%= I18n.t 'event.view.to' %> </span><%= @event[:event_end_date_time].strftime(@site[:date_time_format]) %></h2>
+             </div>
+             <div class="clear"></div>
+             
+        </div>
+        <div><img src="<%= APP_CONFIG['development']['app_url'] %>shadow.png" /></div> 
+        <div class="clear"></div>
+    </div>
+</div>

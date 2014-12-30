@@ -1,0 +1,30 @@
+<section>
+	<div class="main" style="min-height: 420px;">
+    	<% if @page	%>
+    	<div class="mtitle marT40">
+            <h1><%= @page[:pages_title] %></h1>             
+        </div>
+        
+        <div class="shadow marT20 pad20 content_page">
+        	<%
+				if @page[:description]!=nil && @page[:description]!=''
+				 %>
+				<%= render :inline => @page[:description] %>
+			
+        </div>	
+        <% 
+				else
+					%>
+					
+				        <div class="shadow marT20 pad20">
+							<p> <%= I18n.t 'page_index.no_contant_link_available'%></p>
+						</div>			
+					<%
+				end	
+			else %>
+					<div class="shadow marT20 pad20">
+							<p> <%= I18n.t 'page_index.no_contant_link_available'%></p>
+						</div>	
+			<% end %>
+ </div>
+</section>

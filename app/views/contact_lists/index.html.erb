@@ -1,0 +1,158 @@
+<script src="<%= APP_CONFIG['development']['js_url'] %>js/jquery.colorbox.js" type="text/javascript"></script>    
+<link href="<%= APP_CONFIG['development']['css_url'] %>colorbox.css" media="all" rel="stylesheet" type="text/css" />
+
+<script type="text/javascript">
+$(document).ready(function() {
+/**** pop up *****/
+	 $(".rr").colorbox();
+	
+});
+	
+	function set_check(){
+		$('#selecterr').text('');
+		var chks = document.getElementsByName('id[]');
+		var fl = true;
+		for (var i = 0; i < chks.length; i++)
+        {
+            if (chks[i].checked==true)
+            {
+                   fl = false;
+            }
+         }
+         
+         if(fl==true){
+         	$('#selecterr').text('<%= I18n.t 'new.js' %>');
+         	$('#selecterr').addClass("error1");
+			return false;
+         }else{
+         	$('#action_form').val(action_form);
+         	$('#send_invite_click').click();
+         	//$('#action_form').val(action_form);
+         	//document.contactForm.submit();
+         }
+	}
+	
+	
+
+	function confirm_delete(){
+		var con = confirm('<%= I18n.t 'new.confirm' %>');
+		if(con){
+			return true;
+		}
+		return false;	
+	}
+
+</script>
+<style>
+	@media (max-width: 768px) {
+		.contact_list td:nth-of-type(1):before { content: "<%= I18n.t 'new.table.select' %>"; }
+		.contact_list td:nth-of-type(2):before { content: "<%= I18n.t 'new.table.nm' %>"; }
+		.contact_list td:nth-of-type(3):before { content: "<%= I18n.t 'new.table.con' %>"; }
+		.contact_list td:nth-of-type(4):before { content: "<%= I18n.t 'new.table.create' %>"; }
+		.contact_list td:nth-of-type(5):before { content: "<%= I18n.t 'new.table.ql' %>"; }
+	}	
+</style>
+<section>	
+	<div class="main marTB40" style="min-height: 400px;">
+		
+    	<% if flash[:notice1] -%>
+			      <div class="notice" >
+			      	<p><%= flash[:notice1] %></p>
+			      </div>
+			
+			   <% end -%>
+    	<div class="leftcol">
+        	<div class="mtitle">
+            	<h1><%= I18n.t 'new.my' %> </h1>
+            </div>
+            <% if @contact_lists.count > 0 %>
+            	<%= form_tag({:action => 'invite'}, :id => 'contactForm', :name => 'contactForm') do %> 		
+                		
+                	
+		            <div class="shadow event pad3 marT20">
+		                <table class="contact_list table">
+		                    <thead>
+		                    <tr>
+		                        <th><%= I18n.t 'new.table.select' %></th>
+		                        <th><%= I18n.t 'new.table.nm' %></th>
+		                        <th><%= I18n.t 'new.table.con' %></th>
+		                        <th><%= I18n.t 'new.table.create' %></th>
+		                        <th><%= I18n.t 'new.table.ql' %></th>
+		                    </tr>
+		                    </thead>
+		                    <tbody>
+		                     <% for cl in @contact_lists %>
+			                     	<tr>
+				                        <td><input name="id[]" type="checkbox" value="<%= cl[:id] %>" id="<%= cl[:id] %>"/></td>
+				                        <td><a href="<%= APP_CONFIG['development']['site_url'] %>contacts/list/<%= cl[:id] %>"><strong><%= cl[:name] %></strong></a></td>
+				                        <td><%= cl[:cnt] %></td>
+				                        <td><%= cl[:created_at].strftime(@site[:date_time_format]) %></td>
+				                        <td class="action_icon TW150">
+				                            <a href="<%= APP_CONFIG['development']['site_url'] %>contacts/list/<%= cl[:id] %>" class="hint--bottom" data-hint="<%= I18n.t 'create_data_hint.data_hint_contact_list'%>">
+				                            	<img src="<%= APP_CONFIG['development']['app_url'] %>icon-list.png" />
+				                            </a>
+				                            <a href="<%= APP_CONFIG['development']['site_url'] %>contact_lists/copy/<%= cl[:id] %>" class="hint--bottom rr" data-hint="<%= I18n.t 'create_data_hint.data_hint_copy'%>">
+				                            	<img src="<%= APP_CONFIG['development']['app_url'] %>icon-copy.png" />
+				                            </a>
+				                            <a href="<%= APP_CONFIG['development']['site_url'] %>contact_lists/delete/<%= cl[:id] %>" class="hint--bottom" data-hint="<%= I18n.t 'create_data_hint.data_hint_delete'%>" onclick="return confirm_delete();">
+				                            	<img src="<%= APP_CONFIG['development']['app_url'] %>icon-delete.png" />
+				                            </a>
+				                            
+				                            <a href="javascript://" class="hint--bottom" data-hint="<%= I18n.t 'create_data_hint.data_hint_invite'%>" onclick="$('#<%= cl[:id] %>').attr('checked','checked'); $('#send_invite_link').click();">
+				                            	<img src="<%= APP_CONFIG['development']['app_url'] %>icon-invite.png" />
+				                            </a>
+				                            
+				                            
+				                        </td>
+				                    </tr> 
+		                     <% end %>
+		                    
+		                    
+		                    </tbody>
+		                </table>
+		               	
+		            </div>   
+		                 <div class="marT20" align="right">
+				        	<%= will_paginate @contact_lists %>
+				        	<div class="clear"></div>
+				        </div>          
+		            <div class="list_action marT20">
+		            	<div id="selecterr" ></div>
+		            	<div class="fl">
+		            		<input type="hidden" name="action_form" id="action_form" value="" />
+		            		<input type="hidden" name="select_invitation_id" id="select_invitation_id" value="" />
+		            		<a href="<%= APP_CONFIG['development']['site_url'] %>contact_lists/select_invite" class="rr" id="send_invite_click" style="display: none;">&nbsp;</a>
+		                	<a href="javascript://" class="btn" onclick="set_check('invite');" id="send_invite_link"><%= I18n.t 'new.send_invi_select' %></a>
+		                </div>
+		                <div class="fr">
+					       <%= link_to  (I18n.t 'new.create_new_contact') , { :controller => 'contact_lists', :action => 'new'}, :class=> 'btn black_bg' %>
+					    </div>
+		            	<div class="clear"></div>
+		            	
+		            </div>
+		            		
+                <% end %>
+            <% else %>
+            <div class="shadow marT20 pad20">
+            	<% if params[:keyword] %>
+							<p><%= I18n.t 'new.no_record' %><%= params[:keyword] %><%= I18n.t 'new.contact_list' %> </p>
+						
+					<% else %>
+					
+		            	<div class="mtitle">
+		            		<h3><%= I18n.t 'new.sign' %><span><%= I18n.t 'new.my_con' %></span><%= I18n.t 'new.let' %></h3>
+		            	</div><br />
+		                <%= I18n.t 'new.info1' %><br />
+		                <%= I18n.t 'new.info2' %><br />
+		                <%= I18n.t 'new.info3' %><br />
+		                <%= I18n.t 'new.info4' %><br /><br />
+				   <% end %>
+					<%= link_to  (I18n.t 'new.create_contact_list'), { :controller => 'contact_lists', :action => 'new'}, :class=> 'btn' %>
+            </div>
+            <% end %>
+        </div>
+        <%= render(:partial => "contact_sidebar" , :object => :collection) %>   
+        
+        <div class="clear"></div>
+    </div>    
+</section>

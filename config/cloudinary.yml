@@ -1,0 +1,19 @@
+#---
+development:
+  cloud_name: anita-rockers
+  api_key: '461546779472548'
+  api_secret: YUFdNj7Mo1tdzPUxfiRK1nWRAuc
+  enhance_image_tag: true
+  static_image_support: false
+production:
+  cloud_name: anita-rockers
+  api_key: '461546779472548'
+  api_secret: YUFdNj7Mo1tdzPUxfiRK1nWRAuc
+  enhance_image_tag: true
+  static_image_support: true
+test:
+  cloud_name: anita-rockers
+  api_key: '461546779472548'
+  api_secret: YUFdNj7Mo1tdzPUxfiRK1nWRAuc
+  enhance_image_tag: true
+  static_image_support: false

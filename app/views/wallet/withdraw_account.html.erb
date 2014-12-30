@@ -1,0 +1,424 @@
+<%
+	@credit = Wallet.sum("credit", :conditions => ["event_id=? and user_id=?", params[:id], session[:user_id]]) 
+	@bank = UserBankDetail.find(:first, :conditions => ["user_id=?", session[:user_id]])
+	@wallet_setting = WalletSetting.find(:first)
+	@user = User.find(:first, :conditions => ["id=?",session[:user_id]])
+	#@currency_code = CurrencyCode.find(:first, :conditions => ['id=?', @event[:currency_code_id]])
+	#@site[:currency_symbol] = @currency_code[:currency_symbol] 
+
+%>
+
+<%
+	@pfees = @wallet_setting[:paypal_withdraw_fees].to_f
+	@bfees = @wallet_setting[:bank_withdraw_fees].to_f
+	@cfees = @wallet_setting[:cheque_withdraw_fees].to_f
+		
+	@pamt = (@credit.to_f * @pfees) / 100    
+	@bamt = (@credit.to_f * @bfees) / 100 
+ 	@camt = (@credit.to_f * @cfees) / 100
+ 	
+	@withdraw_from_paypal = @credit.to_f - @pamt.to_f 
+	@withdraw_from_bank = @credit.to_f - @bamt.to_f
+	@withdraw_from_cheque = @credit.to_f - @camt.to_f
+	
+%>
+<script>
+
+ $(document).ready(function() {
+	$('#paypal_info').show();
+	$('#bank_info').hide();
+	$('#cheque_info').hide();
+				
+	 $('#with_paypal').show();
+	 $('#with_bank').hide();
+	 $('#with_cheque').hide(); 
+			
+   });
+function set_withdraw_mode(){
+
+	var result_value="";
+	var withdraw_amt = document.getElementById('withdraw_amt');
+	  withdraw_amt = '<%= @withdraw_from_paypal.to_f %>';	
+	  document.getElementById('withdraw_amt').value = withdraw_amt;
+
+
+	if (document.getElementById('paypal').checked) {
+	  result_value = document.getElementById('paypal').value;
+	 
+	  $('#with_paypal').show();
+	  $('#with_bank').hide();
+	  $('#with_cheque').hide();
+	 
+	  $('#paypal_info').show();
+	  $('#bank_info').hide();
+	  $('#cheque_info').hide(); 	
+
+	}
+	if (document.getElementById('net_banking').checked) {
+	  result_value = document.getElementById('net_banking').value;
+	  
+	  var withdraw_amt = document.getElementById('withdraw_amt');
+	  withdraw_amt = '<%= @withdraw_from_bank.to_f %>';
+	  document.getElementById('withdraw_amt').value = withdraw_amt;
+
+	  
+	  $('#with_bank').show();
+	  $('#with_paypal').hide();
+	  $('#with_cheque').hide();
+	  
+	  $('#bank_info').show();
+	  $('#paypal_info').hide();
+	  $('#cheque_info').hide();
+	}
+	if (document.getElementById('cheque').checked) {
+	  result_value = document.getElementById('cheque').value;
+	  
+	  var withdraw_amt = document.getElementById('withdraw_amt');
+	  withdraw_amt = '<%= @withdraw_from_cheque.to_f %>';
+	  document.getElementById('withdraw_amt').value = withdraw_amt;
+	  
+	  $('#with_cheque').show();
+	  $('#with_paypal').hide();
+	  $('#with_bank').hide();
+	  
+	  $('#cheque_info').show();
+	  $('#bank_info').hide();
+	  $('#paypal_info').hide();
+	  
+	}
+}
+
+// Validations
+function validateData(){
+	
+	var email_reg_exp = /^[a-zA-Z0-9]+[a-zA-Z0-9_.-]+[a-zA-Z0-9_-]+@[a-zA-Z0-9]+[a-zA-Z0-9.-]+[a-zA-Z0-9]+.[a-z]{2,4}$/;
+	var name_reg_exp = /^[a-z A-Z]+$/;	
+	var LetNumSpaceSpec=/^[0-9a-z A-Z_-]+$/;
+	var ifsc_reg_exp = /[A-Z|a-z]{4}[0]\d{6}$/; // 4 letters + 0 + 6 numbers
+	var ac_number_reg_exp=/^[0-9]+$/;
+	
+	var filter = email_reg_exp;
+	var filter1 = name_reg_exp; 
+	var filter2 = LetNumSpaceSpec;
+	var filter3 = ifsc_reg_exp;
+	var filter4 = name_reg_exp;
+	var filter5 = ac_number_reg_exp;
+	
+	// For Paypal and Referrer email
+	var a = $("#payacc").val();
+	var b = $('#refacc').val();
+	
+	/* ===== list of textboxes ===== */
+	
+	
+	// for net-bank
+	var bankname = $("#bank_name").val();
+	var branchname = $('#bank_branch').val();
+	var ifsc = $('#bank_ifsc_code').val();  // pending
+	var ac_holder_name = $('#bank_account_holder_name').val();
+	var ac_number = $('#bank_account_number').val();
+	
+	// for cheque
+	var cheque_name = $("#cheque_name").val();
+	var chbranch = $('#cheque_branch').val();
+	var chifsc = $('#cheque_ifsc_code').val();
+	var chacnumber = $('#cheque_account_number').val();
+	var chaddress = $('#org_address').val();
+	
+	/* ===== list of error divs ===== */
+	
+	
+	
+	// for bank
+	var banknameerr = $("#banknameerr");
+	var brancherr = $('#brancherr');
+	var ifscerr = $('#ifscerr'); // pending
+	var achodererr = $('#acholdererr');
+	var acnumbererr = $('#acnumbererr');
+	
+	// for cheque
+	var chnameerr = $("#chnameerr");
+	var chbrancherr = $('#chbrancherr');
+	var chifscerr = $('#chifscerr');
+	var chacnumbererr = $('#chacnumbererr');
+	var chaddresserr = $('#chaddresserr');
+
+
+	// Validations for Paypal and Referrer email
+if (document.getElementById('net_banking').checked) {
+	if(filter1.test(bankname) && filter2.test(branchname) && filter3.test(ifsc) && filter4.test(ac_holder_name) && filter5.test(ac_number)){				
+		banknameerr.text('Name is valid');
+		banknameerr.removeClass("error1");
+		banknameerr.addClass("success");
+		ifscerr.text('Valid IFSC  ');
+		ifscerr.removeClass("error1");
+		ifscerr.addClass("success");
+		brancherr.removeClass("error1");
+		ifscerr.removeClass("error1");
+		
+		
+		return true;
+	}	
+	// Validations for Bank information		
+	else if(!filter1.test(bankname)) {
+				
+		banknameerr.text('Type a valid name please');
+		banknameerr.removeClass("success");
+		banknameerr.addClass("error1");
+		return false;
+	}	
+	else if(!filter2.test(branchname)) {
+				
+		brancherr.text('Type a valid branch name please');
+		brancherr.removeClass("success");
+		brancherr.addClass("error1");
+		return false;
+	}	
+	else if(!filter3.test(ifsc)) {
+				
+		ifscerr.text('Type a valid IFSC  please');
+		ifscerr.removeClass("success");
+		ifscerr.addClass("error1");
+		return false;
+	}	
+	else if(!filter4.test(ac_holder_name)) {
+				
+		achodererr.text('Type a valid A/C Holder Name  please');
+		achodererr.removeClass("success");
+		achodererr.addClass("error1");
+		return false;
+	}
+	else if(!filter5.test(ac_number)) {
+				
+		acnumbererr.text('Type a valid A/C Number  please');
+		acnumbererr.removeClass("success");
+		acnumbererr.addClass("error1");
+		return false;
+	}	
+}
+// For Cheque..
+if (document.getElementById('cheque').checked) {
+	
+	if(filter2.test(cheque_name) && filter2.test(chbranch) && filter3.test(chbranch) && filter5.test(chacnumber) && filter2.test(chaddress)){
+		return true;
+	}
+	else if(!filter2.test(cheque_name)) {
+				
+		chnameerr.text('Type a valid cheque name');
+		chnameerr.removeClass("success");
+		chnameerr.addClass("error1");
+		return false;
+	}	
+	else if(!filter2.test(chbranch)) {
+				
+		chbrancherr.text('Type a valid cheque branch');
+		chbrancherr.removeClass("success");
+		chbrancherr.addClass("error1");
+		return false;
+	}
+	else if(!filter3.test(chifsc)) {
+				
+		chifscerr.text('Type a valid IFSC  please');
+		chifscerr.removeClass("success");
+		chifscerr.addClass("error1");
+		return false;
+	}
+	else if(!filter5.test(chacnumber)) {
+				
+		chacnumbererr.text('Type a valid A/C Number  please');
+		chacnumbererr.removeClass("success");
+		chacnumbererr.addClass("error1");
+		return false;
+	}	
+	else if(!filter2.test(chaddress)) {
+				
+		chaddresserr.text('Type a valid Address please');
+		chaddresserr.removeClass("success");
+		chaddresserr.addClass("error1");
+		return false;
+	}		
+}
+}// end function
+
+</script>  
+<section>
+    		
+	<div class="main marTB40">			
+	<%= form_tag({:controller => 'wallet', :action => 'withdraw_event'}, :id => 'withform') do %>  
+				    
+    	<div class="leftcol" >      	
+            
+            <div class="mtitle">
+            	<h3> <%= I18n.t 'pen_paid_table.en'%>:<span><%= @event[:event_title] %></span></h3>
+            </div>
+            <div class="marT10">
+                 <h3><%= I18n.t 'wallet_withdraw.wallet'%>:<%= @site[:currency_symbol] %> <%= @credit.to_f %>
+            </div>
+            
+           <div id="amterr"></div>
+           <div class="shadow form marT10">
+           	<div class="mar10 pad15">
+                <h2><%= I18n.t 'wallet_withdraw.select_withdraw_mode'%>: <span class="red">*</span></h2>
+
+        		<input type="radio" name="withdraw_mode" id="paypal" value="1" onclick="set_withdraw_mode();" checked="checked" /> <%= I18n.t 'wallet_withdraw.paypal'%>             
+        		<input type="radio" name="withdraw_mode" id="net_banking" value="2" onclick="set_withdraw_mode();" /> <%= I18n.t 'wallet_withdraw.net_banking'%>
+        		<input type="radio" name="withdraw_mode" id="cheque" value="3" onclick="set_withdraw_mode();" /> <%= I18n.t 'wallet_withdraw.cheque'%>   
+        		<br /><br /> <h4><%= I18n.t 'wallet_withdraw.note'%></h4>
+			 </div>							
+           </div>
+             <!-- <div class="shadow form marT10">
+              	
+              	<div id="with_paypal" style= "display:none;" class="mar10 pad15">
+              		<h2> <%= I18n.t 'wallet_withdraw.trxndetail'%>: </h2>
+              	   <label class="marT10"><%= I18n.t 'wallet_withdraw.amt'%>(<%= @site[:currency_symbol] %>) :</label>
+                   <label> <%= @credit.to_f %></label><br />
+                   <label> <%= I18n.t 'wallet_withdraw.trxnfees'%> (%) : </label>
+                   <label> <%= @wallet_setting[:paypal_withdraw_fees]%></label><br />
+                   <label><%= I18n.t 'wallet_withdraw.you_will_get'%>(<%= @site[:currency_symbol] %>) : </label>
+                   <label><%= @withdraw_from_paypal.to_f %> </label><br/>
+                 </div>
+                   
+                 <div id="with_bank" style= "display:none;" class="mar10 pad15">
+                 	<h2> <%= I18n.t 'wallet_withdraw.trxndetail'%>: </h2>
+              	   <label class="marT10"> <%= I18n.t 'wallet_withdraw.amt'%>(<%= @site[:currency_symbol] %>) :</label>
+                   <label> <%= @credit.to_f %></label><br />
+                   <label> <%= I18n.t 'wallet_withdraw.trxnfees'%> (%) : </label>
+                   <label> <%= @wallet_setting[:bank_withdraw_fees]%></label><br />
+                   <label> <%= I18n.t 'wallet_withdraw.you_will_get'%>(<%= @site[:currency_symbol] %>) : </label>
+                   <label><%= @withdraw_from_bank.to_f %> </label><br/>
+                 </div>
+                   
+                 <div id="with_cheque" style= "display:none;" class="mar10 pad15">
+                 	<h2> <%= I18n.t 'wallet_withdraw.trxndetail'%>: </h2>
+              	   <label class="marT10"> <%= I18n.t 'wallet_withdraw.amt'%> (<%= @site[:currency_symbol] %>) :</label>
+                   <label> <%= @credit.to_f %></label><br />
+                   <label> <%= I18n.t 'wallet_withdraw.trxnfees'%> (%) : </label>
+                   <label> <%= @wallet_setting[:cheque_withdraw_fees]%></label><br />
+                   <label> <%= I18n.t 'wallet_withdraw.you_will_get'%>(<%= @site[:currency_symbol] %>): </label>
+                   <label><%= @withdraw_from_cheque.to_f %> </label><br/>
+                 </div>
+              </div>-->
+              <div class="clear"></div>
+             <div class="shadow marT10 form ">
+            	 
+            	<div id="paypal_info" style="display: none;" class="mar10 pad15">
+            		
+                   <h1> <%= I18n.t 'wallet_withdraw.paypal'%> <%= I18n.t 'wallet_withdraw.detail'%>:</h1>
+                   
+                   <label><%= I18n.t 'wallet_withdraw.gateway_name'%>: <span class="red">*</span></label> 
+                   <%= text_field_tag :gateway_name, "Paypal", :class => 'textbox', :name => 'gateway_name', :id => 'gateway_name'  %> 
+
+			
+                  <label><%= I18n.t 'wallet_withdraw.gateway_acc'%>: <span class="red">*</span></label>
+                <% if @user && @user[:event_pay_account] != '' %>
+		 <%= text_field_tag :gateway_account, @user[:event_pay_account], :class => 'textbox', :name => 'gateway_account', :id => 'gateway_account'  %>  
+		<% else %>
+                   <%= text_field_tag :gateway_account, nil, :class => 'textbox', :name => 'gateway_account', :id => 'gateway_account'  %>  
+                 <% end %>
+		</div> <!-- End Div Paypal Info -->
+			    
+			    <div id="bank_info" style="display: none;" class="mar10 pad15">
+                   <h1> <%= I18n.t 'wallet_withdraw.bank'%> <%= I18n.t 'wallet_withdraw.detail'%>:</h1>
+                  
+                    <label><%= I18n.t 'wallet_withdraw.bank'%> <%= I18n.t 'wallet_withdraw.nm'%>: <span class="red">*</span></label>
+                    <% if @bank && @bank[:bank_name] != ''%>
+                    	<%= text_field_tag :bank_name, @bank[:bank_name], :class => 'textbox', :name => 'bank_name', :id => 'bank_name'  %> 
+				    <% else %>
+				    	<%= text_field_tag :bank_name, nil, :class => 'textbox', :name => 'bank_name', :id => 'bank_name'  %>
+				    <% end %>
+                    <div id="banknameerr" class="marL190"></div>
+                    
+                    <label><%= I18n.t 'wallet_withdraw.bank'%> <%= I18n.t 'wallet_withdraw.br'%>: <span class="red">*</span></label>
+                    <% if @bank && @bank[:bank_branch] != ''%>
+                    	<%= text_field_tag :bank_branch, @bank[:bank_branch], :class => 'textbox', :name => 'bank_branch', :id => 'bank_branch'  %> 
+				   <% else %>
+				   		<%= text_field_tag :bank_branch, nil, :class => 'textbox', :name => 'bank_branch', :id => 'bank_branch'  %>
+				   <% end %>
+				   <div id="brancherr" class="marL190"></div>
+				   
+                   <label><%= I18n.t 'wallet_withdraw.bank'%> <%= I18n.t 'wallet_withdraw.ifsc'%>: <span class="red">*</span></label>
+                    <% if @bank && @bank[:bank_ifsc_code] != ''%>  
+                    	<%= text_field_tag :bank_ifsc_code, @bank[:bank_ifsc_code], :class => 'textbox', :name => 'bank_ifsc_code', :id => 'bank_ifsc_code'  %>
+                    <% else %>
+                    	<%= text_field_tag :bank_ifsc_code, nil, :class => 'textbox', :name => 'bank_ifsc_code', :id => 'bank_ifsc_code'  %>
+                    <% end %>
+                    <p style="margin-left: 185px;"> Enter your 11 digit code</p>
+                     <div id="ifscerr" class="marL190"></div>
+                     
+                    <label><%= I18n.t 'wallet_withdraw.holder'%>: <span class="red">*</span></label>
+                    <%= text_field_tag :bank_account_holder_name, nil, :class => 'textbox', :name => 'bank_account_holder_name', :id => 'bank_account_holder_name'  %>
+                     <div id="acholdererr" class="marL190"></div>
+                     
+                   <label><%= I18n.t 'wallet_withdraw.accnum'%>: <span class="red">*</span></label>
+                    <%= text_field_tag :bank_account_number, nil, :class => 'textbox', :name => 'bank_account_number', :id => 'bank_account_number'  %> 
+				     <div id="acnumbererr" class="marL190"></div>
+				    
+                   <label><%= I18n.t 'wallet_withdraw.bank'%> <%= I18n.t 'user.add'%> : </label>
+                    <%= text_field_tag :bank_address, nil, :class => 'textbox', :name => 'bank_address', :id => 'bank_address'  %> 
+				    
+                    <label><%= I18n.t 'wallet_withdraw.bank'%> <%= I18n.t 'user.city'%> : </label>
+                    <%= text_field_tag :bank_city, nil, :class => 'textbox', :name => 'bank_city', :id => 'bank_city'  %>
+                    
+                    <label><%= I18n.t 'wallet_withdraw.bank'%> <%= I18n.t 'user.state'%> : </label>
+                    <%= text_field_tag :bank_state, nil, :class => 'textbox', :name => 'bank_state', :id => 'bank_state'  %> 
+				   
+                     <label><%= I18n.t 'wallet_withdraw.bank'%> <%= I18n.t 'user.country'%> : </label>
+                    <%= text_field_tag :bank_country, nil, :class => 'textbox', :name => 'bank_country', :id => 'bank_country'  %>
+                    
+                    <label><%= I18n.t 'wallet_withdraw.bank'%> <%= I18n.t 'user.zipcode'%> : </label>  
+                    <%= text_field_tag :bank_zipcode, nil, :class => 'textbox', :name => 'bank_zipcode', :id => 'bank_zipcode'  %>
+                  
+			    </div><!-- End Div Bank Info -->
+			    
+			    <div id="cheque_info" style="display: none;" class="mar10 pad15">
+			    	
+                   <h1> <%= I18n.t 'wallet_withdraw.cheque'%> <%= I18n.t 'wallet_withdraw.detail'%></h1>
+                   
+                    <h3>Bank Details: </h3>
+                   <label><%= I18n.t 'wallet_withdraw.nm'%>: <span class="red">*</span></label>
+                    <%= text_field_tag :cheque_name, nil, :class => 'textbox', :name => 'cheque_name', :id => 'cheque_name'  %> 
+				    <div id="chnameerr" class="marL190"></div>
+				    
+                    <label><%= I18n.t 'wallet_withdraw.br'%>: <span class="red">*</span></label>
+                    <%= text_field_tag :cheque_branch, nil, :class => 'textbox', :name => 'cheque_branch', :id => 'cheque_branch'  %> 
+				   <div id="chbrancherr" class="marL190"></div>
+				   
+                    <label><%= I18n.t 'wallet_withdraw.ifsc'%>: <span class="red">*</span></label>
+                    <%= text_field_tag :cheque_ifsc_code, nil, :class => 'textbox', :name => 'cheque_ifsc_code', :id => 'cheque_ifsc_code'  %>
+                    <div id="chifscerr" class="marL190"></div>
+                    
+                    <label><%= I18n.t 'wallet_withdraw.accnum'%>: <span class="red">*</span></label>
+                    <%= text_field_tag :cheque_account_number, nil, :class => 'textbox', :name => 'cheque_account_number', :id => 'cheque_account_number'  %> 
+				 	<div id="chacnumbererr" class="marL190"></div>
+				 				
+				    <h3><%= I18n.t 'user.bill_add'%>:</h3> 
+                    <label><%= I18n.t 'user.add'%>: <span class="red">*</span></label>
+                    <%= text_field_tag :org_address, nil, :class => 'textbox', :name => 'org_address', :id => 'org_address'  %> 
+				    <div id="chaddresserr" class="marL190"></div>
+				    
+                    <label><%= I18n.t 'user.city'%>: </label>
+                    <%= text_field_tag :org_city, nil, :class => 'textbox', :name => 'org_city', :id => 'org_city'  %>
+                    
+                    <label><%= I18n.t 'user.state'%>: </label>
+                    <%= text_field_tag :org_state, nil, :class => 'textbox', :name => 'org_state', :id => 'org_state'  %> 
+				   
+                    <label><%= I18n.t 'user.country'%>: </label>  
+                    <%= text_field_tag :org_country, nil, :class => 'textbox', :name => 'org_country', :id => 'org_country'  %>
+                    
+                    <label><%= I18n.t 'user.zipcode'%>: </label>  
+                    <%= text_field_tag :org_zipcode, nil, :class => 'textbox', :name => 'org_zipcode', :id => 'org_zipcode'  %>
+                  
+                 </div>   <!-- End Div Cheque Info -->
+                 
+			    </div> <!-- End Div Shadow  -->
+                   <input type="submit" name="submit" id="submit" value=<%= I18n.t 'wallet_index.withdraw_amt'%> class="submit_btn fr marT10" onclick="return validateData();"  style="margin-right: 0px;" >
+            
+        </div>
+        <input type="hidden" name="event_id" id="event_id" value="<%= @event[:id]%>">
+        <input type="hidden" name="withdraw_amt" id="withdraw_amt" value="">
+         <% end %>
+        <% @act_class = 'My Earnings' %>         	
+    	<%= render(:partial => "/manage_account/account_sidebar" , :object => :collection) %>    
+        <div class="clear"></div>
+    </div>    
+</section>

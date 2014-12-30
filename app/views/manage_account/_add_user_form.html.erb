@@ -1,0 +1,317 @@
+<style>
+.span_alling {
+vertical-align: top;
+display: inline-block;
+padding-top: 13px;
+font-weight: bold;
+}
+</style>
+
+
+	 <% @site = SiteSetting.find(:first)
+ if params[:invite_id]==0 || params[:invite_id]=='0' || params[:invite_id]==nil 
+         @permission = Permission.new
+         @new_user_flag = 1
+      else
+        @permission = Permission.find(params[:invite_id])   
+        @new_user_flag = 0
+      end
+  %>
+
+<script type="text/javascript">
+	function validateEmailCommon(form,id,errid){
+		//testing regular expression
+		var email_reg_exp= /^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/;
+		var form = $("#"+form+"");	
+		
+	
+		var forget_email = $("#"+id);
+		var forgetEmailInfo = $("#"+errid);
+	
+		//On click		
+		forget_email.focus(function() {  
+			
+		} );
+		//On blur
+		forget_email.blur(validateEmail);
+		forget_email.keyup(validateEmail);
+		
+		
+		if ($('#event_per2').is(':checked'))
+	     {	
+	    	
+	    	event_falg = 0 ;
+		 	$('.event_sel').each(function () {
+				 eve_sel = $(this).is(':checked');
+				if (eve_sel) {event_falg=1;}
+				
+		    });
+		 
+		   if (event_falg == 0) { 
+		   	$('#sel_eve_err').show();
+		   	return false;
+		   	}
+		   	else{
+		   	$('#sel_eve_err').hide();
+		 	} 
+		
+		}
+		
+		
+		if ($('#action_per2').is(':checked'))
+	     {	
+	    	
+	    	action_falg = 0 ;
+		 	$('.action_sel').each(function () {
+				 act_sel = $(this).is(':checked');
+				if (act_sel) {action_falg=1;}
+				
+		    });
+		
+		   if (action_falg == 0) { 
+		   	$('#sel_act_err').show();
+		   	return false;
+		   	}
+		   	else{
+		   	$('#sel_act_err').hide();
+		 	}
+		}
+		
+			//On Submitting
+			form.submit(function(){
+				if(validateEmail())
+					return true;	
+				else
+					return false;
+			});
+		
+	
+			//validation functions
+			function validateEmail(){
+				//testing regular expression
+				var a = $("#"+id).val();
+				var filter = email_reg_exp;
+				//if it's valid email
+				//alert(a);
+				if(filter.test(a)){
+						
+					forgetEmailInfo.text('<%= I18n.t 'add_user_form.email_address_valid'%>');
+					forgetEmailInfo.removeClass("error1");
+					forgetEmailInfo.addClass("success");
+					return true;
+				}
+				//if it's NOT valid
+				else{
+					
+					forgetEmailInfo.text('<%= I18n.t 'list_script.please_valid_email'%>');
+					forgetEmailInfo.addClass("error1");
+					return false;
+				}
+			}
+	
+		}
+		
+</script>  
+     			<div class="mtitle marT40">
+            	<h3><% if(@permission[:user_id] !=nil ) 
+		     								@acc_user = User.find(@permission[:user_id])
+		     								email = @acc_user[:email]
+		     						%>
+		     							<%= I18n.t 'add_user_form.edit_permissions_for'%> <%= email %>
+		     							
+		     						<% else 
+		     								email = ''
+		     						%>
+		     							<%= I18n.t 'add_user_form.add_new_email_address_to_this_account'%>
+		     						<% end %> </h3>
+            </div>  
+            <% 
+				if(@permission[:user_id] !=nil ) 
+					action = 'edit_multi_user'
+				else
+					action = 'multi_users'
+				end		
+			%>
+			<%= form_tag({:controller => 'manage_account', :action => action}, :id => 'eventpayform') do %>
+            <div class="shadow marT10 pad20">
+            	<div class="form multi_user">
+    
+                    	<% if(@permission[:user_id] !=nil ) %>
+	     						<%= I18n.t 'add_user_form.add_user_form_user'%> : <%= @acc_user[:email] %>
+	     						<input type="hidden" name="user[email]" id="email" value="<%= @acc_user[:email] %>" />
+	     				<% else %>
+     						<% 
+     						if @new_user
+	     						if (@new_user.errors.full_messages != []) then -%>
+								     <ul class="errors">
+								      <% @new_user.errors.full_messages.each do |t| %>
+								  		<li><%= t %></li>
+									  <% end %>
+								    </ul>
+								 <% end 
+							 end
+							 %> 
+					        <%= I18n.t 'add_user_form.give_user_access_your_account_add_user_email'%><br /> 
+     						<label><%= I18n.t 'action.email'%></label>
+			                <%= text_field_tag :email, email, :class => 'textbox', :name => 'user[email]', :id => 'email' %>
+			                <div class="clr"></div>
+			                
+			                <input type="hidden" name="user[password]" id="password" value="12345678" />
+		              <% end %>
+		              <div id="emailerr" style="margin-left: 30%;"></div>
+		              <div class="clear"></div>
+			            
+                    <p class="multi_user_p"><%= I18n.t 'add_user_form.grant_this_user_access_to'%>:</p>
+                    <div class="multi_user_radio">
+                    	<%  @events = Event.find_all_events(session[:user_id]) 	%>
+          				
+          				<% if(@permission[:user_id] !=nil )
+          						@eve_arr = @permission[:event].split(",")	
+          				else
+          					@eve_arr = []			
+          				end %>
+          				
+          				
+          				<input type="hidden" name="permission[event]" id="event_val" value="<% if @new_user_flag ==1 %>all<% elsif @eve_arr.include?('all') || @eve_arr.count==0 %><%= @permission[:event] %><% else %>select<% end %>" />
+                    	<input type="radio" name="event_per" id="event_per1" value="all" <% if @eve_arr.include?('all') || @eve_arr.count==0 %> checked="checked" <% end %> onclick="if(this.checked){ $('#select_event').hide(); $('#event_val').val(this.value);  }" />
+                    	<span class="span_alling"><%= I18n.t 'event_index.all_events'%></span><br />
+                    				
+                    				<% if @events.count > 0 %>
+						<input type="radio" name="event_per" id="event_per2" value="select" <% if !@eve_arr.include?('all') && @eve_arr.count > 0 %> checked="checked" <% end %> onclick="if(this.checked){ $('#select_event').show(); $('#event_val').val(this.value); }" />
+						<span class="span_alling"><%= I18n.t 'add_user_form.selected_events_only'%></span>
+						<% end %>
+						<div id="sel_eve_err" class="error1" style="display: none;"> Select at least one event.</div>
+						
+                        <div class="multi_user_list" id="select_event" style="<% if(@eve_arr.include?('all') || @eve_arr.count==0) %> display: none; <% end %> ">
+                        	<div>
+								<a href="javascript:" onclick="$('.event_sel').attr('checked','checked');"> <%= I18n.t 'add_user_form.select_all_events'%> </a> 
+			                  	| <a href="javascript:" onclick="$('.event_sel').removeAttr('checked');"> <%= I18n.t 'add_user_form.deselect_all_events'%> </a> 
+							</div>
+							<% if @events.count > 0 %>
+                  				<% for e in @events %>
+                  					<input type="checkbox" class="event_sel" name="event[]" id="<%= e[:id] %>" value="<%= e[:id] %>" <% if(@eve_arr.include?(e[:id].to_s) || @eve_arr.include?('all')) %> checked="checked" <% end %> />
+                  					&nbsp;&nbsp;<%= e[:event_title] %> (<%= e[:event_start_date_time].strftime(@site[:date_format]) %>)<br />
+                  				<% end %>
+                  			<% end %>
+                  			<input type="hidden" name="event[]" value="no" id="no_event" /> 
+                            
+                        </div>
+                    </div>
+                    
+                    <p class="multi_user_p"><%= I18n.t 'add_user_form.actions_this_user_perform'%>:</p>
+                    <% if(@permission[:user_id] !=nil )
+          						@act_arr = @permission[:action].split(",")	
+          				else
+          					@act_arr = []			
+          				end %>
+          				
+                    <div class="multi_user_radio">
+                    	<input type="hidden" name="permission[action]" id="action_val" value="<% if @new_user_flag ==1 %>all<% elsif  @act_arr.include?('all') || @act_arr.count == 0 %><%= @permission[:action] %><% else %>select<% end %>" />
+                    	<input type="radio" name="action_per" id="action_per1" value="all" <% if @act_arr.include?('all') || @act_arr.count==0 %> checked="checked" <% end %> onclick="if(this.checked){ $('#select_action').hide(); $('#action_val').val(this.value);  }" /> 
+                    	<span class="span_alling"><%= I18n.t 'add_user_form.all_actions'%></span><br />
+						
+						<input type="radio" name="action_per" id="action_per2" value="select" <% if !@act_arr.include?('all') && @act_arr.count > 0  %> checked="checked" <% end %> onclick="if(this.checked){ $('#select_action').show(); $('#action_val').val(this.value); }" />
+						<span class="span_alling"><%= I18n.t 'add_user_form.selected_actions_only'%></span>
+						
+						<div id="sel_act_err" class="error1" style="display: none;"> Select at least one action.</div>
+						
+						<div class="multi_user_list" id="select_action" style="<% if(@act_arr.include?('all') || @act_arr.count==0) %> display: none; <% end %> ">
+                  			<div>
+                  				<a href="javascript:" onclick="$('.action_sel').attr('checked','checked');"> <%= I18n.t 'add_user_form.select_all_events'%> </a> 
+                  				| <a href="javascript:" onclick="$('.action_sel').removeAttr('checked');"> <%= I18n.t 'add_user_form.deselect_all_events'%> </a> 
+                  			</div>
+                  			
+              					<input type="checkbox" class="action_sel" name="action1[]" id="create_event" value="create_event" <% if(@permission[:action]=='all' || @act_arr.include?('create_event')) %> checked="checked" <% end %> onclick=" if(this.checked){ $('#edit_event').attr('checked','checked'); $('#edit_ticket').attr('checked','checked'); $('#custom_register').attr('checked','checked');}" />
+              					 &nbsp;&nbsp;<%= I18n.t 'add_user_form.create_new_events'%><br />
+              					 
+              					<input type="checkbox" class="action_sel" name="action1[]" id="edit_event" value="edit_event" <% if(@permission[:action]=='all' || @act_arr.include?('edit_event')) %> checked="checked" <% end %> onclick=" if(!this.checked){  $('#edit_ticket').removeAttr('checked','checked'); $('#custom_register').removeAttr('checked','checked'); $('#create_event').removeAttr('checked','checked'); }" /> 
+              					&nbsp;&nbsp;<%= I18n.t 'add_user_form.edit_event_details_including_payment_options'%> <br />
+              					
+              					<div style="position: relative; left: 5%;">
+              						<input type="checkbox" class="action_sel" name="action1[]" id="edit_ticket" value="edit_ticket" onclick=" if(this.checked){ $('#edit_event').attr('checked','checked');}" <% if(@permission[:action]=='all' || @act_arr.include?('edit_ticket')) %> checked="checked" <% end %> />
+              					    &nbsp;&nbsp;<%= I18n.t 'add_user_form.edit_ticket_types'%><br /> 
+              					     
+              					     <input type="checkbox" class="action_sel" name="action1[]" id="custom_register" value="custom_register" onclick=" if(this.checked){ $('#edit_event').attr('checked','checked');}" <% if(@permission[:action]=='all' || @act_arr.include?('custom_register')) %> checked="checked" <% end %> />
+              					     &nbsp;&nbsp;<%= I18n.t 'add_user_form.customize_registration_page'%><br /> 
+              					    
+              					</div>
+              				
+              					<input type="checkbox" class="action_sel" name="action1[]" id="edit_payment" value="edit_payment" <% if(@permission[:action]=='all' || @act_arr.include?('edit_payment')) %> checked="checked" <% end %> onclick=" if(!this.checked){ $('#create_event').removeAttr('checked','checked'); }" />
+              					&nbsp;&nbsp;<%= I18n.t 'add_user_form.edit_payment_options_eg'%><br /> 
+              					   
+              					<input type="checkbox" class="action_sel" name="action1[]" id="view_orders" value="view_orders" <% if(@permission[:action]=='all' || @act_arr.include?('view_orders')) %> checked="checked" <% end %> onclick=" if(!this.checked){ $('#manage_order').removeAttr('checked','checked'); }" />
+              					&nbsp;&nbsp;<%= I18n.t 'add_user_form.view_order_attendee_repots'%><br /> 
+              					    
+              					
+              					<div style="position: relative; left: 5%;">
+              						<input type="checkbox" class="action_sel" name="action1[]" id="manage_order" value="manage_order" onclick=" if(this.checked){ $('#view_orders').attr('checked','checked');}" <% if(@permission[:action]=='all' || @act_arr.include?('manage_order')) %> checked="checked" <% end %> />
+              					    &nbsp;&nbsp;<%= I18n.t 'add_user_form.manage_orders_and_attendees'%><br /> 
+              					</div> 
+              					
+              					<input type="checkbox" class="action_sel" name="action1[]" id="manage_discount" value="manage_discount" <% if(@permission[:action]=='all' || @act_arr.include?('manage_discount')) %> checked="checked" <% end %> />
+              					&nbsp;&nbsp;<%= I18n.t 'add_user_form.manage_discount_codes'%><br /> 
+              					      
+              					<input type="checkbox" class="action_sel" name="action1[]" id="manage_affiliate" value="manage_affiliate" <% if(@permission[:action]=='all' || @act_arr.include?('manage_affiliate')) %> checked="checked" <% end %> />
+              					&nbsp;&nbsp;<%= I18n.t 'add_user_form.manage_affiliate_links'%><br /> 
+              					      
+              					<input type="checkbox" class="action_sel" name="action1[]" id="send_invite" value="send_invite" <% if(@permission[:action]=='all' || @act_arr.include?('send_invite')) %> checked="checked" <% end %> />
+              					&nbsp;&nbsp;<%= I18n.t 'add_user_form.send_invites_manage_contacts'%> &amp; <%= I18n.t 'add_user_form.email_attendees'%><br /> 
+              					      
+              					<input type="checkbox" class="action_sel" name="action1[]" id="view_fees" value="view_fees" <% if(@permission[:action]=='all' || @act_arr.include?('view_fees')) %> checked="checked" <% end %> />
+              					&nbsp;&nbsp;<%= I18n.t 'add_user_form.view_fees_and_invoices'%><br /> 
+              					      
+              			<!--		<input type="checkbox" class="action_sel" name="action1[]" id="check_attendee" value="check_attendee" <% if(@permission[:action]=='all' || @act_arr.include?('check_attendee')) %> checked="checked" <% end %> />
+              					&nbsp;&nbsp;<%= I18n.t 'add_user_form.check_in_attendees'%><br />  
+              					
+              		 		<input type="checkbox" class="action_sel" name="action1[]" id="access_at_door" value="access_at_door" <% if(@permission[:action]=='all' || @act_arr.include?('access_at_door')) %> checked="checked" <% end %> onclick=" if(!this.checked){ $('#create_event').removeAttr('checked','checked'); }" />
+              					&nbsp;&nbsp;<%= I18n.t 'add_promotional_code.access'%><%= @site[:site_name]%><%= I18n.t 'add_user_form.at_the_door'%><br /> 
+              			-->		     
+              					<input type="checkbox" class="action_sel" name="action1[]" id="org_profile" value="org_profile" <% if(@permission[:action]=='all' || @act_arr.include?('org_profile')) %> checked="checked" <% end %> />
+              					&nbsp;&nbsp;<%= I18n.t 'add_user_form.access_and_edit_org_profile'%><br />  
+              					     
+              		<!-- 	    <input type="checkbox" class="action_sel" name="action1[]" id="assign_attendee" value="assign_attendee" <% if(@permission[:action]=='all' || @act_arr.include?('assign_attendee')) %> checked="checked" <% end %> />
+              					&nbsp;&nbsp;<%= I18n.t 'add_user_form.auto_assign_num_to_attendees'%><br /> -->                                         
+                  				<input type="hidden" name="action[]" value="no" id="no_event" />  		
+                  		</div>
+                    </div>
+                    
+                    <p class="multi_user_p"><%= I18n.t 'add_user_form.this_user_receive_copy_of'%>:</p>
+                    <% if(@permission[:user_id] !=nil )
+      						@email_arr = @permission[:email].split(",")	
+      				else
+      					@email_arr = []
+      				end %>
+      				
+                    <div class="multi_user_radio">
+                    	<input type="hidden" name="permission[email]" id="email_val" value="<% if @new_user_flag ==1 %> all <% elsif  @email_arr.include?('all') || @email_arr.count > 0 %><%= @permission[:email] %><% else %>select<% end %>" />
+                  		<input type="radio" name="email_per" id="email_per1" value="all" <% if  @email_arr.include?('all') || @email_arr.count==0 %> checked="checked" <% end %> onclick="if(this.checked){ $('#select_email').hide(); $('#email_val').val(this.value);  }" />
+                  		<span class="span_alling"><%= I18n.t 'add_user_form.all_emails'%></span><br />
+						
+						<input type="radio" name="email_per" id="email_per2" value="select" <% if(!@email_arr.include?('all') && @email_arr.count > 0) %> checked="checked" <% end %> onclick="if(this.checked){ $('#select_email').show(); $('#email_val').val(this.value); }" />
+						<span class="span_alling"><%= I18n.t 'add_user_form.selected_emails_only'%></span><br />
+						<div class="multi_user_list" id="select_email" style="<% if(@email_arr.include?('all') || @email_arr.count == 0) %> display: none; <% end %> ">
+		                 	<input type="checkbox" class="email_sel" name="email1[]" id="order_confirm" value="order_confirm" <% if(@permission[:email]=='all' || @email_arr.include?('order_confirm')) %> checked="checked" <% end %> />
+          					&nbsp;&nbsp;<%= I18n.t 'add_user_form.order_confirmations'%><br />
+          					
+          				<!--	<input type="checkbox" class="email_sel" name="email1[]" id="monthly_invoice" value="monthly_invoice" <% if(@permission[:email]=='all' || @email_arr.include?('monthly_invoice')) %> checked="checked" <% end %> />
+          					&nbsp;&nbsp;<%= I18n.t 'add_user_form.monthly_invoices'%><br /> -->
+          					  
+          					<input type="checkbox" class="email_sel" name="email1[]" id="contact_org" value="contact_org" <% if(@permission[:email]=='all' || @email_arr.include?('contact_org')) %> checked="checked" <% end %> />
+          					&nbsp;&nbsp;<%= I18n.t 'add_user_form.contact_the_organizer'%><br />  
+              			</div>
+						
+						<input type="radio" name="email_per" id="email_per2" value="no" <% if @permission[:email]=='no' %> checked="checked" <% end %> onclick="if(this.checked){ $('#select_email').hide(); $('#email_val').val(this.value); }" />
+			            <input type="hidden" name="email[]" value="none" id="no_event" />
+						<span class="span_alling"><%= I18n.t 'add_user_form.no_emails'%></span>
+                    </div>
+                </div>
+                <div class="clear"></div>
+                <div id="payerr"></div>
+            </div>
+            <div class="marT20" align="right">
+            	<input type="hidden" name="permission[admin_id]" id="admin_id" value="<%= session[:user_id] %>" />
+	            <input type="hidden" name="permission[id]" id="id" value="<%= @permission[:id] %>" />
+	            <%= submit_tag (I18n.t 'button.save'), :class => 'submit_btn', :onclick => ' return validateEmailCommon("eventpayform","email","emailerr")' %>
+	        </div>  
+                      
+            <% end %> 

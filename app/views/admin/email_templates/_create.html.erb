@@ -1,0 +1,68 @@
+<% 
+	if params[:id]
+		form_id = 'edit_page'
+		form_act = 'update/'+params[:id].to_s
+	else
+		form_id = 'new_page'
+		form_act = 'create'
+	end	
+%>
+
+<%= form_tag({:action => form_act}, :id => form_id, :novalidate => 'novalidate',:enctype => "multipart/form-data") do %>
+
+<% if (@email_template.errors) then -%>
+<% if (@email_template.errors.full_messages != []) then -%>
+     <ul class="errors">
+      <% @email_template.errors.full_messages.each do |t| %>
+  		<li><%= t %></li>
+	  <% end %>
+    </ul><% end %>
+<% end %>
+    
+<fieldset class="inputs">
+	<ol>
+		<li class="string input required stringish" id="news_from_name_input">
+			<label class=" label" for="news_from_name">From Name<abbr title="required">*</abbr></label>
+			<input id="news_from_name" maxlength="255" name="email_template[from_name]" value="<%= @email_template[:from_name] %>"  type="text"/>
+		</li>
+	</ol>
+	<ol>
+		<li class="string input required stringish" id="news_from_address_input">
+			<label class=" label" for="news_from_address">From Address<abbr title="required">*</abbr></label>
+			<input id="news_from_address" maxlength="255" name="email_template[from_address]" value="<%= @email_template[:from_address] %>" type="text"/>
+		</li>
+	</ol>
+	<ol>
+		<li class="string input required stringish" id="news_from_reply_input">
+			<label class=" label" for="news_from_reply">Reply Address<abbr title="required">*</abbr></label>
+			<input id="news_news_from_reply" maxlength="255" name="email_template[reply_address]" value="<%= @email_template[:reply_address] %>" type="text"/>
+		</li>
+	</ol>
+	<ol>
+		<li class="string input required stringish" id="news_subject_input">
+			<label class=" label" for="news_subject">Subject<abbr title="required">*</abbr></label>
+			<input id="news_subject" maxlength="255"  name="email_template[subject]" value="<%= @email_template[:subject] %>" type="text"/>
+		</li>
+	</ol>
+	<ol>
+		<li class="string input required stringish" id="news_message_input">
+			<label class=" label" for="news_message">Message<abbr title="required">*</abbr></label>
+			<div style="width: 77%; float: left;">
+			<textarea id="news_message" class="ckeditor" rows="20" name="email_template[message]"><%= @email_template[:message] %></textarea>
+			</div>
+		</li>
+	</ol>
+</fieldset>
+
+<fieldset class="actions">
+		<ol>
+			<li class="action input_action " id="event_submit_action">
+				<input name="commit" type="submit" value="<% if params[:id] %>Update <% else %> Create<% end %> Template" />
+			</li>
+		</ol>
+</fieldset>
+
+
+<%end%>
+
+<script src="<%= APP_CONFIG['development']['js_url'] %>js/ckeditor/ckeditor.js"></script>

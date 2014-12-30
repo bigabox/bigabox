@@ -1,0 +1,44 @@
+<div id="main_content">
+	       	          	
+<%= form_tag({:controller => 'site_settings', :action => 'fb_settings'}, :id => 'fb_settings', :name => 'fb_settings') do %> 
+
+		<fieldset class="inputs">
+			<legend><span>Facebook Setting</span></legend>
+			<ol>
+				<li class="select input optional" id="facebook_setting_facebook_login_enable_input">
+					<label class=" label" for="facebook_setting_facebook_login_enable">Facebook login enable</label>
+					<select id="facebook_setting_facebook_login_enable" name="facebook_setting[facebook_login_enable]">
+						<option value="1" <% if @fb[:facebook_login_enable]==1 %> selected="selected" <% end %> >Active</option>
+						<option value="0">Inactive</option>
+					</select>
+				</li>
+				
+				<li class="string input optional stringish" id="facebook_setting_facebook_application_id_input">
+					<label class=" label" for="facebook_setting_facebook_application_id">Facebook application</label>
+					<input id="facebook_setting_facebook_application_id" maxlength="255" name="facebook_setting[facebook_application_id]" type="text" value="<%= @fb[:facebook_application_id] %>" />
+				</li>
+				
+				<li class="string input optional stringish" id="facebook_setting_facebook_access_token_input">
+					<label class=" label" for="facebook_setting_facebook_access_token">Facebook access token</label>
+					<input id="facebook_setting_facebook_access_token" maxlength="500" name="facebook_setting[facebook_access_token]" type="text" value="<%=  @fb[:facebook_access_token] %>" />
+
+				</li>
+				
+				<li class="string input optional stringish" id="facebook_setting_facebook_api_key_input">
+					<label class=" label" for="facebook_setting_facebook_api_key">Facebook api key</label>
+					<input id="facebook_setting_facebook_api_key" maxlength="255" name="facebook_setting[facebook_api_key]" type="text" value="<%= @fb[:facebook_api_key] %>" />
+
+				</li>
+			</ol>
+		</fieldset>
+		
+		<fieldset class="actions">
+			<ol>
+				<li class="action input_action " id="facebook_setting_submit_action">
+					<input type="hidden" name="id" id="id" value="1" />
+					<input name="commit" type="submit" value="Update Facebook setting" />
+				</li>
+			</ol>
+		</fieldset>
+	<% end %>
+</div>

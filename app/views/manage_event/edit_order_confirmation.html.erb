@@ -1,0 +1,135 @@
+<script>
+ 	function trim(el) {
+    el.value = el.value.
+    replace(/(^\s*)|(\s*$)/gi, ""). // removes leading and trailing spaces
+    replace(/[ ]{2,}/gi, " "). // replaces multiple spaces with one space 
+    replace(/\n +/, "\n"); // Removes spaces after newlines
+    return;
+}
+ </script>
+<% @act_class = 'Edit Order Confirmations' %>  
+<%= render(:partial => "common_banner" , :object => :collection) %> 
+<%
+ 	@order = OrderForm.find(:first, :conditions => ['event_id=?', @event[:id]])
+ 	if @order
+ 	else
+ 		@order = OrderForm.new
+ 	end	
+ %>
+<section>
+
+	<div class="main">
+    	<%= form_tag({:controller => 'manage_event', :action => 'edit_order_confirmation'}, :id => 'edit_order_confirmation', :name => 'edit_order_confirmation') do %> 
+			            
+    	<div class="left_columm">
+	    		
+	    	<div class="marT60">
+	        	<div class="mtitle">
+	            	<h1><%= I18n.t 'edit_order_confirmation.edit_order'%> <span><%= I18n.t 'edit_order_confirmation.confirmations'%></span></h1>             
+	            </div>
+	            
+	            <script type="text/javascript">
+								
+					
+					$(document).ready(function(){
+					
+						$("#instructions1").hide();
+						$("#instructions2").show();
+					
+					
+						$("#check_attchpdf").click(function(){
+							var haschecked=document.getElementById('check_attchpdf').checked;
+							
+							if(haschecked)
+							{
+								
+								$("#instructions1").hide();
+								$("#instructions2").show();
+							}
+							else
+							{
+								
+								$("#instructions1").show();
+								$("#instructions2").hide();
+							}
+						});
+					});
+					
+					</script>
+					
+	        	<div class="shadow marT25 pad3P">
+	                	<div>
+	                    	<label class="font_size15"><%= I18n.t 'edit_order_confirmation.customize_email'%></label><br />
+	                        <%= I18n.t 'edit_order_confirmation.your_attendees_receive_email_registration_confirming_order'%>
+	                    </div>
+	                    <div  class="form marT20">
+	                        <label class="marT5"><%= I18n.t 'edit_order_confirmation.default_reply_email_address'%></label>
+	                        <input type="text" class="textbox TW66p" onchange="return trim(this)" value="<% if @order[:reply_to_email] && @order[:reply_to_email] !="" %><%= @order[:reply_to_email]%><%else%><%= session[:user_email] %><%end%>" name="order_form[reply_to_email]" style="width:307px;">
+	                        
+	                        <div class="marT20 checkbox">
+	                            <label class="fl"><%= I18n.t 'edit_order_confirmation.attachments'%></label>                    
+	                            <input type="hidden" name="order_form[add_pdf_tickets]" value="0" />
+				<input type="checkbox" name="order_form[add_pdf_tickets]" checked="checked" id="check_attchpdf" value="1">                            
+	                            <span class="font_size15"> <%= I18n.t 'edit_order_confirmation.attache_pdf_tickets_confirmation_email'%></span>
+	                            <div class="clear"></div>
+	                      	</div>                    
+	                    </div>
+	                    <div class="clear"></div>
+	                    
+	                  
+	                    <div id="instructions1" class="marT25" style="display: <% if @order[:add_pdf_tickets]==1 %> none; <% else %> block; <% end %>">
+								<label class="font_size15"><%= I18n.t 'edit_order_confirmation.msg_display_confirmation_email'%> </label><div class="clear"></div><br />
+							<textarea name="order_form[email_msg]" class="ckeditor"><%= @order[:email_msg] %></textarea> 
+							
+						</div>
+						
+						<div id="instructions2" class="marT25" style="display: <% if @order[:add_pdf_tickets]==1 %> block; <% else %> none; <% end %>">
+							<label class="font_size15"><%= I18n.t 'edit_order_confirmation.msg_On_PDF_Tickets'%>:</label><div class="clear"></div><br />
+							<textarea name="order_form[pdf_msg]" cols="69" rows="15" style="width:98%;"><%= @order[:pdf_msg] %></textarea>
+							 <p class="marT10">
+								<%= I18n.t 'edit_order_confirmation.note_plain_text_only'%>. [ <a href="<%= APP_CONFIG['development']['site_url'] %>content/order_preview" target="_blank" class="fpass1">View email and PDF Ticket example</a> ] 
+							</p> 
+						</div>
+						
+	                    
+	                    
+	                    <div class="marT25">
+	                    	<label class="font_size15"><%= I18n.t 'edit_order_confirmation.customize_confirmation_webpage'%></label><br />
+	                        <p class="marT10"><%= I18n.t 'edit_order_confirmation.your_attendees_also_config_page_when_order_completed'%><strong><%= I18n.t 'edit_order_confirmation.redirect_users_your_own_webpage'%></strong> <%= I18n.t 'edit_order_confirmation.once_the_order_processed_text_below_enter_website'%></p>
+	                    </div>
+	                    <div class="marT25">
+	                    	<label class="font_size15"><%= I18n.t 'edit_order_confirmation.msg_display_confirmation_webpage'%></label><div class="clear"></div><br />
+	                        
+	                        <textarea name="order_form[confirm_msg]"  class="textbox TW97p marT10" placeholder="See you at the event!" ><%= @order[:confirm_msg] %></textarea> 
+								
+	                        <p class="marT10"><% I18n.t 'edit_order_confirmation.note_html_available'%> <!--[<a href="#">View your current order confirmation page</a>]--></p>
+	                    </div>
+	               
+	                <div class="clear"></div>
+	            </div>
+	           
+	           <div class="marT25">
+	           		<input type="hidden" name="order_form[event_id]" id="event_id" value="<%= @event[:id] %>" />
+        		    <input type="hidden" name="order_id" id="order_id" value="<%= @order[:id] %>" />
+    		   		<input type="submit" value="Save" class="btn fr" /> 
+	           </div>
+	           
+	        </div>
+	        
+	        <div class="clear"></div>
+    	</div>  
+    	<% end %>
+    	<%= render(:partial => "manage_event_sidebar" , :object => :collection) %>
+		<div class="clear"></div>
+    </div>
+    <div class="clear"></div>
+    
+</section>
+
+
+<% @edit_menu_class = 'Manage' %>
+<%= render(:partial => "edit_menu" , :object => :collection) %> 
+  <div class="clear"></div>
+  
+
+<script src="<%= APP_CONFIG['development']['js_url'] %>js/ckeditor/ckeditor.js"></script>

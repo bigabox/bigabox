@@ -1,0 +1,77 @@
+<script>
+ $(document).ready(function() {	
+	$('.breadcrumb').html('');
+	$('#index_footer').html('');
+	
+});	
+</script> 
+<%  #@tickets = Purchase.where(:user_id => params[:user_id]).paginate(:page => params[:id], :per_page => 2).order('id DESC')
+	@tickets = Purchase.find_monthly_earning
+	
+ %>
+
+<div class="paginated_collection">
+              <div class="paginated_collection_contents">
+                <div class="index_content">
+                  <div class="index_as_table">
+                    <table border="0" cellspacing="0" cellpadding="0" id="index_table_tickets" class="index_table index" paginator="true">
+                      
+							<thead>
+								<tr>
+								 <!-- <th class="sortable first_name"><a href="/admin/purchases?user_id=4&amp;order=first_name_desc">First Name</a></th>
+								  <th class="sortable last_name"><a href="/admin/purchases?user_id=4&amp;order=last_name_desc">Last Name</a></th> -->
+								  <th class="first_name">Total Amount</th>
+								  <th class="last_name">Total Ticket Qty.</th>
+								  <th class="email">Month - Year</th>
+								  
+								</tr>
+							</thead>
+							<tbody>
+								
+								<% 
+								
+								  if @tickets.count > 0
+								  	i=1
+									  for tic in @tickets
+									  	
+								             
+								%>
+								
+									<tr class="<% if i%2==0 %> even <% else %>odd <% end %>" >
+										 <td class="first_name"><%= set_currency(tic[:total]) %></td>
+										 <td class="last_name"><%= tic[:qty].to_i %></td>
+										 <td class="email"><%= Date::MONTHNAMES[tic[:mon]] %> - <%= tic[:yr] %></td>
+									</tr>
+								<%
+											
+											i+=1
+											end
+								else
+									%>
+									<tr class="odd">
+										<td colspan="7" style="text-align: center;">No Records Available</td>
+									</tr>
+									 <%	
+								end 
+								
+								if i==1
+									%>
+									<tr class="odd">
+										<td colspan="7" style="text-align: center;">No Records Available</td>
+									</tr>
+									<%
+								end	
+								%>
+							
+							
+								 
+							                        
+							</tbody>
+ 
+                    </table>
+                  </div>
+                </div>
+              </div>
+              
+            </div>
+

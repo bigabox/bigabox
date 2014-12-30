@@ -1,0 +1,178 @@
+<script type="text/javascript">
+	    var slide = false;
+	  var height = $('.footer_content').height();
+	                
+			$('.footer_opnen_btn').click(function(event) {
+				 $(".footer_opnen_btn").toggleClass("footer_close_btn");
+	      var docHeight = $(document).height();
+				var windowHeight = $(window).height();
+				var scrollPos = docHeight - windowHeight + height;
+	   //$('#clientsDropDown #clientsDashboard').slideToggle({direction: "up"}, 300);
+	    $('.footer_content').animate({ height: "toggle"}, 1000);
+	    
+	    if(slide == false) {
+			 event.preventDefault();
+			 if (navigator && navigator.userAgent && navigator.userAgent != null) 
+			{
+				var strUserAgent = navigator.userAgent.toLowerCase();
+				var arrMatches = strUserAgent.match(/(iphone|ipod|ipad)/);//alert(strUserAgent);
+				if (arrMatches) 
+				{//alert(strUserAgent);
+					window.scrollTo(0, scrollPos);
+				}
+				else
+				{
+				 $('html, body').animate({scrollTop: scrollPos}, 2000);
+				}	 
+			}
+			else
+			{ 
+	            $('html, body').animate({scrollTop: scrollPos}, 2000);
+			}
+				//window.scrollTo(0, scrollPos);
+	            slide = true;
+	    } else {
+	            slide = false;
+	    }
+	   
+	  }); // end click
+	 
+	 
+	</script>
+	
+	<!-- Slider -->
+	<!--<script type="text/javascript" src="<%= APP_CONFIG['development']['js_url'] %>js/jquery.placeholder-min.js" defer></script>
+	<script defer src="<%= APP_CONFIG['development']['js_url'] %>js/jquery.flexslider.min.js" ></script>-->  
+	
+	
+	<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery-placeholder/2.0.8/jquery.placeholder.min.js" defer></script>
+	<script defer src="http://cdnjs.cloudflare.com/ajax/libs/flexslider/2.2.2/jquery.flexslider-min.js" ></script>  
+	
+	<script type="text/javascript">
+	  $(function(){
+	   // SyntaxHighlighter.all();
+	  });
+	  $(window).load(function(){
+	    $('.flexslider').flexslider({
+	      animation: "fade",
+	      start: function(slider){
+	        $('body').removeClass('loading');
+	      }
+	    });
+	  });
+	  $('input[placeholder], textarea[placeholder]').placeholder();
+	</script>
+<footer>
+	<div class="footer_sp">
+		<div class="main marT40">
+	       	<div class="footer_opnen_btn"><%= I18n.t 'home_footer.click_me'%></div>
+	    </div>    
+	 	<div class="footer_content">
+			<div class="main">
+	        	<div class="footer_box">
+	            	<h3><span><%= I18n.t 'home_footer.plan'%></span> <%= I18n.t 'event_title.events'%></h3>
+	                <ul>
+	                	<% @plan = Page.find(:all, :conditions => ['active=1 AND plan=1 AND footer_bar="YES"']) 
+			        		if @plan.count > 0
+			        			for pl in @plan
+			        				%>
+			        					<li><a href="<%= APP_CONFIG['development']['site_url'] %>content/<%= pl[:slug] %>"><%= pl[:pages_title] %></a></li>
+			        				<%
+			        			end	
+			        		end	
+			        	%>
+	                	<div class="clear"></div>
+	                </ul>
+	            </div>
+	        	<div class="footer_box">
+	            	<h3><span><%= I18n.t 'home_footer.using'%></span> <%= @site[:site_name]%></h3>
+	                <ul>
+	                	<% @plan = Page.find(:all, :conditions => ['active=1 AND  footer_bar="YES" AND `using`=1']) 
+			        		if @plan.count > 0
+			        			for pl in @plan
+			        				%>
+			        					<li><a href="<%= APP_CONFIG['development']['site_url'] %>content/<%= pl[:slug] %>"><%= pl[:pages_title] %></a></li>
+			        				<%
+			        			end	
+			        		end	
+			        	%>
+	                	
+	                    <div class="clear"></div>
+	                </ul>            
+	            </div>
+	        	<div class="footer_box">
+	            	<h3><span><%= I18n.t 'org_show.about'%></span> <%= @site[:site_name] %></h3>
+	                <ul>
+	                	<% @plan = Page.find(:all, :conditions => ['active=1 AND about=1 AND footer_bar="YES"']) 
+			        		if @plan.count > 0
+			        			for pl in @plan
+			        				%>
+			        					<li><a href="<%= APP_CONFIG['development']['site_url'] %>content/<%= pl[:slug] %>"><%= pl[:pages_title] %></a></li>
+			        				<%
+			        			end	
+			        		end	
+			        	%>
+	                	
+	                    <div class="clear"></div>
+	                </ul>
+	            </div>
+	            <div class="clear"></div>
+	        </div>	
+		</div>
+	
+		<div class="footerB">
+	    	<div class="main">
+	        	<div class="copyright">
+	        		 <% @terms = Page.find('26') 
+      	 				@policy = Page.find('27') %>
+      	 		
+	            	&copy; <%= Time.now.year %>&nbsp;&nbsp;&nbsp; <span><%= @site[:site_name]%></span>. <%= I18n.t 'home_footer.all_right_reserved'%> &nbsp;&nbsp;&nbsp;<a href="<%= APP_CONFIG['development']['site_url']%>content/<%= @terms[:slug] %>"><%= I18n.t 'home_footer.terms_of_services'%></a> &nbsp;&nbsp;&nbsp;<a href="<%= APP_CONFIG['development']['site_url']%>content/<%= @policy[:slug] %>"><%= I18n.t 'home_footer.privacy_policy'%></a>
+	            	<!-- <a href="<%= APP_CONFIG['development']['site_url']%>content/<%= @terms[:slug] %>"><%= I18n.t 'home_footer.terms_of_services'%></a> &nbsp;&nbsp;&nbsp;
+	            	<a href="<%= APP_CONFIG['development']['site_url']%>content/<%= @policy[:slug] %>"><%= I18n.t 'home_footer.privacy_policy'%></a> &nbsp;&nbsp;&nbsp;-->
+	            	&nbsp;&nbsp;&nbsp;<a href="<%= APP_CONFIG['development']['site_url']%>home/contact_us"><%= I18n.t 'event.purchase.contact'%></a>
+	            </div>
+	            
+	            <div class="social">
+	            	<a href="<%= @site[:facebook_link] %>" class="fb" width=" " height=" "><%= I18n.t 'invite_create.facebook'%></a>
+	            	<a href="<%= @site[:twitter_link] %>" class="tw" width=" " height=" "><%= I18n.t 'invite_create.twitter'%></a>
+	            	<a href="<%= @site[:gplus_link] %>" class="gp" width=" " height=" "><%= I18n.t 'home_footer.google_plus'%></a>
+	            	<a href="<%= @site[:linked_link] %>" class="in" width=" " height=" "><%= I18n.t 'home_footer.linked_in'%></a>
+	            	<a href="<%= @site[:yahoo_link] %>" class="yh" width=" " height=" "><%= I18n.t 'home_footer.yahoo'%></a>
+	            </div>
+	            <div class="clear"></div>            
+	        </div>
+	    </div>
+	</div>
+	</footer>
+	<!-- Footer -->
+
+	
+<%
+uri = request.env['PATH_INFO']
+%>
+ <% 
+	if (uri.include? "event/" ) || (uri.include? "events/view/")
+		if @event
+			if @event[:google_code]!='' && @event[:google_code]!=nil
+				@google_code = @event[:google_code]
+			end
+		else
+			@google_code = @site[:site_tracker]
+		end		
+	else
+			@google_code = @site[:site_tracker]
+	end			
+ %>
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', '<%= @google_code %>']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>

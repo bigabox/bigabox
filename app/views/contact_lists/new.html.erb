@@ -1,0 +1,90 @@
+<%
+      @user_multi = User.find(session[:user_id]) 
+	 if @user_multi[:ref_id]!=nil && @user_multi[:ref_id]!="" 
+		  @multi = 1
+		  @ses_user = @user_multi[:ref_id]
+	  else
+		  @multi = 0
+		  @ses_user = session[:user_id]
+	  end
+%>
+
+ <script src="<%= APP_CONFIG['development']['js_url'] %>js/validation.js" type="text/javascript"></script> 
+ <script>
+ 	function trim(el) {
+    el.value = el.value.
+    replace(/(^\s*)|(\s*$)/gi, ""). // removes leading and trailing spaces
+    replace(/[ ]{2,}/gi, " "). // replaces multiple spaces with one space 
+    replace(/\n +/, "\n"); // Removes spaces after newlines
+    return;
+}
+ </script> 
+<section>	
+	<div class="main marTB40">
+    	<div class="leftcol">
+        	<div class="mtitle">
+            	<h1><%= I18n.t 'create.con_list' %></h1>
+            </div>
+            <%= form_tag({:controller => 'contact_lists', :action => 'new'}, :id => 'newcontactForm', :name => 'newcontactForm', :multipart => 'true') do %> 
+				  
+				  <% if (@contact_list.errors.full_messages != []) then -%>
+				     <ul class="errors">
+				      <% @contact_list.errors.full_messages.each do |t| %>
+				  		<li><%= t %></li>
+					  <% end %>
+				    </ul>
+				    <% end -%>   
+            <div class="shadow marT20 pad20">
+            	<div class="login_signup">
+                            <div>
+                                <label><strong class="green_font"><%= I18n.t 'create.step1' %></strong> <%= I18n.t 'create.con_name' %></label>
+                                <input type="text" name="contact_list[name]" id="contact_list_name" value="<%= @contact_list[:name] %>" onchange="return trim(this)" class="textbox TW97p">
+						        <div id="contactlistnameInfo" ></div>
+						        
+                            </div>
+                            <div class="marT20">
+                                <label><strong class="green_font"><%= I18n.t 'create.step2' %></strong> <%= I18n.t 'create.add_contact' %></label>
+                                 <div style="margin-left: 1%;"> Download <a href="<%= APP_CONFIG['development']['upload_url'] %>/data/Contact_list _csv_Sample.csv">Contact List</a> File Format.</div>
+                                <div class="multi_user_radio mar0">
+                                    <input type="radio" name="fetch_type" id="fetch_type1" value="files" <% if params[:fetch_type]!='manually' %> checked="checked" <% end %> onclick="if(this.checked){ $('#files_list').show(); $('#social_list').hide(); $('#event_list').hide(); $('#manually_list').hide(); }else{ $('#files_list').hide(); }">
+                                    <strong><%= I18n.t 'create.upload' %></strong><br>
+                                    
+                                    <div class="multi_user_list"  id="files_list" style="display: <% if params[:fetch_type]!='manually' %> block; <% else %> none; <% end %>">                                       
+                                    	<div class="file_upload TW97p">
+                                            <input type="text" placeholder="<%= I18n.t 'create.placeholder' %>" onClick="jQuery('#upload_datafile').click()" readonly="readonly" name="file_name" class="browse"/>
+                                         <div class="upload">
+                                        	<span><%= I18n.t 'create.browse' %></span>
+                                           <input type="file" value="" name="upload" id="upload_datafile" onchange="return filename(this.value);" class="uploads" style="opacity: 0;">
+                                         </div>               
+                                      </div>
+                                    </div><div id="uploaddatafileInfo" ></div>
+                                    <div class="clear"></div><br />
+                                    
+                                    <input type="radio" name="fetch_type" id="fetch_type4" value="manually" <% if params[:fetch_type]=='manually' %> checked="checked" <% end %> onclick="if(this.checked){ $('#files_list').hide(); $('#social_list').hide(); $('#event_list').hide(); $('#manually_list').show(); }else{ $('#manually_list').hide(); }">
+                                    <strong><%= I18n.t 'create.email' %></strong>
+                                    
+                                    <div class="multi_user_list" id="manually_list" style="display: <% if params[:fetch_type]=='manually' %> block; <% else %> none; <% end %>">
+							        	<span><%= I18n.t 'create.e_separated' %></span><br />
+							        	<textarea name="emails" id="emails" class="TW97p" ><%= params[:emails] %></textarea>
+							        </div><div class="clr"></div>
+							        <div id="emailsInfo" style="margin-left: 30px;"></div>
+                                    
+                               </div>
+                                
+                            </div>
+                        </div>
+            </div>            
+            <div class="marT20" align="right">
+                   <input type="hidden" name="contact_list[user_id]" id="user_id" value="<%= @ses_user %>" />
+		           <input type="submit" value="<%= I18n.t 'button.save' %>" class="submit_btn">
+		           <a href="<%= APP_CONFIG['development']['site_url'] %>contact_lists" class="btn black_bg" style="padding: 16px 20px;"><%= I18n.t 'validation.common.can' %></a>
+				
+            </div>
+            <% end %>
+        </div>
+        
+        <%= render(:partial => "contact_sidebar" , :object => :collection) %>   
+        
+        <div class="clear"></div>
+    </div>    
+</section>

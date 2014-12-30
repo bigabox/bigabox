@@ -1,0 +1,62 @@
+<script>
+ $(document).ready(function() {	
+	$('.breadcrumb').html('');
+	$('#index_footer').html('');
+	
+	
+});	
+
+</script> 
+<%= @notice %>
+
+<%  
+	@version = SiteSetting.find(:all)
+
+ %>
+	<div class="paginated_collection">
+              <div class="paginated_collection_contents">
+                <div class="index_content">
+                  <div class="index_as_table">
+                  	
+                    <table border="0" cellspacing="0" cellpadding="0" id="index_table_tickets" class="index_table index" paginator="true">  
+							<thead>
+								<tr>
+								  <th class="site_version">Version No.</th>
+								  <th class="version_license">Version License</th>
+								  <th class="created_at">Version Created</th>
+								</tr>
+							</thead>
+							<tbody>
+								
+						<% 
+							i=1
+							  if @version.count > 0
+								  for v in @version						  	
+						%>
+								
+							<tr>
+								 <td class="site_version"><%= v[:site_version] %></td>
+								 <td class="version_license"><%= v[:version_license] %></td>								 
+								 <td class="created_at"><%= v[:created_at] %>	 </td>
+
+							</tr>
+								<%
+									i+=1	
+									end
+								 else
+								%>
+								<tr class="odd">
+									<td colspan="7" style="text-align: center;">No Records Available</td>
+								</tr>
+								<%	
+									end
+								 %>                     
+							</tbody>
+ 
+                    </table>
+                  </div>
+                </div>
+              </div>
+              
+            </div>
+            

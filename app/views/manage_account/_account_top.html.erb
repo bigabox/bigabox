@@ -1,0 +1,33 @@
+<%
+      @user_multi = User.find(session[:user_id]) 
+	 if @user_multi[:ref_id]!=nil && @user_multi[:ref_id]!="" 
+		  @multi = 1
+		  @ses_user = @user_multi[:ref_id]
+		  @main_user = User.find(@ses_user)
+	  else
+		  @multi = 0
+		  @ses_user = session[:user_id]
+	  end
+%>
+
+<style>
+ .txt_alight_right{
+ 	text-align: right;
+ }	
+	
+</style>
+
+<% @site = SiteSetting.find(:first) %>
+<div class="main marTB40 shadow pad15">
+	<div class="mtitle fl">
+       	<h1><%= I18n.t 'myticket_index.myticket_my' %> <span><%= I18n.t 'account_sidebar.account' %></span></h1>
+    </div>
+    <div class="marT10 since txt_alight_right"><%= @site[:site_name] %> <%= I18n.t 'account_top.account_since' %> <span class="color_1"><%= @user[:created_at].strftime(@site[:date_format]) %></span>
+
+     <br>
+      <% if @multi == 1 %>
+       The main account holder is: <%= @main_user[:email] %> 
+       <% end %>
+    </div>
+    <div class="clear"></div>	
+</div>

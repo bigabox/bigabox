@@ -1,0 +1,79 @@
+<script type="text/javascript">
+function validate_withdrawal(){
+	var amt = $('#amount');
+	var amterr = $('#amounterrInfo');
+	var available = '<%= @wallet[:credit].to_f - @wallet[:due].to_f - @wallet[:paid].to_f %>';
+	amterr.text('');
+	
+	if(amt.val() > 0 && amt.val()!=''){
+		if(parseFloat(amt.val())>parseFloat(available)){
+			amt.focus();
+			amterr.text('<%= I18n.t 'wallet_withdraw.not_withdraw_amt'%> <%= set_currency(@wallet[:credit].to_f - @wallet[:due].to_f - @wallet[:paid].to_f ) %>.');
+			return false;
+		}
+	}else{
+		amt.focus();
+		amterr.text('<%= I18n.t 'wallet_withdraw.enter_valid_amt'%>');
+		return false;
+	}
+	
+	return true;
+}
+
+function chk_numeric(a){
+	var amount=/^[0-9.]+$/;
+	if(!amount.test(a)){
+		$('#amount').focus();
+		$('#amounterrInfo').text('<%= I18n.t 'wallet_withdraw.enter_valid_amt'%>');
+		return false;	
+	}
+	return true;
+}
+</script>
+<section>
+	<%= render(:partial => "/manage_account/account_top" , :object => :collection) %>    
+    		
+	<div class="main marTB40">
+			<% if flash[:notice] -%>
+		      <div class="errors" style="margin-bottom: 0;">
+		      	<p><%= flash[:notice] %></p>
+		      </div>
+		
+		    <% end -%>
+		   
+		   
+	        <% if flash[:notice1] -%>
+		      <div class="notice" style="margin-bottom: 0;">
+		      	<p><%= flash[:notice1] %></p>
+		      </div>
+		
+		    <% end -%>
+						    
+    	<div class="leftcol">      	
+            <div class="mtitle">
+            	<h3><%= I18n.t 'wallet_withdraw.withdraw'%><span><%= I18n.t 'pen_paid_table.amt'%></span></h3>
+            </div>
+            <div class="shadow marT10 pad20">
+            	<%= form_tag({:controller => 'wallet', :action => 'withdraw'}, :id => 'with_frm', :name => 'with_frm') do %> 
+
+            	<div class="withdraw_amount form">
+                	<label><%= I18n.t 'wallet_withdraw.add_amt'%></label>
+                     <%= text_field_tag :amount,'', :class => 'textbox', :onkeyup => 'return chk_numeric(this.value);' %>
+                      
+                      <input type="hidden" name="id" id="id" value="<%= @wallet[:id] %>" />    
+		 			  <%= submit_tag  (I18n.t 'wallet_withdraw.confirm'), :class => 'submit_btn', :onclick => 'return validate_withdrawal();' %>
+		 			<div class="error1" id="amounterrInfo" style="margin-left: 30%;"></div>
+                </div>
+                
+                <% end %>
+                <div class="clear"></div>
+            </div> 
+            <div class="marT20" align="right">
+            	
+            </div>
+        </div>
+        <% @act_class = 'My Earnings' %>         	
+    	<%= render(:partial => "/manage_account/account_sidebar" , :object => :collection) %>    
+        <div class="clear"></div>
+    </div>    
+</section>

@@ -1,0 +1,159 @@
+<section>
+
+	<div class="main marTB40">
+		<% if flash[:notice1] -%>
+			  <div class="notice">
+				<p><%= flash[:notice1] %></p>
+			  </div>
+		<% end -%>
+    	<div class="leftcol">
+        	<div class="mtitle">
+            	<h1><%= I18n.t 'myticket_index.myticket_my'%> <span><%= I18n.t 'myticket_index.mytickets_tickets'%></span></h1>
+            </div>
+            <div class="shadow marT20 pad20">
+                <div class="mtitle">
+                    <h3><%= I18n.t 'myticket_index.current'%> <span><%= I18n.t 'cancel_order.order'%></span></h3>
+                    <%= I18n.t 'myticket_index.select_print_tickets'%>
+                </div>
+            	<div class="order_list">
+                	 
+                 <% 
+                 i=1
+                 
+                 if @purchase.count > 0                  	
+                 		for purchase in @purchase
+                 			if (purchase[:transaction_key] == purchase[:id] || purchase[:ticket_id] == 0)
+	                 		@event = Event.find(purchase[:event_id])
+			                 %>
+			                	
+				                 <a class="<% if i%2==0 %>ticket2<% else %>ticket1<% end %>" href="<%= APP_CONFIG['development']['site_url'] %>my_tickets/view/<%= purchase[:id]%>">
+				                   <%= @event[:event_start_date_time].strftime(@site[:date_time_format]) %> <br />
+			                        <span><%= @event[:event_title] %></span><br />
+			                        <span>Total Qty (<%=  purchase[:ticket_qty] %>)</span>
+			                        <p><%= I18n.t 'myticket_index.view_order'%> »</p>
+							     </a>
+				                 
+				                 <% if i==2 %>
+				                 	<a href="<%= APP_CONFIG['development']['site_url'] %>events/create_event" class="ticketbtn">
+						                 <span><%= I18n.t 'application.appli_create_an_event'%></span><br />
+					                        <%= I18n.t 'myticket_index.set_up_your_awesome'%>
+					                        <p><%= I18n.t 'myticket_index.get_stared'%></p>
+						           </a>
+						           <div id="show_tickets" style="display: none;"></div>
+				                 <% end %>
+				                 
+					             <% 
+					             
+					           ##end  ##
+					             
+					             elsif purchase[:transaction_key] == purchase[:id] && purchase[:ticket_id]>0
+					           	
+					           	@event = Event.find(purchase[:event_id])
+			                	
+			                 %><a class="<% if i%2==0 %>ticket2<% else %>ticket1<% end %>" href="<%= APP_CONFIG['development']['site_url'] %>my_tickets/view/<%= purchase[:id]%>">
+				                   <%= @event[:event_start_date_time].strftime(@site[:date_time_format]) %> <br />
+			                        <span><%= @event[:event_title] %></span><br />
+			                        <span>Total Qty (<%=  purchase[:ticket_qty] %>)</span>
+			                        <p><%= I18n.t 'myticket_index.view_order'%> »</p>
+							     </a>
+				                 
+				                   <% if i==2 %>
+				                 	<a href="<%= APP_CONFIG['development']['site_url'] %>events/create_event" class="ticketbtn">
+						                 <span><%= I18n.t 'application.appli_create_an_event'%></span><br />
+					                        <%= I18n.t 'myticket_index.set_up_your_awesome'%>
+					                        <p><%= I18n.t 'myticket_index.get_stared'%></p>
+						           </a>
+						           <div id="show_tickets" style="display: none;"></div>
+				                 <% end %>
+				                 
+					             <% 
+					             
+					             
+					           	end ## if end
+					           	i+=1
+					             end
+					           	 
+					         #####end
+                 	end %>
+               
+                 <% if i>2 %><% end %>
+                 <% if i<=2 %>
+                 		<a href="<%= APP_CONFIG['development']['site_url'] %>events/create_event" class="ticketbtn">
+		                  <span><%= I18n.t 'application.appli_create_an_event'%></span><br />
+	                        <%= I18n.t 'myticket_index.set_up_your_awesome'%>
+	                        <p><%= I18n.t 'myticket_index.get_stared'%></p>
+			           </a>
+                 <% end %>
+                
+                    <div class="clear"></div>
+                </div>
+                 <% if i>3 %>
+                 		<script>
+                 			function show_tickets(){
+                 				//alert($("#show_tickets").is(':visible'));
+                 				if($("#show_tickets").is(':visible'))
+								{
+								
+									$("#show_tickets").slideUp();
+									$('#show_text').text('All Orders(<%= @purchase.count %>)');
+									
+								}else
+								{
+									$("#show_tickets").slideDown();
+									$('#show_text').text('<%= I18n.t 'side_bar.few_orders'%>');
+									
+								}
+                 			}
+                 		</script>
+                 		<div class="clr"></div>
+                 		<br />
+                 		<div style="text-align: center;"><a href="javascript:" onclick="show_tickets()" id="show_text"><%= I18n.t 'myticket_index.all_orders'%>(<%= @purchase.count %>)</a></div>
+                 <% end %>
+                	
+                	
+            </div>
+        	<div class="mtitle marT40">
+            	<h1><%= I18n.t 'myticket_index.recommened'%> <span><%= I18n.t 'event_title.events'%></span></h1>
+                <span><%= I18n.t 'myticket_index.this_week'%></span>                
+            </div>
+            <div class="marT20 recom_event" id="all_recommand">
+            	
+            		<% if @this_week_events.count > 0 %>
+            		<ul>
+                 	<%	for event in @this_week_events
+                 	%>
+                 		<li>
+	                    	<p>
+	                        	<strong><%= event[:event_start_date_time].strftime('%a') %></strong><br />
+								<%= event[:event_start_date_time].strftime('%b %d') %>
+	                        </p>                        
+	                        <div class="recom_list">
+	                        	<%
+	                        		if event[:event_url_link]=='' || event[:event_url_link]==nil 
+					             		page_url = APP_CONFIG['development']['site_url']+'events/view/'+event[:id].to_s 
+					             	else
+					             		page_url = APP_CONFIG['development']['site_url']+'event/'+event[:event_url_link]
+					             	end
+	                        	%>
+		                        <h2><a href="<%= page_url %>"><%= event[:event_title]%> </a></h2>
+		                        <div class="timing"><%= event[:event_start_date_time].strftime(@site[:date_time_format]) %></div>
+		                        <div class="location"><% if event[:online_event_option]==1 %><%= I18n.t 'create_event.online_event'%><% else %> <%= event[:street_address] %> <% end %></div>
+		                    </div>
+		                	<div class="clear"></div>
+	                    </li>
+	                	
+                 	<% end %>
+                 	</ul>
+                 	<% else %> 
+                 		<p><%= I18n.t 'myticket_index.no_recommened_event_this_week'%></p>
+                 	<% end %>
+                  
+                
+            </div>
+        </div>
+        
+        <!--Content Right-->
+        <%= render(:partial => "sidebar" , :object => :collection) %> 
+        <div class="clear"></div>
+    </div>    
+</section>

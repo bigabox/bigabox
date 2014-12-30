@@ -1,0 +1,135 @@
+<% @act_class = 'Orders' %>         	
+<%= render(:partial => "manage_event/common_banner" , :object => :collection) %>
+
+<script type="text/javascript">
+	function confirm_quantity(){
+		$('#can_error').text('');
+		var chks = $('#tic_qty');
+		var fl = true;
+		
+		if (chks.val() > 0)
+        {
+               fl = false;
+        }
+        
+         
+         if(fl==true){
+         	$('#can_error').text('<%= I18n.t 'purchases.cancel_js'%>');
+         	return false;
+         }else{
+         	return true;
+         }
+	}
+</script>
+<section>
+	<div class="main">
+    	<div class="left_columm">
+    		 <% if flash[:notice] -%>
+			      <div class="errors marT60">
+			      	<p><%= flash[:notice] %></p>
+			      </div>
+			<% end -%>   
+			<a href="#" style="display: none;" id="action_anchor">123&nbsp;</a>	
+				<%= form_tag({:controller => 'purchases', :action => 'cancel'}, :id => 'cancelorderForm', :name => 'cancelorderForm') do %> 	
+						   
+        	<div class="mtitle marT60">
+            	<h1><%= I18n.t 'button.cancel'%> <span><%= I18n.t 'event.purchase.order'%></span></h1>   
+            </div>            
+        	<div class="shadow marT40 pad3P">
+               <div class="form">
+               
+               
+                		  <%   
+					          user_id = @pur[:user_id]
+					          k=0
+				         
+				          #    @ticket = Ticket.find(@pur[:ticket_id])
+			              
+			              %>
+			              
+			              	<% if @pur[:ticket_qty]==1 && @pur[:ticket_id] != 0 %>
+			              		<label class="TW45p"> <%= I18n.t 'purchases.quantity_of'%> - 
+			              	
+			              	<% if @pur[:ticket_id] > 0 
+			              		@ticket = Ticket.find(@pur[:ticket_id])
+			              	%>
+			              	 	<% if @ticket[:free]==1 %>
+			              	 		<%= @ticket[:free_ticket_name] %>
+			              	 	<% elsif @ticket[:paid]==1 %>
+			              	 		<%= @ticket[:paid_ticket_name] %>
+			              	 	<% else %>
+			              	 		<%= @ticket[:donation_ticket_name] %>
+			              	 	<% end %> :
+			              	 
+			              	 <% end # end ticket id 
+			              	 %>
+			              	  
+			              	 </label>
+			                  <span><%= @pur[:ticket_qty] %></span>
+			                  <input type="hidden" name="qtys" id="tic_qty" value="<%= @pur[:ticket_qty] %>"/>
+			                
+			                <% elsif  @pur[:ticket_id] == 0
+			              	 %>
+			              	  <span>Delete All Record</span>
+			                
+			              	<% else %>	<!-- else if qty > 1 -->
+			              	
+			              	<label class="TW45p"> <%= I18n.t 'purchases.enter_quantity_of'%> - 
+			              		
+					          <% if @pur[:ticket_id] > 0 
+			              		@ticket = Ticket.find(@pur[:ticket_id])
+			              	%>
+			              	 	<% if @ticket[:free]==1 %>
+			              	 		<br /><%= @ticket[:free_ticket_name] %>
+			              	 	<% elsif @ticket[:paid]==1 %>
+			              	 		<br /><%= @ticket[:paid_ticket_name] %>
+			              	 	<% else %>
+			              	 		<br /><%= @ticket[:donation_ticket_name] %>
+			              	 	<% end %> :
+
+				              	 </label>
+				                  <select class="selectbox TW45p" name="qtys" id="tic_qty">
+				                    <% 
+				                    	0.upto(@pur[:ticket_qty]) do |i|
+				                    		%>
+				                    			<option value="<%= i %>"><%= i %></option>
+
+				                    		<%
+				                    	end	
+				                    %>
+				                  </select>  
+					                  
+			              	 <% end # end ticket id 
+			              	 %>
+			              	  	
+			              	<% end %> <!-- End main if -->
+			              	  
+			             
+               </div> 
+              	<div class="clear"></div>
+              	<div class="marT25" align="right">
+              		<div class="error1" id="can_error"></div>
+              		<input type="hidden" name="id" id="id" value="<%= @pur[:id] %>" />
+              		<input type="hidden" name="cancel" id="cancel" value="<%= params[:cancel] %>" />
+              		<input type="submit" name="submit" id="submit" value="Confirm" class="submit_btn" onclick="<%if  @pur[:ticket_id] == 0 %>  true <% else %> return confirm_quantity(); <% end %>" />
+              	</div> 
+           </div>
+           
+           <% end %>
+           
+           
+                    
+        	
+    	</div>  
+    	
+    	<%= render(:partial => "manage_event/manage_event_sidebar" , :object => :collection) %>
+		<div class="clear"></div>
+        </div>
+           <div class="clear"></div>
+    
+    
+</section>
+
+<% @edit_menu_class = 'Manage' %>
+<%= render(:partial => "manage_event/edit_menu" , :object => :collection) %> 
+<div class="clear "></div>

@@ -1,0 +1,287 @@
+ <%
+ 	@event_feature = Event.find_featured_events
+ 	@site = SiteSetting.find(:first)
+	@event = Event.find_live_event_wo_city
+	#result = request.location
+	@geoip ||= GeoIP.new(Rails.root.join("lib/GeoIP.dat"))  #@geoip.country(request.remote_ip) 
+	ip = request.remote_ip
+	
+  	result = GeoIP.new(Rails.root.join("lib/GeoLiteCity.dat")).city(ip)
+  	
+ %>   
+ 
+ 
+<script type="text/javascript" language="javascript">
+
+function form_validate_home()
+{
+	if($('#search_city_home').val() == "" )
+	{
+		return false;
+	}
+	else{
+		return true;
+	}
+}
+</script>
+     
+            	
+    	<% if @event_feature.count > 0 	%>
+    	<div class="header">
+            		<div class="flexslider">
+                    	<ul class="slides">
+            			<%	
+            			fcnt = 0
+            			for event in @event_feature	
+            				if fcnt<@site[:feature_limit]	
+            					 if event[:event_url_link]=='' || event[:event_url_link]==nil 
+				             		page_url = APP_CONFIG['development']['site_url']+'events/view/'+event[:id].to_s 
+				             	 else
+				             		page_url = APP_CONFIG['development']['site_url']+'event/'+event[:event_url_link]
+				             	 end
+            			%>
+	        				
+	        				<li>
+	                            <p><a href="<%= page_url %>" target="_blank">
+	                               <%
+	                               	image_check = 0
+       	
+							       	   if(event[:event_logo]!=nil)
+								            img_full_path = check_img(event[:event_logo],'event','orig')	
+								         	if img_full_path!='0' && img_full_path!='' 
+											  image_check = 1
+											  %>
+											  <img src="<%= APP_CONFIG['development']['upload_url'] %><%= img_full_path %>" alt="<%= event[:event_title] %>" height=" " width=" " />
+											  <%
+											end
+										end
+										if image_check==0
+											%>
+											<img src="<%= APP_CONFIG['development']['app_url'] %>demo_image.png" alt="<%= event[:event_title] %>" height=" " width=" " />
+											<%
+										end		
+									 %>
+	                               
+	                             </a></p>
+	                            <h2 style="margin-bottom: 10px;"><a href="<%= page_url %>" target="_blank"><%= truncate(event[:event_title], :length => 60) %></a></h2>
+	                            <div class="clear"></div>
+	                            <% if event[:event_detail]!='' && event[:event_detail]!=nil %><h3 style="margin-bottom: 3px;"><%= render :inline => truncate(ActionController::Base.helpers.strip_tags(event[:event_detail]), :length => 100) %></h3><% end %>
+	                        	<div class="clear"></div>
+	                        </li>
+	        			<% 	
+	        				end
+	        				fcnt+=1
+	        			end	%>
+	        			</ul>
+                	</div>
+                	    
+                <div><img src="<%= APP_CONFIG['development']['app_url'] %>shadow.png" height=" " width=" " /></div> 
+            </div>
+	       <%  end %>
+            	
+                                                 
+               
+        </div>
+    </div>
+</header>
+
+<div class="clear"></div>
+<div class="min_height">
+<div id="dvLoading" ></div> </div>
+<div class="min_height" id="mainbg_div" style="display: none;">
+<section>
+				
+			   
+	<div class="main">
+		
+		<% if flash[:notice1] -%>
+	      <div class="notice marT60">
+	      	<p><%= flash[:notice1] %></p>
+	      </div>
+	
+	    <% end -%>
+	    <% if flash[:notice] && flash[:notice]!='' -%>
+	      <div class="errors marT60">
+	      	<p><%= flash[:notice] %></p>
+	      </div>
+	
+	    <% end -%>
+	    
+    	<div class="marT60">
+        	<div class="mtitle fl">
+        		<%
+					if ip=='127.0.0.1' || @site[:site_mode]==0
+						city = ''
+					else	
+						city=result.city_name
+					end
+						
+							
+	        	%>
+	        	
+            	<h1 class="fl"><%= I18n.t 'home_index.Upcoming' %> <span><%= I18n.t 'event_title.events' %></span> </h1>
+            	
+            		<em><% if city!='' && 	city!=nil
+						@event = Event.find_live_event_with_city(city)
+						%> <%= I18n.t 'home_index.in'%> <%= city %><%
+					end	%> <a href="<%= APP_CONFIG['development']['site_url'] %>search"><%= I18n.t 'home_index.change_your_location' %></a></em>
+            </div>
+           <%= form_tag({:controller => 'search', :action => 'index'}, :id => 'searchFormhome') do %>
+            <div class="search pr">
+            	<input type="text" name="search_city" id="search_city_home" value=""  placeholder="<%= I18n.t 'place.search_event_by_venue_location'%>"  class="textbox" />
+            	<input type="submit" value=" " onclick="return form_validate_home();"  />
+            </div>
+           <% end %> 
+            <div class="clear"></div>
+        </div>
+        <div class="eventListH">
+        	
+        		<% if @event.count > 0 	%>
+        			<ul>
+        			<% 
+        			ecnt=0
+        			for event in @event	
+            			if ecnt<@site[:upcoming_limit]	
+            				
+            				 if event[:event_url_link]=='' || event[:event_url_link]==nil 
+			             		page_url = APP_CONFIG['development']['site_url']+'events/view/'+event[:id].to_s 
+			             	 else
+			             		page_url = APP_CONFIG['development']['site_url']+'event/'+event[:event_url_link]
+			             	 end
+		            	%>
+		            	
+            	<li>
+                	<div class="eventimg">
+                    	<a href="<%= page_url %>">
+	                               <%
+	                               	image_check = 0
+       	
+							       	 if(event[:event_logo]!=nil)
+							             img_full_path = check_img(event[:event_logo],'event','thumb')	
+							         	if img_full_path!='0' && img_full_path!='' 
+										  image_check = 1
+										  %>
+										  <img src="<%= APP_CONFIG['development']['upload_url'] %><%= img_full_path %>" alt="<%= event[:event_title] %>" height=" " width=" " />
+										  <%
+										end
+									end
+										if image_check==0
+											%>
+											<img src="<%= APP_CONFIG['development']['app_url'] %>demo_image.png" alt="<%= event[:event_title] %>" height=" " width=" " />
+											<%
+										end		
+									 %>
+	                               
+	                             </a>
+                    </div>
+                    <div class="eventDetail">
+                    	<h2><a href="<%= page_url %>"><%= truncate(event[:event_title], :length => 30) %></a></h2>
+                         <%
+		                    if event[:organizer_id]!=nil
+		                    	@org = Organizer.find(event[:organizer_id])
+		                    
+		                    	
+		                    if @org	
+		                 		if @org[:page_url]=='' || @org[:page_url]==nil 
+				             		org_page_url = APP_CONFIG['development']['site_url']+'organizers/show/'+@org[:id].to_s 
+				             	else
+				             		org_page_url = APP_CONFIG['development']['site_url']+'org/'+@org[:page_url]
+				             	end
+		                  %>
+		                    
+                        <span><strong><%= I18n.t 'home_index.org_by'%></strong> 
+                        	<a href="<%= org_page_url %>"><% if @org[:name]!='' && @org[:name]!=nil %><%= truncate(@org[:name], :length => 30) %><% else %> <%= I18n.t 'home_index.un_org'%> <% end %></a></span>
+                        	<% end 
+                        	end
+                        	%>
+                        <div class="timing"><%= event[:event_start_date_time].strftime(@site[:date_time_format]) %></div>
+                    </div>
+                </li>
+               <% 
+                	end
+                	ecnt+=1
+                end %>
+            	
+                <div class="clear"></div>
+            </ul>   
+            <% end %>
+                     
+        	<div class="more"><a href="<%= APP_CONFIG['development']['site_url'] %>search"><strong><%= I18n.t 'home_index.view_more_events'%> <% if city!='' && 	city!=nil %> <%= I18n.t 'home_index.in'%> <%= city %> <% end %></strong></a></div>
+        </div>
+        
+    </div>
+    <%  @category = Category.parent_category %>
+    <% if @category.count > 0 %>
+    <div class="sectionBg1">
+    	<div class="main">
+        	<div class="mtitle">
+            	<h1><%= I18n.t 'home_footer.plan'%> <span><%= I18n.t 'event_title.events'%></span></h1>
+            </div>
+            
+            <div class="planevent">
+            	<ul>
+                	 <% 
+                	 i=0
+                	 for cat in @category %>
+                	 	<% if i%4==0 %> <div class="clear"></div> <% end %>
+                	 	<li <% if i%4==0 %> style="margin-left: 0px;" <% end %> class="marT45">
+	                    	<a href="<%= APP_CONFIG['development']['site_url'] %>search/category/<%= cat[:id] %>">
+	                    	<%
+	                               	image_check = 0
+       	
+							       	 if(cat[:category_image]!=nil)
+							            img_full_path = check_img(cat[:category_image],'category','orig')	
+							         	if img_full_path!='0' && img_full_path!='' 
+										  image_check = 1
+										  %>
+										  <img src="<%= APP_CONFIG['development']['upload_url'] %><%= img_full_path %>" alt="<%= cat[:category_name] %>" height="200" width=" "  />
+										  <%
+										end
+									end
+										if image_check==0
+											%>
+											<img src="<%= APP_CONFIG['development']['app_url'] %>demo_image.png" alt="<%= cat[:category_name] %>" height=" " width=" " />
+											<%
+										end		
+									 %></a>
+	                        <h2><a href="<%= APP_CONFIG['development']['site_url'] %>search/category/<%= cat[:id] %>"><%= cat[:category_name] %></a></h2>
+	                        <span><%= cat[:category_description] %></span>
+	                    </li>
+                	 <% 
+                	 	i+=1
+                	 end %>
+                	
+                	
+                </ul>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+    <% end %>
+    <div class="main marT40">
+        <div class="mtitle">
+            <h1><%= I18n.t 'home_index.make_your'%><span> <%= I18n.t 'home_index.event_success'%></span></h1>
+        </div>
+        <div class="marT20">
+        	<div class="success_left">
+            	<img src="<%= APP_CONFIG['development']['app_url'] %>img01.jpg" style="width:654px;  height:323px;" />
+            </div>
+            <div class="success_right">
+            	<ul>
+                	<li>
+                    	<a href="https://play.google.com/store/apps/details?id=com.rockers.entrymanager"><img src="<%= APP_CONFIG['development']['app_url'] %>img.png" /></a>
+                    </li>
+                    <li>
+                    	<img src="<%= APP_CONFIG['development']['app_url'] %>img03.jpg" style="width:284px;  height:150px;"  />
+                    </li>
+                </ul>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="shadow marTB40 BcreBTN">
+        	<h1><%= @site[:site_name] %> <%= I18n.t 'home_index.is'%> <span><%= I18n.t 'event.view.free'%></span> <%= I18n.t 'home_index.sign_up_get_started'%></h1>
+            <a href="<%= APP_CONFIG['development']['site_url'] %>events/create_event" class="btn"><%= I18n.t 'application.appli_create_an_event'%></a>
+        </div>
+    </div>
+</section>
+</div>

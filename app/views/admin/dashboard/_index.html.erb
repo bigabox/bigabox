@@ -1,0 +1,545 @@
+<style>
+	body.active_admin .panel_contents table tr.odd td {
+	    background: #FFFFFF;
+	}
+</style>
+
+<script>
+	function show_content_div(id){
+		if ($("#"+id).is(":hidden")) {
+			$("#"+id).slideDown("slow");
+		} else {
+			$("#"+id).slideUp("slow");
+		}
+	}
+</script>
+<div class="columns">
+	
+               <div class="column" style="width: 32%;" >
+                <div class="panel">
+                	
+                  <h3>Ticket's Report</h3>
+                  <div class="panel_contents">
+                  		<% @sold = Purchase.find_ticket_sold_count %>
+                  		<% 
+                  		    @total_tics = Purchase.find_total_tickets
+                  			@available = @total_tics.to_i -  @sold.to_i
+                  		%><br />
+	                    <p><strong>Tickets Sold :</strong> <%= @sold %> </p>
+	                    <p><strong>Tickets Available :</strong> <%= @available %> </p>
+	                    <br />
+	                    
+	              </div>
+                </div>
+              </div>
+              
+              <div class="column" style="width: 33%; margin-left: 10px;" >
+                <div class="panel">
+                  <h3>Withdrawal's Report </h3>
+                  <div class="panel_contents">
+                  	 	<%
+	                    	@pending_total = WalletWithdraw.find_total_pending_withdrawals
+	                    	@confirm_total = WalletWithdraw.find_total_confirm_withdrawals
+	                    %>
+                  	    <p><strong>Total Withdrawals :</strong> <%= set_currency(@pending_total.to_f + @confirm_total.to_f) %> </p>
+	                    <p><strong>Pending Withdrawals :</strong> <%= set_currency(@pending_total) %>  </p>
+	                    <p><strong>Confirmed Withdrawals :</strong> <%= set_currency(@confirm_total) %> </p>
+	                   
+                  </div>
+                </div>
+              </div> 
+              
+              <div class="column" style="width: 32%; margin-left: 10px;" >
+                <div class="panel">
+                  <h3>Sales Report </h3>
+                  <div class="panel_contents">
+                  	 	<%
+	                    	@total_sales = Purchase.find_total_sales
+	                    	@total_earnings = Purchase.find_total_earnings
+	                    %><br />
+	                    <p><strong>Total Sales :</strong> <%= set_currency(@total_sales) %> </p>
+	                    <p><strong>Total Earnings :</strong> <%= set_currency(@total_earnings) %> </p>
+	                    <br />
+                  		 
+                  </div>
+                </div>
+              </div> 
+              <div style="clear: both;"></div>
+              
+              <div class="column" style="width: 49%;" >
+                <div class="panel">
+                
+                  <h3 onclick="show_content_div('event_div')">Latest Events <img src="<%= APP_CONFIG['development']['app_url'] %>down-arrow.png" alt="" style="float: right;" />
+                  	<div style="clear:both;"></div>
+                  </h3>
+                  <div class="panel_contents" id="event_div" style="display: none;">
+                    <%
+                    	@site = SiteSetting.find(:first)
+                    	time = Time.new
+			            
+			            #@events = Event.where(" cancel=0 AND (DATE(created_at) between ? and ?)  ", Date.today - 6.days, Date.today)
+			        	@events = Event.where(" cancel=0 ").limit(10).order('id desc')
+			        	if @events.count > 0
+			        %>
+			        	<table class="index_table index">
+			        		<tr>
+			        			<th>Event Title</th>
+			        			<th>Event Start Date</th>
+			        			<th>Event End Date</th>
+			        			<th>Current Status</th>
+			        			<th>Tickets Qty.</th>
+			        			<th>View</th>
+			        		</tr>
+				        	<% 
+				        	i=0
+				        	for event in @events	
+				        			 if event[:event_url_link]=='' || event[:event_url_link]==nil 
+					             		page_url = APP_CONFIG['development']['site_url']+'events/view/'+event[:id].to_s 
+					             	 else
+					             		page_url = APP_CONFIG['development']['site_url']+'event/'+event[:event_url_link]
+					             	 end
+				        	%>
+				        		<tr class="<% if (i % 2==0) %>odd <% else %> even <% end %>">
+				        			<td><a href="<%= page_url %>" target="_blank"> <%= event[:event_title] %> </a></td>
+				        			<td><%= event[:event_start_date_time].strftime(@site[:date_time_format]) %></td>
+				        			<td><%= event[:event_end_date_time].strftime(@site[:date_time_format]) %></td>
+				        			<td style="text-align: center;">
+				        				<% if event[:cancel]==1 %>
+				        					Cancelled
+				        				<% elsif event[:active]==1 %>
+				        					Live
+				        				<% else %> Draft <% end %>		
+				        			</td>
+				        			<td>
+				        				<%
+					        			  @free = Ticket.sum(:free_qty, :conditions => " event_id = #{event[:id]}") 
+									      @paid = Ticket.sum(:paid_qty, :conditions => " event_id = #{event[:id]}") 
+									      @donation = Ticket.sum(:donation_qty, :conditions => " event_id = #{event[:id]}") 
+									      @count = @free.to_i + @paid.to_i + @donation.to_i
+									      
+					        			 %><%= @count %>
+				        			 </td>
+				        			<td><a href="<%= page_url %>" target="_blank"><%= image_tag('event.png') %></a></td>
+				        		</tr>	
+				        	<% 
+				        		i+=1
+				        	end %>
+			        	</table>
+                    <% else %>
+                    	<p>No Records Available.</p>
+                    <% end %>
+                  </div>
+                </div>
+              </div>
+              
+				<div class="column" style="margin-left: 10px; width: 49%;" >
+                <div class="panel">
+                  <h3 onclick="show_content_div('user_div')">Latest Users <img src="<%= APP_CONFIG['development']['app_url'] %>down-arrow.png" alt="" style="float: right;" />
+                  	<div style="clear:both;"></div></h3>
+                  <div class="panel_contents" id="user_div" style="display: none;">
+                    
+                     <%
+                    	
+			           # @users = User.where(" DATE(created_at) between ? and ?  ", Date.today - 6.days, Date.today)
+			        	 @users = User.limit(10).order('id desc')
+			        	if @users.count > 0
+			        %>
+			        	<table class="index_table index">
+			        		<tr>
+			        			<th>First Name</th>
+			        			<th>Last Name</th>
+			        			<th>Email</th>
+			        			<th>Joined At</th>
+			        			<th>Current Status</th>
+			        			<th>Events</th>
+			        		</tr>
+				        	<% 
+				        	i=0
+				        	for user in @users	
+				        			 
+				        	%>
+				        		<tr class="<% if (i % 2==0) %>odd <% else %> even <% end %>">
+				        			<td><%= user[:first_name] %></td>
+				        			<td><%= user[:last_name] %></td>
+				        			<td><%= user[:email] %></td>
+				        			<td><%= user[:created_at].strftime(@site[:date_time_format]) %></td>
+				        			<td align="center">
+				        				<% if user[:active]==1 %>
+				        					Active
+				        				<% else %> Inactive <% end %>		
+				        			</td>
+				        			<td><a href="/admin/events/list/<%= user[:id] %>" target="_blank"><%= image_tag('event.png') %></a></td>
+				        		</tr>	
+				        	<% 
+				        		i+=1
+				        	end %>
+			        	</table>
+                    <% else %>
+                    	<p>No Records Available.</p>
+                    <% end %>
+                    
+                  </div>
+                </div>
+              </div>
+            
+              <div style="clear:both;"></div>
+            
+              <div class="column" style="width: 49%;" >
+                <div class="panel">
+                  <h3 onclick="show_content_div('purchase_div')">Latest Purchases <img src="<%= APP_CONFIG['development']['app_url'] %>down-arrow.png" alt="" style="float: right;" />
+                  	<div style="clear:both;"></div></h3>
+                  <div class="panel_contents" id="purchase_div" style="display:none;">
+                    <%
+                    	
+			            #@purchases = Purchase.where(" DATE(created_at) between ? and ?  ", Date.today - 6.days, Date.today)
+			        	@purchases = Purchase.where('ticket_id > 0 and payment=1').limit(10).order('id desc')
+			        	if @purchases.count > 0
+			        %>
+			        	<table class="index_table index">
+			        		<tr>
+			        			<th>Name</th>
+			        			<th>Email</th>
+			        			<th>Event</th>
+			        			<th>Ticket Qty.</th>
+			        			<th>Amount</th>
+			        			<th>Purchased At</th>
+			        		</tr>
+				        	<% 
+				        	i=0
+				        	for pur in @purchases	
+				        	if Event.exists?(pur[:event_id])			
+				        		@eve = Event.find(pur[:event_id])
+				        		
+				        		 if @eve[:event_url_link]=='' || @eve[:event_url_link]==nil 
+				             		page_url = APP_CONFIG['development']['site_url']+'events/view/'+@eve[:id].to_s 
+				             	 else
+				             		page_url = APP_CONFIG['development']['site_url']+'event/'+@eve[:event_url_link]
+				             	 end
+				        	%>
+				        		<tr class="<% if (i % 2==0) %>odd <% else %> even <% end %>">
+				        			<td><%= pur[:first_name] %> <%= pur[:last_name] %></td>
+				        			<td><%= pur[:email] %></td>
+				        			<td><a href="<%= page_url %>" target="_blank"><%= @eve[:event_title] %></a></td>
+				        			<td><%= pur[:ticket_qty] %></td>
+				        			<td style="text-align: center;">
+				        				<%= set_currency(pur[:total]) %>		
+				        			</td>
+				        			<td><%= pur[:created_at].strftime(@site[:date_time_format]) %></td>
+				        		</tr>	
+				        	<% 
+				        		i+=1
+				        	end
+				        	end %>
+			        	</table>
+                    <% else %>
+                    	<p>No Records Available.</p>
+                    <% end %>
+                    
+                  </div>
+                </div>
+              </div>
+    			
+    		 
+              <div class="column" style="margin-left: 10px; width: 49%;" >
+                <div class="panel">
+                  <h3 onclick="show_content_div('cancel_div')">Latest Cancelled Events <img src="<%= APP_CONFIG['development']['app_url'] %>down-arrow.png" alt="" style="float: right;" />
+                  	<div style="clear:both;"></div></h3>
+                  <div class="panel_contents" id="cancel_div" style="display:none;">
+                    <%
+                    	
+			           # @cancel_events = Event.where(" cancel=1 AND (DATE(cancel_date_time) between ? and ? ) ", Date.today - 6.days, Date.today)
+			        	 @cancel_events = Event.where(" cancel=1 ").limit(10).order('id desc')
+			        	if @cancel_events.count > 0
+			        %>
+			        	<table class="index_table index">
+			        		<tr>
+			        			<th>Event Title</th>
+			        			<th>Event Start Date</th>
+			        			<th>Event End Date</th>
+			        			<th>Current Status</th>
+			        			<th>View</th>
+			        		</tr>
+				        	<% 
+				        	i=0
+				        	for event in @cancel_events	
+				        			 if event[:event_url_link]=='' || event[:event_url_link]==nil 
+					             		page_url = APP_CONFIG['development']['site_url']+'events/view/'+event[:id].to_s 
+					             	 else
+					             		page_url = APP_CONFIG['development']['site_url']+'event/'+event[:event_url_link]
+					             	 end
+				        	%>
+				        		<tr class="<% if (i % 2==0) %>odd <% else %> even <% end %>">
+				        			<td><a href="<%= page_url %>" target="_blank"><%= event[:event_title] %></a></td>
+				        			<td><%= event[:event_start_date_time].strftime(@site[:date_time_format]) %></td>
+				        			<td><%= event[:event_end_date_time].strftime(@site[:date_time_format]) %></td>
+				        			<td style="text-align: center;">
+				        				<% if event[:cancel]==1 %>
+				        					Cancelled
+				        				<% elsif event[:active]==1 %>
+				        					Live
+				        				<% else %> Draft <% end %>		
+				        			</td>
+				        			<td><a href="<%= page_url %>" target="_blank"><%= image_tag('event.png') %></a></td>
+				        		</tr>	
+				        	<% 
+				        		i+=1
+				        	end %>
+				        	</table>
+                    <% else %>
+                    	<p>No Records Available.</p>
+                    <% end %>
+                    
+                  </div>
+                </div>
+              </div>
+    
+            
+            
+            <div style="clear:both;"></div>
+            
+           <%
+            time = Time.new
+            day = time.wday-1
+            eday = 6 - day
+            
+            @max_y1 = 4
+            @max_y2 = 4
+            
+            @first_day = Date.today - day.days
+            @last_day = Date.today + eday.days
+          
+           #####  user registration data
+           
+            @week_reg_arr=[]
+            @week_fb_arr=[]
+            @week_tw_arr=[]
+            
+           	@temp1=[]
+           	@temp2=[]
+           	@temp3=[]
+           	
+           	week_reg_arr=''
+			
+			@reg_user = User.find_by_sql("select COUNT(*) as total, DATE(created_at) as date_added from users where  (DATE(created_at) between '"+@first_day.to_s+"' AND '"+@last_day.to_s+"') group by DATE(created_at)")
+			@reg_fb_user = User.find_by_sql("select COUNT(*) as total, DATE(created_at) as date_added from users where  fb_id!=NULL AND fb_id!='' AND (DATE(created_at) between '"+@first_day.to_s+"' AND '"+@last_day.to_s+"') group by DATE(created_at)")
+			@reg_tw_user = User.find_by_sql("select COUNT(*) as total, DATE(created_at) as date_added from users where  tw_id!=NULL AND tw_id!='' AND (DATE(created_at) between '"+@first_day.to_s+"' AND '"+@last_day.to_s+"') group by DATE(created_at)")
+					
+			
+			if(@reg_user.count>0)
+				for res in @reg_user
+					@week_reg_arr.push(res.date_added.to_s => res.total)
+					if res.total > @max_y1
+						@max_y1 = res.total
+					end	
+					#@week_reg_arr[res.date_added] = res.total
+				end	
+			end
+			
+			if(@reg_fb_user.count>0)
+				for res in @reg_fb_user
+					@week_fb_arr.push(res.date_added.to_s => res.total)
+					#@week_reg_arr[res.date_added] = res.total
+					if res.total > @max_y1
+						@max_y1 = res.total
+					end	
+				end	
+			end
+			
+			if(@reg_tw_user.count>0)
+				for res in @reg_tw_user
+					@week_tw_arr.push(res.date_added.to_s => res.total)
+					#@week_reg_arr[res.date_added] = res.total
+					if res.total > @max_y1
+						@max_y1 = res.total
+					end	
+				end	
+			end
+		
+		if @max_y1 % 4 == 0
+		else
+			@max_y1 = @max_y1 * 4
+		end			
+			#while @last_date > @first_date do
+			
+		@wday = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun']
+		
+		i=0
+		until @first_day>@last_day
+			
+			j=0
+			for week in @week_reg_arr
+				if week.include?(@first_day.to_s)
+					@temp1[i]=week[@first_day.to_s]
+					j=1
+				end
+			end
+			
+			if j==0
+				@temp1[i]=0
+			end	
+			
+			
+			j=0
+			for week in @week_fb_arr
+				if week.include?(@first_day.to_s)
+					@temp2[i]=week[@first_day.to_s]
+					j=1
+				end
+			end
+			
+			if j==0
+				@temp2[i]=0
+			end	
+			
+			
+			
+			j=0
+			for week in @week_tw_arr
+				if week.include?(@first_day.to_s)
+					@temp3[i]=week[@first_day.to_s]
+					j=1
+				end
+			end
+			
+			if j==0
+				@temp3[i]=0
+			end	
+			
+			
+			i+=1
+			@first_day = @first_day + 1.days;
+		end	
+		
+		
+		%>
+        
+					              
+              <div class="column" style="width: 49%;" >
+                <div class="panel">
+                  <h3>Weekly User Registration</h3>
+                  <div class="panel_contents">
+	                    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+					    <script type="text/javascript">
+					      google.load("visualization", "1", {packages:["corechart"]});
+					      google.setOnLoadCallback(drawChart);
+					      function drawChart() {
+					        var data = google.visualization.arrayToDataTable([
+					          ['Day', 'Total Registration', 'Facebook', 'Twitter'],
+					          
+					       	  <%
+						          i=0
+						          for day1 in @wday
+						          	%>
+						          		['<%= day1 %>', <%= @temp1[i] %>, <%= @temp2[i] %>, <%= @temp3[i] %>],
+						          	<%
+						          	i+=1
+						          end	
+						          
+						      %>
+					          
+					         
+					        ]);
+					
+					        var options = {
+					          title: 'Weekly User Registration',
+					          max: <%= @max_y1 %>,
+					          min: 0,
+					        };
+					
+					        var chart = new google.visualization.LineChart(document.getElementById('user_chart_div'));
+					        chart.draw(data, options);
+					      }
+					    </script>
+						<div id="user_chart_div" style="width: 100%; height: 500px;"></div>
+                    
+                  </div>
+                </div>
+              </div>
+    			
+    	<%
+    	#event registration data
+    	
+            @week_eve_arr=[]
+           	@temp4=[]
+           	@first_day = Date.today - day.days
+           	
+			@reg_event = Event.find_by_sql("select COUNT(*) as total, DATE(created_at) as date_added from events where DATE(created_at) between '"+@first_day.to_s+"' AND '"+@last_day.to_s+"' group by DATE(created_at)")
+					
+			
+			if(@reg_event.count>0)
+				for res in @reg_event
+					@week_eve_arr.push(res.date_added.to_s => res.total)
+					if res.total > @max_y2
+						@max_y2 = res.total
+					end	
+				end	
+			end
+			
+			if @max_y2 % 4 == 0
+			else
+				@max_y2 = @max_y2 * 4
+			end		
+			
+			i=0
+			until @first_day > @last_day
+				j=0
+				for week in @week_eve_arr
+					if week.include?(@first_day.to_s)
+						@temp4[i]=week[@first_day.to_s]
+						j=1
+					end
+				end
+				
+				if j==0
+					@temp4[i]=0
+				end	
+				
+				i+=1
+				@first_day = @first_day + 1.days;
+			end	
+    	%>
+    		 
+              <div class="column" style="margin-left: 10px; width: 49%;" >
+                <div class="panel">
+                  <h3>Weekly Event Registration</h3>
+                  <div class="panel_contents">
+                    <script type="text/javascript">
+					      google.load("visualization", "1", {packages:["corechart"]});
+					      google.setOnLoadCallback(drawChart);
+					      function drawChart() {
+					        var data = google.visualization.arrayToDataTable([
+					          ['Day', 'Events'],
+					          
+					           <%
+						          i=0
+						          for day2 in @wday
+						          	%>
+						          		['<%= day2 %>', <%= @temp4[i] %>],
+						          	<%
+						          	i+=1
+						          end	
+						          
+						      %>
+						      
+					        ]);
+					
+					        var options = {
+					          title: 'Weekly Event Registration',
+					          max: <%= @max_y2 %>,
+					          min: 0,
+					          
+					        };
+					
+					        var chart = new google.visualization.LineChart(document.getElementById('event_chart_div'));
+					        chart.draw(data, options);
+					      }
+					    </script>
+						<div id="event_chart_div" style="width: 100%; height: 500px;"></div>
+                    
+                  </div>
+                </div>
+              </div>
+            
+            <div style="clear:both;"></div>
+            
+            </div>

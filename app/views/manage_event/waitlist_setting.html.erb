@@ -1,0 +1,156 @@
+ <%
+ 	@list = Waitlist.find(:first, :conditions => ['event_id=?', @event[:id]])
+ 	if @list
+ 	else
+ 		@list = Waitlist.new
+ 	end	
+ 	
+ 	free_tickets = Ticket.get_free_ticket(@event[:id])
+	paid_tickets = Ticket.get_paid_ticket(@event[:id])
+	donation_tickets = Ticket.get_donation_ticket(@event[:id])	
+ %>
+ 
+ <% @act_class = 'Waitlist Settings' %>         	
+ <%= render(:partial => "common_banner" , :object => :collection) %>    
+
+<section>
+	<div class="main">
+		<%= form_tag({:controller => 'manage_event', :action => 'waitlist_setting'}, :id => 'waitlist_setting', :name => 'waitlist_setting') do %>
+		              
+			      
+    	<div class="left_columm">
+    	<div class="marT60 waitlist">
+        	<div class="mtitle">
+            	<h1><%= I18n.t 'manage_event_sidebar.waitlist'%> <span><%= I18n.t 'ticket_part.settings'%></span></h1>
+            </div>
+            
+            <div class="shadow marT25 pad20">
+            	<div class="mtitle borderB">
+                    <h3><%= I18n.t 'waitlist_setting.waitlist_enable'%></h3>           
+                </div>
+                <div class="marT25">										
+                      <input type="radio" name="waitlist[active]" onclick="$('#enable').show();" value="1" <% if @list[:active]==1 %> checked="checked" <% end %>  />&nbsp;&nbsp;Enable
+					  <input type="radio" name="waitlist[active]" onclick="$('#enable').hide();" value="0"  <% if @list[:active]==0 %> checked="checked" <% end %> style="margin-left: 3%;"  />&nbsp;&nbsp;Disable
+				</div>
+            	
+            	<div id="enable" style="display: <% if @list[:active]==1 %> block; <% else %> none; <% end %>">
+	            	<div class="mtitle borderB marT40">
+	                    <h3><%= I18n.t 'waitlist_setting.waitlist_trigger'%></h3>           
+	                </div>
+	                <div class="marT25">										
+	                       <%
+					            if free_tickets
+					 				for free in free_tickets 
+							       		%>
+							       		<input type="radio" value="<%= free[:id] %>" class="marT10" name="waitlist[trigger]" <% if @list[:trigger]==free[:id].to_s %> checked="checked" <% end %> />
+											 <strong><%= free[:free_ticket_name] %></strong> (<%= I18n.t 'waitlist_setting.activate_waitlist_ticket_sells_out'%>)<br />
+										   
+							       		<%	 	
+					         		end
+					         	end	
+					         %>
+					          <%
+					            if paid_tickets
+					 				for paid in paid_tickets 
+							       		%>
+							       		<input type="radio" value="<%= paid[:id] %>"  class="marT10" name="waitlist[trigger]" <% if @list[:trigger]==paid[:id].to_s %> checked="checked" <% end %> />
+											 <strong><%= paid[:paid_ticket_name] %></strong> (<%= I18n.t 'waitlist_setting.activate_waitlist_ticket_sells_out'%>)<br />
+										    
+							       		<%	 	
+					         		end
+					         	end	
+					         %>
+					         <%
+					            if donation_tickets
+					 				for donation in donation_tickets 
+							       		%>
+							       		<input type="radio" value="<%= donation[:id] %>" class="marT10"  name="waitlist[trigger]" <% if @list[:trigger]==donation[:id].to_s %> checked="checked" <% end %> />
+											 <strong><%= donation[:donation_ticket_name] %></strong> (<%= I18n.t 'waitlist_setting.activate_waitlist_ticket_sells_out'%>)<br />
+										    
+							       		<%	 	
+					         		end
+					         	end	
+					        %>
+						  
+	                     
+	                     <input type="radio" value="all" name="waitlist[trigger]" <% if @list[:trigger]=='all' %> checked="checked" <% end %> class="marT10" />
+	                     <strong><%= I18n.t 'waitlist_setting.capacity'%></strong> (<%= I18n.t 'waitlist_setting.active_waitlist_total_event_capacity'%>)	
+	                 </div>
+	            	<div class="mtitle borderB marT40">
+	                    <h3><%= I18n.t 'waitlist_setting.maximum_waitlist_size'%></h3>           
+	                </div>
+	                <div class="marT25">										
+	                     <input type="text" name="waitlist[size]" value="<%= @list[:size] %>" class="textbox TW70">&nbsp; <%= I18n.t 'waitlist_setting.zero_for_unlimited'%>	
+	                 </div>
+	                 
+	            	<div class="mtitle borderB marT40">
+	                    <h3><%= I18n.t 'waitlist_setting.attendee_info_collected'%></h3>           
+	                </div>
+	                <div class="marT25">										
+	                     <input type="checkbox" value="1" name="waitlist[full_name]" checked="checked" onclick="this.checked=true;"  />
+	                     <strong><%= I18n.t 'waitlist_setting.full_name'%> </strong>(<%= I18n.t 'customize_order_form.required'%>)<br />
+	                     
+	                     <input type="checkbox" value="1" name="waitlist[email]"  checked="checked" onclick="this.checked=true;"  /> 
+	                     <strong><%= I18n.t 'home_js.email_address'%></strong> (<%= I18n.t 'customize_order_form.required'%>)<br />
+	                     
+	                     <input type="checkbox" value="1" name="waitlist[phone]" <% if @list[:phone]=='1' %> checked="checked" <% end %> />
+	                     <strong><%= I18n.t 'waitlist_setting.phone_number'%></strong>	
+	                 </div>
+	                 
+	            	<div class="mtitle borderB marT40">
+	                    <h3><%= I18n.t 'waitlist_setting.edit_waitlist_response_ticket_release_msg'%></h3>           
+	                </div>
+	                <div class="marT25">										
+	                      <a href="javascript:" onclick="$('#response_div').show(); $('#release_div').hide(); $(this).removeClass('link2'); $(this).addClass('link3'); $('#relclick').removeClass('link3'); $('#relclick').addClass('link2'); " id="resclick" class="link3"><%= I18n.t 'waitlist_setting.you_editing_auto_response_msg'%></a> | 
+						 <a href="javascript:" onclick="$('#response_div').hide(); $('#release_div').show(); $(this).removeClass('link2'); $(this).addClass('link3'); $('#resclick').removeClass('link3'); $('#resclick').addClass('link2'); " id="relclick" class="link2"><%= I18n.t 'waitlist_setting.edit_waitlist_ticket_release_msg'%></a>
+										
+	                     <div id="response_div" class="marT25"><textarea name="waitlist[response]" class="ckeditor "><%= @list[:response] %></textarea></div>
+						<div id="release_div" style="display: none;" class="marT25"><textarea name="waitlist[release]" class="ckeditor "><%= @list[:release] %></textarea></div> 
+						
+	                 </div>
+	            	<div class="mtitle borderB marT40">
+	                    <h3><%= I18n.t 'waitlist_setting.maximum_time_attendee_ticket_release_msg'%></h3>           
+	                </div>
+	                <div class="marT25">										
+	                     <div class="maximum_time">
+	                     	<input type="text" name="waitlist[hour]" value="<%= @list[:hour] %>" class="textbox TW50">&nbsp; Hour(s) &nbsp;
+	                     </div>
+	                     <div class="maximum_time">
+	                     	<input type="text" name="waitlist[minute]" value="<%= @list[:minute] %>" class="textbox TW50">&nbsp; Minute(s) &nbsp;	
+	                     </div>
+	                     <div class="maximum_time">
+	                     	<input type="text" name="waitlist[day]" value="<%= @list[:day] %>" class="textbox TW50">&nbsp; Day(s) &nbsp;
+	                     </div>
+	                     <div class="clear"></div>
+	                     <div>
+							(<%= I18n.t 'waitlist_setting.until_next_waitlist_postion_contacted'%>)
+	                    </div>
+	                 </div>
+	            	
+            	</div>
+            </div>
+            <input type="hidden" name="waitlist[event_id]" value="<%= @event[:id] %>" />
+    		<input type="hidden" name="list_id" value="<%= @list[:id] %>" />
+    		<input type="submit" value="Save Changes" class="submit_btn fr marT20" />
+    		
+           <div class="clear"></div>
+    </div>  
+    </div>
+    	
+    	<% end %>
+    	 
+		     <%= render(:partial => "manage_event_sidebar" , :object => :collection) %>    
+		<div class="clear"></div>
+        </div>
+           <div class="clear"></div>
+   
+</section>
+
+
+<% @edit_menu_class = 'Manage' %>
+<%= render(:partial => "edit_menu" , :object => :collection) %> 
+<div class="clear "></div>
+
+
+
+<script src="<%= APP_CONFIG['development']['js_url'] %>js/ckeditor/ckeditor.js"></script>

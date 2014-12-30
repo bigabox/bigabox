@@ -1,0 +1,199 @@
+<%
+      @user_multi = User.find(session[:user_id]) 
+	 if @user_multi[:ref_id]!=nil && @user_multi[:ref_id]!="" 
+		  @multi = 1
+		  @ses_user = @user_multi[:ref_id]
+	  else
+		  @multi = 0
+		  @ses_user = session[:user_id]
+	  end
+%>
+
+<style>
+	.form label{
+		width: 50%;
+		text-align: left;
+		padding-left: 5px; 
+	}
+	
+	.popup_Content{
+		/*width: inherit;*/
+	}
+</style>
+
+<script type="text/javascript">
+	function validate_add_new(){
+		var email_reg_exp= /^[a-zA-Z0-9]+[a-zA-Z0-9_.-]+[a-zA-Z0-9_-]+@[a-zA-Z0-9]+[a-zA-Z0-9.-]+[a-zA-Z0-9]+.[a-z]{2,4}$/;
+		var form = $("#newcontactForm");	
+		
+	
+		var contact_list_name = $("#contact_list_name");
+		var contactlistnameInfo = $("#contactlistnameInfo");
+		
+		var upload_datafile = $("#upload_datafile");
+		var uploaddatafileInfo = $("#uploaddatafileInfo");
+		
+		var emails = $("#emails");
+		var emailsInfo = $("#emailsInfo");
+		
+		
+		var fetch_type1 = $("#fetch_type1");
+		//var fetch_type2 = $("#fetch_type2");
+		//var fetch_type3 = $("#fetch_type3");
+		var fetch_type4 = $("#fetch_type4");
+		
+		//set all errors null 
+		contactlistnameInfo.text("");
+		uploaddatafileInfo.text("");
+		emailsInfo.text("");
+		
+		
+		//On Submitting
+		form.submit(function(){
+			
+			if(contact_list_name.val()==''){
+				 contact_list_name.focus();
+				 contactlistnameInfo.text("<%= I18n.t'jscript.contact_name_require' %>");
+				 contactlistnameInfo.addClass("error1");
+				 return false;
+			}
+			
+			if(fetch_type1.is(':checked') || fetch_type4.is(':checked')) //|| fetch_type2.is(':checked') || fetch_type3.is(':checked')
+			{
+				if (fetch_type1.is(':checked')) {
+					chks = upload_datafile;
+					if (chks.val()=='')
+	                {
+	                        upload_datafile.focus();
+							uploaddatafileInfo.text("<%= I18n.t'jscript.upload_csv' %>");
+							uploaddatafileInfo.addClass("error1");
+							
+							return false;
+	                }
+					else 
+					{
+							value = chks.val();
+							
+							t1 = value.substring(value.lastIndexOf('.') + 1,value.length);
+							
+							if( t1!='csv')
+							{
+								upload_datafile.focus();
+								uploaddatafileInfo.text("<%= I18n.t 'jscript.invalid_file' %>");
+								uploaddatafileInfo.addClass("error1");
+								
+								return false;
+							}
+							
+					}	
+				}
+				
+				/*if (fetch_type2.is(':checked')) {
+					return false;
+				}	
+				
+				if (fetch_type3.is(':checked')) {
+					return false;	
+				}	*/
+				
+				if (fetch_type4.is(':checked')) {
+					if(emails.val()==''){
+						  emails.focus();
+						 emailsInfo.text("<%= I18n.t 'jscript.atleast_one_record' %>");
+						 emailsInfo.addClass("error1");
+						 return false;
+					}else{
+						
+						var mails = emails.val().split('\n');
+						for (var i = 0; i < mails.length; i++)
+				        {
+				        	var cmmails = mails[i].split(',');
+				            for (var j = 0; j < cmmails.length; j++)
+				        	{
+				        		var a = cmmails[j];
+								var filter = email_reg_exp;
+								//if it's valid email
+								
+								if(a!=''){
+										
+									if(!filter.test(a)){
+										emails.focus();	
+										emailsInfo.text("<%= I18n.t 'jscript.valid_email' %>");
+										emailsInfo.addClass("error1");
+										return false;
+									}
+								}
+				        	}	
+				            //alert(mails[i]);
+				         }
+						
+					}
+				}
+					
+			}else{
+				 
+				 emailsInfo.text("<%= I18n.t 'jscript.atleast_one_record' %>");
+				 emailsInfo.addClass("error1");
+				 return false;
+			}
+			return true;
+				
+		});
+	}
+</script>
+
+<section>	
+	<div class="main marTB40 popup_Content">
+    	
+        	
+            <%= form_tag({:controller => 'contacts', :action => 'add_new'}, :id => 'newcontactForm', :name => 'newcontactForm', :multipart => 'true') do %> 
+				  
+				 
+            
+            	<div class="login_signup">
+                            <input type="hidden" name="contact_list[name]" id="contact_list_name" value="<%= @contact_list[:name] %>">
+                             <div id="contactlistnameInfo" ></div>
+                            <div class="marT20">
+                                <label><strong class="green_font"><%= I18n.t 'add_new.add_following' %></strong> </label>
+                                <div class="multi_user_radio mar0">
+                                    <input type="radio" name="fetch_type" id="fetch_type1" value="files" <% if params[:fetch_type]!='manually' %> checked="checked" <% end %> onclick="if(this.checked){ $('#files_list').show(); $('#social_list').hide(); $('#event_list').hide(); $('#manually_list').hide(); }else{ $('#files_list').hide(); }">
+                                    <strong><%= I18n.t 'add_new.upload_email_from_csv' %></strong><br>
+                                   <div style="margin-left: 4%;"> Download <a href="<%= APP_CONFIG['development']['upload_url'] %>/data/Contact_list _csv_Sample.csv">Contact List</a> File Format.</div>
+                                    <div class="multi_user_list"  id="files_list" style="display: <% if params[:fetch_type]!='manually' %> block; <% else %> none; <% end %>">                                       
+                                    	<div class="file_upload TW97p">
+                                            <input type="text" placeholder="Upload File" id="file_name" onClick="jQuery('#upload_datafile').click()" readonly="readonly" name="file_name" class="browse"/>
+                                         <div class="upload">
+                                        	<span><%= I18n.t 'add_new.browse' %></span>
+                                           <input type="file" value="" name="upload" id="upload_datafile" onchange="return filename(this.value);" class="uploads" style="opacity: 0;">
+                                         </div>               
+                                      </div>
+                                    </div><div id="uploaddatafileInfo" ></div>
+                                    <div class="clear"></div><br />
+                                    
+                                    <input type="radio" name="fetch_type" id="fetch_type4" value="manually" <% if params[:fetch_type]=='manually' %> checked="checked" <% end %> onclick="if(this.checked){ $('#files_list').hide(); $('#social_list').hide(); $('#event_list').hide(); $('#manually_list').show(); }else{ $('#manually_list').hide(); }">
+                                    <strong><%= I18n.t 'add_new.manualy_email_address' %></strong>
+                                    
+                                    <div class="multi_user_list" id="manually_list" style="display: <% if params[:fetch_type]=='manually' %> block; <% else %> none; <% end %>">
+							        	<span><%= I18n.t 'add_new.separated_email' %></span><br />
+							        	<textarea name="emails" id="emails" class="TW97p"><%= params[:emails] %></textarea>
+							        </div><div class="clr"></div>
+							        <div id="emailsInfo" style="margin-left: 30px;"></div>
+                                    
+                               </div>
+                                
+                            </div>
+                        </div>
+                      
+            <div class="marT20" align="right">
+                  <input type="hidden" name="contact_list[user_id]" id="user_id" value="<%= @ses_user %>" />
+		           <input type="submit" value="Save" class="submit_btn" onclick="return validate_add_new();">
+		           <a href="javascript://" onclick="parent.jQuery.colorbox.close();"  class="btn black_bg" style="padding: 16px 20px;"><%= I18n.t 'validation.common.can' %></a>
+				
+            </div>
+            <% end %>
+       
+        
+        <div class="clear"></div>
+    </div>    
+</section>
+

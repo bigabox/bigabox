@@ -1,0 +1,116 @@
+<style>
+	.marl{
+		margin-left: 20% !important;
+		color: #f00;
+	}
+</style>
+<script>
+	function check_form_validate(){
+		var email_reg_exp= /^[a-zA-Z0-9]+[a-zA-Z0-9_.-]+[a-zA-Z0-9_-]+@[a-zA-Z0-9]+[a-zA-Z0-9.-]+[a-zA-Z0-9]+.[a-z]{2,4}$/;
+		
+		var from_name = $('#from_name');
+		var from_name_err = $('#from_name_err');
+		from_name_err.text('');
+		
+		if(from_name.val()==''){
+			from_name.focus();
+			from_name_err.text("From Name can't be blank");
+			return false;
+		}
+		
+		var from_address = $('#from_address');
+		var from_add_err = $('#from_add_err');
+		from_add_err.text('');
+		
+		
+		var a = from_address.val();
+		var filter = email_reg_exp;
+		//if it's valid email
+		if(a==''){
+			from_address.focus();
+			from_add_err.text("From Address can't be blank");
+			return false;
+		}
+		
+		if(a!=''){
+				
+			if(!filter.test(a)){
+				from_address.focus();	
+				from_add_err.text("From Address should be valid email address");
+				return false;
+			}
+		}
+		
+		
+		var reply_address = $('#reply_address');
+		var reply_add_err = $('#reply_add_err');
+		
+		
+		reply_add_err.text('');
+		
+		
+		var a = reply_address.val();
+		var filter = email_reg_exp;
+		//if it's valid email
+		if(a==''){
+			reply_address.focus();
+			reply_add_err.text("Reply Address can't be blank");
+			return false;
+		}
+		
+		if(a!=''){
+				
+			if(!filter.test(a)){
+				reply_address.focus();	
+				reply_add_err.text("Reply Address should be valid email address");
+				return false;
+			}
+		}
+		
+		return true;
+	}
+</script>      
+<% 
+	
+		form_id = 'change_address'
+		form_act = 'change_address'
+	 
+%>
+<%= form_tag({:action => form_act}, :id => form_id, :novalidate => 'novalidate') do %> 
+	
+	<fieldset class="inputs">
+		<ol>
+			<li class="string input required stringish" id="page_pages_title_input">
+				<label class=" label" for="page_pages_title">From Name<abbr title="required">*</abbr></label>
+				<input id="from_name" maxlength="255" name="from_name" type="text" value="<%= params[:from_name] %>" />
+				<div class="marl" id="from_name_err"></div>
+			</li>
+			
+			<li class="string input required stringish" id="page_pages_title_input">
+				<label class=" label" for="page_pages_title">From Address<abbr title="required">*</abbr></label>
+				<input id="from_address" maxlength="255" name="from_address" type="text" value="<%= params[:from_address] %>" />
+				<div class="marl" id="from_add_err"></div>
+			</li>
+			
+			
+			<li class="string input required stringish" id="page_pages_title_input">
+				<label class=" label" for="page_pages_title">Reply Address<abbr title="required">*</abbr></label>
+				<input id="reply_address" maxlength="255" name="reply_address" type="text" value="<%= params[:reply_address] %>" />
+				<div class="marl" id="reply_add_err"></div>
+			</li>
+			
+			
+		</ol>
+	</fieldset>
+	
+	
+	
+	<fieldset class="actions">
+		<ol>
+			<li class="action input_action " id="page_submit_action">
+				<input name="commit" type="submit" value="Save" onclick="return check_form_validate();" />
+			</li>
+		</ol>
+	</fieldset>
+<% end %>
+

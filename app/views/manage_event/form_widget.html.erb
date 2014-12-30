@@ -1,0 +1,867 @@
+ <script type="text/javascript" src="<%= APP_CONFIG['development']['js_url'] %>js/jquery.tipsy.js"></script>
+ <%= render(:partial => "common_banner" , :object => :collection) %>   
+<%
+	free_tickets = Ticket.get_free_ticket(@event[:id])
+	paid_tickets = Ticket.get_paid_ticket(@event[:id])
+	donation_tickets = Ticket.get_donation_ticket(@event[:id])	
+%>
+
+<script type="text/javascript">
+        function selectall()
+		{ 
+		
+			var text_val=document.getElementById('copypath');			
+			text_val.focus();			
+			text_val.select();			
+			if (!document.all) return; // IE only
+			
+			r= text_val.createTextRange();
+			
+			r.execCommand('Copy');			
+		}
+
+</script>
+
+
+<section>
+	<div class="main">
+		<%= render(:partial => "manage_event_sidebar" , :object => :collection) %>
+	<div class="left_columm">
+    	<%
+        		@protect = 1
+        		
+        		if(@event[:password_protect]==1 && @event[:keep_private]==1)
+        			@protect = 0
+        			
+        			if(session[:event_password] == @event[:password_value])
+        			@protect = 1
+        		
+        			elsif(@event[:password_value]==params[:event_password])
+        				@protect = 1
+        			end
+        		end
+        	%>
+    	<div class="marT60">
+        	<div class="mtitle fl">
+            	<h1 class="fl"><%= I18n.t 'event.view.ticket' %> <span><%= I18n.t 'event.view.information' %></span></h1>
+             
+            </div> <div class="clear"></div>
+            
+            
+             <% if @protect==1	%>
+		        <div class="event_detail pad3 marT20" id="event_detail">  
+		    <% if free_tickets.count > 0 || paid_tickets.count > 0 || donation_tickets.count > 0 %>      
+		    <%= form_tag({:controller => 'tickets', :action => 'purchase'}, :id => 'purchase', :name => 'purchase' , :target=> '_blank') do %>	 
+		   
+            <table class="ticket table" id = "ticket_table">
+                <thead>
+                <tr>
+                    <th style="width: 110px;"><%= I18n.t 'event.view.ticket_title' %></th>
+                    <th style="width: 110px;"><%= I18n.t 'event.view.sales_end' %></th>
+                    <th style="width: 61px;"><%= I18n.t 'event.view.price' %></th>
+                    <th style="width: 61px;"><%= I18n.t 'event.view.fee' %></th>
+                   <% if @event[:remaining_tickets] == 1 %> 
+                    <th style="width: 80px;"><%= I18n.t 'event.view.available' %></th>
+                   <% end %>
+                    <th style="width: 95px;"><%= I18n.t 'event.view.qty' %></th>
+                
+                </tr>
+                </thead>
+                <tbody>
+                	<%
+                    	pur_available=0
+                    	now_date = Time.now.strftime('%Y-%m-%d %H:%M:%S')
+                    	@hidden=0
+                    	if free_tickets.count > 0
+	 
+			       			 for free in free_tickets 
+			       			 	if @code_type==2 
+			       			 		if PromotionalCode.is_applicable_promocode(@access_codes, free)==1
+			       			 			@hidden=1
+			       			 		end	
+			       			 		
+			       			 	end	
+         if (free[:free_ticket_name]!='' && free[:free_ticket_name]!=nil)
+                    %>
+		                    <tr>
+			                    <td>
+			                    	<% if @access_codes %>			                    	
+				                    	<% @promo_tkts = @access_codes[:tickets] %>
+				                    	
+				                    	<% if @promo_tkts %>
+				                    		<% if(@promo_tkts.include?(free[:id].to_s)) %>				                    		
+				                    			<%= free[:free_ticket_name]%>
+				                    		<% end %>				                    
+				                    	<% end %>
+				                     <% if  (free[:free_ticket_status]!=2 ) %>
+				                    	<%= free[:free_ticket_name]%>	
+				                    	<% end %>			                	
+				                  <%else%>
+				                    <% if  (free[:free_ticket_status]!=2 ) %>
+				                    	<%= free[:free_ticket_name]%>	
+				                    	<% end %>			                    
+			                    	<% end %>
+			                    	
+			                    	
+                                    	<% if free[:free_description]!='' && free[:free_description]!=nil %>
+                                    		<a href="javascript:" onclick="if($('#<%= free[:id] %>').val()==1){ $('#desc_<%= free[:id] %>').hide(); $('#<%= free[:id] %>').val(0); this.innerHTML = '<%= I18n.t 'event.view.view_more' %>'; }else{ $('#desc_<%= free[:id] %>').show(); $('#<%= free[:id] %>').val(1); this.innerHTML = '<%= I18n.t 'event.view.hide' %>';  }"><%= I18n.t 'event.view.view_more' %></a>
+                                    		<input type="hidden" id="<%= free[:id] %>" value="0" />
+                                    		<div id="desc_<%= free[:id] %>" style="display: none;">
+                                    			<%= free[:free_description] %>
+                                    		</div>
+                                    <% end %>
+			                    </td>
+			                    <td>
+			                    	<% if free[:free_end_sale]!=nil %>
+			                    <% if @access_codes %>			                    	
+				                    	<% @promo_tkts = @access_codes[:tickets] %>
+				                    	<% if @promo_tkts %>
+				                    		<% if(@promo_tkts.include?(free[:id].to_s)) %>				                    		
+				                    				<%= free[:free_end_sale].strftime(@site[:date_time_format]) %>			                    			
+				                    		<% else %>				                    		
+				                    				<%= free[:free_end_sale].strftime(@site[:date_time_format]) %>
+				                    		<% end %>				                    
+				                    	<% end %>
+				                    	
+				                    <%else%>
+				                    		<%= free[:free_end_sale].strftime(@site[:date_time_format]) %>			                    
+			                    	<% end %>
+			                    	<% end %>
+			                    </td>
+			                    
+			                    
+			                    <td>
+			                    	 
+			                   <%= I18n.t 'event.view.free' %>	
+			                   </td>
+			                    	
+			                    	
+			                    <td>		<%= I18n.t 'event.view.free' %>	                    
+			                    	
+			                    </td>
+			                     <% available = free[:free_qty].to_i - free[:used].to_i %>
+			                  <% if  @event[:remaining_tickets] == 1 %> 
+			                    <td>
+			                    	  <% if @access_codes %>			                    	
+				                    	<% @promo_tkts = @access_codes[:tickets] %>
+				                    	<% if @promo_tkts %>
+				                    		<% if(@promo_tkts.include?(free[:id].to_s)) %>	
+				                    		<% if @access_codes [:used_cnt] > @access_codes [:uses]
+				                    			available = 0 %>
+				                    			<%= available.to_i %>/<%= @qty.to_i %> 
+				                    			<% elsif @access_codes[:uses] > 0 %>
+												<% @qty = @access_codes[:uses] 	
+													# Calculate available tickets having discount 
+					                    	      available = @qty.to_i - @access_codes[:used_cnt].to_i %>
+					                    	      <%= available.to_i %>/<%= @qty.to_i %> 
+					                   		 <!-- For unlimited uses of discount code -->	
+					                     	  <% elsif @access_codes[:uses] == 0 %>      
+				                    			<% @qty = free[:free_qty]									 
+			                    	 		 	available = @qty.to_i - free[:used].to_i %>
+			                    	 		 	<%= available.to_i %>/<%= @qty.to_i %> 
+			                    			 	
+				                    	  <% end %>		  
+				                    		                   
+		                    			
+				                    		<% else %>				                    		
+				                    				<% @qty = free[:free_qty]									 
+			                    	 		 available = @qty.to_i - free[:used].to_i %>
+			                    	 		 <%= available.to_i %>/<%= @qty.to_i %>                     
+
+				                    		<% end %>				                    
+				                    	<% end %>
+				                    	
+				                    <%else%>
+											<% @qty = free[:free_qty]									 
+			                    	 		 available = @qty.to_i - free[:used].to_i %>
+			                    	 		 <%= available.to_i %>/<%= @qty.to_i %> 			                    
+			                    	<% end %>
+			                    	
+			                    </td>
+			                   <% end %> 
+			                
+			                    <td>
+			                    	  <% if available.to_i == 0  %>
+			                    		<%= I18n.t 'event.view.sold_out' %>
+			                    		<% else %>
+			                    	 <% available = free[:free_qty].to_i - free[:used].to_i %>
+			                    		<% if(free[:free_end_sale]==nil || free[:free_end_sale] < now_date || free[:free_start_sale] > now_date || @event[:event_end_date_time] < now_date ) %>
+		                                    <%= I18n.t 'event.view.na' %>
+		                                <% else 		                                		
+		                                		
+		                                		if free[:free_min_purchase]==nil or free[:free_min_purchase]==''
+		                                			free[:free_min_purchase]=@site[:min_purchase_allowed]
+		                                		end
+		                                		
+		                                		if free[:free_max_purchase]==nil or free[:free_max_purchase]==''
+		                                			free[:free_max_purchase]=@site[:max_purchase_allowed]
+		                                		end
+		                                		
+		                                		if (available >= free[:free_min_purchase])
+		                                			pur_available=1
+		                                			
+		                                		if available >= free[:free_max_purchase] && free[:free_max_purchase]>0
+		                                			available = free[:free_max_purchase]
+		                                		end	
+		                                %>
+		                                    <div class="posrel">
+			                                    <select name="ticket_qty[<%= free[:id] %>]" id="ticket_qty_<%= free[:id] %>" class="table_selectbox W50P_T"  >
+			                                        <option value="0">0</option>
+			                                        <%
+			                                        	free[:free_min_purchase].upto(available) do |n|
+			                                        	    %><option value="<%= n %>"><%= n %></option> <%
+														end
+			                                        %>
+			                                        
+			                                    </select>
+				                            <div class="clear"></div>
+							        		</div>       
+	                                    <% 
+	                                    	else
+	                                    		%> <%= I18n.t 'event.view.sold_out' %> <%
+	                                    	end
+	                                    end
+	                                    end %>
+			                    </td>
+			                </tr>            
+		            <%
+                    			end
+                    		end 
+                    	end	
+		             %>
+		             <%
+		             if paid_tickets.count > 0
+	 
+			       			 for paid in paid_tickets 
+			       			 	if @code_type==1			       			 		
+			       			 		if PromotionalCode.is_applicable_promocode(@disc_codes, paid)==1
+			       			 			@hidden=1
+			       			 		end
+			       			 	elsif @code_type==2
+			       			 		if PromotionalCode.is_applicable_promocode(@access_codes, paid)==1
+			       			 			@hidden=1
+			       			 		end	
+			       			 	end
+			       			 	
+			       if (paid[:paid_ticket_name]!='' && paid[:paid_ticket_name]!=nil)
+                    %>
+		                    <tr>
+			                    <td>
+				                    <% if @disc_codes  %>
+				                       <% @promo_tkts = @disc_codes[:tickets] %>
+				                    
+				                    	<% if @promo_tkts && paid[:paid_ticket_status] != 2 %>
+				                    
+				                    		<% if(@promo_tkts.include?(paid[:id].to_s))  %>				                    		
+				                    				<%= paid[:paid_ticket_name]%>
+					                    			   <% if @disc_codes[:disc_amt] %>
+								                    	<br /> (Discounted <%= set_currency(@disc_codes[:disc_amt]) %>)
+								                    	<% end %>	
+								                    	<%if @disc_codes[:disc_perc] %>
+								                    	<br /> (Discounted <%= @disc_codes[:disc_perc] %>%)
+								                    	<% end%>
+								                <% else %>
+								                
+								                <%= paid[:paid_ticket_name]%>
+								                    
+				                    		<% end  %>				                    
+				                    	<% end 
+				                    	
+				                    	elsif @access_codes  
+				                    	@promo_tkts = @access_codes[:tickets] %>
+				                    
+				                    	<% if @promo_tkts %>
+				                    	
+				                    		<% if(@promo_tkts.include?(paid[:id].to_s)) %>				                    		
+				                    			<%= paid[:paid_ticket_name]%>				                    			
+				                    		<% end%>				                    
+				                    	<% end 
+				                    	if (paid[:paid_ticket_status]!=2  ) %>
+				                    		 <%= paid[:paid_ticket_name]%>
+				                    	<% end %>
+				                    	
+				                    <% else %>
+				                    	<% if (paid[:paid_ticket_status]!=2  ) %>
+				                    		 <%= paid[:paid_ticket_name]%>
+				                    	
+				                    <%	end 
+				                    end
+				                    %>
+				                    	
+			                    	
+			                    		<% if paid[:paid_description]!='' && paid[:paid_description]!=nil %>
+                                    		<a href="javascript:" onclick="if($('#<%= paid[:id] %>').val()==1){ $('#desc_<%= paid[:id] %>').hide(); $('#<%= paid[:id] %>').val(0); this.innerHTML = '<%= I18n.t 'event.view.view_more' %>'; }else{ $('#desc_<%= paid[:id] %>').show(); $('#<%= paid[:id] %>').val(1); this.innerHTML = '<%= I18n.t 'event.view.hide' %>';  }"><%= I18n.t 'event.view.view_more' %></a>
+                                    		<input type="hidden" id="<%= paid[:id] %>" value="0" />
+                                    		<div id="desc_<%= paid[:id] %>" style="display: none;">
+                                    			<%= paid[:paid_description] %>
+                                    		</div>
+                                    <% end %>
+			                    </td>
+			                    <td>
+			                    	 <% if @disc_codes %>
+				                       <% @promo_tkts = @disc_codes[:tickets] %>
+				                    
+				                    	<% if @promo_tkts && paid[:paid_ticket_status]!= 2  %>
+				                    	
+				                    		<% if(@promo_tkts.include?(paid[:id].to_s)) %>
+					                    			<% if @disc_codes[:end_date_time]!=nil%>		                    			 
+					                    			 <%= @disc_codes[:end_date_time].strftime(@site[:date_time_format]) %> 
+							                    	<% else%> 	
+							                    		<%= paid[:paid_end_sale].strftime(@site[:date_time_format]) %>
+							                    	<% end %>
+							               <% else %>				                    	
+					                    	<% if paid[:paid_end_sale]!=nil %>
+			                    				<%= paid[:paid_end_sale].strftime(@site[:date_time_format]) %>
+			                    			<% end %>
+			                    			
+				                    		<% end%>				                    
+				                    	<% end 
+				                    	
+				                    	elsif @access_codes  
+				                    	@promo_tkts = @access_codes[:tickets] %>
+				                    
+				                    	<% if @promo_tkts  %>
+				                    		<% if(@promo_tkts.include?(paid[:id].to_s)) %>				                    		
+				                    				<% if @access_codes[:end_date_time]!=nil%>		                    			 
+					                    			 <%= @access_codes[:end_date_time].strftime(@site[:date_time_format]) %> 
+							                    	<% else%> 	
+							                    		<%= paid[:paid_end_sale].strftime(@site[:date_time_format]) %>
+							                    	<% end %>
+							               <% else %>				                    	
+					                    	<% if paid[:paid_end_sale]!=nil %>
+			                    				<%= paid[:paid_end_sale].strftime(@site[:date_time_format]) %>
+			                    			<% end %>
+							                    		
+				                    		<% end%>				                    
+				                    	<% end 
+				                    	
+				                    	else %>
+				                    		<%= paid[:paid_end_sale].strftime(@site[:date_time_format]) %>
+				                    <%	end %>
+			                    	
+			                    
+			                    	
+			                    </td>
+			                    <td>
+			                    	 <% if @disc_codes %>
+				                       <% @promo_tkts = @disc_codes[:tickets] %>
+				                    
+				                    	<% if @promo_tkts && paid[:paid_ticket_status]!= 2  %>
+				                    	
+				                    		<% if(@promo_tkts.include?(paid[:id].to_s)) %>
+						                    		<% if @disc_codes[:disc_amt]!=nil && @disc_codes[:disc_amt]!='' && @disc_codes[:disc_amt] > 0 
+							                    			paid[:paid_price] = paid[:paid_price].to_f - @disc_codes[:disc_amt].to_f %>
+							                    			<%= set_currency(paid[:paid_price]) %>
+							                    	
+							                    	 <%elsif @disc_codes[:disc_perc]!=nil && @disc_codes[:disc_perc]!='' && @disc_codes[:disc_perc] > 0 && @disc_codes[:disc_perc] <100  
+						       			 				@perc = ((paid[:paid_price].to_f * @disc_codes[:disc_perc].to_f) / 100)
+							       			 				paid[:paid_price] = paid[:paid_price].to_f - @perc.to_f %>
+							       			 				<%= set_currency(paid[:paid_price]) %>	
+							       			 				
+							       			 		 <%elsif @disc_codes[:disc_perc] == 100 %>
+							       			 		 	<%= I18n.t 'event.view.free' %>
+							       			 		 <% end %>
+				                    		
+							               <% else %>				                    	
+					                    	<%= set_currency(paid[:paid_price]) %>
+			                    			
+				                    		<% end%>				                    
+				                    	<% end 
+				                    	
+				                    	elsif @access_codes  
+				                    	@promo_tkts = @access_codes[:tickets] %>
+				                    
+				                    	<% if @promo_tkts  %>
+				                    			<% if @access_codes[:disc_amt]!=nil && @access_codes[:disc_amt]!='' && @access_codes[:disc_amt] > 0 
+							                    			paid[:paid_price] = paid[:paid_price].to_f - @access_codes[:disc_amt].to_f %>
+							                    			<%= set_currency(paid[:paid_price]) %>
+							                    	
+							                    	 <%elsif @access_codes[:disc_perc]!=nil && @access_codes[:disc_perc]!='' && @access_codes[:disc_perc] > 0  
+						       			 				@perc = ((paid[:paid_price].to_f * @access_codes[:disc_perc].to_f) / 100)
+							       			 				paid[:paid_price] = paid[:paid_price].to_f - @perc.to_f %>
+							       			 				<%= set_currency(paid[:paid_price]) %>
+							       			 			
+							       			 				
+							       			 		<% else %>
+							       			 		<%= set_currency(paid[:paid_price]) %>	
+							       			 		 <% end %>		                    		
+				                    				
+							            
+			                    			<% end 
+				                    	else %>
+				                    			<%= set_currency(paid[:paid_price]) %>
+				                    <%	end %>
+			                    </td>
+			                    
+			                    <td>
+			                    	<% if @disc_codes %>
+				                       <% @promo_tkts = @disc_codes[:tickets] %>
+				                    
+				                    	<% if @promo_tkts && paid[:paid_ticket_status]!= 2  %>
+				                    	
+				                    		<% if(@promo_tkts.include?(paid[:id].to_s)) %>				                    		
+				                    			
+					                    			   <% if (@event[:event_pass_fees]==1) || (@event[:event_pass_fees]==3 && paid[:paid_service_fee]==1) %>
+                              	 						  <% if @disc_codes[:disc_perc]!= nil && @disc_codes[:disc_perc] == 100 %>
+                              	 							 
+							       			 		 			<%= I18n.t 'event.view.free' %>
+							       			 		 
+                              	 							<% else %>
+                              	 							<%= set_currency(paid[:paid_fee]) %>
+                              	 						  <% end %>		
+							       			 		
+                              	 						<% else %>
+                              	 						
+                              	 							<%= set_currency(0) %>
+                              	 						<% end %>
+                              	 				<% else %>
+                              	 				<%= set_currency(paid[:paid_fee]) %>
+				                    		<% end%>				                    
+				                    	<% end 
+				                    	
+				                    	elsif @access_codes  
+				                    	@promo_tkts = @access_codes[:tickets] %>
+				                    
+				                    	<% if @promo_tkts %>
+				                    		<% if(@promo_tkts.include?(paid[:id].to_s)) %>				                    		
+				                    			<% if (@event[:event_pass_fees]==1) || (@event[:event_pass_fees]==3 && paid[:paid_service_fee]==1) %>
+                          	 							<%= set_currency(paid[:paid_fee]) %>
+                          	 						<% else %>
+                          	 							<%= set_currency(0) %>
+                          	 						<% end %>
+				                    			
+				                    		<% else %>
+				                    		<%= set_currency(paid[:paid_fee]) %>
+				                    		<% end%>				                    
+				                    	<% end 
+				                    	
+				                    	else %>
+				                    		 <% if (@event[:event_pass_fees]==1) || (@event[:event_pass_fees]==3 && paid[:paid_service_fee]==1) %>
+                              	 							<%= set_currency(paid[:paid_fee]) %>
+                              	 						<% else %>
+                              	 							<%= set_currency(0) %>
+                              	 						<% end %>
+				                    <%	end %>
+				                    
+				                   
+			                    </td>
+			                       <% available = paid[:paid_qty].to_i - paid[:used].to_i %>
+			                  <% if  @event[:remaining_tickets] == 1 %> 
+			                    <td>
+			                    	  <% if @access_codes %>			                    	
+				                    	<% @promo_tkts = @access_codes[:tickets] %>
+				                    	<% if @promo_tkts %>
+				                    		<% if(@promo_tkts.include?(paid[:id].to_s)) %>	
+				                    		<% if @access_codes [:used_cnt] > @access_codes [:uses]
+				                    			available = 0 %>
+				                    			<%= available.to_i %>/<%= @qty.to_i %> 
+				                    			<% elsif @access_codes[:uses] > 0 %>
+									<% @qty = @access_codes[:uses] 	
+						                    	      available = @qty.to_i - @access_codes[:used_cnt].to_i %>
+						                    	      <%= available.to_i %>/<%= @qty.to_i %> 
+						                   		 <!-- For unlimited uses of discount code -->	
+					                     	 	 <% elsif @access_codes[:uses] == 0 %>      
+					                    			<% @qty = paid[:paid_qty]									 
+				                    	 		 	available = @qty.to_i - paid[:used].to_i %>
+				                    	 		 	<%= available.to_i %>/<%= @qty.to_i %> 			                    			 	
+				                    	 	 	<% end %>		  
+				                    		                   
+		                    			
+				                    		<% else %>				                    		
+				                    				<% @qty = paid[:paid_qty]									 
+			                    	 		 available = @qty.to_i - paid[:used].to_i %>
+			                    	 		 <%= available.to_i %>/<%= @qty.to_i %>                     
+
+				                    		<% end %>				                    
+				                    	<% end %>
+				                    	
+				                    	<% elsif @disc_codes %>			                    	
+				                    	<% @promo_tkts = @disc_codes[:tickets] %>
+				                    	<% if @promo_tkts %>
+				                    		<% if(@promo_tkts.include?(paid[:id].to_s)) %>	
+				                    		<% if @disc_codes[:used_cnt] > @disc_codes[:uses]
+				                    			available = 0 %>
+				                    		<%= available.to_i %>/<%= @qty.to_i %> 
+				                    			<% elsif @disc_codes[:uses] > 0 %>
+									<% @qty = @disc_codes[:uses] 	
+									# Calculate available tickets having discount 
+						                    	      available = @qty.to_i - @disc_codes[:used_cnt].to_i %>
+						                    	      <%= available.to_i %>/<%= @qty.to_i %> 
+						                   		 <!-- For unlimited uses of discount code -->	
+					                     	 	 <% elsif @disc_codes[:uses] == 0 %>      
+					                    			<% @qty = paid[:paid_qty]									 
+				                    	 		 	available = @qty.to_i - paid[:used].to_i %>
+				                    	 		 	<%= available.to_i %>/<%= @qty.to_i %> 			                    			 	
+				                    	 	 	<% end %>		  
+				                    		                   
+		                    			
+				                    		<% else %>				                    		
+				                    				<% @qty = paid[:paid_qty]									 
+			                    	 		 available = @qty.to_i - paid[:used].to_i %>
+			                    	 		 <%= available.to_i %>/<%= @qty.to_i %>                     
+
+				                    		<% end %>				                    
+				                    	<% end %>
+				                    	
+				                    <%else%>
+											<% @qty = paid[:paid_qty]									 
+			                    	 		 available = @qty.to_i - paid[:used].to_i %>
+			                    	 		 <%= available.to_i %>/<%= @qty.to_i %> 			                    
+			                    	<% end %>
+			                    	
+			                    </td>
+			                   <% end %> 
+			                    
+			                   
+			                   <!-- for combo box --> 
+			                    <td> 
+			                    	  <% if available.to_i <= 0  %>
+			                    		<%= I18n.t 'event.view.sold_out' %>
+			                    		<% else %>
+			                    	<% available = paid[:paid_qty].to_i - paid[:used].to_i %> 
+			                    	
+			                    
+			                    		<% if  (paid[:paid_end_sale]==nil || paid[:paid_end_sale] < now_date || paid[:paid_start_sale] > now_date || @event[:event_end_date_time] < now_date ) %>
+		                                    <%= I18n.t 'event.view.na' %>
+		                               
+		                                
+			                    	  <% else
+		                                		if paid[:paid_min_purchase]==nil or paid[:paid_min_purchase]==''
+		                                			paid[:paid_min_purchase]=@site[:min_purchase_allowed]
+		                                		end
+		                                		
+		                                		if paid[:paid_max_purchase]==nil or paid[:paid_max_purchase]==''
+		                                			paid[:paid_max_purchase]=@site[:max_purchase_allowed]
+		                                		end
+		                                		
+		                                		if (available >= paid[:paid_min_purchase])
+		                                			pur_available=1
+		                                			
+		                                		if available >= paid[:paid_max_purchase] && paid[:paid_max_purchase]>0
+		                                			available = paid[:paid_max_purchase]
+		                                		end	
+		                                		
+		                                %>
+		                               
+		                                    <div class="posrel">
+			                                    <select name="ticket_qty[<%= paid[:id] %>]" id="ticket_qty_<%= paid[:id] %>" class="table_selectbox W50P_T"  >
+			                                        <option value="0">0</option>
+			                                        <%
+			                                        	paid[:paid_min_purchase].upto(available) do |n|
+			                                        	    %><option value="<%= n %>"><%= n %></option> <%
+														end
+			                                        %>
+			                                        
+			                                    </select>
+				                            <div class="clear"></div>
+							        		</div>       
+	                                    <% 
+	                                    	else
+	                                    		%> <%= I18n.t 'event.view.sold_out' %> <%
+	                                    	end
+	                                  end
+	                                    end%>
+			                    </td>
+			                </tr>            
+		            <%
+		            
+		            			end
+                    		end 
+                    	end	
+		             %>
+		             
+		             <%
+		             if donation_tickets.count > 0
+	 
+			       			 for donation in donation_tickets 
+			       			 	if @code_type==2 
+			       			 		if PromotionalCode.is_applicable_promocode(@access_codes,  donation)==1
+			       			 			@hidden=1
+			       			 		end	
+			       			 		
+			       			 	end	
+			       			 	
+if (donation[:donation_ticket_name]!='' && donation[:donation_ticket_name]!=nil)%>
+		                    <tr>
+			                    <td>
+			                    	<% if @access_codes %>			                    	
+				                    	<% @promo_tkts = @access_codes[:tickets] %>
+				                    	
+				                    	<% if @promo_tkts %>
+				                    		<% if(@promo_tkts.include?(donation[:id].to_s)) %>				                    		
+				                    			<%= donation[:donation_ticket_name]%>				                    			
+				                    		
+				                    		<% end %>				                    
+				                    	<% end %>
+				                     <% if  (donation[:donation_ticket_status]!=2)%>
+				                    	<%= donation[:donation_ticket_name]%>	
+				                    	<% end %>	
+				                    	
+				                    <%else%>
+				                    <% if  (donation[:donation_ticket_status]!=2) %>
+				                    	<%= donation[:donation_ticket_name]%>	
+				                    	<% end %>			                    
+			                    	<% end %>
+			                    	
+                                    	<% if donation[:donation_description]!='' && donation[:donation_description]!=nil %>
+                                    		<a href="javascript:" onclick="if($('#<%= donation[:id] %>').val()==1){ $('#desc_<%= donation[:id] %>').hide(); $('#<%= donation[:id] %>').val(0); this.innerHTML = '<%= I18n.t 'event.view.view_more' %>'; }else{ $('#desc_<%= donation[:id] %>').show(); $('#<%= donation[:id] %>').val(1); this.innerHTML = '<%= I18n.t 'event.view.hide' %>';  }"><%= I18n.t 'event.view.view_more' %></a>
+                                    		<input type="hidden" id="<%= donation[:id] %>" value="0" />
+                                    		<div id="desc_<%= donation[:id] %>" style="display: none;">
+                                    			<%= donation[:donation_description] %>
+                                    		</div>
+                                    	<% end %>
+			                    </td>
+			                    <td>
+			                    	<% if donation[:donation_end_sale]!=nil %>
+			                    <% if @access_codes %>			                    	
+				                    	<% @promo_tkts = @access_codes[:tickets] %>
+				                    	<% if @promo_tkts %>
+				                    		<% if(@promo_tkts.include?(donation[:id].to_s)) %>				                    		
+				                    				<%= donation[:donation_end_sale].strftime(@site[:date_time_format]) %>			                    			
+				                    		<% else %>				                    		
+				                    				<%= donation[:donation_end_sale].strftime(@site[:date_time_format]) %>
+				                    		<% end %>				                    
+				                    	<% end %>
+				                    	
+				                    <%else%>
+				                    		<%= donation[:donation_end_sale].strftime(@site[:date_time_format]) %>			                    
+			                    	<% end %>
+			                    	<% end %>
+			                    
+			                    </td>
+			                    <td>
+			                    	 <% if @access_codes  
+				                    	@promo_tkts = @access_codes[:tickets] %>
+				                    	<% if @promo_tkts %>
+				                    		<% if(@promo_tkts.include?(donation[:id].to_s)) %>				                    		
+				                    				<%= I18n.t 'event.view.na' %>
+				                    		<% end %>
+				                    		<% if donation[:donation_ticket_status]!=2 %>
+				                    				<%= I18n.t 'event.view.na' %>
+				                    		<% end %>                   			
+					                    <% end 				                    	
+				                    	
+				                    	elsif @disc_codes %>			                    	
+				                    	<% @promo_tkts = @disc_codes[:tickets] %>
+				                    		<% if @promo_tkts && donation[:donation_ticket_status]!= 2 %>				                    						                    		
+				                    				<%= I18n.t 'event.view.na' %>
+				                    			<% end %>
+				                    	<% else %>
+				                    		<%= I18n.t 'event.view.na' %>
+				                    <% end %>
+			                    
+			                    </td>
+			                    <td>
+			                    	 <% if @access_codes  
+				                    	@promo_tkts = @access_codes[:tickets] %>
+				                    	<% if @promo_tkts %>
+				                    		<% if(@promo_tkts.include?(donation[:id].to_s)) %>				                    		
+				                    				<%= I18n.t 'event.view.na' %>
+				                    		<% end %>
+				                    		<% if donation[:donation_ticket_status]!=2 %>
+				                    				<%= I18n.t 'event.view.na' %>
+				                    		<% end %>                   			
+					                    <% end 				                    	
+				                    	
+				                    	elsif @disc_codes %>			                    	
+				                    	<% @promo_tkts = @disc_codes[:tickets] %>
+				                    		<% if @promo_tkts && donation[:donation_ticket_status]!= 2 %>				                    						                    		
+				                    				<%= I18n.t 'event.view.na' %>
+				                    			<% end %>
+				                    	<% else %>
+				                    		<%= I18n.t 'event.view.na' %>
+				                    <% end %>
+			                    	
+			                    </td>
+			                  <% available = donation[:donation_qty].to_i - donation[:used].to_i %> 
+			                  <% if  @event[:remaining_tickets] == 1 %> 
+			                    <td>
+			                    	  <% if @access_codes %>			                    	
+				                    	<% @promo_tkts = @access_codes[:tickets] %>
+				                    	<% if @promo_tkts %>
+				                    		<% if(@promo_tkts.include?(donation[:id].to_s)) %>	
+				                    		
+				                    		<% if @access_codes [:used_cnt] > @access_codes [:uses]
+				                    			available = 0 %>
+				                    			<%= available.to_i %>/<%= @qty.to_i %> 
+				                    			
+				                    		<% elsif @access_codes[:uses] > 0 %>
+				                    			
+									<% @qty = @access_codes[:uses] 	
+								# Calculate available tickets having access code
+					                    	
+					                    	      available = @qty.to_i - @access_codes[:used_cnt].to_i %>
+					                    	      <%= available.to_i %>/<%= @qty.to_i %> 
+					                   		 <!-- For unlimited uses of access code -->	
+					                   		 
+					                     	  <% elsif @access_codes[:uses] == 0 %>      
+				                    			<% @qty = donation[:donation_qty]									 
+			                    	 		 	available = @qty.to_i - donation[:used].to_i %>
+			                    	 		 	<%= available.to_i %>/<%= @qty.to_i %> 
+			                    			 	
+				                    	 	 <% end %>	<!-- end include -->	  
+				                    		                   
+		                    			
+				                    		<% else %>				                    		
+				                    		<% @qty = donation[:donation_qty]									 
+			                    	 		 available = @qty.to_i - donation[:used].to_i %>
+			                    	 		 <%= available.to_i %>/<%= @qty.to_i %>                     
+
+				                    		<% end %><!-- End promo tkts-->				                    
+				                    	<% end %><!-- End if access codes -->
+				                    	
+				                    <%else%>
+								<% @qty = donation[:donation_qty]									 
+			                    	 		 available = @qty.to_i - donation[:used].to_i %>
+			                    	 		 <%= available.to_i %>/<%= @qty.to_i %> 			                    
+			                    	<% end %>
+			                    	
+			                    </td>
+			                   <% end %> 
+			                    
+			                     <td>
+			                       <% if available.to_i == 0  %>
+			                    		<%= I18n.t 'event.view.sold_out' %>
+			                    		<% else %>
+			                     	<% available = donation[:donation_qty].to_i - donation[:used].to_i %>               
+			                    		<% if donation[:donation_end_sale]==nil || donation[:donation_end_sale] < now_date  || donation[:donation_start_sale] > now_date || @event[:event_end_date_time] < now_date  %>
+		                                   
+		                                    <%= I18n.t 'event.view.na' %>
+		                                  
+		                                <% else
+		                                	if (available > 0)
+		                                		pur_available=1
+		                                 %>		                                 
+		                                   <%= I18n.t 'event.view.amount' %>(<%= @site[:currency_symbol] %>)<br /> 
+		                                   <input type="hidden" name="ticket_qty[<%= donation[:id] %>]" id="ticket_qty_<%= donation[:id] %>"   class="textbox" style="height: 30px;"   />
+		                                   <input type="text" name="ticket_price[<%= donation[:id] %>]" id="ticket_price_<%= donation[:id] %>"  class="textbox" style="height: 30px;"   />  
+	                                   
+	                                    <% 
+	                                    	else
+	                                    		%> <%= I18n.t 'event.view.sold_out' %> <%
+	                                    	end
+	                                    end
+	                                     end %>
+			                    </td>
+			                </tr>            
+		            <%
+		            			end
+                    		end 
+                    	end	
+		             %>
+		                                
+	                
+	                
+                </tbody>
+            </table>
+            	<input type="hidden" name="event_id" id="event_id" value="<%= @event[:id] %>" />
+            	
+            	<!--  setting up return url if registratoin time gets over.  -->
+            	
+            	<% return_url = request.url 
+                    return_url.gsub! '?err=redirect', ''
+                 %>
+		<input type="hidden" name="return_url" id="return_url" value="<%= return_url %>" />
+		
+		<!--  end of retun url   -->
+		
+            	<% @promotional_codes = PromotionalCode.find(:all, :conditions => ['event_id=?', @event[:id]]) %>
+            	
+            				
+				<% if @code_type==0 && @promotional_codes.count > 0 %>
+					<br />
+   					<p>	<%= I18n.t 'event.view.enter_promo' %> :
+   							<input type="text" name="promotional_code" id="promotional_code" value="" class="textbox" />   							
+   							<a href="javascript:" onclick="submit_check_promotional_code();"  class="btn fr"><%= I18n.t 'event.view.apply' %></a>   						
+   							</p><div id="promotional_codeInfo" class="error1"></div> <br />
+				<% end %>
+							
+								
+            	<% if @code_type==1  %>
+            			<input type="hidden" name="promo_code_id" id="promo_code_id" value="<%= @disc_codes[:id] %>" />
+            			<input type="hidden" name="promo_code_amt" id="promo_code_amt" value="<%= @disc_codes[:disc_amt] %>" />
+            			<input type="hidden" name="promo_code_perc" id="promo_code_perc" value="<%= @disc_codes[:disc_perc] %>" />
+            			  
+            	<% elsif @code_type==2%> 
+						<input type="hidden" name="promo_code_id" id="promo_code_id" value="<%= @access_codes[:id] %>" />
+            	<%	end %>
+            		
+		        <% if pur_available==1 %> 
+				        <div class="clear"></div>
+				</div>
+            		<% if session[:user_id]=='' ||  session[:user_id]==nil 
+	       				session[:return_url_event] = request.url 
+	       					%>
+	       					<div class=" fr marT15">
+		       					<span class="font_size14"><%= I18n.t 'event.view.login_first' %></span>
+		       					<a href="<%= APP_CONFIG['development']['site_url'] %>home/login?ret=yes"  class="btn"><%= I18n.t 'event.view.login' %></a>
+	       					</div>
+	       					<%
+	       				else
+	       					%>
+	       					<a href="javascript:" id="buy_btn" onclick="submit_check_form();" ondblclick="this.preventDefault();" class="btn fr marT15"><%= I18n.t 'event.view.buy_tickets' %></a>
+	       					<%
+	       				end	
+	       			%> 
+            	<% else %>
+			            	
+            		<div class="pad15 textcenter"><p><%= I18n.t 'event.view.no_tickets_purchase' %></p></div>
+            		<div class="clear"></div>
+					</div>
+            	<% end %>
+            	<div class="clear"></div>
+            	
+            <% end %>
+            <% else %>
+            	<div class="pad15 textcenter"><p><%= I18n.t 'event.view.no_tickets_purchase' %></p></div>
+            		<div class="clear"></div>
+					</div>
+            <% end %>
+            
+          <% else %>  
+            
+          		<div class="event_detail pad3 marT20">
+          		<%= form_tag(request.path ,:id => 'passwordform', :name => 'passwordform') do %>	
+          			<div class="event_detail pass_text pad20 marT20">
+		                	<img src="<%= APP_CONFIG['development']['app_url'] %>icon-protection.png" />
+		                    <div>
+		                        <strong><span class="font_size15"><%= I18n.t 'event.view.event_password_protected' %></span></strong>
+		                        <p><%= I18n.t 'event.view.event_password_protected_enter_password' %></p><br />
+		                        <input type="password" id="event_password" name="event_password" class="textbox" placeholder="Enter Password" value="<%= params[:event_password] %>" /> 
+		                        <div id="event_pass_info" class="error1" style="margin-left: 15px;">
+                       				<% if params[:event_password]!='' && params[:event_password]!=nil %>
+                       					<%= I18n.t 'event.view.incorrect_password' %>
+                       				<% end %>
+                       			</div>
+                       			<a href="javascript:" onclick="submit_password_form();" class="btn"><%= I18n.t 'event.view.view_now' %></a>
+		                                            
+		                    </div>
+		                <div class="clear"></div>
+		            </div>
+		            
+              	<% end %><!-- end form -->
+              	 <div class="clear"></div>
+              	 
+		</div><!-- end outer div of form tag-->
+          <% end %>  
+            <div class="clear"></div>
+	<div class="pr" style="width: 100%;">
+        	<br />
+        	<div id="widgets">
+        	<textarea id="copypath" style="width:97%; height:75px;" readonly="readonly"><div id="widgets"></div><iframe src="<%= APP_CONFIG['development']['site_url'] %>manage_event/customform/<%= @event[:id] %>" title="MyForm" allowtransparency="true" id="formwidget" scrolling = "off" style="width: 60%;height: 70%;" target="_blank" frameBorder = “0”></iframe>
+			</textarea>
+            	<a href="javascript:" onclick="selectall()" class="copy"></a><br />
+            </div>  
+          
+        </div>   
+    </div>  
+	
+     </div>
+     <div class="clear"></div>
+</section>
+
+
+
+<% @edit_menu_class = 'Manage' %>
+<%= render(:partial => "edit_menu" , :object => :collection) %> 
+<div class="clear "></div>

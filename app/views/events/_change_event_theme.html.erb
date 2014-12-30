@@ -1,0 +1,125 @@
+                        <ul class="change_color">
+                            <li>
+                            	<input type='color' class="full" value="<%= @one_theme[:event_title] %>" onchange="set_preview_event(this,'event_theme_title');"  /> 
+                            	<%= I18n.t 'change_event.event_title'%>
+                            	<input type="hidden" name="event_theme[event_title]" value="<%= @one_theme[:event_title] %>" id="event_theme_title" />
+                            	<div class="clear"></div>
+                            </li>
+                            <li>
+                            	<input type='color' class="full" value="<%= @one_theme[:background] %>" onchange="set_preview_event(this,'event_theme_background');"  /> 
+                            	<%= I18n.t 'change_event.background'%>
+                            	<input type="hidden" name="event_theme[background]" value="<%= @one_theme[:background] %>" id="event_theme_background" />
+                            	<div class="clear"></div>
+                            </li>
+                            <li>
+                            	<input type='color' class="full" value="<%= @one_theme[:header_text] %>" onchange="set_preview_event(this,'event_theme_header_text');"  /> 
+                            	<%= I18n.t 'change_event.header_text'%>
+                            	<input type="hidden" name="event_theme[header_text]" value="<%= @one_theme[:header_text] %>" id="event_theme_header_text" />
+                            	<div class="clear"></div>
+                            </li>
+                            <li>
+                            	<input type='color' class="full" value="<%= @one_theme[:box_background] %>" onchange="set_preview_event(this,'event_theme_box_background');"  /> 
+                            	<%= I18n.t 'change_event.box_background'%>
+                            	<input type="hidden" name="event_theme[box_background]" value="<%= @one_theme[:box_background] %>" id="event_theme_box_background" />
+                            	<div class="clear"></div>
+                            </li>
+                            <li>
+                            	<input type='color' class="full" value="<%= @one_theme[:body_text] %>" onchange="set_preview_event(this,'event_theme_body_text');"  /> 
+                            	<%= I18n.t 'change_event.body_text'%>
+                            	<input type="hidden" name="event_theme[body_text]" value="<%= @one_theme[:body_text] %>" id="event_theme_body_text" />
+                            	<div class="clear"></div>
+                            </li>
+                            <li>
+                            	<input type='color' class="full" value="<%= @one_theme[:box_border] %>" onchange="set_preview_event(this,'event_theme_box_border');"  /> 
+                            	<%= I18n.t 'change_event.box_border'%>
+                            	<input type="hidden" name="event_theme[box_border]" value="<%= @one_theme[:box_border] %>" id="event_theme_box_border" />
+                            	<div class="clear"></div>
+                            </li>
+                            <li>
+                            	<input type='color' class="full" value="<%= @one_theme[:links] %>" onchange="set_preview_event(this,'event_theme_links');"  /> 
+                            	<%= I18n.t 'change_event.color_link'%>
+                            	<input type="hidden" name="event_theme[links]" value="<%= @one_theme[:links] %>" id="event_theme_links" />
+                            	<div class="clear"></div>
+                            </li>
+                            <li>
+                            	<input type='color' class="full" value="<%= @one_theme[:box_header] %>" onchange="set_preview_event(this,'event_theme_box_header');"  /> 
+                            	<%= I18n.t 'change_event.box_header'%>
+                            	<input type="hidden" name="event_theme[box_header]" value="<%= @one_theme[:box_header] %>" id="event_theme_box_header" />
+                            	<div class="clear"></div>
+                            </li>
+                        </ul><div class="clear"></div>
+              
+	<script type="text/javascript" src="<%= APP_CONFIG['development']['js_url'] %>new_picker/spectrum.js"></script>     
+	  
+	  <script type="text/javascript">
+	       function set_color_picker(){
+		
+				 /*************** color picker *************/
+
+				$(".full").spectrum({
+				    className: "full-spectrum",
+				    maxPaletteSize: 10,
+				    preferredFormat: "hex",
+				    localStorageKey: "spectrum.demo",
+				});
+				
+			}
+				
+			function set_preview_event(ele,id){
+					var hex = ele.value;
+					
+					if(id=='event_theme_title'){
+						$('#event_theme_title').val(hex);
+						$('.main_event_title').css('color', hex);
+					}
+					if(id=='event_theme_background'){
+						$('#event_theme_background').val(hex);
+						$('#event_theme_page_change').css('backgroundColor', hex);
+					}
+					if(id=='event_theme_header_text'){
+						$('#event_theme_header_text').val(hex);
+						$('#event_theme_page_change .table th').css('color',  hex);
+						$('#event_theme_page_change a.btn').css('color',  hex);
+						$('#event_theme_page_change .save_event').css('color',  hex);
+						$('#event_theme_page_change .save_event a').css('color',  hex);
+						
+						$('#event_theme_page_change .left_columm .mtitle h1').css('color',  hex);
+						$('#event_theme_page_change .right_columm .mtitle h1').css('color',  hex);
+					}
+					if(id=='event_theme_box_background'){
+						$('#event_theme_box_background').val(hex);
+						$('#event_theme_page_change .event_detail').css('backgroundColor',  hex);
+						$('#event_theme_page_change .article_shadow').css('backgroundColor',  hex);
+						$('#event_theme_page_change .article_shadow img').css('backgroundColor',  hex);
+						$('#event_theme_page_change .shadow').css('backgroundColor',  hex);
+					}
+					if(id=='event_theme_body_text'){
+						$('#event_theme_body_text').val(hex);
+						$('#event_theme_page_change').css('color',  hex);
+					}
+					if(id=='event_theme_box_border'){
+						$('#event_theme_box_border').val(hex);
+						$('.event_detail').css('borderColor',  hex);
+						$('.shadow').css('borderColor',  hex);
+					}
+					if(id=='event_theme_links'){
+						$('#event_theme_links').val(hex);
+						$('#event_theme_page_change a').css('color',  hex);
+					}
+					if(id=='event_theme_box_header'){
+						$('#event_theme_box_header').val(hex);
+						$('#event_theme_page_change .table th').css('backgroundColor',  hex);
+						$('#event_theme_page_change .mtitle h1 span').css('color',  hex);
+						$('#event_theme_page_change .mtitle h2 span').css('color',  hex);
+						$('#event_theme_page_change .event_detail span').css('color',  hex);
+						$('#event_theme_page_change .organizer h4').css('color',  hex);
+						$('#event_theme_page_change a.btn').css('backgroundColor',  hex);
+						$('#event_theme_page_change .save_event').css('backgroundColor',  hex);
+						$('#event_theme_page_change .save_event a').css('backgroundColor',  hex);
+					}
+			}
+	
+	</script>
+ 
+  
+ 	

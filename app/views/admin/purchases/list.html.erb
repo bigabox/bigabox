@@ -1,0 +1,99 @@
+<script>
+ $(document).ready(function() {	
+	$('.breadcrumb').html('');
+	$('#index_footer').html('');
+	
+});	
+</script> 
+<%  #@tickets = Purchase.where(:user_id => params[:user_id]).paginate(:page => params[:id], :per_page => 2).order('id DESC')
+	
+	@tickets = Purchase.where('user_id=? and ticket_id > 0', params[:id]).order('id DESC')
+	
+ %>
+
+<div class="paginated_collection">
+              <div class="paginated_collection_contents">
+                <div class="index_content">
+                  <div class="index_as_table">
+                    <table border="0" cellspacing="0" cellpadding="0" id="index_table_tickets" class="index_table index" paginator="true">
+                      
+							<thead>
+								<tr>
+								 <!-- <th class="sortable first_name"><a href="/admin/purchases?user_id=4&amp;order=first_name_desc">First Name</a></th>
+								  <th class="sortable last_name"><a href="/admin/purchases?user_id=4&amp;order=last_name_desc">Last Name</a></th> -->
+								  <th class="first_name">First Name</th>
+								  <th class="last_name">Last Name</th>
+								  <th class="email">Email</th>
+								  <th class="event_id">Event Title</th>
+								  <th class="ticket_qty">Ticket Qty.</th>
+								  <th class="total">Price</th>
+								  <th>&nbsp;</th>
+								</tr>
+							</thead>
+							<tbody>
+								
+								<% 
+								
+								  if @tickets.count > 0
+								  	i=1
+									  for tic in @tickets
+									  	if(tic[:ticket_id] > 0)
+								         if @event = Event.exists?(tic[:event_id])
+								             @event = Event.find(tic[:event_id])
+								             
+								%>
+								
+									<tr class="<% if i%2==0 %> even <% else %>odd <% end %>" id="purchase_<%= tic[:id] %>">
+										 <td class="first_name"><%= tic[:first_name] %></td>
+										 <td class="last_name"><%= tic[:last_name] %></td>
+										 <td class="email"><%= tic[:email] %></td>
+										 <td class="event_id"><%= @event[:event_title] %></td>
+										 <td class="ticket_qty"><%= tic[:ticket_qty] %></td>
+										 <td class="total"><%= set_currency(tic[:total]) %></td>
+										 
+										 <td class="">
+										 	<% 
+							                    @cancel_available = cancel_available(tic[:created_at])
+							                   # @cancel_available = 1
+							                    if @cancel_available == 1 %>
+												 	<a href="/admin/purchases/cancel/<%= tic[:id] %>" class="member_link delete_link" data-confirm="Are you sure you want to delete this?" data-method="delete" rel="nofollow">Delete</a>
+												 <% else %>
+												 	N/A
+												 <% end %>
+										</td>
+									</tr>
+								<%
+											
+											i+=1
+											end
+										end
+									end
+								else
+									%>
+									<tr class="odd">
+										<td colspan="7" style="text-align: center;">No Records Available</td>
+									</tr>
+									 <%	
+								end 
+								
+								if i==1
+									%>
+									<tr class="odd">
+										<td colspan="7" style="text-align: center;">No Records Available</td>
+									</tr>
+									<%
+								end	
+								%>
+							
+							
+								 
+							                        
+							</tbody>
+ 
+                    </table>
+                  </div>
+                </div>
+              </div>
+              
+            </div>
+

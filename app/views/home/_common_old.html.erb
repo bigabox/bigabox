@@ -1,0 +1,261 @@
+<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0;"/>
+
+<link href='http://fonts.googleapis.com/css?family=Droid+Serif' rel='stylesheet' type='text/css'>
+
+<!-- Favicon -->
+<link rel="icon" href="<%= APP_CONFIG['development']['app_url'] %>themes/favicon.png" sizes="32x32">
+
+<!-- Default -->
+ <link rel="stylesheet" href="<%= APP_CONFIG['development']['css_url'] %>style.css" type="text/css" media="screen"> 
+<!-- Slider -->
+
+<link rel="stylesheet" href="<%= APP_CONFIG['development']['css_url'] %>flexslider.css" type="text/css" media="all" />
+
+<!-- Mobile Menu +Flexslider -->
+<link rel="stylesheet" href="<%= APP_CONFIG['development']['css_url'] %>mobile-menu.css">
+
+<!-- Style + responsive + responsive-tabs -->
+<!-- <link rel="stylesheet" href="<%= APP_CONFIG['development']['css_url'] %>responsive_style.css" type="text/css" media="screen">-->
+<!-- Responsive Stylesheets -->
+ <link rel="stylesheet" href="<%= APP_CONFIG['development']['css_url'] %>responsive.css" type="text/css" media="screen"> 
+
+<!-- Tabs  -->
+ <link rel="stylesheet" href="<%= APP_CONFIG['development']['css_url'] %>responsive-tabs.css"> 
+
+
+<!--[if lt IE 7]>
+<script src="<%= APP_CONFIG['development']['js_url'] %>js/ie/IE7.js"></script>
+<![endif]-->
+
+<!--[if lt IE 8]>
+<script src="<%= APP_CONFIG['development']['js_url'] %>js/ie/IE8.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+<script src="<%= APP_CONFIG['development']['js_url'] %>js/ie/IE9.js"></script>
+<![endif]-->
+
+
+<!-- Jquery -->
+
+<link rel="stylesheet" href="<%= APP_CONFIG['development']['css_url'] %>new_picker/spectrum.css">
+
+
+<!-- Jquery -->
+
+<script type="text/javascript" src="<%= APP_CONFIG['development']['js_url'] %>new_picker/jquery-1.9.1.js"></script>
+
+
+
+<script src="https://maps.googleapis.com/maps/api/js?sensor=false" type="text/javascript" ></script>
+
+<!-- <script src="<%= APP_CONFIG['development']['js_url'] %>js/jquery-1.7.1.js"></script>--> <!-- compressd to common_jquery -->
+
+<!-- jquery-1.7.1 + form.js -->
+<script src="<%= APP_CONFIG['development']['js_url'] %>js/common_jquery.js"></script> 
+
+<!-- <script src="<%= APP_CONFIG['development']['js_url'] %>js/jquery.form.js" type="text/javascript" defer></script> -->
+<!--<script src="<%= APP_CONFIG['development']['js_url'] %>js/jquery.form.min.js" type="text/javascript" ></script>--><!-- compressd to common_jquery -->
+<script src="<%= APP_CONFIG['development']['js_url'] %>js/map/initmap.min.js" type="text/javascript" ></script>
+<!-- Login menu -->
+<script type="text/javascript">
+
+	var server_url = "<%= APP_CONFIG['development']['js_url'] %>js/ckeditor";
+
+  $(document).ready(function() {
+
+	$('.acc_link').click(function (){			
+		$('.acc_div').slideToggle("slow");
+		//$('.wrap').show();
+		if($('.wrap').css('display')=='none'){ $('.wrap').show();  } else
+		{ $('.wrap').hide();  }
+	});	
+	
+	$('.wrap').click(function (){		
+		$('.acc_div').slideToggle("slow");
+		//$('.wrap').hide();
+		if($('.wrap').css('display')=='none'){ $('.wrap').show();  } else
+		{ $('.wrap').hide();  }
+	});
+	
+	$('.link_show').click(function (){
+		$('.div_show').slideToggle("slow");
+		if($(this).text() == '<%= I18n.t 'payaccounts.show' %>'){
+           $(this).text('<%= I18n.t 'event.view.hide' %>');
+       } else {
+           $(this).text('<%= I18n.t 'payaccounts.show' %>');
+       }
+	   
+	});	
+	
+	$(window).bind("load", function() {
+	   <% uri = request.env['PATH_INFO'] %>
+	   
+	    		$('#dvLoading').fadeOut(1000);
+				$('#mainbg_div').fadeIn(1000); 
+				$('.min_height').css('minHeight',0);
+				
+	    		$('.mobileMenu').fadeIn(1000);
+				$('#mainbg_div').css('minHeight','400px'); 
+				
+				var show_map=0;
+				
+		<% if (uri.include? "/event/" ) || (uri.include? "events/view/") || (uri.include? "events/edit/") || (uri.include? "events/theme/") || (uri.include? "events/create_event")	%>
+	   			<% 
+	   			if @event
+	   				if @event[:street_address]!='' && @event[:street_address]!=nil %> 
+					 	val = '<%= @event[:street_address] %>'; 
+					 	set_map_center(val);
+						show_map=1;
+			    <% 
+			    	end
+			    end %>
+			    	<%
+						@geoip ||= GeoIP.new(Rails.root.join("lib/GeoIP.dat"))  #@geoip.country(request.remote_ip) 
+						ip = request.remote_ip
+						
+					  	result = GeoIP.new(Rails.root.join("lib/GeoLiteCity.dat")).city(ip)
+					  	
+					  	if ip=='127.0.0.1' 
+										city = 'USA'
+						else	
+							city=result.city_name
+						end
+									
+					 %>
+
+			    	if ($('#test').length > 0 && show_map==0) {
+			    			$('#test').initMap({ type : 'roadmap',zoom: 4, center: '<%= city %>' ,
+	   							 markers : { marker1: { animation: 'bounce'}} });
+	   				}
+			    
+		<% end %>	
+		
+		if ($('#foo2').length > 0) {
+			
+			$('#foo2').carouFredSel({
+					auto: false,
+					prev: '#prev2',
+					next: '#next2',
+					pagination: "#pager2",
+					mousewheel: true,
+					swipe: {
+						onMouse: true,
+						onTouch: true
+					}
+				});
+		}
+	});
+});
+
+
+function set_map_center(val){
+   	if ($('#test').length > 0) {
+   		$('#test').initMap({ 
+   			type : 'roadmap',
+   			zoom: 4,
+   			center : val,
+   			markers : {
+				marker1: { 
+					position: val,
+					animation: 'bounce',
+					info_window : { 
+		                content :val,
+		                maxWidth: 100,
+		                zIndex: 1
+		            } 
+             	}
+			}
+	 	});
+	} 
+ }	
+</script>
+
+
+<!-- Responsive -->
+<script src="<%= APP_CONFIG['development']['js_url'] %>js/respond.min.js" ></script> 
+
+<!-- Mobile Menu -->
+ <script src="<%= APP_CONFIG['development']['js_url'] %>js/jquery.mobile-menu.js" ></script> 
+<!-- <script src="<%= APP_CONFIG['development']['js_url'] %>js/jquery.mobile-1.4.4.min.js"></script>  -->
+
+<script>
+	  $(document).ready(function() {
+		$("body").mobile_menu({
+			menu: ['#main-nav ul', '#secondary-nav ul'],
+			menu_width: 200,
+			prepend_button_to: '#mobile-bar'
+		});
+	});
+</script>
+
+<!-- Tabs -->
+<!-- <script src="<%= APP_CONFIG['development']['js_url'] %>js/responsiveTabs.js" ></script> --> <!-- respond_custom.js -->
+
+<script src="<%= APP_CONFIG['development']['js_url'] %>js/respond_custom.js" ></script>
+<!-- <script src="<%= APP_CONFIG['development']['js_url'] %>js/jquery-ui-1.9.0.custom.js" type="text/javascript" ></script> --> <!-- respond_custom.js -->
+<link href="<%= APP_CONFIG['development']['css_url'] %>jquery/jquery.ui.all.css" media="all" rel="stylesheet" type="text/css" />
+<!-- <script src="<%= APP_CONFIG['development']['js_url'] %>js/jquery-ui-timepicker-addon.js" type="text/javascript" defer></script>  --> 
+<script src="<%= APP_CONFIG['development']['js_url'] %>js/jquery-ui-timepicker-addon.min.js" type="text/javascript" ></script>   
+  
+<script>
+	// create event
+	var validat_js_event_title_req = "<%= I18n.t 'validation_js.event_title_is_required' %>"
+	var validat_js_venue_name_req="<%= I18n.t 'validation_js.vanue_name_field_is_required' %>"
+	var validat_js_street_add_req="<%= I18n.t 'validation_js.street_address_field_is_required' %>"
+	var validat_js_event_start_date_req="<%= I18n.t 'validation_js.event_start_date_is_required' %>"
+	var validat_js_event_end_date_req="<%= I18n.t 'validation_js.event_end_date_is_required' %>" 
+	var validat_js_end_date_min_start_date="<%= I18n.t 'validation_js.end_date_minimum_three_hours_greater_start_date' %>"
+	var validat_js_end_date_greater_start_date="<%= I18n.t 'validation_js.end_date_greater_start_date' %>"
+	var validat_js_upload_logo_req="<%= I18n.t 'validation_js.evevt_logo_is_required' %>"
+	var validat_js_event_details_req="<%= I18n.t 'validation_js.event_details_is_required' %>"
+	var validat_js_org_host_req="<%= I18n.t 'validation_js.org_host_is_required' %>"
+	var validat_js_ticket_name_req="<%= I18n.t 'validation_js.ticket_name_field_is_required_all_tickets' %>"
+	var validat_js_ticket_qty_req="<%= I18n.t 'validation_js.ticket_qty_field_is_required_all_tickets' %>"
+	var validat_js_ticket_price_req="<%= I18n.t 'validation_js.ticekt_price_field_is_required_all_paid_tickets' %>"
+	var validat_js_ticket_start_date_not_grater_end_date="<%= I18n.t 'validation_js.ticket_start_sale_date_not_greater_end_sale_date_all_ticekts' %>"
+	var validat_js_ticket_end_date_not_grater_end_date="<%= I18n.t 'validation_js.ticket_end_sale_not_greater_event_end_date_all_tickets' %>"
+	var validat_js_valid_alpha_numeric="<%= I18n.t 'user_profile.type_valid_alpha_numeric' %>"
+	
+	// user profile
+	var validate_js_contactname_req="<%= I18n.t 'jscript.contact_name_require' %>"
+	var validate_js_upload_csv="<%= I18n.t 'jscript.upload_csv' %>"
+	var validate_js_invalid_file="<%= I18n.t 'jscript.invalid_file' %>"
+	var validate_js_atleast_one="<%= I18n.t 'jscript.atleast_one_record' %>"
+	var validate_js_valid_email="<%= I18n.t 'jscript.valid_email' %>"
+	var validat_js_org_name_req="<%= I18n.t 'validation_js.org_name_field_is_required' %>"
+	var validat_js_org_logo_req="<%= I18n.t 'validation_js.org_logo_is_required' %>"
+	var validat_js_about_org_req="<%= I18n.t 'validation_js.about_org_field_is_required' %>"
+	var validat_js_wesite_field_req="<%= I18n.t 'validation_js.website_field_is_required' %>"
+	var validat_js_type_valid_website_url="<%= I18n.t 'validation_js.type_valid_website_url' %>"
+	var validat_js_min_one_category_req="<%= I18n.t 'validation_js.minimum_one_category_is_required' %>"
+	var validat_js_min_one_city_req="<%= I18n.t 'validation_js.minimum_one_city_is_required' %>"
+	var validat_js_enter_valid_alpha_numeric="<%= I18n.t 'user_profile.enter_valid_alpha_numeric' %>"
+	var validat_js_type_valid_alpha_numeric="<%= I18n.t 'user_profile.type_valid_alpha_numeric' %>"
+	var validat_js_type_only_numeric_char="<%= I18n.t 'validation_js.type_only_alpha_numeric_char' %>"
+	var validat_js_type_only_numeric_char_and="<%= I18n.t 'validation_js.type_only_alpha_numeric_char_and' %>"
+	
+	//facebook login
+	var validat_js_email_address_valid="<%= I18n.t 'add_user_form.email_address_valid' %>"
+	var validat_js_type_valid_email="<%= I18n.t 'list_script.please_valid_email' %>"
+	var validat_js_pwd_req="<%= I18n.t 'manage_account_index.pwd_is_required' %>"
+	var validat_js_pwd_valid="<%= I18n.t 'manage_account_index.pwd_is_valid' %>"
+	var validat_js_pwd_one_lower_one_upper_one_special="<%= I18n.t 'manage_account_index.pwd_should_8_25_char_on_digit_one_lowercase_one_upercase_one_special' %>"
+	var validat_js_pwd_not_match="<%= I18n.t 'validation_js.pwd_does_not_match' %>"
+	var validat_js_confirm_pwd_match="<%= I18n.t 'validation_js.confirm_pwd_match' %>"
+	
+	//custom validation
+	var validat_js_field_req="<%= I18n.t 'custom_validation.field_req' %>"
+	var validat_js_enter_valid_zip="<%= I18n.t 'custom_validation.enter_valid_zipcode' %>"
+	var validat_js_valid_zip="<%= I18n.t 'custom_validation.valid_zip' %>"
+	var validat_js_enter_valid_10_digit_num="<%= I18n.t 'custom_validation.enter_valid_ten_digit' %>"
+	var validat_js_valid_number="<%= I18n.t 'custom_validation.valid_number' %>"
+	var validat_js_enter_valid_less_15_digit="<%= I18n.t 'custom_validation.enter_valid_less_than_15_digit' %>"
+</script>  
+<script type="text/javascript">
+
+	setTimeout(function() {
+	$('.notice').fadeOut("slow");
+	}, 3000 );
+	
+</script>

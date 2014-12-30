@@ -1,0 +1,74 @@
+        
+<% 
+	if params[:id]
+		form_id = 'edit_page'
+		form_act = 'update/'+params[:id].to_s
+	else
+		form_id = 'new_page'
+		form_act = 'create'
+	end		 
+%>
+<%= form_tag({:action => form_act}, :id => form_id, :novalidate => 'novalidate') do %> 
+<% if (@event.errors) then -%>
+	<% if (@event.errors.full_messages != []) then -%>
+     <ul class="errors">
+      <% @event.errors.full_messages.each do |t| %>
+  		<li><%= t %></li>
+	  <% end %>
+    </ul><% end %>
+    <% end %>
+	<fieldset class="inputs">
+		<ol>
+			<li class="string input required stringish" id="event_event_title_input">
+				<label class=" label" for="event_event_title">Event Title<abbr title="required">*</abbr></label>
+				<input id="event_event_title" maxlength="255" name="event[event_title]" type="text" value="<%= @event[:event_title] %>" />
+
+			</li>
+			
+			<li class="string input required stringish" id="event_vanue_name_input">
+				<label class=" label" for="event_event_title">Venue Name<abbr title="required">*</abbr></label>
+				<input id="event_vanue_name" maxlength="255" name="event[vanue_name]" type="text" value="<%= @event[:vanue_name] %>" />
+
+			</li>
+			
+			<li class="string input required stringish" id="event_street_address_input">
+				<label class=" label" for="event_street_address">Street address<abbr title="required">*</abbr></label>
+				<input id="event_street_address" maxlength="255" name="event[street_address]" type="text" value="<%= @event[:street_address] %>" />
+
+			</li>
+			
+			<li class="select input optional" id="event_online_event_option_input">
+				<label class=" label" for="event_online_event_option">Online event option</label>
+				<select id="event_online_event_option" name="event[active]">
+					<option value="0">NO</option>
+					<option value="1">YES</option>
+				</select>
+			</li>
+			
+			<li class="input optional" id="event_event_detail_input">
+				<label class=" label" for="event_event_detail" style="float: left; width: 20%;">Event Detail</label>
+				<div style="width: 66%; float: left;">
+					<textarea id="event_event_detail" class="ckeditor" name="event[event_detail]" rows="20" class=""><%= @event[:event_detail] %></textarea>
+				</div>
+				<div style="clear: both"></div>
+
+			</li>
+			
+			
+		</ol>
+	</fieldset>
+	
+	
+	<fieldset class="actions">
+		<ol>
+			<li class="action input_action " id="event_submit_action">
+				<input name="commit" type="submit" value="<% if params[:id] %>Update <% else %> Create<% end %> Page" />
+			</li>
+		</ol>
+	</fieldset>
+<% end %>
+
+
+
+
+<script src="<%= APP_CONFIG['development']['js_url'] %>js/ckeditor/ckeditor.js"></script>

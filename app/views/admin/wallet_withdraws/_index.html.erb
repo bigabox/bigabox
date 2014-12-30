@@ -1,0 +1,108 @@
+<script>
+ $(document).ready(function() {	
+	$('.breadcrumb').html('');
+	$('#index_footer').html('');
+	
+});	
+</script> 
+<%  #@tickets = Purchase.where(:user_id => params[:user_id]).paginate(:page => params[:id], :per_page => 2).order('id DESC')
+	@with = WalletWithdraw.where(:withdraw_status => 0, :cancel_order => 0).order('id DESC')#.paginate(:page => params[:id], :per_page => 1).order('id DESC')
+	@site = SiteSetting.find(:first)
+ %>
+
+<script>
+	function check_with_submit(){
+		$('#witherror').text('');
+		var chks = document.getElementsByName('all_id[]');
+		var fl = true;
+		for (var i = 0; i < chks.length; i++)
+        	{
+        		chks[i].checked==true;
+        	}
+        	fl = false;
+            
+         
+        
+	}
+</script>
+<div class="paginated_collection">
+              <div class="paginated_collection_contents">
+                <div class="index_content">
+                  <div class="index_as_table">
+                    <%= form_tag({:action => 'confirm'}, :id => 'withdrawForm', :name => 'withdrawForm') do %> 
+                    <% if @with.count > 0 %>
+                    <div id="witherror" style="text-align: center; color: #f00;"></div>
+                    <div align="right">
+                    	<a href="javascript://"  onclick="return check_with_submit();"><img src="<%= APP_CONFIG['development']['app_url'] %>tick1.png" alt="" /> Confirm All</a>
+                    </div>
+                    <% end %>
+                    <table border="0" cellspacing="0" cellpadding="0"  class="index_table index" paginator="true">
+                      
+							<thead>
+								<tr>
+								 <!-- <th class="sortable first_name"><a href="/admin/purchases?user_id=4&amp;order=first_name_desc">First Name</a></th>
+								  <th class="sortable last_name"><a href="/admin/purchases?user_id=4&amp;order=last_name_desc">Last Name</a></th> -->
+								  <th>&nbsp;</th>
+								  <th>Withdraw ID</th>
+								  <th >User</th>
+								  <th >Amount</th>
+								  <th >Withdraw IP address</th>
+								  <th >Request Date</th>
+								  <th class="">&nbsp;</th>
+ 								  <th class="">&nbsp;</th>
+								</tr>
+							</thead>
+							<tbody>
+								
+								<% 
+								i=1
+								  if @with.count > 0
+									  for w in @with
+									  	@user = User.find(w[:user_id])
+								%>
+								
+						<tr class="<% if i%2==0 %> even <% else %>odd <% end %>">
+							<td><input type="checkbox" name="all_id[]" value="<%= w[:id] %>" /></td>
+							<td><%= w[:id]%></td>
+							<td>
+							<% if @user[:first_name] %>
+								<%= @user[:first_name] %> <%= @user[:last_name]%>
+							<%else%>
+								<%= @user[:email] %>
+							<%end%>
+							</td>
+							<td><%= set_currency(w[:withdraw_amount]) %></td>
+							<td><%= w[:withdraw_ip] %></td>
+							<td><%= w[:created_at].strftime(@site[:date_time_format]) %></td>
+							<td>
+							<%= link_to image_tag('tick1.png', :title => 'Confirm') + ' Confirm ', {:action => 'confirm/'+w[:id].to_s} %>
+							</td>
+							<td>
+								<%= link_to "Transaction Details", {:action => 'detail/'+w[:id].to_s} %>
+							</td>
+									</tr>
+								<%
+											i+=1
+										
+									end
+								 else
+									%>
+									<tr class="odd">
+										<td colspan="7" style="text-align: center;">No Pending Withdrawals Available</td>
+									</tr>
+									 <%	
+								end %>
+							
+							
+								 
+							                        
+							</tbody>
+ 
+                    </table>
+                    <% end %>
+                     
+                  </div>
+                </div>
+              </div>
+              
+            </div>

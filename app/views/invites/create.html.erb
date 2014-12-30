@@ -1,0 +1,761 @@
+<% @act_class = 'Create Invitations' %>         	
+<%= render(:partial => "manage_event/common_banner" , :object => :collection) %>    
+
+
+<style>
+	#colorbox, #cboxOverlay, #cboxWrapper{
+		z-index:0 !important;
+	}
+	
+	.e_tab2sty tr td {
+		vertical-align: top;
+	}
+	
+	.error1{
+		margin-left: 0px;
+	}
+	.sp-preview{
+ 		height: 38px;
+ 		width: 105px;
+ 	}
+ 	.sp-dd{
+ 		height: 30px;
+ 		padding: 10px 0 0 0;
+ 	}
+ 	
+ 	.email_bg{
+ 		background: <%= @invite[:back_color] %>;
+ 		color: <%= @invite[:text_color] %>;
+ 	}
+ 	
+ 	.email_bg a, .email_bg a:visited, .email_bg a:hover{
+ 		color: <%= @invite[:link_color] %>;
+ 	}
+ 	.marL50{
+ 	        margin-left: 50px;
+ 	}
+ 	input.textbox[type="text"] {
+  	       font-size: 13px;
+          }
+</style>
+<style>
+	@media (max-width: 768px) {
+		.should_come td:nth-of-type(1):before { content: "<%= I18n.t 'create.table.select'%>"; }
+		.should_come td:nth-of-type(2):before { content: "<%= I18n.t 'action.email'%>"; }
+		.should_come td:nth-of-type(3):before { content: "<%= I18n.t 'action.first_name'%>"; }
+		.should_come td:nth-of-type(4):before { content: "<%= I18n.t 'action.last_name'%>"; }
+		.should_come td:nth-of-type(5):before { content: "<%= I18n.t 'action.action'%>"; }
+	}	
+</style>
+
+<script type="text/javascript">
+
+	
+$(document).ready(function(){
+
+	
+		/****  color picker end ***/
+ 		var myDate = new Date();
+		var nowDate = new Date(myDate.getTime() + 1*24*60*60*1000);
+		
+	
+		$('.date_time').datetimepicker({
+			ampm: false,dateFormat:'yy-mm-dd',
+			timeFormat: 'hh:mm',
+			minDate: 0
+		});
+		$('#ui-datepicker-div').hide();
+});
+
+</script>
+
+<script type="text/javascript">
+	var email_reg_exp= /^[a-zA-Z0-9]+[a-zA-Z0-9_.-]+[a-zA-Z0-9_-]+@[a-zA-Z0-9]+[a-zA-Z0-9.-]+[a-zA-Z0-9]+.[a-z]{2,4}$/;
+	
+function set_custom_values(type){
+	if(type=='custom'){
+		if($('#invite_image').is(":checked")){
+			$('#event_image').show();
+		}else{
+			$('#event_image').hide();
+		}
+		
+		if($('#invite_facebook').is(":checked") || $('#invite_twitter').is(":checked")){
+			$('#fb_tw').show();
+			if($('#invite_facebook').is(":checked")){
+				$('#fb_link').show();
+			}else{
+				$('#fb_link').hide();
+			}
+			
+			if($('#invite_twitter').is(":checked")){
+				$('#tw_link').show();
+			}else{
+				$('#tw_link').hide();
+			}
+			
+		}else{
+			$('#fb_tw').hide();
+		}
+		
+		if($('#invite_sal').is(":checked")){
+			$('#salute_t').show();
+			
+			if($('#invite_salutation').val()=='None'){
+				$('#salute').text("");
+			}else{
+				$('#salute').text($('#invite_salutation').val());
+			}
+			
+		}else{
+			$('#salute_t').hide();
+		}
+		
+		
+	}
+	
+	if(type=='message'){
+		
+		$('#invite_message_data').html($('#invite_message').val());
+		
+	}
+	
+	parent.jQuery.colorbox.close();
+	//$("#customize, #modal-boxes").fadeOut();
+	
+}
+
+
+function validate_submit(){
+	$('#fromnameInfo').text("");
+	$('#replytoInfo').text("");
+	$('#subjectInfo').text("");
+	
+	
+	var guest = $('.should_come');
+	var len = guest.length;
+		if(len==0)
+		{
+		 var guests_div = $("#addguest_error");
+		 guests_div.text("Please Add one Guest");
+		 guests_div.addClass("error1");
+		 return false ;
+		}
+		else{
+		 var guests_div = $("#addguest_error");
+		 guests_div.text("");
+	    }
+		
+
+	
+	if($('#show_name1').val()==''){
+		$('#fromnameInfo').text("<%= I18n.t 'invite_create.enter_name_sender'%>");
+		$('#show_name1').focus();
+		return false;
+	}
+	
+	if($('#show_email1').val()==''){
+		$('#replytoInfo').text("<%= I18n.t 'invite_create.enter_reply_to_email'%>");
+		$('#show_email1').focus();
+		return false;
+	}
+	
+	if($('#show_email1').val()!=''){
+		if(!email_reg_exp.test($('#show_email1').val())){
+			$('#replytoInfo').text("<%= I18n.t 'invite_create.type_valid_email'%>");
+			$('#show_email1').focus();
+			return false;
+		}
+	}
+	
+	if($('#show_sub1').val()==''){
+		$('#subjectInfo').text("<%= I18n.t 'invite_create.enter_subject_line'%>");
+		$('#show_sub1').focus();
+		return false;
+	}
+	
+	
+	
+	 if ($('#submit_type').val() == 'send'){
+
+	  if($("#RadioGroup1_1").prop('checked')){
+	   
+	   if ($('#invites_select_date').val()== "" ){
+	     $('#invites_select_date_err').text("<%= I18n.t 'validation_js.value_cant_be_blank'%>");
+	     $('#invite_days_err').text("");
+	     return false;
+	     }
+	   }
+	   
+	   if($("#RadioGroup1_2").prop('checked')){
+	   
+	   if ($('#invite_days').val()== "" || $('#invite_hours').val()== "" ){
+	     $('#invite_days_err').text("<%= I18n.t 'validation_js.value_cant_be_blank'%>");
+	      $('#invites_select_date_err').text("");
+	     return false;
+	     }
+	   }
+	   
+	 }
+	 $('#invite_days_err').text("");
+	 $('#invites_select_date_err').text("");
+	
+	
+	return true;
+}
+
+function send_test_email(){
+	
+	var a = $('#send_mail').val();
+	$('#sendmailInfo').text("");
+	
+	if(a==''){
+		$('#sendmailInfo').text("<%= I18n.t 'invite_create.enter_valid_email'%>");
+		$('#send_mail').focus();
+		return false;
+	}
+	
+	if(a!=''){
+		if(!email_reg_exp.test(a)){
+			$('#sendmailInfo').text("<%= I18n.t 'invite_create.type_valid_email'%>");
+			$('#send_mail').focus();
+			return false;
+		}
+	}
+	
+	if(validate_submit()){
+		$('#createinviteForm').submit();
+	}
+	
+	return false;
+	
+}	
+
+function remove_selected(){
+	 $('#err1').text("");
+	 var chks = document.getElementsByName('guest_id[]');
+	 var guest_id='';
+ 	 var hasChecked = true; 
+ 	  	for (var i = 0; i < chks.length; i++)
+        {
+            if (chks[i].checked==true)
+            {
+                hasChecked = false;
+                if(guest_id=='') guest_id=chks[i].value;
+                else guest_id = guest_id+','+chks[i].value;
+            }
+		}
+		
+	if(hasChecked){
+		$('#err1').text("<%= I18n.t 'invite_create.select_atleast_one'%>");
+		return false;
+	}
+	
+	 var page_path = '/invites/delete_guest/';
+       
+        var invitation_id = $('#invitation_id').val();
+        var random_no = $('#random_no').val();
+        
+        $.ajax({
+            type: "GET",
+            data: {guest_id: guest_id, invitation_id: invitation_id, random_no: random_no},
+            url: page_path,
+            success: function(data) {
+              	 	//alert(data.guest.length);
+              	 	if(data.guest.length > 0){
+		                	
+	                	var table = '<div class="eventinrcont" style="border: none;"><table class="should_come table"><tr><th><%= I18n.t 'new.table.select' %></th><th><%= I18n.t 'action.email' %></th><th><%= I18n.t 'action.first_name' %></th><th><%= I18n.t 'action.last_name' %></th><th><%= I18n.t 'action.action' %></th></tr>';
+			            var obj = data.guest;
+		               	for (i=0; i < obj.length; i++) {
+						  // or if (Object.prototype.hasOwnProperty.call(obj,prop)) for safety...
+						    prop = obj[i]
+						    if(prop["first_name"]=='null' || prop["first_name"]=='' || prop["first_name"]==null)
+						    {
+						    	var first_name = 'N/A';
+						    }else{
+						    	var first_name = prop["first_name"];
+						    }
+						    
+						    if(prop["last_name"]=='null' || prop["last_name"]=='' || prop["last_name"]==null)
+						    {
+						    	var last_name = 'N/A';
+						    }else{
+						    	var last_name = prop["last_name"];
+						    }
+						    
+						    
+						     table=table+'<tr><td><input type="checkbox" name="guest_id[]" value="'+prop["id"]+'" /></td><td id="email'+prop["id"]+'">'+prop["email"]+'</td><td id="first_name'+prop["id"]+'">'+first_name+'</td><td  id="last_name'+prop["id"]+'">'+last_name+'</td><td><a href="<%= APP_CONFIG['development']['site_url'] %>invites/edit_guest/'+prop["id"]+'" class="rr" ><%= I18n.t 'create_data_hint.data_hint_edit' %></a></td></tr>';
+						    
+						}
+						
+						table=table+'</table></div><div class="clr"></div>';
+						$('#show_guest_list').html(table);
+						$('#show_guest_list').show();
+						$('#remove_contact_option').show();
+						$(".eventinrcont .rr").colorbox();
+						
+						
+					}else{
+						$('#show_guest_list').html('<p><%= I18n.t 'validation.common.no_records_available'%></p>');
+						$('#remove_contact_option').hide();
+					}
+                
+            }
+        });
+}
+
+function set_send_schedule(ele){
+	var id = ele.id;
+	if(id=='RadioGroup1_0'){
+		$("#invites_select_date").attr('disabled','disabled');
+		$("#invite_days").attr('disabled','disabled');
+		$("#invite_hours").attr('disabled','disabled');
+		$("#sendemailminutes").attr('disabled','disabled');
+	}
+	else if(id=='RadioGroup1_1'){
+		$("#invites_select_date").removeAttr('disabled','disabled');
+		$("#invite_days").attr('disabled','disabled');
+		$("#invite_hours").attr('disabled','disabled');
+		$("#sendemailminutes").attr('disabled','disabled');
+	}
+	else{
+		$("#invites_select_date").attr('disabled','disabled');
+		$("#invite_days").removeAttr('disabled','disabled');
+		$("#invite_hours").removeAttr('disabled','disabled');
+		$("#sendemailminutes").removeAttr('disabled','disabled');
+	}
+}
+
+function trim(el) {
+   
+   el.value = el.value.replace(/(^\s*)|(\s*$)/gi, "").replace(/\n +/, "\n").replace(/\s/g, ''); 
+   return;
+}
+
+</script>
+
+<section>
+	<div class="main">
+		<%= form_tag({:controller => 'invites', :action => 'create'}, :id => 'createinviteForm', :name => 'createinviteForm', :multipart => 'true')  do %> 	
+				         
+		          
+    	<div class="left_columm">
+    	<div class="marT60">
+        	<div class="mtitle">
+            	<h1><%= I18n.t 'invite_create.create_your'%><span> <%= I18n.t 'invite_create.invitations' %></span></h1>             
+            </div>            
+        	<div class="shadow marT25 pad3P">
+            	
+                <div>
+                <a href="#customize" class="inline btn marT25"><%= I18n.t 'invite_create.customize' %></a>&nbsp;&nbsp;<a href="#edit_message"  class="inline btn marT25 black_bg"><%= I18n.t 'invite_create.edit_message'%></a>
+               
+               <div style="display: none;">
+                	<div id="customize"  >
+                		  
+			            <div class="pad15">
+			            	
+			              <h2 id="customizeLabel"><%= I18n.t 'invite_create.customize_invitations'%></h2>
+	                		<br /><span><%= I18n.t 'invite_create.change_invitation_color'%></span><br /><br /><br />
+	                		<ul class="custom_colors form">
+			                     <li>
+				                    <div class="label"><%= I18n.t 'invite_create.text_color'%></div>
+				                    <input type='color' class="full" value="<%= @invite[:text_color] %>" onchange="set_preview_invite(this,'text');"  />
+				                 </li>
+			                   
+			                     <li>
+				                   <div class="label"><%= I18n.t 'invite_create.background_color'%></div>
+				                   <input type='color' class="full" value="<%= @invite[:back_color] %>" onchange="set_preview_invite(this,'back');"  />
+				                 </li>
+			                   
+			                     <li>
+				                   <div class="label"><%= I18n.t 'invite_create.link_color'%></div>
+				                   <input type='color' class="full" value="<%= @invite[:link_color] %>" onchange="set_preview_invite(this,'link');"  />
+				                   
+			                   	</li>
+			                 </ul> <div class="clear"></div>
+			                 <br />
+			                 
+			                 <p><input type="checkbox" name="invite[image]" id="invite_image" value="1" <% if @invite[:image]==1 %> checked="checked" <% end %> /> <%= I18n.t 'invite_create.show_event_image'%> </p>
+			                 <p><input type="checkbox" name="invite[facebook]" id="invite_facebook"  value="1" <% if @invite[:facebook]==1 %> checked="checked" <% end %> /> <%= I18n.t 'invite_create.show_facebook_share'%> </p>
+			                 <p><input type="checkbox" name="invite[twitter]" id="invite_twitter"  value="1" <% if @invite[:twitter]==1 %> checked="checked" <% end %> /> <%= I18n.t 'invite_create.show_twitter_share'%> </p><br/>
+			                 <p><input type="checkbox" name="salutation" id="invite_sal" <% if @invite[:salutation]!='None' %> checked="checked" <% end %> onclick="if(this.checked){}else{  $('#invite_salutation').val('None'); }" /> <%= I18n.t 'invite_create.show_salutation'%> 
+			                 		<select name="invite[salutation]" id="invite_salutation" class="selectbox" style="margin-left: 3%;">
+			                 			<option value="<%= I18n.t 'invite_create.create_hello'%>" <% if @invite[:salutation]=='Hello' %> selected="selected" <% end %>> <%= I18n.t 'invite_create.create_hello'%> </option>
+			                 			<option value="<%= I18n.t 'event.purchase.hi'%>" <% if @invite[:salutation]=='Hi' %> selected="selected" <% end %>> <%= I18n.t 'event.purchase.hi'%> </option>
+			                 			<option value="<%= I18n.t 'invite_create.greetings'%>" <% if @invite[:salutation]=='Greetings' %> selected="selected" <% end %>> <%= I18n.t 'invite_create.greetings'%> </option>
+			                 			<option value="<%= I18n.t 'invite_create.dear'%>" <% if @invite[:salutation]=='Dear' %> selected="selected" <% end %>> <%= I18n.t 'invite_create.dear'%> </option>
+			                 			<option value="<%= I18n.t 'invite_create.none'%>" <% if @invite[:salutation]=='None' %> selected="selected" <% end %>> <%= I18n.t 'invite_create.none'%> </option>
+			                 		</select>	
+			                 </p>
+			                 <br />
+			                 <a href="javascript://" class="btn"  onclick="set_custom_values('custom');"><%= I18n.t 'invite_create.done'%></a>
+			           </div>
+			               
+		                 
+                	</div>
+					                	
+					                	
+                	<div id="edit_message"  >
+                		
+                		<div class="pad15">
+			              <h2 id="edit_messageLabel"><%= I18n.t 'invite_create.edit_message'%></h2>
+			            
+                		
+                		<br /><span><%= I18n.t 'invite_create.personalize_your_invitation'%></span>
+                		<textarea name="invite[message]" id="invite_message" class="jqte-test"><%= @invite[:message] %></textarea>
+                		
+						
+                		<a class="btn marT15" href="javascript://"  onclick="set_custom_values('message');"><%= I18n.t 'invite_create.done'%></a>
+						</div>
+			            
+                	</div>
+					                	
+				</div>	
+					                
+                </div>
+                <div class="marT10">
+                	<div class="email_bg">
+                    	<div class="email_title">
+                        	<h1 id="salute_t"><b id="salute"><%= @invite[:salutation] %></b> <b> &lt;&lt; <%= I18n.t 'invite_create.create_attendee' %> &gt;&gt;, </b></h1>
+                            <p><%= I18n.t 'invite_create.your_invitaion_to_following'%></p>
+                            <% 
+	                       		if @event[:event_url_link]=='' || @event[:event_url_link]==nil 
+				             		page_url = APP_CONFIG['development']['site_url']+'events/view/'+@event[:id].to_s 
+				             	else
+				             		page_url = APP_CONFIG['development']['site_url']+'event/'+@event[:event_url_link]
+				             	end
+	                       %>
+	                       <a href="<%= page_url %>"><%= @event[:event_title] %></a>
+		                  
+                        </div>
+                        <div class="email_time">
+                        	<span><%= I18n.t 'invite_create.event_to_time_date_location'%>:</span>
+                        	
+                            <div>
+                            	<div id="event_image" class="efl" style="width:30%; display: <% if @invite[:image]==1 %> block; <% else %> none; <% end %>">
+	                        		<%
+	                        		if(@event[:event_logo]!=nil)
+							             img_full_path = check_img(@event[:event_logo],'event','thumb')	
+								         	if img_full_path!='0' && img_full_path!='' 
+											  image_check = 1
+										  %>
+										  <img src="<%= APP_CONFIG['development']['upload_url'] %><%= img_full_path %>" alt=""  />
+										  <%
+										end
+									end
+										if image_check==0
+											%>
+											<img src="<%= APP_CONFIG['development']['app_url'] %>demo_image.png" alt=""   />
+											<%
+										end		
+									
+	                        		%>
+	                        	</div>
+                                <div class="fl" style="width: 60%">
+                                	<p><%= I18n.t 'invite_create.start_date'%> : &nbsp;&nbsp;<%= @event[:event_start_date_time].strftime(@site[:date_time_format]) %> <br />
+									   <%= I18n.t 'invite_create.end_date'%> : &nbsp;&nbsp;&nbsp;&nbsp;<%= @event[:event_end_date_time].strftime(@site[:date_time_format]) %><br /><br />
+										<%= @event[:vanue_name] %><br />
+										<%= @event[:street_address] %><br />
+										                    
+	                                </p>
+                                </div><div class="clear"></div><br />
+                                <%  
+		              						@add = @event[:street_address].gsub(",", "_")
+		              						@add = @add.gsub(" ", "_")
+		              					 %>
+										 <a href="<%= page_url %>" id="attend_event_btn" class="btn" style="background-color:<%= @invite[:text_color] %>;"><%= I18n.t 'invite_create.attend_event'%></a>  
+                                
+              					<a href="https://maps.google.com/maps?q=<%= @add %>&hl=en" id="view_map_btn" target="_blank" class="btn"  style="background-color:<%= @invite[:text_color] %>;"><%= I18n.t 'invite_create.view_map'%></a>
+							           
+							
+                            </div>
+                            
+                            <div class="clear"></div>
+                        </div>
+                        <% if @event[:password_protect]==1 %>
+                        <div class="email_message">
+                        	<%= I18n.t 'invite_create.your_event_pwd_is'%> : <%= @event[:password_value] %><br />
+							<%= I18n.t 'invite_create.this_event_pwd_protected'%>
+                        </div>
+                        <% end %>
+                        <div class="email_footer">
+                        	
+							<div id="fb_tw" style=" display: <% if ((@invite[:facebook]==1 || @invite[:twitter]==1) && (@event[:add_facebook]==1 || @event[:add_twitter]==1)) %> block; <% else %> none; <% end %>">
+						         <strong><%= I18n.t 'invite_create.share_this_event'%> 
+						         <a id="fb_link" href="http://facebook.com/<%= @event[:facebook_link] %>" style="display: <% if @event[:add_facebook]==1  && @invite[:facebook]==1 %> inline-block; <% else %> none; <% end %>"><%= I18n.t 'invite_create.facebook' %></a> <%= I18n.t 'invite_create.invite_and' %> 
+						         <a id="tw_link" href="http://twitter.com/<%= @event[:twitter_link] %>" style="display: <% if @event[:add_twitter]==1 && @invite[:twitter]==1 %> inline-block; <% else %> none; <% end %>"><%= I18n.t 'invite_create.twitter' %></a><br /><br />
+							</div>
+							
+							
+							<div id="invite_message_data"><% if @invite[:message]!='' && @invite[:message]!=nil %><%= render :inline => @invite[:message]  %><% end %></div>
+							<br />
+                            
+                           
+                            </strong>
+                        </div>
+                    </div>
+                                 
+                </div>
+            
+            	
+            	<div class="form marT10">
+                	<label><%= I18n.t 'invite_create.name_of_sender'%></label>
+                    <input type="text" name="invite[from_name]" value="<%= @invite[:from_name] %>" id="show_name1" style="display: <% if @invite[:from_name]==nil || @invite[:from_name]=='' %>inline-block; <% else %>none; <% end %>" class="textbox" />    
+			    	<span id="show_name" style="display: <% if @invite[:from_name]==nil || @invite[:from_name]=='' %>none; <% else %>inline-block; <% end %>"><%= @invite[:from_name] %></span>
+					<div id="fromnameInfo" class="error1" style="margin-left:30%;"></div>
+                    
+                	<label><%= I18n.t 'invite_create.reply_to'%></label>
+                    <span id="show_email" style="display: <% if @invite[:reply_to]==nil || @invite[:reply_to]=='' %>none; <% else %>inline-block; <% end %>"><%= @invite[:reply_to] %></span>
+					<input type="text" name="invite[reply_to]" value="<%= @invite[:reply_to] %>" id="show_email1" onchange="return trim(this);" style="display: <% if @invite[:reply_to]==nil || @invite[:reply_to]=='' %>inline-block; <% else %>none; <% end %>" class="textbox" />    
+			    	<div id="replytoInfo" class="error1"  style="margin-left:30%;"></div>
+                	
+                	<label><%= I18n.t 'invite_create.subject_line'%></label>
+                    <span id="show_sub" style="display: <% if @invite[:subject]==nil || @invite[:subject]=='' %>none; <% else %>inline-block; <% end %>"><%= @invite[:subject] %></span>
+					<input type="text" name="invite[subject]" value="<%= @invite[:subject] %>" id="show_sub1" style="display: <% if @invite[:subject]==nil || @invite[:subject]=='' %>inline-block; <% else %>none; <% end %>" class="textbox" />    
+			    	<div id="subjectInfo" class="error1" style="margin-left:30%;"></div>
+			    	             	
+                </div>
+                <div  class="clear"></div>
+            	<div class="withdraw_amount test_invitation marT25">
+                    <label class="test_invitation"><%= I18n.t 'invite_create.send_invitation_to'%></label>
+                    <input type="text" name="send_email" id="send_mail" value="" class="textbox" placeholder=<%= I18n.t 'place.enter_email'%> onchange="return trim(this);"  />
+                    <a href="javascript://" class="btn" onclick="send_test_email();" style="margin-left:2%;"><%= I18n.t 'button.send'%></a>
+                    <div id="sendmailInfo" class="error1"></div>
+                </div> 
+                <div class="clear"></div>  
+            </div>
+         
+           	<div class="mtitle marT40">
+            	<h1><%= I18n.t 'invite_create.who_should'%> <span><%= I18n.t 'invite_create.come'%></span></h1>             
+            </div>            
+        	<div class="shadow marT25 pad3P">       	
+                 <div id="addguest_error" style="text-align: center; margin-bottom: 10px;"></div>
+                <div class="shadow event pad3" id="show_guest_list">
+                <% if @guests.count > 0 %>              	
+                <table class="should_come table">
+                    <thead>
+                    <tr>
+                        <th><%= I18n.t 'new.table.select'%></th>
+                        <th><%= I18n.t 'action.email'%></th>
+                        <th><%= I18n.t 'action.first_name'%></th>
+                        <th><%= I18n.t 'action.last_name'%></th>
+                        <th><%= I18n.t 'action.action'%></th>
+                      </tr>
+                    </thead>
+                    
+                    <tbody>
+                    
+                   <% for g in @guests 
+						if g[:first_name]=='' || g[:first_name]==nil
+							first = 'N/A'
+						else
+							first = g[:first_name]
+						end	
+						
+						if g[:last_name]=='' || g[:last_name]==nil
+							last = 'N/A'
+						else
+							last = g[:last_name]
+						end		
+					%>
+						<tr>
+							<td><input type="checkbox" name="guest_id[]" value="<%= g[:id] %>" /></td>
+							<td id="email<%= g[:id] %>"><%= g[:email] %></td>
+							<td id="first_name<%= g[:id] %>"><%= first %></td>
+							<td id="last_name<%= g[:id] %>"><%= last %></td>
+							<td><a href="<%= APP_CONFIG['development']['site_url'] %>invites/edit_guest/<%= g[:id] %>" class="rr" ><%= I18n.t 'create_data_hint.data_hint_edit' %></a></td>
+						</tr>
+					<% end %>
+                    </tbody>
+                    
+                </table>
+                <% else %>
+                	<p><%= I18n.t 'validation.common.no_records_available'%></p>
+                <% end %>
+                <div class="clear"></div>
+            	</div>
+            <div class="marT20">
+               
+               		<a href="javascript:" id="remove_contact_option" onclick="remove_selected();" style="display: <% if @guests.count > 0 %> block; <% else %> none; <% end %>"><%= I18n.t 'invite_create.remove_selected'%></a>
+               
+               <a href="<%= APP_CONFIG['development']['site_url'] %>invites/add_guests/<%= @random %>?invitation_id=<%= @invite[:id] %>" class="btn fr rr"><%= I18n.t 'invite_create.plus_add_guests'%></a>   
+               
+				<div id="err1" class="error1"></div>
+            </div>
+            <div id="show_guest_list_errInfo" class="error1"></div>
+            
+            <div class="clear"></div>                
+            </div>
+            
+            <div class="mtitle marT40">
+            	<h1><%= I18n.t 'invite_create.send_and'%> <span><%= I18n.t 'invite_create.schedule'%></span></h1>             
+            </div>            
+        	<div class="shadow marT25 pad3P">       	
+                <input type="radio" name="invite[immediately]" value="1" id="RadioGroup1_0"  onclick="set_send_schedule(this);" <% if @invite[:immediately]==1 %> checked="checked" <% end %> />&nbsp;&nbsp; <span><%= I18n.t 'invite_create.immediately'%></span><br />
+			<div class="marT20">
+            	<input type="radio" name="invite[immediately]" value="0" id="RadioGroup1_1" onclick="set_send_schedule(this);"  <% if @invite[:immediately]==0 && @invite[:select_date]!=nil %> checked="checked" <% end %> />&nbsp;&nbsp; 
+            	<span><%= I18n.t 'invite_create.select_date'%></span>
+            	<input type="text" name="invite[select_date]" id="invites_select_date"  value="<%= @invite[:select_date] %>" size="30" class="textbox marL10 date_time" style="margin:0px; float:none;" <% if @invite[:immediately]!=0 || @invite[:select_date]==nil %> disabled="disabled" <% end %> />
+            </div>
+            <div class="error1 marL50" id="invites_select_date_err"> </div>
+            <div class="marT25">
+	            <div class="fl marT10">
+	            	<input type="radio" name="invite[immediately]" value="0" id="RadioGroup1_2"  onclick="set_send_schedule(this);"  <% if @invite[:immediately]==0 && @invite[:select_date]==nil %> checked="checked" <% end %> />&nbsp;&nbsp;
+	            </div>
+	            <div class="fl">										
+	                 <div class="maximum_time">
+	                    <input type="text" name="invite[days]" id="invite_days" class="textbox TW50" value="<%= @invite[:days] %>" size="5" onkeyup="if(this.value > 0){}else{ this.value='';}" <% if @invite[:immediately]!=0 || @invite[:select_date]!=nil %> disabled="disabled" <% end %> />&nbsp; <%= I18n.t 'invite_create.days'%> &nbsp;
+	                 </div>
+	                 <div class="maximum_time">
+	                    <input type="text" name="invite[hours]" id="invite_hours"  class="textbox TW50" value="<%= @invite[:hours] %>" size="5" onkeyup="if(this.value > 0){}else{ this.value='';}" <% if @invite[:immediately]!=0 || @invite[:select_date]!=nil %> disabled="disabled" <% end %>  />&nbsp; <%= I18n.t 'invite_create.hours'%> &nbsp;	
+	                 </div>
+	                 <div class="maximum_time">
+	                 	<select id="sendemailminutes" name="invite[minutes]" class="selectbox_date TW100" <% if @invite[:immediately]!=0 || @invite[:select_date]!=nil %> disabled="disabled" <% end %> >
+							<option value="0"  <% if @invite[:minutes]==0  %> selected="selected" <% end %> >00</option>
+							<option value="15" <% if @invite[:minutes]==15 %> selected="selected" <% end %> >15</option>
+							<option value="30" <% if @invite[:minutes]==30 %> selected="selected" <% end %> >30</option>
+							<option value="45" <% if @invite[:minutes]==45 %> selected="selected" <% end %> >45</option>
+						</select> 
+	                    
+	                    &nbsp; <span class="marT15 di"><%= I18n.t 'invite_create.before_my_event'%></span>
+	                 </div>                
+	             </div>
+           	 </div>
+                        
+            <div class="clear"></div> 
+            <div class="error1 marL50" id="invite_days_err"> </div>               
+            </div>
+            <div class="marT25">
+            	<input type="hidden" name="invite[text_color]" id="invite_text_color" value="<%= @invite[:text_color] %>" />
+             	<input type="hidden" name="invite[back_color]" id="invite_back_color" value="<%= @invite[:back_color] %>" />
+             	<input type="hidden" name="invite[link_color]" id="invite_link_color" value="<%= @invite[:link_color] %>" />
+             	
+             	<input type="hidden" name="invite[event_id]" value="<%= @event[:id] %>" />
+
+             	
+             	<input type="hidden" name="invitation_id" id="invitation_id" value="<%= @invite[:id] %>" />
+             	<input type="hidden" name="submit_type" id="submit_type" value="" />
+             	
+             	<input type="hidden" name="random_no" id="random_no" value="<%= @random %>" />
+           		<input type="submit" value="<%= I18n.t 'button.send_schedule'%>" class="submit_btn" onclick="$('#submit_type').val('send'); return validate_submit();" />
+           		<input type="submit" value="<%= I18n.t 'button.save'%>" class="submit_btn1" onclick="$('#submit_type').val('draft'); return validate_submit();"  />
+            
+            </div>
+        </div>
+        
+        
+           <div class="error1" id="guest_req_fields"></div>
+           <div class="clear"></div>
+    </div>  
+    	
+    	<% end %>
+    	
+    	<% @act_class = 'Create Invitations' %>         	
+		<%= render(:partial => "manage_event/manage_event_sidebar" , :object => :collection) %>    
+		     
+		<div class="clear"></div>
+        </div>
+           <div class="clear"></div>
+    
+    
+</section>
+
+
+<% @edit_menu_class = 'Manage' %>
+<%= render(:partial => "manage_event/edit_menu" , :object => :collection) %> 
+<div class="clear "></div>
+
+
+<link type="text/css" rel="stylesheet" href="<%= APP_CONFIG['development']['css_url'] %>jquery-te-1.3.5.css">
+
+<script type="text/javascript" src="<%= APP_CONFIG['development']['js_url'] %>jquery-te-1.3.5.min.js" charset="utf-8"></script>  
+<script>
+	$('.jqte-test').jqte();
+</script>
+
+
+<link href="<%= APP_CONFIG['development']['css_url'] %>colorbox.css" media="all" rel="stylesheet" type="text/css" />
+<script src="<%= APP_CONFIG['development']['js_url'] %>js/jquery.colorbox.js" type="text/javascript"></script>
+     
+<script type="text/javascript" src="<%= APP_CONFIG['development']['js_url'] %>new_picker/spectrum.js"></script>     
+	 
+<script type="text/javascript">
+
+	
+$(document).ready(function(){
+
+	$("#show_name").click(function(){
+		
+		$("#show_name1").show();
+		$("#show_name").hide();
+	});
+	
+	$("#show_email").click(function(){
+		$("#show_email1").show();
+		$("#show_email").hide();
+	});
+	
+	$("#show_sub").click(function(){
+		$("#show_sub1").show();
+		$("#show_sub").hide();
+	});
+	
+	
+	jQuery(".rr").colorbox({height:"70%", width:"45%"});
+	jQuery(".inline").colorbox({inline:true, width:"50%"});   
+
+
+	/*************** color picker *************/
+
+		$(".full").spectrum({
+		    className: "full-spectrum",
+		    maxPaletteSize: 10,
+		    preferredFormat: "hex",
+		    localStorageKey: "spectrum.demo",
+		    
+		});
+		
+		
+		
+		/****  color picker end ***/
+ 		var myDate = new Date();
+		var nowDate = new Date(myDate.getTime() + 1*24*60*60*1000);
+		
+	
+		$('.date_time').datetimepicker({
+			ampm: false,dateFormat:'yy-mm-dd',
+			timeFormat: 'hh:mm',
+			minDate: 0
+		});
+});
+
+</script>
+
+
+       
+	  <script type="text/javascript">
+	       
+			function set_preview_invite(ele,id){
+					var hex = ele.value;
+					
+					if(id=='text'){
+						$('#invite_text_color').val(hex);
+						$('.email_bg').css('color',  hex);
+						$('.email_time').css('borderColor',  hex);
+						$('#attend_event_btn').css('backgroundColor', hex);
+						$('#view_map_btn').css('backgroundColor', hex);
+					}
+					if(id=='back'){
+						$('#invite_back_color').val(hex);
+						$('.email_bg').css('backgroundColor', hex);
+					}
+					if(id=='link'){
+						$('#invite_link_color').val(hex);
+						$('.email_bg a').css('color', hex);
+					}
+					
+			}
+	
+	</script>
+                         
+  

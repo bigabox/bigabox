@@ -1,0 +1,92 @@
+
+<script type="text/javascript">
+	function confirm_quantity(){
+		$('#can_error').text('');
+		var chks = $('#tic_qty');
+		var fl = true;
+		
+		if (chks.val() > 0)
+        {
+               fl = false;
+        }
+        
+         
+         if(fl==true){
+         	$('#can_error').text('Select atleast one ticket to cancel!!');
+         	return false;
+         }else{
+         	return true;
+         }
+	}
+</script>
+<%= form_tag({:controller => 'purchases', :action => 'delete'}, :id => 'cancel', :novalidate => 'novalidate') do %> 
+	
+	<fieldset class="inputs">
+		<ol>
+			<li class="string input required stringish" >
+				
+
+<%   
+					          
+					           @site = SiteSetting.find(:first)
+						        @pur = Purchase.find(params[:id])
+						        @event = Event.find(@pur[:event_id])
+					          user_id = @pur[:user_id]
+					          k=0
+				         
+				              @ticket = Ticket.find(@pur[:ticket_id])
+			              
+			              %>
+			              	<% if @pur[:ticket_qty]==1 %>
+			              		<label  class=" label" for="page_pages_title" > Quantity of - 
+				              	 	<% if @ticket[:free]==1 %>
+				              	 		<%= @ticket[:free_ticket_name] %>
+				              	 	<% elsif @ticket[:paid]==1 %>
+				              	 		<%= @ticket[:paid_ticket_name] %>
+				              	 	<% else %>
+				              	 		<%= @ticket[:donation_ticket_name] %>
+				              	 	<% end %><abbr title="required">*</abbr> : 
+				              	 </label>
+			                  <span><%= @pur[:ticket_qty] %></span>
+			                  <input type="hidden" name="qtys" id="tic_qty" value="<%= @pur[:ticket_qty] %>"/>
+			                   
+			              	<% else %>	
+			              	
+			              		<label  class=" label" for="page_pages_title" > Enter Quantity of - 
+				              	 	<% if @ticket[:free]==1 %>
+				              	 		<%= @ticket[:free_ticket_name] %>
+				              	 	<% elsif @ticket[:paid]==1 %>
+				              	 		<%= @ticket[:paid_ticket_name] %>
+				              	 	<% else %>
+				              	 		<%= @ticket[:donation_ticket_name] %>
+				              	 	<% end %><abbr title="required">*</abbr> : 
+				              	 </label>
+			                  <select  name="qtys" id="tic_qty">
+			                    <% 
+			                    	0.upto(@pur[:ticket_qty]) do |i|
+			                    		%>
+			                    			<option value="<%= i %>"><%= i %></option>
+			                    		<%
+			                    	end	
+			                    %>
+			                  </select>   	
+			              	<% end %>
+			              	
+			              	 
+			                  
+			</li>
+			
+					</ol>
+	</fieldset>
+	
+	<fieldset class="actions">
+		<ol>
+			<li class="action input_action " id="cancel_submit_action">
+				<div id="can_error" style="color: #f00;"></div>
+          		<input type="hidden" name="id" id="id" value="<%= @pur[:id] %>" />
+          		<input type="hidden" name="cancel" id="cancel" value="<%= params[:cancel] %>" />
+				<input name="commit" type="submit" value="Confirm" onclick="return confirm_quantity();"/>
+			</li>
+		</ol>
+	</fieldset>
+<% end %>

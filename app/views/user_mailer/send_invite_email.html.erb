@@ -1,0 +1,98 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+
+</head>
+<body>
+	
+   <div style="background-color: <%= @invite[:back_color] %>; color: <%= @invite[:text_color] %>; padding: 15px">
+                    	
+                    	<div style="border-bottom: 1px solid #CCCCCC;padding: 10px 0 20px;text-align: center;">
+                        	<center>
+	                        	<% if @invite[:salutation]!='None' %><h1 style="line-height: 40px; color: <%= @invite[:text_color] %>;"><b><%= @invite[:salutation] %> <%= @name %>,</b></h1><% end %>
+	                            <p style="color: <%= @invite[:text_color] %>;"><%= I18n.t 'invite_create.your_invitaion_to_following'%></p>
+	                            
+	                            <% 
+		                       		if @event[:event_url_link]=='' || @event[:event_url_link]==nil 
+					             		page_url = APP_CONFIG['development']['site_url']+'events/view/'+@event[:id].to_s 
+					             	else
+					             		page_url = APP_CONFIG['development']['site_url']+'event/'+@event[:event_url_link]
+					             	end
+		                       %>
+		                       <a href="<%= page_url %>" style="color: <%= @invite[:link_color] %>; text-decoration: none; font-size: 20px; "><%= @event[:event_title] %></a>
+		                  <center>
+                        </div>
+                        
+                        <div style="border-bottom: 1px solid #CCCCCC; padding: 20px 0;">
+                        	<span style="color: <%= @invite[:text_color] %>;"><%= I18n.t 'invite_create.event_to_time_date_location'%>:</span>
+                        	<br />
+                            <div>
+                            	<% if @invite[:image]==1 %> 
+                            	<div style="width:30%; float:left;">
+	                        		<%
+	                        		if(@event[:event_logo]!=nil)
+							             img_full_path = check_img(@event[:event_logo],'event','thumb')	
+								         	if img_full_path!='0' && img_full_path!='' 
+											  image_check = 1
+										  %>
+										  <img src="<%= APP_CONFIG['development']['upload_url'] %><%= img_full_path %>" alt="" style="float: left;width: 220px;" />
+										  <%
+										end
+									end
+										if image_check==0
+											%>
+											<img src="<%= APP_CONFIG['development']['app_url'] %>demo_image.png" alt=""  style="float: left;width: 220px;"  />
+											<%
+										end		
+									
+	                        		%>
+	                        	</div><% end %>
+                                <div style="width: 60%; float: left;color: <%= @invite[:text_color] %>;">
+                                	<p style="text-decoration: none; margin-left: 20px;">
+									<%= I18n.t 'invite_create.start_date'%> : &nbsp;<%= @event[:event_start_date_time].strftime(@site[:date_time_format]) %><br />
+									<%= I18n.t 'invite_create.end_date'%> : &nbsp;&nbsp;<%= @event[:event_end_date_time].strftime(@site[:date_time_format]) %><br /><br />
+										<%= @event[:vanue_name] %><br />
+										<%= @event[:street_address] %><br />
+										                    
+	                                </p>
+                                </div><div style="clear: both;"></div><br />
+                                <%  
+		              						@add = @event[:street_address].gsub(",", "_")
+		              						@add = @add.gsub(" ", "_")
+		              					 %>
+										 <a href="<%= page_url %>" style="text-decoration: none; background:  <%= @invite[:text_color] %>;color: <%= @invite[:link_color] %>;display: inline-block;font-family: 'Droid Serif',Arial,Helvetica,sans-serif;font-size: 20px;padding: 10px 20px;transition: all 0.3s ease 0s;">Attend Event</a>  
+                                
+              					<a href="https://maps.google.com/maps?q=<%= @add %>&hl=en" target="_blank" style="text-decoration: none; background:  <%= @invite[:text_color] %> ;color: <%= @invite[:link_color] %>;display: inline-block;font-family: 'Droid Serif',Arial,Helvetica,sans-serif;font-size: 20px;padding: 10px 20px;transition: all 0.3s ease 0s;" ><%= I18n.t 'invite_create.view_map'%></a>
+							           
+							
+                            </div>
+                            
+                            <div class="clear"></div>
+                        </div>
+                        <% if @event[:password_protect]==1 %>
+                        <div class="email_message">
+                        	<%= I18n.t 'invite_create.your_event_pwd_is'%>: <%= @event[:password_value] %><br />
+							<%= I18n.t 'invite_create.this_event_pwd_protected'%>
+                        </div>
+                        <% end %>
+                        <div class="email_footer" style="padding: 20px 0;">
+                        	<% if ((@invite[:facebook]==1 || @invite[:twitter]==1) && (@event[:add_facebook]==1 || @event[:add_twitter]==1)) %>
+							<div id="fb_tw" >
+						         <strong><%= I18n.t 'invite_create.share_this_event'%>
+						         <a id="fb_link" href="http://facebook.com/<%= @event[:facebook_link] %>" style="display: <% if @event[:add_facebook]==1  && @invite[:facebook]==1 %> inline-block; <% else %> none; <% end %>">Facebook</a> and 
+						         <a id="tw_link" href="http://twitter.com/<%= @event[:twitter_link] %>" style="display: <% if @event[:add_twitter]==1 && @invite[:twitter]==1 %> inline-block; <% else %> none; <% end %>">Twitter</a><br /><br />
+							</div>
+							<% end %>
+							
+							<div id="invite_message_data"><% if @invite[:message]!='' && @invite[:message]!=nil %><%= render :inline => @invite[:message]  %><% end %></div>
+							<br />
+                            
+                           
+                            </strong>
+                        </div>
+                    </div>
+           
+  </body>
+</html>

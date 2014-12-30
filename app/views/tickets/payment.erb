@@ -1,0 +1,27 @@
+<!-- Gateway :: TEST is test mode. You can change this while making it live -->
+
+<%= form_for :sim_transaction, :url => AuthorizeNet::SIM::Transaction::Gateway::TEST do |f| %> 
+<div align="left">
+  <%= sim_fields(@sim_transaction) %>
+  <h2> Authorize.NET Payment Gateway</h2>
+  <%= label_tag 'x_name', "Event Name : #{@event[:event_title]}" %><br />
+  
+  <%= label_tag 'x_amount', "Total Amount: #{number_to_currency(@amount)}" %><br/>
+  <%= label_tag 'x_name', "Merchant :  #{@user[:first_name]} #{@user[:last_name]}" %><br />
+
+  <%= label_tag 'x_card_num', 'Credit Card Number : '%>
+  <%= text_field_tag 'x_card_num' %></br/>
+  <%= label_tag 'x_card_num', '(Enter 4111111111111111 as card number in TEST mode.)' %></br/>
+  <%= label_tag 'x_exp_date', 'Expiration Date (MMYY) : '%>
+  <%= text_field_tag 'x_exp_date' %></br/>
+  <%= label_tag 'x_exp_date', '(Enter value such as 1120 )'%></br/>
+  
+ <INPUT TYPE='HIDDEN' NAME='x_relay_response' VALUE="FALSE">
+ <INPUT TYPE='HIDDEN' NAME='x_receipt_link_url' VALUE="http://halfevent.com/tickets/auth_net_return/+pur_id+'?user_id='+session[:user_id]">
+ <input type="hidden" name="pur_id" id="pur_id" value="<%= params[:id] %>" />
+ <input type="hidden" name="user_id" id="user_id" value="<%= session[:user_id] %>" />
+
+
+  <%= f.submit 'Purchase'%>
+</div>  
+<% end %>

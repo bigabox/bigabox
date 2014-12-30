@@ -1,0 +1,95 @@
+<% @act_class = 'Create Affiliate Programs' %>         	
+<%= render(:partial => "common_banner" , :object => :collection) %>
+    
+<style>
+@media (max-width: 768px) {
+	.list_aff td:nth-of-type(1):before { content: "<%= I18n.t 'list_affiliate_code.affiliate_name'%>"; }
+	.list_aff td:nth-of-type(2):before { content: "<%= I18n.t 'list_affiliate_code.visits'%>"; }
+	.list_aff td:nth-of-type(3):before { content: "<%= I18n.t 'affiliates.affi'%>"; }
+	.list_aff td:nth-of-type(4):before { content: "<%= I18n.t 'affiliates.sales'%>"; }
+	.list_aff td:nth-of-type(5):before { content: "<%= I18n.t 'affiliates.referral_fee'%>"; }
+	.list_aff td:nth-of-type(6):before { content: "<%= I18n.t 'wallet_index.due' %>"; }
+	.list_aff td:nth-of-type(5):before { content: "<%= I18n.t 'list_affiliate_code.paid'%>"; }
+	.list_aff td:nth-of-type(6):before { content: "<%= I18n.t 'list_affiliate_code.actions' %>"; }
+}
+</style>
+<section>
+	<div class="main">
+    	
+	   
+	     
+    	<div class="left_columm">
+    	<div class="marT60">
+        	<div class="mtitle">
+            	<h1> <%= I18n.t 'list_affiliate_code.mange_affiliate_programs' %></h1>             
+            </div> 
+         <div class="shadow pad7 marT25">   
+            	<a href="<%= APP_CONFIG['development']['site_url'] %>manage_event/edit_affiliate_code/<%= @event[:id] %>" class="btn fr"><%= I18n.t 'list_affiliate_code.create_more_codes' %></a>
+            	<div class="clear"></div>
+            	
+            	<% if @affiliates.count > 0 %>
+					<div class="shadow pad7 marT25">		 	
+							<table class="list_aff table">
+			                	<tr>
+			                    	<th><%= I18n.t 'list_affiliate_code.affiliate_name' %></th>
+			                        <th><%= I18n.t 'list_affiliate_code.visits' %></th>
+			                        <th><%= I18n.t 'affiliates.affi' %></th>
+			                        
+			                        <th><%= I18n.t 'affiliates.sales' %></th>
+			                        <th><%= I18n.t 'affiliates.referral_fee' %></th>
+			                        <th><%= I18n.t 'wallet_index.due' %></th>
+			                        
+			                        <th><%= I18n.t 'list_affiliate_code.paid' %></th>
+			                        <th><%= I18n.t 'list_affiliate_code.actions' %></th>
+			                    </tr>
+			                    
+			                    <% for code in @affiliates %>
+				                    <tr>
+				                    	<td><%= code[:name] %> </td>
+				                        <td><%= code[:visits] %> </td>
+				                        <td><%= code[:affiliates] %> </td>
+				                        <td><%= set_currency(code[:sales]) %></td>
+				                        <td><% if code[:fee_amt]!=nil && code[:fee_amt]!='' %> <%= set_currency(code[:fee_amt]) %> <% else %>  <%= code[:fee_perc] %>% <% end %></td>
+				                        <td><%= set_currency(code[:due]) %></td>
+				                        <td><%= set_currency(code[:paid]) %></td>
+				                        <td>
+				                        	<a href="<%= APP_CONFIG['development']['site_url'] %>manage_event/edit_affiliate_code/<%= code[:event_id] %>?code_id=<%= code[:id] %>"><%= I18n.t 'button.edit'%></a> | 
+				                        	<a href="<%= APP_CONFIG['development']['site_url'] %>manage_event/delete_affiliate_codes/<%= code[:event_id] %>?code_id=<%= code[:id] %>" onclick="if(confirm(<%= I18n.t 'list_affiliate_code.are_sure_delete_code' %>)){ return true; }else{ return false; }"><%= I18n.t 'common_banner.delete'%></a>
+				                        </td>
+				                    </tr>
+			                    <% end %>
+			                    	<tr class="order_total">
+			                    		<td><b><%= I18n.t 'event.purchase.total'%></b></td>
+			                    		<td><%= @visit %></td>
+				                        <td><%= @affiliate %> </td>
+				                        <td><%= set_currency(@sales) %></td>
+				                        <td>&nbsp;</td>
+				                        <td><%= set_currency(@due) %></td>
+				                        <td><%= set_currency(@paid) %></td>
+				                        <td>&nbsp; </td>
+			                    	</tr>
+			                  
+			                </table> 
+			        	</div>        
+			        <% end %>
+							  
+							  
+	  
+      </div>  
+        </div>
+        
+           <div class="clear"></div>
+    	</div>  
+    	
+    	
+    	<%= render(:partial => "manage_event/manage_event_sidebar" , :object => :collection) %> 
+		<div class="clear"></div>
+        </div>
+           <div class="clear"></div>
+    
+</section>
+
+
+<% @edit_menu_class = 'Manage' %>
+<%= render(:partial => "manage_event/edit_menu" , :object => :collection) %> 
+<div class="clear "></div>

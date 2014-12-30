@@ -1,0 +1,72 @@
+<script>
+ $(document).ready(function() {	
+	$('.breadcrumb').html('');
+	$('#index_footer').html('');
+	
+});	
+</script> 
+<%  #@tickets = Purchase.where(:user_id => params[:user_id]).paginate(:page => params[:id], :per_page => 2).order('id DESC')
+	@can = CancelOrder.where(:with_con => 1).order('id DESC')#.paginate(:page => params[:id], :per_page => 1).order('id DESC')
+	@site = SiteSetting.find(:first)
+ %>
+
+<div class="paginated_collection">
+              <div class="paginated_collection_contents">
+                <div class="index_content">
+                  <div class="index_as_table">
+                    
+                    <table border="0" cellspacing="0" cellpadding="0"  class="index_table index" paginator="true">
+                      
+							<thead>
+								<tr>
+								  <th>First Name</th>
+								  <th>Last Name</th>
+								  <th>Email</th>
+								  <th>Event Title</th>
+								  <th>Ticket Name</th>
+								  <th>Ticket Qty</th>
+								  <th>Amount</th>
+								</tr>
+							</thead>
+							<tbody>
+								
+								<% 
+								i=1
+								  if @can.count > 0
+									  for c in @can
+								%>
+								
+									<tr class="<% if i%2==0 %> even <% else %>odd <% end %>">
+										<td><%= c[:first_name] %></td>
+										<td><%= c[:last_name] %></td>
+										<td><%= c[:email] %></td>
+										<td><%= event_title(c[:event_id]) %></td>
+										<td><%= ticket_name(c[:ticket_id]) %></td>
+										<td><%= c[:ticket_qty] %></td>
+										<td><%= set_currency(c[:total]) %></td>
+									</tr>
+								<%
+											i+=1
+										
+									end
+								 else
+									%>
+									<tr class="odd">
+										<td colspan="7" style="text-align: center;">No Records Available</td>
+									</tr>
+									 <%	
+								end %>
+							
+							
+								 
+							                        
+							</tbody>
+ 
+                    </table>
+                    
+                     
+                  </div>
+                </div>
+              </div>
+              
+            </div>

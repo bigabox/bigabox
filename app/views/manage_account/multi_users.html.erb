@@ -1,0 +1,96 @@
+<script type="text/javascript">
+function fetch_user_account(val){
+	    var page_path = '/manage_account/add_user_form/';
+	    var invite_id = val;
+	    $.ajax({
+	        type: "GET",
+	        data: {invite_id: invite_id}, 
+	        url: page_path+invite_id,
+	        success: function(data) {
+	         //  alert(data);
+	            $("#multi_user_div").html(data);
+	            }
+	        });
+	   
+}
+
+function confirm_delete(){
+	var con = confirm('<%= I18n.t 'manage_account_multi_user.are_you_sure_want_to_delete_this_user'%>');
+	if(con){
+		return true;
+	}
+	return false;
+}
+</script>
+
+<section>
+	<%= render(:partial => "account_top" , :object => :collection) %>
+	
+	<div class="main marTB40">
+    	<% if flash[:notice] -%>
+	      <div class="errors">
+	      	<p><%= flash[:notice] %></p>
+	      </div>
+		<% end -%>
+	   
+         <% if flash[:notice1] -%>
+	      <div class="notice">
+	      	<p><%= flash[:notice1] %></p>
+	      </div>
+		<% end -%>
+		
+    	<div class="leftcol">      	
+            <div class="mtitle">
+            	<h3><%= I18n.t 'manage_account_multi_user.email_address_access_this_account'%></h3>
+            </div>
+            <div class="shadow marT10 pad20">
+                    <strong><%= @user[:email] %> (<%= I18n.t 'manage_account_multi_user.administrator'%>)</strong><br />
+					<br />
+					
+					<% if @permittted_users.count > 0 %>
+        	      	<div class="shadow event pad3">
+        	      		<table class="table">
+        	      		<thead>
+        	      			<tr>
+        	      				<th><%= I18n.t 'user.email'%></th>
+        	      				<th><%= I18n.t 'ticket_part.action'%></th>
+        	      			</tr>
+        	      		</thead>
+        	      		<tbody>
+        	      		<% for us in @permittted_users 
+        	      			@peruse = User.find(us[:user_id])
+        	      			if @peruse
+        	      		%>
+	        	      			<tr>
+	        	      				<td><%= @peruse[:email] %></td><td align="center"><a href="javascript:" onclick="fetch_user_account('<%= us[:id] %>')">Edit</a> | <a href="<%= APP_CONFIG['development']['site_url'] %>manage_account/delete_user/<%= @peruse[:id] %>?per_id=<%= us[:id] %>" onclick="return confirm_delete();"><%= I18n.t 'common_banner.delete'%></a></td>
+	        	      			</tr>
+        	      			<% end %>
+        	      		<% end %>
+        	      		</tbody>
+        	      	</table>
+        	      	</div><div class="clear"></div><br />
+        	      	
+        	      		
+        	      	<% end %>
+        	      	
+                    <a href="javascript:" class="btn" onclick="fetch_user_account('0')"><%= I18n.t 'manage_account_multi_user.add_email' %></a>
+            </div>
+            	<div id="multi_user_div">
+						<% 
+	     						if @new_user
+		     						if (@new_user.errors.full_messages != []) then -%>
+		     						<%= render(:partial => "add_user_form" , :object => :collection) %> 
+		     			<%
+		     						end
+		     					end	
+		     			%>			
+				</div>	       	
+               
+        
+        </div>
+        <% @act_class = 'Multi-User Access' %>         	
+		<%= render(:partial => "account_sidebar" , :object => :collection) %>    
+		   
+        <div class="clear"></div>
+    </div>    
+</section>

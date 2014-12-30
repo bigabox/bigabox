@@ -1,0 +1,85 @@
+<% @act_class = 'Google Analytics' %>         	
+<%= render(:partial => "common_banner" , :object => :collection) %>  
+
+ 
+<script type="text/javascript">
+		
+function chk_value(id){
+	//alert('hi');
+	var code_exp = /^\bUA-\d{4,10}-\d{1,4}\b$/;
+	//==/^ua-\d{4,9}-\d{1,4}$/i
+	var code = $('#code').val();
+	//alert(up);
+	$('#err').text("");
+	var filter = code_exp;
+				//if it's valid url
+	if(code==''){
+		$('#code').focus();
+		$('#err').text('<%= I18n.t 'google_analytic.enter_valid_google_analytic_code'%>');
+		
+		return false;
+	}
+	
+	//if it's NOT valid
+	if(!filter.test(code)){
+		$('#code').focus();
+		$('#err').text('<%= I18n.t 'google_analytic.enter_valid_google_analytic_code'%>');
+		
+		return false;
+	}
+	return true;
+}
+	
+</script>
+
+<section>
+	<div class="main">
+    	<div class="left_columm">
+    	<div class="marT60">
+        	<div class="mtitle fl">
+            	<h1 class="fl"><%= I18n.t 'invite_index.manage_your'%> <span><%= I18n.t 'invite_create.invitations'%>!</span></h1>
+             
+            </div> <div class="clear"></div>
+            <%= form_tag({:controller => 'manage_event', :action => 'google_analytic_code'}, :id => 'google_analytic_code', :name => 'google_analytic_code') do %>
+							
+	            <div class="shadow pad3P marT25 ">
+					<div class="mng_inv">
+						<h4 class="fl fontnormal marT10"> <%= I18n.t 'google_analytic.if_you_use_google_analytics_full_ua_num'%> </h4>
+						<input type="text" class="fr textbox" value="<%= @event[:google_code] %>" name="event[google_code]" id="code" />
+						<div class="clear"></div>
+						<div id="err" class="error1" style="margin-left: 51%;"></div>
+					</div>
+					
+					<div class="mng_inv">
+		                 <h4 class=" fontnormal marT10 green_font"> <%= I18n.t 'google_analytic.about_google_analytics'%> </h4>
+						 <p> <%= I18n.t 'google_analytic.if_you_use_google_analytics_full_ua_num'%></p>
+						 <p> <%= I18n.t 'google_analytic.for_example_ua'%></p>
+						 <p> <%= I18n.t 'google_analytic.for_info_set_up_account'%> <a href="http://www.google.com/analytics" target="_blank"  ><%= I18n.t 'google_analytic.google_analytics'%></a></p>
+						 <p>For help on Google Analytics integration with your event , <a href="<%= APP_CONFIG['development']['site_url'] %>content/google_analytics_integration" target="_blank"  >Click here</a> </p>
+						 <div class="clear"></div>
+	                </div>
+	                
+	                <div class="marT25">
+					 	<input type="submit" value=<%= I18n.t 'type_and_language.save_changes'%> class="btn" onclick="return chk_value();" />
+					 </div>
+						 
+	           </div>
+        	<% end %>
+        
+           
+           <div class="clear"></div>
+        </div>
+        
+           <div class="clear"></div>
+    </div>  
+    	       	
+		     <%= render(:partial => "manage_event_sidebar" , :object => :collection) %>  
+		<div class="clear"></div>
+        </div>
+           <div class="clear"></div>
+ 
+</section>
+
+<% @edit_menu_class = 'Manage' %>
+<%= render(:partial => "edit_menu" , :object => :collection) %> 
+<div class="clear "></div>

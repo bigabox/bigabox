@@ -1,0 +1,152 @@
+<script>
+ $(document).ready(function() {	
+	$('.breadcrumb').html('');
+	$('#index_footer').html('');
+	
+	$('#titlebar_right').html('<div class="action_items"><span class="action_item"><a href="/admin/tickets/new/<%= params[:id] %>?type=free">Add Free Ticket</a></span>'+
+	'<span class="action_item"><a href="/admin/tickets/new/<%= params[:id] %>?type=paid">Add Paid Ticket</a></span>'+
+	'<span class="action_item"><a href="/admin/tickets/new/<%= params[:id] %>?type=donation">Add Donation Ticket</a></span></div>');
+	
+	
+	
+});	
+</script> 
+
+
+<%  #@tickets = Purchase.where(:user_id => params[:user_id]).paginate(:page => params[:id], :per_page => 2).order('id DESC')
+	@site = SiteSetting.find(:first)
+	@tickets = Ticket.where(:event_id => params[:id])
+ %>
+
+
+
+<div class="paginated_collection">
+              <div class="paginated_collection_contents">
+                <div class="index_content">
+                  <div class="index_as_table">
+                    <table border="0" cellspacing="0" cellpadding="0" id="index_table_tickets" class="index_table index" paginator="true" style="width: 70%; margin: 0 auto;">
+                      
+							<thead>
+								<tr>
+								 <!-- <th class="sortable first_name"><a href="/admin/purchases?user_id=4&amp;order=first_name_desc">First Name</a></th>
+								  <th class="sortable last_name"><a href="/admin/purchases?user_id=4&amp;order=last_name_desc">Last Name</a></th> -->
+								  <th>Ticket Type</th>
+								  <th>Ticket Name</th>
+								  <th>Ticket Description</th>
+								  <th>Sales End</th>
+								  <th>Price</th>
+								  <th>Fee</th>
+								  <th>Total Qty</th>
+								  <th>Purchased Qty</th>
+								  <th>Available Qty</th>
+								  <th>&nbsp;</th>
+								</tr>
+							</thead>
+							<tbody>
+								
+								<% 
+								i=1
+								  if @tickets.count > 0
+									  for t in @tickets
+								%>
+										<%
+											if t[:free]==1
+												%>
+													<tr class="<% if i%2==0 %> even <% else %>odd <% end %>" id="ticket_<%= t[:id] %>">
+														 <td>Free</td>
+														 <td><%= t[:free_ticket_name]%></td>
+					                                     <td><%= t[:free_description] %></td>
+					                                     <td><% if t[:free_end_sale]!=nil %><%= t[:free_end_sale].strftime(@site[:date_time_format]) %><% end %></td>
+					                                     <td>Free</td>
+					                                     <td>Free</td>
+					                                     <td><%= t[:free_qty] %></td>
+					                                     <td><%= t[:used] %></td>
+					                                     <td><%= t[:free_qty] - t[:used] %></td>
+					                                     
+				                                      	 <td class="">
+													 		<a href="/admin/tickets/<%= t[:id] %>/edit" class="member_link edit_link">Edit</a>
+													 		<a href="/admin/tickets/<%= t[:id] %>" class="member_link delete_link" data-confirm="Are you sure you want to delete this?" data-method="delete" rel="nofollow">Delete</a>
+													  	 </td>
+													</tr>
+												
+												<%
+												i+=1
+											end	
+										%>
+										
+										
+										<%
+											if t[:paid]==1
+												%>
+													<tr class="<% if i%2==0 %> even <% else %>odd <% end %>" id="ticket_<%= t[:id] %>">
+														 <td>Paid</td>
+														 <td><%= t[:paid_ticket_name]%></td>
+					                                     <td><%= t[:paid_description] %></td>
+					                                     <td><% if t[:paid_end_sale]!=nil %><%= t[:paid_end_sale].strftime(@site[:date_time_format]) %><% end %></td>
+					                                     <td><%= set_currency(t[:paid_price]) %></td>
+		                                    			 <td><% fee = t[:paid_price].to_f * @site[:paid_ticket_fee]/100 %> 
+		                                    			 <%= set_currency(fee) %></td>
+					                                     <td><%= t[:paid_qty] %></td>
+					                                     <td><%= t[:used] %></td>
+					                                     <td><%= t[:paid_qty] - t[:used] %></td>
+				                                      	 <td class="">
+													 		<a href="/admin/tickets/<%= t[:id] %>/edit" class="member_link edit_link">Edit</a>
+													 		<a href="/admin/tickets/<%= t[:id] %>" class="member_link delete_link" data-confirm="Are you sure you want to delete this?" data-method="delete" rel="nofollow">Delete</a>
+													  	 </td>
+													</tr>
+												
+												<%
+												i+=1
+											end	
+										%>
+										
+										
+										<%
+											if t[:donation]==1
+												%>
+													<tr class="<% if i%2==0 %> even <% else %>odd <% end %>" id="ticket_<%= t[:id] %>">
+														 <td>Donation</td>
+														 <td><%= t[:donation_ticket_name]%></td>
+					                                     <td><%= t[:donation_description] %></td>
+					                                     <td><% if t[:donation_end_sale]!=nil %><%= t[:donation_end_sale].strftime(@site[:date_time_format]) %><% end %></td>
+					                                     <td>N/A</td>
+		                                    			 <td>N/A</td>
+					                                     <td><%= t[:donation_qty] %></td>
+					                                     <td><%= t[:used] %></td>
+					                                     <td><%= t[:donation_qty] - t[:used] %></td>
+				                                      	 <td class="">
+													 		<a href="/admin/tickets/<%= t[:id] %>/edit" class="member_link edit_link">Edit</a>
+													 		<a href="/admin/tickets/<%= t[:id] %>" class="member_link delete_link" data-confirm="Are you sure you want to delete this?" data-method="delete" rel="nofollow">Delete</a>
+													  	 </td>
+													</tr>
+												
+												<%
+												i+=1
+											end	
+										%>
+										
+											
+									
+								<%
+											
+										
+									end
+								 else
+									%>
+									<tr class="odd">
+										<td colspan="9" style="text-align: center;">No Records Available</td>
+									</tr>
+									 <%	
+								end %>
+							
+							
+								 
+							                        
+							</tbody>
+ 
+                    </table>
+                  </div>
+                </div>
+              </div>
+              
+            </div>

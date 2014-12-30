@@ -1,0 +1,240 @@
+<% @currency_symbol = @site[:currency_code]
+     @currency_code = CurrencyCode.find(:first, :conditions => ['currency_code=?', @site[:currency_code]]) 
+     @site[:currency_symbol] = @currency_code [:currency_symbol]
+
+%>
+
+
+<script type="text/javascript" src="<%= APP_CONFIG['development']['js_url'] %>js/jquery.tipsy.js"></script>
+
+<script type="text/javascript" src="<%= APP_CONFIG['development']['js_url'] %>new_picker/spectrum.js"></script>    
+<script>
+ $(document).ready(function() {
+ 	document.getElementById('btn_widget').value = "<%= I18n.t 'button_widget.buy_tickets'%> <%= I18n.t 'button_widget.on1'%> Halfevent";
+ 	document.getElementById('othertext').value = "<%= I18n.t 'button_widget.click_register'%>";
+    $('#btn_widget').addClass('smallFont');	
+    $('#btn_widget').removeClass('btn');	
+    $('#copypath').val('');
+    
+    
+	$(".full").spectrum({
+		    className: "full-spectrum",
+		    maxPaletteSize: 10,
+		    preferredFormat: "hex",
+		    localStorageKey: "spectrum.demo",
+		    
+		});
+ });
+ 
+ 
+ /* Color customization */
+	function set_preview_invite(ele,id){
+					var hex = ele.value;
+					
+					if(id=='text'){
+						$('#btn_widget').css('color',  hex);
+					}
+					if(id=='back'){
+						$('#btn_widget').css('backgroundColor', hex);
+					}
+			} 
+ </script>
+ <% @act_class = 'Create Widgets' %>         	
+ <%= render(:partial => "common_banner" , :object => :collection) %>   
+
+<section>
+	<div class="main">
+	<div class="left_columm">
+    	<div class="marT60">
+        	<div class="mtitle fl">
+            	<h1 class="fl">  <%= I18n.t 'manage_event_sidebar.button_widget'%></h1>
+             
+            </div> <div class="clear"></div>
+            
+        	<div class="shadow marT10 pad3P" id="button_event_detail">
+        	<h1> Preview </h1>	
+        	<div class="btn_bg">
+        		 <% if @event[:event_url_link]=='' || @event[:event_url_link]==nil
+		page_url = APP_CONFIG['development']['site_url']+'events/view/'+@event[:id].to_s 
+		
+	 else 
+		page_url = APP_CONFIG['development']['site_url']+'event/'+@event[:event_url_link] 
+	end %> 
+              <%
+							logo_img = APP_CONFIG['development']['app_url']+'themes/logo.png'
+							
+				       		if(@site[:site_logo]!=nil)
+					            chk_img = check_img(@site[:site_logo],'other','orig')	
+					         	if chk_img!='0' && chk_img!=''
+								  logo_img = APP_CONFIG['development']['upload_url']+chk_img
+								end
+							end %>  	
+         <a href="<%= page_url %>" target="_blank">
+         	<!-- <input type="submit" class="btn" id="btn_widget" value =""  /> -->
+         	 <input type="button" class="btn" id="btn_widget" value =""  /> 
+         </a>
+         </div>
+          <!-- <a href="<%= page_url %>" target="_blank"> Buy Tickets on <img src="<%= logo_img %>"/></a>-->               
+        <div class="clear"></div>
+
+<script type="text/javascript">
+        function selectall()
+		{ 
+		
+			var text_val=document.getElementById('copypath');			
+			text_val.focus();			
+			text_val.select();			
+			if (!document.all) return; // IE only
+			
+			r= text_val.createTextRange();
+			
+			r.execCommand('Copy');			
+		}
+		
+	function set_button_widget(val){
+		//alert(val);
+		if (document.getElementById('buytickets').checked) {
+			
+			 $('#copypath').val('');
+				  result = document.getElementById('buytickets').value;
+				  document.getElementById('othertext').disabled=true;
+				  document.getElementById('btn_widget').value = "<%= I18n.t 'button_widget.buy_tickets'%> <%= I18n.t 'button_widget.on1'%> Halfevent";
+		
+		}
+		if (document.getElementById('regnow').checked) {
+			
+			    $('#copypath').val('');
+				 
+				  document.getElementById('othertext').disabled=true;
+				  result = document.getElementById('regnow').value;
+				  document.getElementById('btn_widget').value = "<%= I18n.t 'button_widget.reg_now'%> <%= I18n.t 'button_widget.on1'%> Halfevent";
+				 
+		}
+		if (document.getElementById('other').checked) {
+			      
+			      document.getElementById('othertext').disabled=false;
+			      result = document.getElementById('othertext').value;
+				  document.getElementById('btn_widget').value = result + " Halfevent";
+		}
+		
+		if (document.getElementById('smallText').checked) {
+				  $('#copypath').val('');
+				  
+				  $('#btn_widget').addClass('smallFont');		
+
+			  	  $('#btn_widget').removeClass('btn');
+			  	  $('#btn_widget').removeClass('mediumFont');
+			  	  $('#btn_widget').removeClass('largeFont');
+		}
+		else if (document.getElementById('mediumText').checked) {
+			 	  $('#copypath').val('');
+				  
+				  $('#btn_widget').addClass('mediumFont');
+				  
+				  $('#btn_widget').removeClass('btn');
+				  $('#btn_widget').removeClass('smallFont');
+			  	  $('#btn_widget').removeClass('largeFont');
+		
+		}
+		else if (document.getElementById('largeText').checked) {		
+			 	  $('#copypath').val('');		   
+				  
+				  $('#btn_widget').addClass('largeFont');
+				  
+				  $('#btn_widget').removeClass('btn');
+				  $('#btn_widget').removeClass('mediumFont');
+			  	  $('#btn_widget').removeClass('smallFont');
+		}
+
+	}
+	
+	function get_code(){
+		var back_color = document.getElementById('backcol').value;
+		var text_color = document.getElementById('textcol').value;
+		var widget_text = document.getElementById('btn_widget').value;
+		var widget_size;
+		
+		if (document.getElementById('smallText').checked){
+			widget_size = 0; 
+		}
+		if (document.getElementById('mediumText').checked){
+			widget_size = 1; 
+		}
+		if (document.getElementById('largeText').checked){
+			widget_size = 2; 
+		}
+		
+		var page_path = '/manage_event/widget_info/'+<%= @event[:id]%>;
+        $.ajax({
+            type: "POST",
+            data:  {widgetText: widget_text, text_color: text_color, back_color: back_color, widget_size: widget_size},
+            url: page_path,
+            success: function(data) {
+              <% @widget = Widget.find(:last) %>
+             
+         $('#copypath').val('<div id="widgets"></div><iframe src="<%= APP_CONFIG['development']['site_url'] %>manage_event/custombutton/<%= @widget[:id] + 1%>" frameBorder="0"></iframe>');
+
+              }
+        });
+       
+        
+	}
+</script>
+
+        <div>
+        	
+	        <h1>Customize</h1>
+	        
+	        <h2>Text:</h2><input type="radio" name="manage_event[btntext]" id="buytickets" value="Buy Tickets" onclick="set_button_widget('buynow');" checked="checked" /> <%= I18n.t 'button_widget.buy_tickets'%> <br/>        
+	    	<input type="radio" name="manage_event[btntext]" id="regnow" value="Register Now" onclick="set_button_widget('regnow');" /> <%= I18n.t 'button_widget.reg_now'%>  <br/>
+	    	<input type="radio" name="manage_event[btntext]" id="other" value="Other" onclick="set_button_widget('other');" /> <%= I18n.t 'button_widget.other'%>:
+	    	
+	    	<input type="text" name="manage_event[othertxt]" maxlength="25" id="othertext" value="" onchange="set_button_widget(this.value);" disabled="true"/><br/>
+             
+            <h2>Size:</h2><input type="radio" name="size[btnSize]" id="smallText" value="small" onclick="set_button_widget('small');" checked="checked" /> Small <br/>        
+	    	<input type="radio" name="size[btnSize]" id="mediumText" value="medium" onclick="set_button_widget('medium');" /> Medium <br/>
+	    	<input type="radio" name="size[btnSize]" id="largeText" value="large" onclick="set_button_widget('large');" /> Large
+	    	                
+        </div>     
+         
+         <div class="label"><%= I18n.t 'invite_create.background_color'%></div>
+		<input type='color' class="full" id="backcol" value="#7AB962" onchange="set_preview_invite(this,'back');"  />
+		
+		 <div class="label"><%= I18n.t 'invite_create.text_color'%></div>
+		<input type='color' class="full" id="textcol" value="#FFFFFF" onchange="set_preview_invite(this,'text');"  />
+         
+        
+        <div class="pr" style="width: 90%;">
+     	<input type="submit" class="btn" id="generate_code" value ="Generate Code" onclick="get_code();" style="font-size: 15px;" />
+
+        	<label><%= I18n.t 'button_widget.generate_code' %></label>
+        	<div id="widgets">
+        	<textarea id="copypath" style="width:97%; height:75px;" readonly="readonly"><a href="<%= page_url %>" target="_blank">" /></a></textarea>
+            	<a href="javascript:" onclick="selectall()" class="copy"></a><br />
+            </div>  
+          
+        </div>   
+        <label><%= I18n.t 'user_profile.profile_copy' %> &amp; <%= I18n.t 'user_profile.paste_this_code_on_website' %></label>   
+
+               
+        <div class="clear "></div>
+      
+      </div><!-- end of button_event_detail -->
+                      
+     </div>
+        
+    </div>  
+    	
+	
+
+     <%= render(:partial => "manage_event_sidebar" , :object => :collection) %>   
+    	 
+     </div>
+     <div class="clear"></div>
+</section>
+
+
+
+<% @edit_menu_class = 'Manage' %>
+<%= render(:partial => "edit_menu" , :object => :collection) %> 
+<div class="clear "></div>

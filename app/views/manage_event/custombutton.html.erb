@@ -1,0 +1,50 @@
+ <%
+ 	@event = Event.find(@widget[:event_id])
+ 
+  	if @event[:event_url_link]=='' || @event[:event_url_link]==nil
+		page_url = APP_CONFIG['development']['site_url']+'events/view/'+@event[:id].to_s 		
+	 else 
+		page_url = APP_CONFIG['development']['site_url']+'event/'+@event[:event_url_link] 
+	end 
+%> 
+<script src="<%= APP_CONFIG['development']['js_url'] %>js/jquery-1.7.1.js"></script>
+<style>
+ 	.btn_bgcolor {
+ 		
+ 		background: <%= @widget[:back_color] %>;
+ 		color: <%= @widget[:text_color]%>
+ 	}
+ 	
+ 	.btn_img {
+ 		<% if @widget[:widget_size] == 0 %> 		
+ 			background-image: url("http://halfevent.com/assets/themes/bl1.png"); 	
+ 			font-size: 13px;	 	
+ 			padding: 10px 25px;
+ 				
+ 		<% elsif @widget[:widget_size] == 1 %> 		
+ 			background-image: url("http://halfevent.com/assets/themes/bl2.png"); 
+ 			font-size: 15px;		
+ 			padding: 10px 38px;
+ 			
+ 		<% elsif @widget[:widget_size] == 2 %> 		
+ 			background-image: url("http://halfevent.com/assets/themes/bl3.png"); 	
+ 			font-size: 18px;	
+ 			padding: 10px 50px;
+ 			
+ 		<% end %>
+ 		
+ 		background-repeat: no-repeat;
+ 		font-family: "Droid Serif", Arial, Helvetica, sans-serif;
+ 		border: none;
+		cursor: pointer;
+ 	}
+</style>
+<div id='widgets'></div>
+<script>
+  $(document).ready(function() {
+    
+   	document.getElementById('widgets').innerHTML = '<a href="<%= page_url %>" target="_blank"> <input type="button" class="btn_bgcolor btn_img" id="btn_widget" value ="<%= @widget[:widget_text] %>"  />  </a>';
+	
+});
+</script>
+ 

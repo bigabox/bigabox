@@ -1,0 +1,21 @@
+ <%  @show = Tip.find(params[:id]) %>
+ 
+<div class="panel">
+      <h3>Tip Details</h3>
+	  <div class="panel_contents">
+	    <div class="attributes_table site_setting" id="attributes_table_site_setting_1">
+	      <table border="0" cellspacing="0" cellpadding="0">
+	            <tr class="row">
+	              <th>Title</th>
+	              <td><%= @show[:title] %></td>
+	            </tr>
+	            
+	            <tr class="row">
+	              <th>Detail</th>
+	              <td><% if @show[:desc]!='' && @show[:desc]!=nil %><%= render :inline => @show[:desc] %><% end %></td>
+	            </tr>
+	      </table>
+    	</div>
+  	  </div>
+</div>
+           

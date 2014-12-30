@@ -1,0 +1,86 @@
+<script>
+ $(document).ready(function() {	
+	$('.breadcrumb').html('');
+	$('#index_footer').html('');
+	
+});	
+</script> 
+<%  #@tickets = Purchase.where(:user_id => params[:user_id]).paginate(:page => params[:id], :per_page => 2).order('id DESC')
+	@events = Event.where(:user_id => params[:id], :cancel => 0)
+	@site = SiteSetting.find(:first)
+ %>
+
+
+
+<div class="paginated_collection">
+              <div class="paginated_collection_contents">
+                <div class="index_content">
+                  <div class="index_as_table">
+                    <table border="0" cellspacing="0" cellpadding="0" id="index_table_tickets" class="index_table index" paginator="true">
+                      
+							<thead>
+								<tr>
+								 <!-- <th class="sortable first_name"><a href="/admin/purchases?user_id=4&amp;order=first_name_desc">First Name</a></th>
+								  <th class="sortable last_name"><a href="/admin/purchases?user_id=4&amp;order=last_name_desc">Last Name</a></th> -->
+								  <th class="event_title">Event Title</th>
+								  <th class="vanue_name">Event Venue</th>
+								  <th class="event_start_date_time">Start Date</th>
+								  <th class="event_end_date_time">End Date</th>
+								  <th class="organizer_host">Organizer Host</th>
+								  <th class="host_description" width="15%">Host Description</th>
+								  <th class="">&nbsp;</th>
+								</tr>
+							</thead>
+							<tbody>
+								
+								<% 
+								i=1
+								  if @events.count > 0
+									  for e in @events
+									  	
+								%>
+								
+									<tr class="<% if i%2==0 %> even <% else %>odd <% end %>" id="purchase_<%= e[:id] %>">
+										 <td class="event_title"><%= e[:event_title] %></td>
+										 <td class="vanue_name">
+										 	<% if e[:online_event_option]==1 %>
+										 		This is an online Event
+										 	<% else %>	
+										 		<%= e[:vanue_name] %>
+										 	<% end %>	
+										 </td>
+										 <td class="event_start_date_time"><%= e[:event_start_date_time].strftime(@site[:date_time_format]) %></td>
+										 <td class="event_end_date_time"><%= e[:event_end_date_time].strftime(@site[:date_time_format]) %></td>
+										 <td class="organizer_host"><%= e[:organizer_host] %></td>
+										 <td class="host_description"><% if e[:host_description]!=nil && e[:host_description]!='' %><%= render :inline => e[:host_description] %><% end %></td>
+										  
+										 <td class="">
+										 	<a href="/events/view/<%= e[:id] %>" target="_blank" class="member_link view_link">View</a>
+										 	<a href="/events/edit/<%= e[:id] %>?admin=edit" class="member_link edit_link">Edit</a>
+										 	<a href="/admin/events/delete_event/<%= e[:id] %>" class="member_link delete_link" data-confirm="Are you sure you want to delete this?" data-method="delete" rel="nofollow">Delete</a>
+										 </td>
+										 
+									</tr>
+								<%
+											i+=1
+										
+									end
+								 else
+									%>
+									<tr class="odd">
+										<td colspan="7" style="text-align: center;">No Records Available</td>
+									</tr>
+									 <%	
+								end %>
+							
+							
+								 
+							                        
+							</tbody>
+ 
+                    </table>
+                  </div>
+                </div>
+              </div>
+              
+            </div>

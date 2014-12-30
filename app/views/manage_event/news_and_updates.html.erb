@@ -1,0 +1,136 @@
+<% @act_class = 'Add News and Updates' %>  
+<%= render(:partial => "common_banner" , :object => :collection) %> 
+
+ <%
+ 	@updates = EventUpdate.find(:all, :conditions => ['event_id=?', @event[:id]])
+ 	
+ %>
+  
+<script type="text/javascript">
+	
+function chk_value(id){
+	//alert('hi');
+	var up = $('#update'+id).val();
+	//alert(up);
+	$('#err'+id).text("");
+	/*if(up=='&nbsp;' || up==''){
+		$('#update'+id).focus();
+		$('#err'+id).text("Enter Update First.");
+		return false;	
+	}*/
+	return true;
+}
+
+function confirm_delete_update(){
+	var con = confirm('<%= I18n.t 'new.confirm'%>');
+	if(con){
+		return true;
+	}
+	return false;
+}	
+
+
+	
+</script> 
+
+<section>
+	<div class="main">
+		<% if flash[:notice] -%>
+		      <div class="errors marT60">
+		      	<p><%= flash[:notice] %></p>
+		      </div>
+		
+		   <% end -%>               
+		
+    	<div class="left_columm">
+    	<div class="marT60">
+        	<div class="mtitle fl">
+            	<h1 class="fl"> <%= I18n.t 'invite_add_attendee.add_attendee_add'%> <span> <%= I18n.t 'event.view.news' %> &amp;<%= I18n.t 'event.view.updates' %> </span></h1>
+             
+            </div> <div class="clear"></div>
+            
+        <div class="shadow marT20 pad3P">
+        	<%= form_tag({:controller => 'manage_event', :action => 'edit_news_and_updates'}, :id => 'news_and_updates', :name => 'news_and_updates') do %>	
+				<div class="form TW100p">
+					<textarea name="event_update[updates]" id="update0" class="ckeditor"></textarea> 
+					<br/><br/>
+					<input type="hidden" name="update_id" value="0" />
+					<input type="hidden" name="event_update[event_id]" value="<%= @event[:id] %>" />
+					<div class="error1" id="err0" ></div>
+					<input type="submit" class="btn fr marT15" value="<%= I18n.t 'button.add_update' %>" onclick="return chk_value('0');"><div class="clear"></div>
+				<div class="clear"></div></div>	
+			<% end %>	
+			
+        	
+           <div class="clear"></div>
+           </div>
+           <% if @updates.count > 0 %>
+							<% for up in @updates %>
+           <div class="shadow marT20 pad3">
+        		<div class="news_update">
+                   <span><%= up[:updated_at].strftime(@site[:date_time_format]) %></span>
+                   <span class="action_icon fr">
+                            	
+                            	<a href="javascript:" onclick="$('#show_div<%= up[:id] %>').hide(); $('#edit_div<%= up[:id] %>').show();" class="hint--bottom" data-hint=<%= I18n.t 'create_data_hint.data_hint_edit'%>>
+                            		<img src="<%= APP_CONFIG['development']['app_url'] %>icon-edit.png" /></a>
+                            	
+                            	<a href="<%= APP_CONFIG['development']['site_url'] %>manage_event/delete_update/<%= up[:id] %>?eve=<%= @event[:id] %>" onclick="return confirm_delete_update();" class="hint--bottom" data-hint=<%= I18n.t 'create_data_hint.data_hint_delete'%>>
+                            		<img src="<%= APP_CONFIG['development']['app_url'] %>icon-delete.png" /></a>
+                            </span>
+                    <div class="clear"></div>
+                 
+                </div>
+                        <div class="pad3P" id="show_div<%= up[:id] %>">
+                        	<%= render :inline => up[:updates] %>
+                        </div>
+                        
+                        <div class="pad3P" id="edit_div<%= up[:id] %>" style="display: none;">
+							<%= form_tag({:controller => 'manage_event', :action => 'edit_news_and_updates'}, :id => 'edit_news_and_updates', :name => 'edit_news_and_updates') do %>
+								<textarea name="event_update[updates]" class="ckeditor" id="update<%= up[:id] %>"><%= up[:updates] %></textarea> 
+								<br/><br/>
+								<input type="hidden" class="e_subbtn2bg" value="<%= up[:id] %>" name="update_id">
+								<input type="hidden" name="event_update[event_id]" value="<%= @event[:id] %>" />
+								<div class="error1" id="err<%= up[:id] %>" ></div>
+								
+								<a href="javascript://" class="btn fr marT15 black_bg"  onclick="$('#show_div<%= up[:id] %>').show(); $('#edit_div<%= up[:id] %>').hide();" style="margin-left:10px;"><%= I18n.t 'validation.common.can' %></a>
+								<input type="submit" class="btn fr marT15" value="Edit" onclick="return chk_value('<%= up[:id] %>');">
+								
+									<div class="clear"></div>
+							<% end %>	
+						</div> 
+           
+           <div class="clear"></div>
+           </div>
+           <% end %>
+		<% else %>
+				<br /><div class="mtitle fl">
+	            	<h1 class="fl"> <%= I18n.t 'event.view.news' %> <span> &amp;<%= I18n.t 'event.view.updates' %> </span></h1>
+	             
+	            </div> <div class="clear"></div>
+	            <div class="shadow marT20 pad3">
+	            	<div class="pad10"><%= I18n.t 'new_and_updates.no_update_added_yet' %></div> 
+	            </div>	
+				           
+				
+		<% end %>  
+           
+								
+							 
+           
+        </div>
+        
+           <div class="clear"></div>
+    </div>  
+    	<%= render(:partial => "manage_event_sidebar" , :object => :collection) %>
+		<div class="clear"></div>
+        </div>
+           <div class="clear"></div>
+   
+</section>
+<% @edit_menu_class = 'Manage' %>
+<%= render(:partial => "edit_menu" , :object => :collection) %> 
+<div class="clear "></div>
+
+
+
+<script src="<%= APP_CONFIG['development']['js_url'] %>js/ckeditor/ckeditor.js"></script>

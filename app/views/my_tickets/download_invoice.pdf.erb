@@ -1,0 +1,133 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252" />
+<title>Welcome to Halfevent</title>
+</head>
+
+<body style="font-family:Arial, Helvetica, sans-serif; font-size:13px;">
+<!-- strat main div -->
+	<div style="width:670px;  margin:0px auto; border:1px solid #ccc; height:100%; overflow:hidden; padding:10px 25px;">
+		<!-- start left div -->
+			<div style="width:70%; float:left;">
+				<p style="margin:1px 0 0 0; font-size:12px;"><%= I18n.t 'invoice_pdf.invoice_help' %></p>
+					<div style="text-align:left; line-height:19px; margin-top:30px;">
+						<h2 style="font-size:14px;"><strong><%= I18n.t 'invoice_pdf.invoice_to' %></strong></h2>
+						<%= @my_ticket[:first_name] +" "+ @my_ticket[:last_name]%><br />
+						<!--155 5th St.<br />
+						San Francisco, CA 94103<br />
+						United States-->
+						<div style="margin:70px 0px">
+						<h1><%= I18n.t 'invoice_pdf.invoice' %></h1>
+						</div>
+						<h2 style="line-height:0px;"><%= I18n.t 'invoice_pdf.invoice_number' %> <%= @my_ticket[:id]%></h2>
+						<i><%= I18n.t 'invoice_pdf.please_quote_invoice_number_for_payment_and_correspondence' %></i>
+					</div>
+			</div>
+			<!-- End left Div -->
+			
+			<!-- stra right div -->
+			<div style="width:30%; float:left;">
+				<div style="text-align:left; line-height:19px;">
+					<h2 style="font-size:14px; margin:0 0 10px 0;"><strong><%= I18n.t 'invoice_pdf.invoice_from' %></strong></h2>
+					Halfevent Help Center<br />
+					<!--155 5th St<br />
+					San Francisco<br />
+					94103<br />
+					United Kingdom-->
+					
+					<p><i style="color:#006600;"><%= I18n.t 'invoice_pdf.ticketing_by' %></i></p>
+					<img src="http://halfevent.com/eventdemo/public/data/orig/other/logo_5969a0c291_logo1.png" width="200px" />
+					<!--<p style="color:#006600;"><i>
+					155 5th St, 7th Floor<br />
+					San Francisco, CA 94103<br />
+					USA	</i></p>-->
+					
+					<h2 style="font-size:14px; line-height: 0px; margin-top: 33px;"><strong><%= I18n.t 'invoice_pdf.invoice_date' %> <%= @my_ticket[:created_at].strftime("%b %d ,%Y") %></strong></h2>
+					<%= I18n.t 'invoice_pdf.invoice_event' %> <%= @event[:event_title]%>
+				</div>
+			</div>
+			<!-- End Right Div -->
+			<div style="Border-bottom:2px solid #000; clear:both; padding:10px 0px;"></div>
+			<p>Dear <%= @my_ticket[:first_name] +" "+ @my_ticket[:last_name]%></p>
+			<p><%= I18n.t 'invoice_pdf.thank_you_for_your_order' %></p>
+			
+			<!--- Table Start   --->
+			
+			<table style="border:1px solid #333;border-spacing: 0;border-collapse:collapse;">
+				<tr>
+				
+					<td style="background:#999999; padding:15px 40px; borde-spacing:0px; color:#fff; font-size:14px;border:1px solid #333;">
+					<strong><%= I18n.t 'invoice_pdf.ticket_title' %></strong></td>
+					<td style="background:#999999; padding:15px 45px; borde-spacing:0px; color:#fff; font-size:14px;border:1px solid #333;">
+					<strong><%= I18n.t 'invoice_pdf.price' %></strong></td>
+					<td style="background:#999999; padding:15px 45px; borde-spacing:0px; color:#fff; font-size:14px;border:1px solid #333;">
+					<strong><%= I18n.t 'invoice_pdf.quantity' %></strong></td>
+					<td style="background:#999999; padding:15px 45px; borde-spacing:0px; color:#fff; font-size:14px;border:1px solid #333;">
+					<strong><%= I18n.t 'invoice_pdf.fee' %></strong></td>
+					<td style="background:#999999; padding:15px 40px; borde-spacing:0px;color:#fff; font-size:14px;border:1px solid #333;">
+					<strong><%= I18n.t 'invoice_pdf.total' %></strong></td>
+				
+				</tr>
+				<% @tickets = Purchase.where('transaction_key ='+ @my_ticket[:id].to_s) %>
+				<% if @my_ticket[:ticket_id] > 0 %>
+            			<% @ticket_detail = Ticket.find(@my_ticket[:ticket_id]) %>
+            			<% for tik in @my_ticket %>
+            	<tr>
+					<td style="padding:10px 15px;border:1px solid #333;">
+						<% if @ticket_detail[:free]==1 %>
+                    		<%= @ticket_detail[:free_ticket_name] %>
+                    	<% elsif @ticket_detail[:paid]==1 %>
+                    		<%= @ticket_detail[:paid_ticket_name] %>
+                    	<% else %>
+                    		<%= @ticket_detail[:donation_ticket_name] %>
+                    	<% end %>
+					</td>
+					<td style="padding:10px 15px;border:1px solid #333;"><%= tik[:ticket_amt] %></td>
+					<td style="padding:10px 15px;border:1px solid #333;"><%= tik[:ticket_qty] %></td>
+					<td style="padding:10px 15px;border:1px solid #333;"><%= tik[:total_fees] %></td>
+					<td style="padding:10px 15px;border:1px solid #333;"><%= tic_tol= tik[:ticket_amt] + tik[:total_fees] %></td>
+				</tr>
+            		   <% end %>
+            	<%else%>
+            	
+				<%for tic in @tickets %>
+				
+                <% @ticket_detail = Ticket.find(tic[:ticket_id]) %>
+				<tr>
+					<td style="padding:10px 15px;border:1px solid #333;">
+						<% if @ticket_detail[:free]==1 %>
+                    		<%= @ticket_detail[:free_ticket_name] %>
+                    	<% elsif @ticket_detail[:paid]==1 %>
+                    		<%= @ticket_detail[:paid_ticket_name] %>
+                    	<% else %>
+                    		<%= @ticket_detail[:donation_ticket_name] %>
+                    	<% end %>
+					</td>
+					<td style="padding:10px 15px;border:1px solid #333;text-align:center;"><%= set_currency( tic[:ticket_amt] ) %></td>
+					<td style="padding:10px 15px;border:1px solid #333;text-align:center;"><%= tic[:ticket_qty] %></td>
+					<td style="padding:10px 15px;border:1px solid #333;text-align:center;"><%= set_currency(tic[:total_fees]) %></td>
+					<td style="padding:10px 15px;border:1px solid #333;text-align:center;"><%= set_currency(tic_tol= tic[:ticket_amt] + tic[:total_fees]) %></td>
+				</tr>
+				<%end%>
+				<%end%>
+			</table>
+			
+			<!---  End  --->
+			<div style="width:70%; float:left;">
+				<!--<p>Charget To Visa: -5272</p>-->
+				<p><%= I18n.t 'invoice_pdf.time_of_supply' %> <%= @my_ticket[:created_at].strftime(@site[:date_time_format]) %></p>
+				
+			</div>
+			<div style="width:28%; float:left;text-align:right; ">
+				<p><%= I18n.t 'invoice_pdf.total_net' %> <%= set_currency (@my_ticket[:total] )%></p>
+				<!--<p><strong><%= I18n.t'invoice_pdf.invoice_amount' %> $1.00</strong></p>-->
+			</div>
+			<!--<p style="font-weight:bold;text-align:justify;"><%= I18n.t'invoice_pdf.event_desc' %>"<%= @event[:event_title]%>"(<%= @event[:created_at].strftime(@site[:date_time_format]) %>) <%= I18n.t'invoice_pdf.event_desc1' %> *EB * <%= @event[:event_title]%>" <%= I18n.t'invoice_pdf.event_desc2' %></p>-->
+			<p><strong><%= I18n.t 'invoice_pdf.thank_you' %><br />
+			<%= I18n.t 'invoice_pdf.halfevent_help_center' %></strong></p>
+			<p style="font-size:12px; line-height:16px;text-align:justify;"><i><%= I18n.t 'invoice_pdf.description' %></i></p>
+	</div>
+	<!-- end main div -->
+</body>
+</html>

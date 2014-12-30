@@ -1,0 +1,219 @@
+<script type="text/javascript">
+var email_reg_exp= /^[a-zA-Z0-9]+[a-zA-Z0-9_.-]+[a-zA-Z0-9_-]+@[a-zA-Z0-9]+[a-zA-Z0-9.-]+[a-zA-Z0-9]+.[a-z]{2,4}$/;	
+	function validate_newguestForm(){
+		//alert('hi');
+		var form = $("#newguestForm");	
+	
+		var upload_datafile = $("#upload_datafile");
+		var uploaddatafileInfo = $("#uploaddatafileInfo");
+		
+		var emails = $("#emails");
+		var emailsInfo = $("#emailsInfo");
+		
+		
+		var fetch_type1 = $("#fetch_type1");
+		//var fetch_type2 = $("#fetch_type2");
+		//var fetch_type3 = $("#fetch_type3");
+		var fetch_type4 = $("#fetch_type4");
+		
+		//set all errors null 
+		
+		uploaddatafileInfo.text("");
+		emailsInfo.text("");
+		
+		
+		if(fetch_type1.is(':checked') || fetch_type4.is(':checked')) //|| fetch_type2.is(':checked') || fetch_type3.is(':checked')
+			{
+				if (fetch_type1.is(':checked')) {
+					chks = upload_datafile;
+					if (chks.val()=='')
+	                {
+	                        upload_datafile.focus();
+							uploaddatafileInfo.text("<%= I18n.t "jscript.upload_csv"%>");
+							uploaddatafileInfo.addClass("error1");
+							
+							return false;
+	                }
+					else 
+					{
+							value = chks.val();
+							
+							t1 = value.substring(value.lastIndexOf('.') + 1,value.length);
+							
+							if( t1!='csv')
+							{
+								upload_datafile.focus();
+								uploaddatafileInfo.text("<%= I18n.t "jscript.invalid_file"%>");
+								uploaddatafileInfo.addClass("error1");
+								
+								return false;
+							}
+							
+					}	
+				}
+				
+				/*if (fetch_type2.is(':checked')) {
+					return false;
+				}	
+				
+				if (fetch_type3.is(':checked')) {
+					return false;	
+				}	*/
+				
+				if (fetch_type4.is(':checked')) {
+					if(emails.val()==''){
+						  emails.focus();
+						 emailsInfo.text("<%= I18n.t 'jscript.atleast_one_record' %>");
+						 emailsInfo.addClass("error1");
+						 return false;
+					}else{
+						
+						var mails = emails.val().split('\n');
+						for (var i = 0; i < mails.length; i++)
+				        {
+				        	var cmmails = mails[i].split(',');
+				            for (var j = 0; j < cmmails.length; j++)
+				        	{
+				        		var a = cmmails[j];
+								var filter = email_reg_exp;
+								//if it's valid email
+								//alert(a);
+								if(a!=''){
+										
+									if(!filter.test(a)){
+										emails.focus();	
+										emailsInfo.text("<%= I18n.t 'jscript.valid_email' %>");
+										emailsInfo.addClass("error1");
+										return false;
+									}
+								}
+								
+				        	}	
+				            //alert(mails[i]);
+				         }
+						
+					}
+				}
+					
+			}else{
+				 
+				 emailsInfo.text("<%= I18n.t 'jscript.atleast_one_record' %>");
+				 emailsInfo.addClass("error1");
+				 return false;
+			}
+			
+			///submit form 
+			
+			var url = '/invites/add_guests'; // the script where you handle the form input.
+			var formData = new FormData($('form#newguestForm')[0]);
+			
+		    $.ajax({
+		           type: "POST",
+		           url: url,
+		           data: formData,
+        		   async: false,
+		           success: function(data)
+		           {	$('#show_guest_list_errInfo').text('');
+		               // show response from the php script.
+		                if(data.guest.length > 0){
+		                	
+		                	var table = '<div class="eventinrcont" style="border: none;"><table class="should_come table"><tr><th><%= I18n.t 'new.table.select' %></th><th><%= I18n.t 'action.email' %></th><th><%= I18n.t 'action.first_name' %></th><th><%= I18n.t 'action.last_name' %></th><th><%= I18n.t 'action.action' %></th></tr>';
+				            var obj = data.guest;
+				           
+			               	for (i=0; i < obj.length; i++) {
+							  // or if (Object.prototype.hasOwnProperty.call(obj,prop)) for safety...
+							    prop = obj[i]
+							    if(prop["first_name"]=='null' || prop["first_name"]=='' || prop["first_name"]==null)
+							    {
+							    	var first_name = 'N/A';
+							    }else{
+							    	var first_name = prop["first_name"];
+							    }
+							    
+							    if(prop["last_name"]=='null' || prop["last_name"]=='' || prop["last_name"]==null)
+							    {
+							    	var last_name = 'N/A';
+							    }else{
+							    	var last_name = prop["last_name"];
+							    }
+							    
+							    
+							    table=table+'<tr><td><input type="checkbox" name="guest_id[]" value="'+prop["id"]+'" /></td><td id="email'+prop["id"]+'">'+prop["email"]+'</td><td id="first_name'+prop["id"]+'">'+first_name+'</td><td  id="last_name'+prop["id"]+'">'+last_name+'</td><td><a href="<%= APP_CONFIG['development']['site_url'] %>invites/edit_guest/'+prop["id"]+'" class="rr" ><%= I18n.t 'create_data_hint.data_hint_edit' %></a></td></tr>';
+							$("#addguest_error").text("");      
+							}
+							
+							table=table+'</table></div><div class="clr"></div>';
+							$('#show_guest_list').html(table);
+							$('#show_guest_list').show();
+							$('#remove_contact_option').show();
+							$(".eventinrcont .rr").colorbox();
+							
+							
+						}else{
+							$('#show_guest_list').html('<p><%= I18n.t 'validation.common.no_records_available'%></p>');
+							$('#remove_contact_option').hide();
+							$('#show_guest_list_errInfo').text('<%= I18n.t 'add_guests.already_email' %>');
+						}
+						parent.jQuery.colorbox.close();
+		          },
+					cache: false,
+			        contentType: false,
+			        processData: false
+		         });
+		
+		    return false;
+		
+	
+	}
+
+</script>
+
+
+
+
+<%= form_tag({:controller => 'invites', :action => 'add_guests'}, :id => 'newguestForm', :name => 'newguestForm', :multipart => 'true') do %> 
+				  
+				  <div class="pad15">
+				        <h2><%= I18n.t 'add_guests.add_guest' %></h2>
+				        <br />
+				        <h3><%= I18n.t 'add_guests.add_guests_from_following' %></h3><div class="clr"></div>
+				    	 <br />
+				    	
+				    	<input type="radio" name="fetch_type" id="fetch_type1" value="files" <% if params[:fetch_type]!='manually' %> checked="checked" <% end %> onclick="if(this.checked){ $('#files_list').show(); $('#social_list').hide(); $('#event_list').hide(); $('#manually_list').hide(); }else{ $('#files_list').hide(); }">
+				        <label><%= I18n.t 'create.upload' %></label>
+				        <div style="margin-left: 8%;"> Download <a href="<%= APP_CONFIG['development']['upload_url'] %>/data/Contact_list _csv_Sample.csv">Contact List</a> File Format.</div>
+				        
+				    	<div class="clr"></div>
+				    	
+				    	<div class="left_new" id="files_list" style=" margin-left: 7%;" <% if params[:fetch_type]!='manually' %> block; <% else %> none; <% end %>">
+				        	<%= file_field_tag 'upload', :id => 'upload_datafile' %>
+				        </div><div class="clr"></div>
+				        <div id="uploaddatafileInfo" style="margin-left: 7%;"></div>
+				    	
+				        
+					 
+					   <div class="clr"></div>
+				  
+				   
+				       <input type="radio" name="fetch_type" id="fetch_type4" value="manually" <% if params[:fetch_type]=='manually' %> checked="checked" <% end %> onclick="if(this.checked){ $('#files_list').hide(); $('#social_list').hide(); $('#event_list').hide(); $('#manually_list').show(); }else{ $('#manually_list').hide(); }">
+				        <label><%= I18n.t 'add_guests.manually_email' %></label>
+				  		<div class="clr"></div>
+				  		
+				  		  
+				        <div class="left_new" id="manually_list" style="display: <% if params[:fetch_type]=='manually' %> block; <% else %> none; <% end %>">
+				        	<span><%= I18n.t 'add_guests.enter_email_separated' %></span><br />
+				        	<textarea name="emails" id="emails" style="width:300px; height: 150px;"><%= params[:emails] %></textarea>
+				        </div><div class="clr"></div>
+				        <div id="emailsInfo" style="margin-left: 30px;"></div>
+				        
+				        <div class="marT20">
+				        	 
+				        <input type="hidden" name="guest[invite_id]" id="invite_id" value="<%= params[:invitation_id] %>" />
+				        <input type="hidden" name="guest[random_no]" id="random_no" value="<%= @random %>" />
+				           <a class="btn" href="javascript://" onclick="return validate_newguestForm();"><%= I18n.t 'button.save' %></a>
+				           <a href="javascript:" onclick="parent.jQuery.colorbox.close();" class="btn black_bg" style="bottom:2px;"><%= I18n.t 'button.cancel' %></a>
+				       </div>
+				   
+				  </div>      
+				 
+				  <% end %>  

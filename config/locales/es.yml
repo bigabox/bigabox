@@ -1,0 +1,2170 @@
+# localization file for Spanish. Add more files in this directory for other locales.
+# See https://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
+
+es:
+  hello: "Hola mundo"
+####  common 
+  meta_title:
+    event_view: "evento"
+    ticket_purchase: "compra de billetes"
+    affiliates: "filial"
+    can_or: "Las órdenes canceladas"
+    can_list: "Contacto listas"
+    add_can_list: "Añadir Nueva Lista de contactos"
+    contacts_list: "Lista de contactos"
+    my_event: "Mis Eventos"
+    set_event_title: "Ajuste Detalles del evento"
+    event_theme: "Tema Evento"
+    set_event_details: "Ajuste Detalles del evento"
+    invite_list: "Invita Lista"
+    create_invite: "Crea Invitar "
+    add_attendee: "Agregar asistente"
+    all_attendees_list: "Listado de todos los asistentes"
+    my_tickets: "Mis entradas"
+    meta_sign_up: "Regístrese"
+    cancel_order: "Cancelar pedido "
+    meta_login: "Iniciar la sesión"
+    forgot_pwd: "Olvidé mi contraseña"
+    set_pwd: "Establecer contraseña"
+    contact_us: "contáctenos"
+    view_order: "Ver Ordenes"
+    this_weekend_events: "Este fin de Eventos"
+    this_week_events: "Esta Semana"
+    tomorrow_events: "Mañana Eventos"
+    today_events: "hoy Eventos"
+    next_week_events: "Próximos Eventos de la semana"
+    this_month_events: "Este mes Eventos"
+    all_price: "todo_precio"
+    free_events: "Eventos gratis"
+    paid_donation_events: "Pagados / Donación Eventos"
+    not_free: "no_libre"
+    discover_events: "Descubra Eventos"
+    manage_wallet: "Gestione Monedero"
+    withdraw_wallet: "Retirar Monedero"
+    
+    m_dashboard: "salpicadero"
+    m_customize_order_form: "Personalizar formulario de pedido"
+    m_que_for_event: "Pregunta para el Evento"
+    m_edit_order_confirmation: "Editar Confirmación del Pedido"
+    m_edit_type_language: "Editar tipo e idioma"
+    m_add_news_updates: "Añadir noticias y actualizaciones"
+    m_google_analytics: "Google analítica"
+    m_orders: "órdenes"
+    m_edit_orders: "Editar órdenes"
+    m_waitlist_setting: "Configuración de Lista de Espera"
+    m_promotional_codes: "Códigos promocionales"
+    m_edit_promotional_code: "Editar código promocional"
+    affiliate_programs: "Programas de Afiliados"
+    edit_affiliate_code: "Editar código de afiliado"
+    
+    manage_account: "administrar cuenta"
+    change_password: "Cambiar contraseña"
+    credit_cards: "Tarjetas de crédito"
+    charges_credits: "Cargos y Créditos"
+    m_invoices: "Facturas"
+    m_email_preferences: "Preferencias de correo electrónico"
+    m_payment_accounts: "Cuentas de pago"
+    multi_user_access: "Multi usuario acceso"
+    m_unused_org: "Los organizadores no utilizados"
+    m_referral_program: "Programa de Referidos"
+    m_affiliate_prg: "Programa de Afiliados"
+                                
+  button:
+    send: "enviar"
+    cancel: "cancelar"
+    search: "Buscar"
+    save: "guardar"
+    preview: "avance"
+    make_event_live: "Haga Evento en vivo"
+    edit: "editar"
+    search: "Buscar"
+    send_schedule: "Enviar y Programación"
+    save_draft: "Guardar como borrador"
+    add_update: "Agregar Actualizar"
+         
+  tooltip_title:
+    admin_fees_transffered_ticket_buy: "Honorarios administración serán transferidos al comprador de entradas."
+    admin_fess_will_absorbed_ticket_price_take_event_org: "Honorarios administración serán absorbidos en Precio de la entrada y se tomarán de los ingresos de la empresa organizadora del evento."
+    admin_fees_cutomize_ticket_select_option_particular_ticket: 'Honorarios administración serán Personalizado por boleto. Usted tiene que seleccionar la opción en "Configuración" en particular de venta de entradas.'
+    enter_fb_address_link_fbpage: "Ingrese su dirección de Facebook para incluir un enlace a su página de Facebook."
+    enter_twitter_address_include_link_twitter_page: "Ingrese su dirección de Facebook para incluir un enlace a su página de Facebook."
+              
+  user:
+    prefix: "prefijo"
+    fname: "Nombre"
+    lname: "apellido"
+    suffix: "sufijo"
+    email: "Email"
+    home_phone: "Teléfono de la casa"
+    cell_phone: "teléfono celular"
+    bill_add: "Dirección de Facturación"
+    country: "país"
+    select_country: "Seleccione su país"
+    add: "dirección"
+    add2: "dirección 2"
+    city: "ciudad"
+    state: "estado"
+    select_state: "Seleccionar Estado"
+    zip: "Código Postal"
+    home_add: "Dirección de la casa"
+    ship_add: "Dirección de envío"
+    work_add: "Dirección de Trabajo"
+    job: "Título del trabajo"
+    company: "empresa"
+    work_phone: "Teléfono del trabajo"
+    blog: "Blog"
+    website: "sitio web"
+    other: "otra información"
+    gender: "género"
+    bdate: "Fecha de nacimiento" 
+    age: "edad"
+    que: "Otras preguntas"
+    wiever: "Wievers"
+    agree_wiever: "Estoy de acuerdo a dicha renuncia"
+    apply_to: "Aplicar a"  
+    payment: "Seleccione la entrada del pago"
+    
+###  event view page
+  event:
+    view:
+      redirect_err: "Su sesión ha caducado. Intentalo de nuevo."
+      event_hi: "¡Hola,"
+      contact: "Póngase en contacto con "
+      us: "nosotros"
+      the_org: "el organizador"
+      for_info: "para el evento y la información del boleto."
+      event: "evento"
+      from: "de"
+      to: "a"
+      ticket: "billete"
+      information: "información"
+      ticket_title: "Título Ticket"
+      sales_end: "Sales End"
+      price: "precio"
+      fee: "cuota"
+      available: "disponible"
+      qty: "cantidad"
+      view_more: "Ver más"
+      hide: "ocultar"
+      free: "libre"
+      na: "N / A"
+      sold_out: "Vendido"
+      amount: "Ingresar el importe de"
+      enter_promo: "Introduzca el código promocional aquí si tiene"
+      apply: "aplicar"
+      login_first: "Regístrese primero para comprar las entradas."
+      login: "Iniciar la sesión"
+      buy_tickets: "Comprar Entradas"
+      no_tickets_purchase: "No hay entradas disponibles para la compra online."
+      event_password_protected: "Este evento está protegido por contraseña"
+      event_password_protected_enter_password: "El anfitrión de este evento ha decidido proteger con contraseña los detalles. Si desea ver más, por favor, introduzca la contraseña a continuación."
+      incorrect_password: "Contraseña incorrecta."
+      view_now: "Ver ahora"
+      whos: "¿Quién "
+      going: "va"
+      connect_with_facebook_friends: "Conéctate para ver cuáles de tus amigos de Facebook están pasando."
+      connect_with_facebook: "Conéctate con Facebook"
+      share_it: "Compártelo llegar algunas personas a bordo!"
+      share_this: "Comparte este"
+      event_detail: "Detalle del "
+      detail: "Evento"
+      save_this_event: "Guardar este evento"
+      people_saved: "personas lo han guardado esta"
+      when: "Cuándo y"
+      where: "dónde"
+      orga: "orga"
+      nizer: "nizador"
+      unnamed_orga: "Organizador Sin nombre"
+      contact_organizer: "Póngase en contacto con el Organizador"
+      view_organizer: "Ver perfil de organizador"
+      news: "Noticias"
+      updates: "actualizaciones"
+      
+    purchase:
+      total: "total"
+      total_amount: "Importe total"
+      reg_info: "Información de Registro"
+      ticket_buyer: "Si compras entradas"
+      pay_now: "Pague ahora"
+      click_here: "Haga clic aquí si usted no está redireccionado automáticamente en 10 segundos ..."
+      pur_suc: "Usted ha comprado boletos con éxito."
+      new_pur: "Nuevo Ticket (s) adquirida por "
+      of_event: " del Evento "
+      pur_can: "Proceso de compra Error .. Inténtalo de nuevo!"
+      you_are_going: "Usted va a  "
+      order_saved: "Su orden se ha guardado en mis entradas."
+      order: "orden"
+      tickets: "Boleto (s)"
+      mail_sent_to: "Un correo electrónico de confirmación se ha enviado a "
+      go_to: "Ir a mis entradas"
+      you_can_use: "Usted puede utilizar "
+      all_kind: " para organizar eventos de todo tipo!"
+      from_local: "De una actuación local a una gala de caridad, o incluso una carrera de 5 km, "
+      make_easy: "hace que sea fácil para cualquiera crear una página de eventos y gestión de quién viene."
+      hi: "¡Hola"
+      thanks: "Gracias,"
+      unnamed_orga: "Organizador Sin nombre"
+      que_abt: "Preguntar sobre este "
+      orga: "organizador?"
+      contact: "contáctenos"
+      view_profile: "Ver Perfil Organizador"
+      pdf_free: "libre"
+      pdf_paid: "pagado"
+      pdf_donation: "donación"
+      print: "Imprimir y traer este billete con usted." 
+      print_head: "IMPRIMIR ESTA ENTRADA Y LLEVAR CON USTED."
+      date_time: "Fecha + Hora"
+      loc: "ubicación"
+      order_info: "Información de pedido "
+      by: " por "
+      tic_type: "Tipo Ticket"
+      tic_qty: "Cantidad de entradas"
+      do_you: "¿Organiza Eventos?"
+      join: "Únete a nuestro equipo ahora!"
+      attendees_successfully_added: "Los asistentes al evento agregado con éxito ." 
+      please_complete_registration_within: "Por favor complete el registro en"
+      minutes_after: "minutos. Después"
+      the_reservation_we_re_holding_will_be_released_to_others: "minutos, la reserva que estamos sosteniendo dará a conocer a los demás."
+          
+  #### organizer contact 
+  orga:
+    contact:
+      head: "Contactar organizador"
+      name: "nombre"
+      email: "Email"
+      msg: "mensaje"      
+      
+#####  validation starts      
+  validation:
+    ####common
+    common:
+      email_req: "Se requiere Email de campo."
+      valid_email: "Introduzca una dirección de correo válida."
+      no_records_available: "Registros no disponibles."
+      can: "cancelar"
+      edit: "editar"
+      
+    #####  event view page validation
+    event_view:
+      order_info: "No válido cantidad. Introduce una cantidad de 1 o más o importe."
+      enter_password: "Introduzca su contraseña."
+      event_saved: "Evento salvó successfuuly ."
+      can_not_save_own_event: "No se puede guardar su propio evento ."
+      already_saved: "Ya has guardado este evento ." 
+      event_not_exists: "Evento no existe ." 
+      enter_promo: "Introduzca un código promocional válido."
+      valid_promo: "Escriba sólo caracteres alfanuméricos, '.', '_', '@' Y."
+      not_promo: "Este código promocional no existe para este evento ."
+      
+    orga_contact:
+      msg_sent: "Su Mensaje enviado con éxito ."
+      name_req: "Se requiere nombre de campo."
+      msg_req: "Se requiere de campo Mensaje."
+      
+    ticket_purchase:
+      prefix_req: "Se requiere que todos Prefijo campo(s)."
+      fname_req: "Se requiere que todos primeros campo(s) de nombre."
+      lname_req: "Se requiere que todos apellido campo(s)."
+      suffix_req: "Se requiere que todos sufijo campo(s)."
+      email_req: "Todos los correos electrónicos campo(s) son obligatorios."
+      email_valid: "Introduzca una dirección de correo válida en todos los campo(s) de correo electrónico."
+      home_phone: "Todos los campo(s) Phone Home se requieren."
+      cell_phone: "Todos los campo(s) de teléfono celular se requieren."
+      bill_country: "Toda la facturación País campo(s) son obligatorios."
+      bill_add: "Todos los campo(s) de dirección de facturación se requieren."
+      bill_add2: "Todas las direcciones de facturación 2 campo(s) son obligatorios."
+      bill_city: "Toda la facturación City campo(s) son obligatorios."
+      bill_state: "Se requiere que todos los Estados de facturación campo(s)."
+      bill_zip: "Toda la facturación Zip / Postal Code campo(s) son obligatorios."   
+      home_country: "Todos los países Inicio campo(s) son obligatorios."
+      home_add: "Todos Home campo(s) de dirección se requieren."
+      home_add2: "Todos en Dirección 2 campo(s) son obligatorios."
+      home_city: "Todos los campo(s) de la ciudad local se requieren."
+      home_state: "Se requiere que todos Inicio Estado campo(s)."
+      home_zip: "Se requiere que todos Inicio Código Postal campo(s)." 
+      ship_country: "Todos envío del país los campo(s) son obligatorios."
+      ship_add: "Todas las direcciones de envío los campo(s) son obligatorios."
+      ship_add2: "Dirección de envío Todos los campo(s) son obligatorios 2."
+      ship_city: "Todo el envío City campo(s) son obligatorios."
+      ship_state: "Se requiere que todos los Estados del envío campo(s)."
+      ship_zip: "Todo el envío Zip / Postal Code campo(s) son obligatorios." 
+      work_country: "Todos los países que trabajan los campo(s) son obligatorios."
+      work_add: "Todas las direcciones de trabajo los campo(s) son obligatorios."
+      work_add2: "Todas las direcciones de trabajo 2 campo(s) son obligatorios."
+      work_city: "All City Trabajo campo(s) son obligatorios."
+      work_state: "Se requiere que todos los Estados campo(s) de trabajo."
+      work_zip: "Se requiere que todos Trabajo Código Postal campo(s)."
+      work_job: "Se requiere que todos Título del Trabajo campo(s)."
+      work_company: "Se requiere que todos Sociedad Los campo(s)."
+      work_phone: "Se requiere que todos Trabajo Teléfono campo(s)."
+      work_blog: "Se requiere que todos Blog campo(s)."
+      work_website: "Se requiere que todos Website campo(s)."
+      gender: "Se requieren todos los campo(s) de género."
+      bdate: "Se requiere que todos Fecha de nacimiento campo(s)."
+      age: "Se requieren todos los campo(s) de edad."
+      starf: "* Todos los campo(s) son necesarios en Otra información."
+      starw: "* Todos los campo(s) son necesarios en Exenciones."
+      starall: "Hay que rellenar '*'. Ingrese toda la información requerida." 
+
+######  placeholders 
+  place:
+    prefix: "Ingrese Prefijo"
+    fname: "Ingrese el nombre"
+    lname: "Introducir apellido"
+    suffix: "Introduzca el sufijo"
+    email: "Escribir el correo electrónico"
+    home_phone: "Entrar Home Phone"
+    cell_phone: "Introduzca teléfono celular"
+    bill_country: "Introduzca facturación País"
+    bill_add: "Introduzca la dirección de facturación"
+    bill_add2: "Introduzca la dirección de facturación 2"
+    bill_city: "Introduzca facturación City"
+    bill_state: "Ingrese el Estado de Facturación"
+    bill_zip: "Introduzca facturación Código Postal"
+    home_country: "Introduzca el país de origen"
+    home_add: "Introduzca Domicilio"
+    home_add2: "Ingrese en Dirección 2"
+    home_city: "Introduzca ciudad local"
+    home_state: "Introduzca Estado de origen"
+    home_zip: "Introduzca Inicio Código Postal"
+    ship_country: "Introduzca País de envío"
+    ship_add: "Introduzca la dirección de envío"
+    ship_add2: "Introduzca la dirección de envío 2"
+    ship_city: "Escriba City envío"
+    ship_state: "Introduzca estado del envío"
+    ship_zip: "Introduzca el envío Código Postal"
+    work_country: "Introduzca País de trabajo"
+    work_add: "Introduzca la dirección de trabajo"
+    work_add2: "Introduzca la dirección de trabajo 2"
+    work_city: "Escriba City Trabajo"
+    work_state: "Introduzca Estado de Trabajo"
+    work_zip: "Introduzca Trabajo Código Postal"
+    work_job: "Introduzca trabajo Título del trabajo"
+    company: "Introduzca Company"
+    work_phone: "Introduzca Teléfono del trabajo"
+    blog: "Escriba Blog"
+    website: "Introduzca web"
+    age: "Introduzca edad"
+    event_title: "Título del evento"
+    venue_name: "Nombre del Lugar"
+    street_address: "Dirección"
+    general_admission: "Admisión General"
+    search_event_by_venue_location: "Buscar Eventos por Lugar o ubicación"
+    search_for_category: "Búsqueda por Categoría o Eventos"
+    enter_a_location: "Escriba un lugar"
+    
+    enter_first_name: "Escriba su Nombre"
+    enter_last_name: "Escriba su Apellido"
+    enter_your_email: "Ingrese su E-mail"
+    enter_your_home_phone: "Ingrese su Teléfono"
+    enter_your_cell_phone: "Ingrese su teléfono celular"
+    enter_your_billing_country: "Ingrese su facturación País"
+    enter_your_billing_add: "Introduzca su dirección de facturación"
+    enter_your_billing_add2: "Introduzca su dirección de facturación 2"
+    enter_billing_state: "Ingrese su Estado de Facturación"
+    enter_your_billing_zip_postal: "Ingrese su Código Postal Billing / Código Postal"
+    enter_your_home_country: "Introduzca su país de origen"
+    enter_your_home_address: "Ingrese su Domicilio"
+    enter_your_home_address2: "Ingrese su Dirección de la casa 2"
+    enter_your_home_state: "Ingrese su Estado de origen"
+    enter_your_home_zip_postal_code: "Ingrese su hogar Zip / Código Postal"
+    enter_your_shipping_country: "Ingrese su País de envío"
+    
+    enter_your_shipping_address: "Ingrese su dirección de envío"
+    enter_your_shipping_address2: "Introduzca su dirección del envío 2"
+    enter_your_shipping_state: "Ingrese su estado del envío"
+    enter_your_shipping_zip_postal: "Ingrese su código postal Envios / Postal"
+    enter_your_working_country: "Introduzca su país de Trabajo"
+    enter_your_working_add: "Introduzca su dirección de trabajo"
+    enter_your_working_add2: "Introduzca su dirección de trabajo 2"
+    enter_your_working_state: "Ingrese su Estado de Trabajo"
+    enter_your_working_zip_postal: "Ingrese su Código Postal / Código Postal Trabajo"
+    enter_your_work_job_title: "Ingrese su trabajo Título del trabajo"
+    enter_your_company: "Ingrese su Empresa"
+    enter_your_work_phone: "Ingrese su Teléfono del trabajo"
+    enter_your_blog: "Ingrese su Blog"
+    enter_your_website: "Ingrese su Sitio Web"
+    enter_your_age: "Ingrese su Edad"  
+    name_email_company_jobtitle_blog: "Ex. Nombre, correo electrónico, empresa, cargo, Blog, etc."
+    enter_email: "Escribir el correo electrónico"
+    type_city_name: "Tipo Nombre de la ciudad"
+              
+ ###  affiliates file 
+  affiliates:
+    affi: "Afiliados"
+    event: "evento"
+    referral Fee: "Tasa de Referencia"
+    join: "unirse"
+    need: "necesidad" 
+    help: "Ayuda?"
+    additional_help: "ayuda adicional?"
+    org_an_event: "Organizar un evento?"
+    sales: "venta"
+    referral_fee: "Tasa de Referencia"
+        
+  link:
+    create_contact: "Cómo crear una lista de contactos"
+    manage_contact: "Cómo administrar los contactos"
+    import_contact: "Cómo importar contactos desde un archivo"
+    
+  join:
+    join_affi: "No puedes unirte a su propio programa de afiliados!"
+    conti: "continuar"
+  
+  notice:
+    already_join: "Usted ya ha sumado a este programa."
+    success_join: "Te uniste con éxito este programa." 
+    
+ ### cancel_orders
+  cancel_order:
+    can: "Cancelado"
+    order: "órdenes"
+    pen: "PENDIENTE"
+    pad: "pagado"
+    
+  pen_paid_table:
+    en: "Nombre del evento"
+    tn: "Nombre Ticket"
+    tq: "Cantidad de entradas"
+    amt: "cantidad"
+    
+### contact_lists
+    ### contact_sidebar
+  cont_sider: 
+    cont_nm_req: "Se requiere Contacto Nombre de la lista ."
+    
+  search_part:
+    search_all: "Buscar en todos"
+    place_holder: "Escriba lista de contactos Nombre"
+    need_help: "¿Necesitas ayuda?"
+    
+   # contact_controller
+  notice:
+    con_create_notice: "Lista Creado éxito Contacto ."
+    con_copy_notice: "Lista copiado correctamente contacto ."
+    con_delete_notice: "Registre borrado de la lista de contactos con éxito ."
+    con_invitation_send_notice: "Invitación (s) enviado con éxito ."
+    
+   # copy
+  copy:
+    js_script: "Se requiere Contacto Nombre de la lista ."
+    con_list: "Copie la lista de contactos"
+    enter_name: "Introduzca el nombre de "    
+
+    #new
+  create:
+    con_list: "Crear una lista de contactos"
+    step1: "Paso 1:"
+    con_name: "Introduzca el nombre de su lista de contactos"
+    step2: "Paso 2:"
+    add_contact: "Agregar contactos desde una de las siguientes"
+    upload: "Subir correos electrónicos de archivo CSV."
+    placeholder: "Elige un archivo de tu ordenador"
+    browse: "Busque"
+    email: "Introducir manualmente las direcciones de correo"
+    e_separated: "(introduzca emails separados por comas o saltos de línea)"
+     
+   #index
+  new:
+    js: "Seleccione al menos una lista de contactos ."
+    confirm: "¿Está seguro que desea eliminar este registro?"
+    my: "Mis contactos"
+    contacts: "Contactos"
+       
+    table:
+      select: "seleccionar"
+      nm: "nombre"
+      con: "Contactos"
+      create: "creado"
+      ql: "Enlaces"
+    
+    send_invi_select: "Enviar invitación a Favoritos"
+    create_new_contact: "Crear nueva lista de contactos"
+    no_record: "Registros no están disponibles con nombre como "
+    contact_list: "'en la lista de contactos."
+    sign: "'" 
+    my_con: "Mis contactos"
+    let: "'Me deja ..."
+    info1: "Organizar los contactos de mis eventos en un solo lugar"
+    info2: "Enviar invitaciones a los contactos con solo un par de clics"
+    info3: "Ver el estado de los contactos que han sido invitados"
+    info4: "Importar direcciones de correo electrónico de Yahoo Mail, Gmail, Hotmail, Outlook y Excel"
+    create_contact_list: "Crear una lista de contactos" 
+      
+    # select invite
+  select_invite: 
+    select_invitation: "Seleccione la invitación"  
+    you_have_not_scheduled_any_invitation: "Usted no se ha programado ninguna invitación para eventos en vivo todavía."
+      
+   ### contacts
+    # action
+  action:
+    num: "Sr. No."
+    email: "electrónicos"
+    first_name: "Nombre"
+    last_name: "apellido"
+    action: "acción"
+    
+    #add_new 
+  jscript:
+    contact_name_require: "Se requiere Contacto Nombre de la lista ."
+    upload_csv: "Subir archivo CSV."
+    invalid_file: "Tipo de archivo no es válido. Subir archivo CSV."
+    atleast_one_record: "Ingrese al menos un registro de la lista de contactos ."
+    valid_email: "Todos ID de correo electrónico debe ser válida."
+    
+  add_new:
+    add_following: "Agregar contactos desde una de las siguientes"
+    upload_email_from_csv: "Subir correos electrónicos de archivo CSV."
+    browse: "Busque"
+    manualy_email_address: "Introducir manualmente las direcciones de correo"
+    separated_email: "(introduzca emails separados por comas o saltos de línea)"
+    
+    #copy_contact
+  copy_contact:
+    copy_js: "Se requiere Contacto Nombre de la lista ."
+    contact_list: "Copie la lista de contactos"
+    enter_name: "Introducir nombre"
+ 
+    #list_contact
+  list_script:
+    list_js: "Se requiere Contacto Nombre de la lista ."
+    please_valid_email: "Escriba un error, por favor E-mail"
+    delete_confirm: "¿Está seguro que desea eliminar este registro?"
+    unsubscribe_confirm: "¿Seguro que quieres dar de baja este disco?"
+    atleast_one_record: "Seleccione al menos un registro de la lista ."
+    are_delete_record: "¿Está seguro de que desea eliminar registro seleccionado (s)?"
+    
+    rn_contact: "Cambiar el nombre de la lista de contactos"
+    new_contact: "Añadir un nuevo contacto"      
+    unsubscribed: "no suscritas"
+    never_emailed: "Nunca Envié un correo electrónico"
+   
+  edit_contact:
+    edit_cont: "Editar registro de contactos"
+    re_name: "rebautizar"
+    last_emailed: "Última Envié un correo electrónico"
+    new_select: "seleccionar"
+    
+  contact_link:
+    select_all: "Seleccionar todo"
+    clear_selected: "Borrar seleccionado"
+    export_selected: "Exportar seleccionado"
+    delete_selected: "Eliminar seleccionados"
+    send_invitation_selected: "Enviar invitación a Favoritos"
+    copy_selected_another_list: "Copie seleccionado a otra lista"
+    no_contact_record_available: "No hay registro de contacto disponible."
+    
+    #contacts controller
+  contact_controller:
+    products_imported: "Los productos importados."
+    already_error: "Contacto Nombre de la lista ya ha sido tomada"
+    contact_record_unsubscribed: "Contacto Registro no suscrito con éxito ."
+    contact_record_deleted_successfully: "Contactar registro eliminado con éxito ."
+    contact_record_deleted: "Contacto Registro no suscrito con éxito ."
+    record_deleted_successfully: "Registro (s) borrado de contactos con éxito ."
+    invitation_send: "Invitación (s) enviado con éxito ."
+    contact_record_successfully: "Registro añadido a Lista de contactos con éxito ."
+    success: "éxito"
+    error: "error"
+    new_record_successfully: "Registros ahorrar a la nueva lista de éxito ."
+  
+    ### errors
+    #error_404
+  error_404:
+    exception: "excepción"
+    go_to_home: "Ir a la portada"
+    sorry_page_requested_not_found: "Lo sentimos, la página solicitada no se pudo encontrar"
+    tried_to_access: "Intentó acceder"
+    error_raise: "Se planteó error de ruta de acceso."
+    error: "error"
+    back_to_home: "Volver a la portada"
+  
+    #error_500
+  error_500:
+    page_not_found: "La página no existe en el sitio con esta URL"
+    sorry_record_requested_not_found: "Lo sentimos, la grabación solicitada no se pudo encontrar"
+    
+  ###events
+     #evet_controller
+  event_controller:
+    unnamed_organizer: "Organizador Sin nombre"
+    event_details_save_successfully: "Detalles del evento han guardado correctamente ."
+    event_saved_successfully_submitted: "Detalles del evento han guardado correctamente y presentadas para hacer en vivo. Espere a que la aprobación del administrador ."
+    error_creating_try_again: "Error en la creación de eventos, Try .. otra vez!!"
+    event_design_save_successfully: "Evento de Diseño guardado correctamente ."
+    not_allowed_edit_event_theme: "Usted no está autorizado a editar este tema del evento ."
+    not_access_page: "No puede acceder a esta página ."
+    url_already_taken: "Enlace url evento ya ha sido tomada." 
+    
+    #_change_event_theme
+  change_event:
+    event_title: "Título del evento"
+    background: "fondo"
+    header_text: "Texto de cabecera"
+    box_background: "Caja de fondo"
+    body_text: "Cuerpo de texto"
+    box_border: "Caja Frontera" 
+    color_link: "Enlaces"
+    box_header: "Caja Header"
+
+    #create_event
+  create_data_hint:
+    data_hint_contact_list: "Lista de contactos"
+    data_hint_copy: "copie"
+    data_hint_delete: "borrar"
+    data_hint_invite: "invitar"
+    data_hint_edit: "editar"
+    data_hint_Unsubscribe: "Darse de baja"
+    data_hint_manage: "gestionar"
+    data_hint_view: "ver"
+    data_hint_publish: "publicar"
+            
+  day:
+    monday: "lunes"
+    tuesday: "martes"
+    wednesday: "miércoles"
+    thursday: "jueves"
+    friday: "viernes"
+    saturday: "sábado"
+    sunday: "domingo"
+    
+  number:
+    first: "primero"  
+    second: "segundo"
+    third: "tercero"
+    fourth: "cuarto"
+    fifth: "quinto"
+    last: "último"
+    
+    #create event   
+  create_event:
+    ticket_sales: "venta de entradas"
+    start_sales: "Inicio Ventas"
+    now: "ahora"
+    end_sales: "End de ventas"
+    before_event: "1 hora antes del comienzo de evento"
+    min_purchase_permitted: "Compra mínima permitida"
+    max_purchase_permitted: "Compra máximo permitido"
+    rm: "eliminar"
+    rm_logo: "¿Está seguro que desea eliminar este logotipo?"
+    address_required: "Se requiere campo de dirección."
+    date_not_proper: "La fecha final de la repetición no puede ser anterior a la fecha de inicio del evento."
+    
+    every: "cada"
+    months: "meses"
+    day: "día"
+    msg_of_the_month: "del mes"
+    to: "a"
+    until: "hasta"
+    of_every_month: "de cada mes"
+    msg_weeks: "semana"
+    
+    never: "nunca"
+    daily: "diario"
+    weekly: "semanal"
+    monthly: "mensual"
+    other_specific: "Otros (especifique)"
+                
+    choose_atleast_one: "Por favor, elija al menos un día."    
+    please_custom_date: "Por favor, añada fechas personalizadas a su cita repetitiva."
+    repeat_date: "La fecha final de la repetición no puede ser anterior a la fecha de inicio del evento."
+    event_start_date: "Se requiere Evento Fecha de inicio."
+    event_end_date: "Se requiere Evento Fecha de finalización."
+    
+    #add event details
+    add_event_details:  "Añada sus detalles del evento"
+    expert_tips: "Consejos de expertos"
+    your_event_title: "Su Título del evento"
+    max_character: "Máximo 75 caracteres"
+    character_left: "caracteres restantes."
+    venue_name: "Nombre del Lugar"
+    running_an: "Ejecución de un"
+    online_event: "evento en línea"
+    street_address: "Dirección"
+    not_find_location: "No puede encontrar su lugar?"
+    show_map_event: "Ver mapa de la página vista de eventos"
+    location: "ubicación"
+    your_event_map_not_appear: "Su caso es sólo en línea. Los mapas no aparecerá en eventos en línea."
+    add_an_address: "Añadir una dirección"
+    date: "fecha"
+    time: "tiempo"
+    customer_date_time: "Fechas y horarios personalizados se establecen para este evento."
+    this_event_repeats: "Este acontecimiento se repite"
+    event_repeats: "El acontecimiento se repite"
+    event_location: "Lugar del Evento"
+    address: "dirección"
+    time_setting: "Ajustes de tiempo"
+    more_time_zone: "Más zonas horarias"
+    select_time_zone: "Seleccionar Zona Horaria"
+    event_page_setting: "Evento Configuración de página"
+    display_start_time_event_page: "Muestra la hora de inicio en la página del evento"
+    display_end_time_event_page: "Mostrar hora de finalización en la página del evento"
+    display_time_zone_event_page: "Mostrar zona horaria en la página del evento"
+
+    when_event_repeat: "Cuando se hace la repetición de eventos?"
+    repeat_every: "repetir cada"
+    day_s: "Día (s)"
+    ends_after: "termina después"
+    week_s: "Semana (s)"
+    repeat_on: "Repita On "
+    
+    repaat_on_the: "Repita en el"
+    of_the_month: "del mes"
+    select_by_date: "Selección por Fecha"
+    day_of_the_month: "día del mes"
+    select_by_day_of_week: "Selección por día de la semana"
+    repeat_every: "repetir cada"
+    month_s: "Mes (s)"
+    event_starts: "Inicia Evento"
+    event_ends: "Evento Final"
+    display_end_date_on_regi_page: "Mostrar la fecha final en la página de registro"
+    add_date: "Agregar fecha"
+    note: "Nota: las fechas de eventos pasados ​​y eventos con la venta de entradas no se pueden modificar."
+    upload_logo: "Subir Logo"
+    your_jpg_gif_png_not_exceed_2mb: "Su imagen debe ser formato JPG, GIF o PNG y no exceder de 2 MB."
+    event_description: "Descripción del evento"
+    org_host: "Organización / anfitrión"
+    select_org: "Seleccione Organizador"
+    unnamed_org: "Organizador Sin nombre"
+    add_new: "Añadir nuevo"
+    org_host_descri: "organización / anfitrión Descripción"
+    include_link_social_page: "Para incluir un enlace a mis páginas sociales por ejemplo, Facebook, Twitter"
+    facebook_com: "http://facebook.com/"
+    twitter_com: "http://twitter.com/"
+    please_enter_valid_link: "Please enter a valid link"
+    
+  event_day:
+    mon: "Mon"
+    tue: "mar"
+    wed: "casarse"
+    thu: "Jue"
+    fri: "vie"
+    sat: "sáb"
+    sun: "sol"
+    
+    #2. Create Tickets
+  ticket_part:
+    sold: "entradas vendidas"
+    already_sold: "La cantidad no podrá ser inferior a las entradas ya vendidas."
+    create_tickets: "Crear entradas"
+    add_ticket: "Añadir un vuelo"
+    ticket_tips: "Consejos de entradas"
+    ticket_free: "libre"
+    ticket_paid: "pagado"
+    ticket_donation: "donación"
+    ticket_confirm: "¿Está seguro de que desea eliminar esta entrada?"
+    strat_date_not_greater_end_date: "billete Fecha de inicio Venta shloud no sea mayor que Fecha de finalización Venta ."
+    end_date_not_greater_end_date: "billete Fecha de finalización Venta shloud no sea superior Evento Fecha de finalización ."
+    delete_ticket: "¿Está seguro de que desea eliminar esta entrada?"
+    incomplete: "incompleto"
+    add_ticket_here: "Añadir entradas aquí."
+    ticket_name: "Nombre billete"
+    ticket_quantity: "billete Cantidad"
+    ticket_price: "Precio de la entrada"
+    fee: "cuota"
+    buyer_total: "Si compras totales"
+    sales_status: "Estado de Ventas"
+    setting: "ajuste"
+    action: "acción"
+    ticket_description: "billete Descripción"
+    hide_description: "Ocultar la descripción en las páginas de sucesos"
+    sales_starts: "Ventas Se inicia"
+    sales_ends: "Ventas Final"
+    ticket_permited_by_order: "Entradas permitidas por pedido"
+    min: "mínimo"
+    max: "máximo"
+    apply: "aplicar"
+    service_fees: "Tarifas de Servicios"
+    donations: "Donaciones"
+    settings: "Configuración"
+    pass_on_the_fees_to_the_ticket_buyer: "Pasa de los honorarios al comprador billete"
+    absorb_the_fees_into_the_ticket_price: "Absorber los honorarios en el precio del billete"
+    event_capacity: "Capacidad Evento"
+    i_Would_like_to: "Me gustaría"
+    pass_on_fees_to_the_buyer: "Pasa de los honorarios al comprador"
+    absorb_the_fees: "Absorber los honorarios"
+    customize_per_ticket_type: "Personalizar según el tipo de billete"
+    checked: "comprobado"
+    this_event_private_not_listed_event_directory_search_engine: "Este evento es privado y no será incluido en nuestro directorio de eventos o en los motores de búsqueda."
+    invitation_only_attendees_must_receive: "Invitación Only-Los asistentes deben recibir una"
+    email_invitation_to_register: "invitación por correo electrónico para registrarse."
+                
+  promote_event_page:
+    promote_your_event_page: "Promociona tu página de eventos"
+    promote_tips: "Promover Consejos"
+    publicize_keep_it_private: "Dar a conocer, o mantenerlo en privado"
+    public_page: "Página Pública"
+    private_page: "Página privada"
+    private_text: "Este evento es privado y no será incluido en nuestro directorio de eventos o en los motores de búsqueda."
+    attendees_facebook_twitter_linkedin: "Los asistentes podrán compartir el evento con sus amigos en Facebook, Twitter, LinkedIn y Pinterest."
+    invitation_only_eventbrite_email: "Solamente por Invitación-Los asistentes deben recibir una invitación Eventbrite correo electrónico para registrarse."
+    password_protected: "protegidos con contraseña"
+    search_categories: "Categorías de Búsqueda"
+    select_category: "Selecciona una categoría"
+    select_subcategory: "Seleccione Subcategoría"
+    remaining_ticket: "Entradas restantes"
+    show_num_of_ticket_remaining: "Mostrar el número de entradas restantes en la página de registro"
+    customize_web_address: "Personalizar Dirección Web"
+
+    # download_excel
+  download_excel:
+    sr_num: "Sr. No."
+    order_num: "Código"
+    purchase_date: "Fecha de compra" 
+    no_purchase_available: "No Disponible Compra."
+    no_events_available: "No hay eventos disponibles."
+    
+    #event display attendee
+  event_display_attendee:
+    display_attendee_info: "Muestra información de los asistentes"
+    these_field_require: "Estos campos requieren la recopilación de información durante el registro."
+    ticket_ordered: "billete Pedido"
+    city_home_add: "Ciudad (de su casa)"
+    state_home_add: "Estado (domicilio)"
+    city_work_add: "Ciudad (dirección del trabajo)"
+    state_work_add: "Estado (dirección de obra)"
+    
+    #theme
+  theme:
+    custom_header: "Personalizar encabezado"
+    custom_footer: "Personalizar pie de página"
+    personalize_your_theme: "Personaliza tu tema"
+    choose_a_theme: "Elige un tema"
+    or_design_your_own: "O su propio diseño"
+    display_attendees: "Mostrar asistentes"
+    allow_visitors: "Permitir a los visitantes ver cuáles de sus amigos de Facebook están pasando"
+    add_cutom_html: "Añadir Custom HTML"
+
+  #index
+  event_title:
+    events: "Eventos"
+    unnamed_org_event: "Eventos del Organizador Sin nombre"
+    my_events: "Mis Eventos"
+    referred_events: "Eventos Recomendados"
+    
+  event_index:
+    filter_events_by_organizer: "Filtrar eventos por la organizadora"
+    all_events: "Todos los eventos"
+    status: "estado"
+    sold: "vendido"
+    draft: "borrador"
+    live_events: "Eventos en directo"
+    live: "vivir"
+    completed_events: "Eventos completadas"
+    completed: "terminado"
+    cancelled_events: "Eventos cancelados (1)"
+    no_events_created: "No hay eventos creados."
+    latest: "más reciente"
+    update: "actualizar"
+    regi_terminology: "terminología registro"
+    customize_your_order_form: "Personalizar el formulario de pedido"
+    you_not_have_events: "No tiene ningún evento."
+    create_new_event: "Para crear un nuevo evento,"
+    event_dashboard: "panel Evento"
+    new_event_page _colors: "Nueva pagina de Eventos colores"
+    themes: "temas"
+    learn_about_all: "Entérese de las nuevas características que hemos"
+    recently_launched: "recientemente lanzado"
+    
+    ### invites 
+      # add_attendee
+  invite_add_attendee:
+    invalid_quantity: "No válido cantidad. Introduce una cantidad de 1 o más o importe."
+    add_attendee_add: "añadir"
+    event_db_attendees: "Los asistentes"
+    ticket_type: "Tipo billete"
+    view_more: "Ver más"
+    no_ticket_available: "No hay entradas disponibles para la asignación de los asistentes."
+    payment_type: "Tipo de pago"
+    paid_with_check: "Pago con cheque"
+    paid_with_cash: "Pagado con dinero en efectivo"
+    paid_directly_online_with_PayPal: "Pagado directamente en línea con PayPal"
+    paid_online_non_PayPal: "Pago en línea PayPal no"
+    paid_by_google_checkout: "A cargo de Google caja"
+    complimentary: "cortesía"
+    no_payment_necessary: "Sin pagos necesarios"
+    other: "Otro"
+    other_small: "otro"
+    notes: "Notas"
+    
+      #add_guests
+  add_guests:
+    already_email: "Todo el correo electrónico que ha introducido son ya existe."
+    add_guest: "Añadir huéspedes"
+    add_guests_from_following: "Paso 1: Añadir Invitados de uno de los siguientes:"
+    manually_email: "Introducir manualmente las direcciones de correo"
+    enter_email_separated: "(introduzca emails separados por comas o saltos de línea)"
+
+    #attendees
+  attendees:
+    one_two_three: "123"
+    all: "todo"
+    attendees: "Los asistentes"
+    quick_actions: "Acciones rápidas"
+    edit_ticket_buyer: "Editar Comprador Ticket"
+    cancel_this_order: "Cancelar esta Orden"
+    view_attendee_report: "Ver detalles de los asistentes"
+    resend_confirmation_email: "Reenviar correo de confirmación"
+    print_tickets: "Entradas Imprimir"
+    no_attendees_available: "No hay asistentes disponibles."
+
+  #create 
+  invite_create:
+    enter_name_sender: "Introduzca el nombre del remitente."
+    enter_reply_to_email: "Introduzca Responder al correo electrónico."
+    type_valid_email: "Escriba un error, por favor E-mail"
+    enter_subject_line: "Introduzca la línea de asunto."
+    enter_valid_email: "Ingrese Email válida."
+    select_atleast_one: "Seleccione al menos un registro de borrado."
+    create_your: "Crea tu"
+    invitations: "invitaciones!"
+    name_of_sender: "Nombre del remitente"
+    reply_to: "Responder a"
+    subject_line: "Línea de asunto"
+    customize: "Personalizar"
+    edit_message: "Editar Mensaje"
+    customize_invitations: "Personalizar Invitaciones"
+    change_invitation_color: "Cambiar los colores de invitación y opciones para compartir."
+    text_color: "color del texto"
+    background_color: "color de fondo"
+    link_color: "Enlace color"
+    show_event_image: "Mostrar imagen del evento"
+    show_facebook_share: "Mostrar Facebook Share"
+    show_twitter_share: "Mostrar Twitter Compartir"
+    show_salutation: "Mostrar Tratamiento"
+    create_hello: "¡Hola"
+    greetings: "saludos"
+    dear: "querido"
+    none: "ninguno"
+    done: "HECHO"
+    personalize_your_invitation: "Personaliza tu invitación."
+    create_attendee: "asistente"
+    your_invitaion_to_following: "Usted está invitado a la siguiente prueba:"
+    event_to_time_date_location: "Evento que se celebrará en la siguiente fecha, hora y lugar:"
+    start_date: "Fecha de inicio"
+    end_date: "Fecha de finalización"
+    attend_event: "Asistir a eventos"
+    view_map: "Ver mapa"
+    your_event_pwd_is: "Su contraseña evento es:"
+    this_event_pwd_protected: "Este evento está protegido por contraseña. Registrarse con la contraseña anterior, para asistir a este evento."
+    share_this_event: "Comparte este evento en"
+    facebook: "Facebook"
+    invite_and: "y"
+    twitter: "gorjeo"
+    send_invitation_to: "Enviar una invitación de prueba para"
+    who_should: "¿Quién debe"
+    come: "venir?"
+    remove_selected: "eliminar seleccionado"
+    plus_add_guests: "+ Añadir huéspedes"
+    send_and: "Enviary"
+    schedule: "programar"
+    immediately: "inmediatamente"
+    select_date: "Seleccione Fecha"
+    days: "días"
+    hours: "Horas"
+    before_my_event: "Antes de que mi caso"
+    you_can_only_create_invites_on_a_live_event: "Sólo puede crear invita en un evento en vivo."
+    
+
+    #edit_guest
+  edit_guest:
+    enter_fname: "Ingrese Nombre."
+    enter_lname: "Introducir apellido."
+    enter_valid_email: "Ingrese Email válida."
+    email_should_be_valid: "Correo electrónico debe ser válida."
+    edit_info: "Editar información de"
+
+    #invite_index
+  invite_index:
+    manage_your: "Administre su"
+    scheduled: "Programado"
+    subject: "tema"
+    created_at: "Creado el"
+    no_email_invitations_sceduled: "No hay invitaciones de correo electrónico aún programados."
+    no_email_invitation_draft: "No hay invitaciones de correo electrónico en el proyecto todavía."
+    create_invitation: "Crear Invitaciones"
+
+    #invite_controller
+  invite_controller:
+    email_successfully: "Invitación por correo electrónico enviado con éxito ."
+    invite_email_send_successfully: "Invitación por correo electrónico enviado con éxito ."
+    invite_saved_draft_successfully: "Invitación guarda en el proyecto con éxito ."
+    invite_deleted: "Invitación eliminado correctamente ."
+    
+   ### Layouts
+    #admin
+  layout_admin:
+    admin: "administración"
+    copy_right: "derechos de autor"
+  
+  #application
+  application:
+    home: "INICIO"
+    find_events: "encontrar eventos"
+    create_an_event: "Crear un evento"
+    how_it_works: "¿CÓMO FUNCIONA?"
+    log_in: "Iniciar la sesión"
+    sign_up: "REGISTRO"
+    appli_create_an_event: "Crear un evento"
+    my_profile: "Mi Perfil"
+    my_tickets: "Mis entradas"
+    my_account: "MI CUENTA"
+    logout: "SALIR"
+
+    ##My tickets 
+     #sidebar
+  side_bar:
+    user_not_login: "El usuario canceló ingresa o no autorizó en su totalidad."
+    social: "Social"
+    connect_to_see_attending: "Conéctate para ver los eventos que tus amigos están asistiendo."
+    all_recommendations: "Todas las Recomendaciones"
+    few_orders: "Pocas órdenes"
+    
+    #my_ticket index
+  myticket_index:
+    myticket_my: "mi"
+    mytickets_tickets: "Entradas"
+    current: "corriente"
+    select_print_tickets: "Seleccionar una orden de imprimir billetes, solicitar un reembolso, o póngase en contacto con el organizador."
+    set_up_your_awesome: "Configure su propio evento increíble en unos pocos pasos fáciles y simples!"
+    get_stared: "Consigue Se quedó"
+    all_orders: "Todas las órdenes"
+    recommened: "recomendado"
+    this_week: "Esta semana"
+    no_recommened_event_this_week: "No hay Eventos recomendados para esta semana."
+    view_order: "Ver pedido"
+    
+    #my_ticket view
+  myticket_view:
+    cancel_order: "¿Está seguro de que desea cancelar el pedido?"  
+    for: "para"
+    view_free: "(Gratis)"
+    view_paid: "(pagado)"
+    view_donation: "(donación)"
+    contact_the_host: "Contactar al anfitrión"
+    cancel_order: "Cancelar pedidos"
+    
+    ###organizers
+      #show
+  org_show:
+    event_held: "Eventos Realizados"
+    top_categories: "Categorías Principales"
+    primary_location: "Ubicación primaria:"
+    about: "acerca de"
+    organizer: "organizador"
+    check_out_evnets_org: "Echa un vistazo a los eventos y del organizador para"
+    current_events: "Eventos actuales"
+    attend: "asistir"
+    currently: "Actualmente"
+    not_have_any_live: "No tiene eventos en vivo"
+    past_events: "Eventos Pasados"
+    featured: "Destacado"
+    show_view: "ver"
+    search_results_for: "Resultados de la búsqueda"
+    
+    ### pages
+      #page index
+  page_index:
+    no_contant_link_available: "No hay contenido disponible para este enlace."
+    
+  ###Home
+    # footer
+  home_footer:
+    click_me: "Haga clic en mí"
+    plan: "plan"
+    using: "uso"
+    all_right_reserved: "Todos los derechos reservados"
+    terms_of_services: "Términos de Servicio"
+    privacy_policy: "Política de privacidad"
+    google_plus: "Google más"
+    linked_in: "Linkedin"
+    yahoo: "Yahoo"
+    
+   #home contact_us
+  home_contact_us:
+    feel_free_to_talk: "No dude en hablar con nosotros. Estamos escuchando!"
+    org_an_event: "Organizar un evento? llamar"
+    attending_an_event: "Asistir a un evento y necesita soporte técnico? llamar"
+    calling_outside_the_us: "Llamar fuera de los EE.UU.? marcar"
+    call_us_anytime: "Llámenos en cualquier momento - día o de la noche!"
+    tell_us_more: "Cuéntenos más, así que mejor le puede ayudar:"
+    tell_us_more: "Cuéntenos más,"
+    so_we_can_better_assist_you: "así que mejor le podemos ayudar"
+    call: "llamar"
+    dial: "marcar"
+        
+  home_js:
+    this_field_is_required: "Este campo es obligatorio."
+    type_valid_email_please: "Escriba un error, por favor E-mail."
+    i_am: "estoy"
+    select_one: "Seleccione Uno"
+    an_event_org: "un organizador de eventos"
+    an_event_attendee: "Un asistente de eventos"
+    category_of_my_question: "Categoría de mi pregunta"
+    login_and_password: "Login y contraseña"
+    event_page_design: "Diseño de páginas Evento"
+    fees_payments_invoices: "Honorarios, pagos y facturas"
+    collecting_viewing_attendee: "Recopilación de información y visualización de los asistentes"
+    promoting_an_event: "Promover un evento"
+    management_tools: "herramientas de gestión"
+    sales_i_m_organizing: "Ventas - Estoy organizando un gran evento"
+    unsubscribe: "Darse de baja"
+    unable_to_register: "No se puede registrar"
+    order_confirmation_tickets: "Las órdenes Confirmación / Entradas"
+    details_about_event: "Los detalles sobre un evento"
+    refund: "devolución"
+    email_address: "Dirección de correo electrónico"
+    event_name_url: "Nombre del evento / URL"
+    subject: "tema"
+    details: "Detalles"
+    how_to_send_email_invitation: "¿Cómo enviar invitaciones por correo electrónico"
+    we_have_improved: "Hemos mejorado esta característica! Para obtener más información, visite los tutoriales a continuación."
+
+  ###home facebook login
+        #facebook_login
+  facebook_login:
+    set_your: "Establezca su"
+    pwd_here: "contraseña aquí"
+    details_here: "datos personales aquí"
+    pwd: "contraseña"
+    skip_this_step: "Omita este paso"
+    update: "Actualización"
+
+  #forgot_password
+  forgot_pwd:
+    forget: "olvidar"
+    back_to_login: "Volver a inicio"
+    forgot_log_in: "Iniciar la sesión"
+    forgot_using: "uso"
+    log_in_with: "Iniciar sesión con"
+    connect_with_twitter: "Conéctate con gorjeo"
+    
+   #index
+  home_index:
+    in: "en"
+    Upcoming: "Próximas"
+    change_your_location: "Cambie su ubicación"
+    org_by: "Organizado por"
+    un_org: "Organizador Unnammed"
+    view_more_events: "Ver más eventos"
+    make_your: "Haga su"
+    event_success: "Evento sea un éxito"
+    is: "es"
+    sign_up_get_started: "para inscribirse y empezar."
+    enter_your_email_id: "Ingrese su ID de correo electrónico"
+    
+    #login
+  home_login:
+    start_now: "Comience ahora"
+    free_easy: "es gratis y fácil"
+    remember_me: "Recuérdame"
+    cannot_access: "No se puede acceder a su cuenta?"
+    small_sign_up: "contratar"
+    by_clickin_sign_up: 'Al hacer clic en "Registrarse", confirmo que estoy de acuerdo con el '
+    term_service: "Términos de servicio"
+    login_and: "y"
+    content: "contenido"
+    attending_event: "Asistir a un evento?"
+    login_click_here: "Haga clic aquí"
+    to_access_your_order: "para acceder a su pedido"
+    login_or: "o"
+
+    #logout
+  home_logout:
+    small_home: "casa"
+    small_logout: "logout"
+    find_me_in: "Encuéntrame en"
+    
+    #set_new_password
+  set_new_password:
+    reset: "reajustar"
+    new_pwd: "Nueva contraseña"
+    confirm_pwd: "Confirmar Contraseña"
+    or: "o"
+
+    #sign_up
+  home_signup:
+    start_now_free_easy: "Comienza ahora, es gratis y fácil"
+    sign_up_using: "inscríbase por medio"
+    already_registered: "Ya está registrado?"
+    want_to_know_more: "¿Quieres saber más?"
+    find_out_how: "Descubra cómo"
+    home_can: "lata"
+    help_you: "ayudarle a"
+    sell_out_your_event: "vender su evento!"
+    give_us_call: "Llámenos, estaremos encantados de charlar."
+    
+    #home_controller
+  home_controller:
+    home_js: "Que se haya registrado con éxito. Correo electrónico de verificación enviado a su ID de correo electrónico. Verifique que su cuenta Entrar aquí ."
+    you_join_successfully: "Te uniste con éxito este programa."
+    you_register_logged: "Has registrado y has ingresado con éxito ."
+    you_logged_in_successfully: "Que se haya conectado con éxito ."
+    your_account_inactivate: "Su cuenta está inactiva. Comuníquese con el administrador para activarlo ."
+    something_wrong_yor_facebook_amount_try_again: "Algo está mal con su cuenta de Facebook. Inténtalo de nuevo o Ingresar / Registrarse a través del sitio."    
+    invalid_user_pwd_combination: "inválido combinación usuario / contraseña"
+    we_send_email_instructions: "Te hemos enviado un e-mail con las instrucciones para recuperar la contraseña. Por favor, consultar su correo electrónico ."
+    invalid_email_address: "Dirección de correo electrónico no válida. Cuenta con la dirección de correo electrónico no existe ."
+    your_account_activated: "Su cuenta activa con éxito ."
+    your_account_does_not_exists: "Cuenta de usuario no existe. Por favor, inténtelo de nuevo ."
+    password_reset_successfully: "Contraseña restablecido correctamente ."
+    your_pwd_time_limit_expired: "Su plazo antes señalado contraseña ha sido vencido. Por favor envíe de nuevo."
+    your_pwd_recovery_does_not_exists: "Su solicitud set password no existe."
+    your_que_send_successfully_admin_contact: "Su pregunta ha enviado satisfactoriamente. Administrador pondrá en contacto con usted pronto ."
+    you_logged_out_successfully: "Usted haya abandonado el éxito ."   
+     
+  ### purchases
+    #cancel
+  purchases:
+    cancel_js: "Seleccione al menos un boleto para cancelar!"
+    quantity_of: "Cantidad de"
+    enter_quantity_of: "Introduzca la cantidad de"
+  
+    #show
+  purchases_show:
+    work_info: "Información de Trabajo"
+    phone: "teléfono"
+
+    #purchases_controller
+  purchase_controller:
+    order_cancel: "Orden Cancelado éxito ."
+    conformation_email_successfully: "Email confirmación se ha enviado satisfactoriamente ."
+
+  ### Search 
+    #Search index
+  search_index:
+    local: "local"
+    near: "cerca"
+    all_dates: "Todas las fechas"
+    today: "hoy"
+    tomorrow: "mañana"
+    this_week: "Esta semana"
+    this_weekend: "Este fin de semana"
+    next_week: "Siguiente semana"
+    this_month: "Este mes"
+    all_prices: "Todos los precios"
+    organized_by: "Organizado por"
+    category: "categoría"
+    all_categories: "Todas las categorías"
+    architecture: "arquitectura"
+    art: "arte"
+    design: "diseño"
+    diy_crafts: "Bodas y eventos"
+    no_events_found_here: "No se han encontrado eventos aquí."
+
+  ### tips
+    #tips file
+  tip:
+    no_tips_available: "No hay consejos disponibles."
+
+  ###user_mail
+    #api_key_generated
+  api_key_generated:
+    your_api_key_generated: "Su clave de API se genera con éxito en"
+    api_key_is: "API clave es"
+    thanks_for_joining: "Gracias por unirte y tienen un gran día!"
+    system_admin: "Administrador del sistema."
+
+    #create_event_email
+  create_event_email:
+    you_successfully_created_new_event: "Ha creado un nuevo evento a"
+    event_title_is: "Título del evento es"
+    to_see_to_the_site: "Para ver el evento en el sitio, sólo tienes que seguir este enlace"
+
+   #forgot_pwd_email
+  forgot_pwd_email:
+    request_pwd_successfully: "Usted solicita una contraseña olvidada genearted éxito. Haga clic en siguiente enlace para restablecer tu contraseña."
+    forgot_link: "enlace"
+   
+  #multi_user_access
+  multi_user_access:
+    you_are_invited_to: "Usted está invitado a"
+    click_below_link: "Haga clic en siguiente enlace para establecer su contraseña."
+
+  #send invite email
+  send_invite_email:
+    welcome_to: "Bienvenido a"
+    you_have_successfully_signed: "Usted ha sido suscrito con éxito a"
+    your_email_id_is: "su ID de correo electrónico es"
+    to_login_site_follow_link: "Para acceder al sitio, sólo tienes que seguir este enlace"
+ 
+   ### users
+   #change_org_theme
+  change_org_theme:
+    preview_window: "ventana de previsualización"
+    this_preview_page_colors: "Esta es una vista previa de su página de perfil de colores."
+    selecting_color_changed: "Selección de una muestra de color a la izquierda permite que los colores se pueden cambiar."
+  
+  #user form
+  user_form:
+    prohibited_this_user: "prohibido este usuario se guarden"
+    
+  #user edit  
+  user_edit:
+    editing_user: "Edición usuario"
+    
+  #user index   
+  user_index:
+    listing_users: "Listado de usuarios"
+  
+  #user new
+  user_new:
+    new_user: "Nuevo usuario"  
+  
+  #user profile
+  user_profile:
+    event_logo_not_valid: "Tipo de evento Logo no es válida."
+    not_authorized_to_upload: "Usted no está autorizado a cargar la imagen"
+    enter_valid_alpha_numeric: "Introduzca una base de datos alfanuméricos válidos."
+    type_valid_alpha_numeric: "Escriba una base de datos alfanuméricos válidos."
+    unnamed: "sin nombre"
+    add_new_org: "Crear Nuevo Organizador"
+    manage_org: "Gestione Organizador"
+    profile: "perfil"
+    create_single_destination: "Crear un solo destino para todos sus eventos."
+    org_name: "nombre del Organizador"
+    about_the_org: "Sobre el organizador"
+    description: "descripción"
+    also_use_this_description: "También utilizar esta descripción para que las páginas de eventos"
+    optional_org_settings: "Configuración Organizador opcionales"
+    select_info_you_want_to_display: "Seleccione la información que desea visualizar en la página el perfil de este organizador."
+    org_info: "info Organizador"
+    show_my_website: "Mostrar mi página web"
+    show_no_of_event_held: "Mostrar el número de eventos que se celebran"
+    show_top_event_categories: "Mostrar las categorías de eventos"
+    show_top_event_locations: "Mostrar los lugares de actividades principales"
+    event_info: "información del evento"
+    display_only_events_this_org: "Mostrar sólo los eventos de este organizador"
+    display_all_my_events: "Mostrar todos los eventos del"
+    featured_event: "Evento Destacado"
+    select_event: "Seleccione Evento"
+    org_page_url: "Página de organización Url"
+    profile_change: "cambiar"
+    promote_your_profile: "Promociona tu página de perfil en su página web"
+    quickly_install_button: "Instalar un botón que enlaza con rápidamente su"
+    profile_page: "página de perfil."
+    choose_button: "Elige un botón"
+    profile_copy: "copie"
+    paste_this_code_on_website: "pega este código para su uso en su sitio web"
+    add_social_network_profile: "Añadir las redes sociales a tu perfil"
+    integrate_social_networking_feed_in_profile: "Integrar fuentes de redes sociales en mi página de perfil"
+    fb_page_link: "Facebook Página Enlace"
+    add_my_twitter_username: "Añadir mi nombre de usuario de Twitter o feed búsqueda"
+    user_name: "Nombre de usuario"
+    search_query: "consulta de Búsqueda"
+    customize_profile_colors: "Personalizar los colores del perfil"
+    choose_template: "Elija una plantilla de Clone Eventbrite"
+    choose_custom_colors_bg: "Elija los colores / de fondo personalizadas"
+    advanced: "avanzado"
+    color_display_options: "Opciones de visualización de color"
+    always_apply_selected_page_colors: "Aplique siempre la página de perfil colores seleccionados"
+    apply_my_event_page_to_visiting_page: "Aplicar mis páginas de sucesos colores cuando se visita desde una página de eventos"
+
+    #user controller
+  users_controller:
+    org_account_updated: "Cuenta Organizador ha actualizado correctamente."
+    org_info_save_successfully: "Información Organizador guardado correctamente."
+    user_successfully_created: "Usuario sido creado con éxito."
+    user_successfully_updated: "Usuario se ha actualizado correctamente."
+
+  ###Wallet index
+    # index
+  wallet_index:
+    atleast_one_record_withdraw: "Seleccione al menos un registro de retirarse ."
+    earnings: "ganancias"
+    event_earn: "Gana Evento"
+    due: "debido"
+    withdraw_amt: "Retirar Importe"
+    refferral_event: "Refferral Ganar"
+    referral_code: "Código de referencia"
+    capital_due: "DEBIDO"
+    capital_paid: "PAGADO"
+    affilliate_earn: "Afiliados Gane"
+    affiliate_code: "Código de Afiliado"
+    chk_all: "Ver Todos"
+    un_all: "Deseleccionar Todos"
+    
+   #withdraw  
+  wallet_withdraw:  
+    not_withdraw_amt: "Usted no puede retirar cantidad superior"
+    enter_valid_amt: "Ingrese el monto válida."
+    withdraw: "retirar"
+    add_amt: "Agregue la cantidad"
+    confirm: "confirmar"
+    select_withdraw_mode: "Seleccione el modo de Retiro"
+    paypal: "payPal"
+    net_banking: "Net Banking"
+    bank: "Banco"
+    nm: "nombre"
+    ifsc: "Código IFSC"
+    holder: "El Titular de Cuenta Nombre"
+    accnum: número de cuenta"
+    br: "rama"
+    cheque: "Comprobar"
+    detail: "Detalles"
+    gateway_name: "Nombre de puerta de enlace"
+    gateway_account: "cuenta de puerta de enlace"
+    my_wallet: "Mi billetera"
+    wallet: "billetera"
+    trxndetail: "Detalles de Transacción"
+    amt: "retirar Monto"
+    trxnfees: "Tarifas de transacción"
+    you_will_get: "Obtendrá"
+    gateway_acc: "cuenta de puerta de enlace"
+    note: "Nota: Las tarifas de procesamiento se les cobrará en el monto de su retiro durante este proceso."
+
+  #wallet controller
+  wallet_controller:
+    withdraw_request_send: "Retirar Solicitar enviar correctamente."
+
+  ### tickets
+  #add attendee
+  add_attendee:
+    add_attendee_attendee: "Los asistentes"
+    fnm_fields_required: "Son obligatorios Nombre Campos."
+    lnm_fields_required: "Se precisa el apellido Campos."
+    email_fields_required: "Se requieren Email campos."
+    home_city_field_required: "Se requieren para la ciudad local Campos."
+    home_state_field_required: "Se requieren Inicio Estado campos."
+    work_city_field_required: "Se requieren City campos de trabajo."
+    work_state_field_required: "Se requieren Estado campos de trabajo."
+    job_title_field_required: "Se requieren Título del Trabajo campos."
+    company_field_required: "Se requieren Compañía campos."
+    blog_field_required: "Se requieren Blog campos."
+    website_field_required: "Se requieren Website campos."
+    attendee_info: "Información del Participante"
+    waivers: "Renuncias"
+    bill_state: "proyecto de ley_estado"
+    home_state: "casa_estado"
+    
+  #ticket order  
+  tickets_order:
+    credit_card_no_require: "Se requiere el número de tarjeta de crédito de campo."
+    expire_date_field_require: "Se requiere Fecha de vencimiento de campo."
+    ccv_be_3_digit_no: "CCV debe ser el número de 3 dígitos."
+    ccv_be_3_digit_numeric_only: "CCV debe ser único valor numérico de 3 dígitos."
+    fname_field_required: "Se requiere Nombre de campo."
+    lname_field_required: "Es obligatorio Apellido Campo."
+    city_field_require: "Se requiere Campo Ciudad."
+    state_field_required: "Se requiere Estado del campo."
+    zip_code_required: "Se requiere Código postal Campo."
+    country_code_required: "Se requiere campo País."
+    fill_your: "Llene su"
+    credit_card_num: "Número de Tarjeta de Crédito"
+    expire_date: "Fecha de Vencimiento"
+    CCV: "CCV"
+    zip_code: "código postal"
+
+    ###manage event
+    #common banner
+  common_banner:  
+    sure_cancel_event: "¿Está seguro que desea cancelar este evento?"
+    permanently_delete_event: "¿Está seguro que desea eliminar este evento?"
+    small_draft: "borrador"
+    complete: "completar"
+    delete: "borrar"
+    find_attendees: "Encontrar asistentes"
+            
+    #edit menu
+  edit_menu:
+    design: "diseño"
+    manage: "gestionar"
+    
+    #manage event sidebar
+  manage_event_sidebar:
+    cusomize_order_form: "Personalizar formulario de pedido"
+    edit_order_confirmations: "Editar confirmaciones de pedidos"
+    event_type: "Tipo de evento"
+    language: "idioma"
+    add_news_and_updates: "Añadir noticias y actualizaciones"
+    invite: "invitar"
+    manage_invitations: "Gestione Invitaciones"
+    analyze: "analizar"
+    google_analytics: "Google analítica"
+    add_attendees: "Añadir asistentes"
+    all_attendees: "Todos los asistentes"
+    waitlist: "Lista de Espera"
+    waitlist_settings: "Configuración de Lista de Espera"
+    sell: "vender"
+    create_promotional_codes: "Crear códigos de promoción"
+    create_affiliate_programs: "Crear programas de afiliados"
+    
+    #add affiliate code
+  add_affiliate_code:
+    enter_valid_affiliate_code: "Introduzca un código de afiliado válido."
+    only_alpha_numeric_char: "Introduzca sólo caracteres alfanuméricos."
+    enter_amt_percentage_referral_fee: "Por favor ingrese ya sea una cantidad o un porcentaje de tarifa de referencia."
+    create_a_new: "Crear un nuevo"
+    affiliate_program: "Programa de Afiliados"
+    code_of_affiliate_program: "Código de su programa de afiliados"
+    spaces_apostrophes_non_numeric_not_allowed: "No se permiten espacios, apóstrofes y caracteres no alfanuméricos."
+    ex_earlybirdspecial_membersonly_dc121232: "(Ejemplos: earlybirdspecial, MembersOnly, dc121232, etc)"
+    off_ticket_price: "de descuento sobre precio"
+    make_public: "Hacer pública"
+    public_affiliates_page: "Página afiliados pública"
+    
+    #add promotional code
+  add_promotional_code:
+    type_only_alpha_numeric_character: "Introduzca sólo caracteres alfanuméricos "
+    enter_amt_or_percentage_ticket_price: "Por favor ingrese ya sea una cantidad o un porcentaje de descuento del precio del billete."
+    select_atleast_one_ticket: "Por favor, seleccione al menos un tipo de entrada."
+    dont_have_any_ticket: "Usted no tiene ninguna entrada para la selección. Este código no se puede generar."
+    discount_amt_should_not_greater_or equal_select_ticket_price: "Importe de descuento no debe ser mayor o igual al precio del billete seleccionado ."
+    enter_num_use_promotional_code: "Ingresa el número de usos de Código Promocional."
+    promotional_code: "Códigos promocionales"
+    code_type: "Tipo de código"
+    discount: "descuento"
+    access: "acceso"
+    code: "código"
+    spaces_apostrophes_non_numeric_not_allowed_with_example: "Los espacios, apóstrofes y caracteres que no son alfanuméricos (excepto '-' '.', '_', '@' Y) No se admiten. (Ejemplos: johnsmith@gmail.com, earlybirdspecial_08, dc-121232)"
+    file_must_be_csv_upto_3000_code_separated_comma_maxi_256_spaces_apostrophes_non_numeric_not_allowed_with_example: "El archivo debe ser *. Csv y puede contener hasta 3.000 códigos, separados por comas, o las recogidas en líneas separadas. Máximo de 256 caracteres por código. Los espacios, apóstrofes y caracteres no alfanuméricos (excepto '-' '.', '_', '@' Y) no se les permite."
+    discount_amt: "Monto de Descuento"
+    applies_to: "Se aplica a"
+    all_ticket_types: "Todos los tipos de entradas"
+    discount_code_only_applied_paid_tickets: "Códigos de descuento sólo se pueden aplicar a los billetes pagados."
+    uses: "utiliza"
+    not_hidden: "nothidden"
+    unlimited: "ilimitado"
+    starts: "Inicia"
+    minutes_before_event_starts: "Minutos antes de que comience el evento."
+    ends: "Final"
+    when_sales_end: "Al final de ventas"
+    minutes_before_event_end: "Minutos antes de que finalice el evento."
+    tip: "punta"
+    after_creating_promotional_code_embed_code_in_link_publish_website_email_blog_etc: "Después de crear un código de promoción puede incrustar el código en un enlace para publicar en su sitio web, blog, un correo electrónico, etc con el formato siguiente. Este enlace le permitirá al solicitante de registro para ver los precios con descuento o billetes ocultos en la página del evento sin tener que introducir el código."
+    disc_rate_less_than_or_equal_100: "Tasa de descuento debe ser menor o igual que 100."
+    enter_start_date: "Por favor seleccione la fecha de inicio."
+    enter_end_date: "Por favor seleccione la fecha final."
+    enter_date: "Por favor, ingrese la fecha."
+    uses_less_than_or_equal_selected_ticket_qty: "Número de usos debe ser menor que o igual a la cantidad de billetes seleccionado."
+    validate_start_end_date: "La fecha de inicio debe ser anterior a la fecha de finalización."
+    
+    
+
+  # copy
+  manage_event_copy:
+    new_event_name_is_required: "Se requiere un nuevo nombre de evento ."
+    copy_this_event: "Copia este Evento"
+    may_event_quickly_create_new_event_same_description: "Puede copiar este evento para crear rápidamente un nuevo evento con las mismas características, tipos de boletos, encuesta, y las fechas."
+    you_may_also_whatever_change_new_event: "Usted también puede hacer los cambios que sean necesarios para el nuevo evento, tanto antes como después de la publicación."
+    you_must_press_publish_event_button_attendee_registration: "Usted debe presionar el botón Evento Publicar en la página siguiente antes de que esté disponible para los registros de los asistentes al evento."
+    new_event_name: "Nuevo Nombre del evento"
+
+  #customize order form
+  customize_order_form:
+    customize_order: "Personalizar Orden"
+    form: "forma"
+    what_info_you_collect: "¿Qué tipo de información desea recoger?"
+    you_have_3_option: "Usted tiene 3 opciones"
+    collect_only:  "Recoge sólo"
+    basic_info: "información básica"
+    email_name: "correo electrónico, nombre"
+    collect_info_below_for_the: "Recopilar información a continuación para la"
+    ticket_buyer_only: "comprador billete único"
+    collect_info_below_for: "Recopilar información a continuación para"
+    each_attendee: "cada asistente"
+    which_ticket_type_collect_info: "¿Para qué tipos de boletos no desea recopilar información?"
+    deselect_all: "Deseleccionar todo"
+    info_to_collect: "Información para recoger"
+    include: "incluir"  
+    required: "necesario"
+    mr_mrs_etc: "Sr., Sra., etc"
+    address_info: "Información de dirección"
+    other_info: "Otro tipo de información"
+    work: "trabajar"
+    company: "empresa"
+    organization: "organización"
+    work_address: "Dirección del trabajo"
+    are_you_sure_delete_this_que: "¿Está seguro de que desea eliminar esta pregunta?"
+    add_que: "Añadir pregunta"
+    registration: "registro"
+    options: "Opciones"
+    optional_setting: "Configuración opcional"
+    title_your_attendee_info_page: "Título de la página de información de asistentes"
+    instructions_for_your_attendees: "Las instrucciones para los asistentes"
+    registeration_time_limit: "Límite de tiempo de inscripción"
+    off_ticket_price: "% De descuento sobre precio de las entradas"
+    ticket_option: "Opciones de entrega de entradas"
+    eticket: "eEntradas"
+    will_call_pickup: "Llamará pickup"
+    msg_display_after_ticket_sales: "Mensaje para mostrar después de la venta de entradas ya ha finalizado"
+    attendee_manage: "Gestión de asistentes"
+    allow_attendee_update_info_after_registration: "Permitir asistente para actualizar la información después de Registrarse"
+    refund_policy: "Política de devoluciones"
+    allow_attendee_request_refund_purchased_tickets: "Permitir asistente a solicitar reembolsos por boletos comprados"
+    customize_minutes: "acta"
+    tool_tip_collect_info_ticket_buyer: "Recopilar información de sólo el comprador billete o de todos los asistentes (boletos comprados)."
+    tool_tip_include_msg_registration_process: "Incluya un mensaje a los asistentes sobre el proceso de registro."
+    tool_tip_attendee_transaction_time_limit: "El límite de tiempo de transacción de asistentes bloquea entradas como pendiente de transacciones para el período de tiempo especificado hasta que el asistente finalice el plazo de registro o el tiempo se ha superado."
+    tool_tip_if_transaction_does_not_occure: "Si la transacción no occure en plazo especificado a continuación se dará a conocer la compra de entradas. Esto es para evitar la sobreventa de billetes."
+    tool_tip_allow_ticket_buyer: "Deje que el comprador billete para seleccionar un método de entrega de billetes alternativa"
+    enter_0_to_disable_registration_time: "Introduzca 0 Dejar en blanco para desactivar el tiempo de registro"
+    time_should_be_greate_than_one: "Tiempo de registro debe ser numérico y mayor que o igual a 0."
+    select_at_least_one_ticket: "Seleccione al menos 1 ticket."
+    
+        
+  #edit order confirmation
+  edit_order_confirmation:
+    edit_order: "Editar para"
+    confirmations: "Confirmaciones"
+    customize_email: "Personalizar Email"
+    your_attendees_receive_email_registration_confirming_order: "Los asistentes recibirán un correo electrónico después de Registrarse confirmar su orden."
+    default_reply_email_address: 'Dirección "responder a" email por defecto'
+    attachments: "Adjuntos"
+    attache_pdf_tickets_confirmation_email: "Conecte boletos PDF en el correo electrónico de confirmación"
+    msg_display_confirmation_email: "Mensaje que se mostrará en el correo electrónico de confirmación"
+    note_plain_text_only: "Nota: Sólo Texto sin formato"
+    view_email_pdf_ticket_example: "Ver el email y el ejemplo Ticket PDF"
+    customize_confirmation_webpage: "Personalizar página de confirmación del pedido"
+    your_attendees_also_config_page_when_order_completed: "Los asistentes también serán llevados a una página de confirmación dentro de su navegador cuando finalice su orden."
+    redirect_users_your_own_webpage: "Redirigir a los usuarios a su propia página web"
+    once_the_order_processed_text_below_enter_website: "una vez que la orden se procesa, borrar todo el texto de abajo y entrar en su página web URL (incluyendo http://)"
+    note_html_available: "Nota: HTML disponible."
+
+  #google analytic
+  google_analytic:
+    enter_valid_google_analytic_code: "Introduzca un código de Google Analytic válida."
+    enter_google_analytics_ua_num: "Escriba Google Analytics Número UA"
+    about_google_analytics: "Acerca de Google analítica"
+    if_you_use_google_analytics_full_ua_num: "Si utiliza Google Analytics entrar su número de UA completo."
+    for_example_ua: "Por ejemplo UA-000000-0"
+    for_info_set_up_account: "Para obtener más información o para abrir una cuenta, visite:"
+    google_analytics: "http://www.google.com/analytics"
+  
+    # index 
+  manage_event_index:
+    dashboard: "salpicadero"
+    page_url: "URL de la página"
+    days_to_event: "Días a eventos"
+    page_views: "Impresiones de Página"
+    ticket_sold: "entradas vendidas"
+    tickets_available: "Entradas disponibles"
+    download_purchase_report: "Descargar Informe Compra"
+    total_sales: "Ventas totales"
+    gross_sales: "Ventas brutas"
+    total_manual_sales: "Ventas Totales Manual"
+    capital_total_sales: "VENTAS TOTALES"
+    fees_paid: "Comisiones Pagadas"
+    total_net_sales: "Total de ventas netas"
+    email_invitation_sent: "Invitaciones de correo electrónico enviados"
+    send_invitation: "Enviar invitaciones"
+    recent_orders: "Pedidos recientes"
+    no_order_this_event_yet: "No hay pedidos para este evento todavía."
+    recent_attendees: "Los asistentes recientes"
+    no_attendees_this_evnet_yet: "No hay asistentes a este evento todavía."
+    page_link: "Enlace a la página"
+
+    #list affiliate code
+  list_affiliate_code:
+    mange_affiliate_programs: "Administrar los programas de afiliados"
+    create_more_codes: "Crear más códigos"
+    affiliate_name: "Nombre afiliado"
+    visits: "Visitas"
+    sales: "venta"
+    paid: "pagado"
+    actions: "Acciones"
+    are_sure_delete_code: "¿Está seguro que desea eliminar este código?"
+
+    #list promotional
+  list_promotional_code:
+    manage_promotional_codes: "Gestione códigos promocionales"
+    discount_codes: "Códigos de Descuento"
+    discount_code: "Código de Descuento"
+    started: "Introducción"
+    small_days: "días"
+    minutes: "acta "
+    before_event: "antes del evento"
+    no_limits: "No Límites"
+    access_codes: "Códigos de Acceso"
+    
+    # new and updates
+  new_and_updates:
+    no_update_added_yet: "Sin embargo actualizada añadió."
+  
+    # orders
+  manage_event_orders:
+    download_excel_report: "Descargar Informar sobresalir"
+    date_range: "Rango de fechas"
+    since_sales_started: "Ya comenzaron las ventas"
+    this_week: "Esta semana"
+    this_month: "Este mes"
+    this_year: "Este año"
+    custom_date_range: "Rango de fechas personalizado"
+    sort_by: "Ordenar por"
+    date_descending: "Fecha Descendente"
+    date_ascending: "Fecha ascendente"
+    email_ascending: "Enviar ascendente"
+    email_descending: "Enviar Descendente"
+    amount_ascending: "monto ascendente"
+    amount_descending: "importe Descendente"
+    per_page: "por página"
+    qty: "Cantidad"
+    search_for_orders: "Búsqueda para las órdenes"
+    ordered_by: "Ordenado de"
+    new_on: "en"
+    total: "Total"
+  
+    # Question
+  manage_event_question:
+    question_field_required: "Es obligatorio Campo pregunta."
+    all_options_fields_required_if_you_want_fill: "Todos los campos de opciones son obligatorios. Si usted no quiere llenarlo continuación, haga clic en la cruz por esa opción."
+    waiver_field_required: "Es obligatorio Campo Waiver."
+    select_atleast_1_ticket: "Seleccione al menos 1 ticket."
+    you_must_aleast_one_choice: "Usted debe tener una opción aleast."
+    edit_a: "Editar un"
+    create_new: "Crear nuevo"
+    Question: "pregunta"
+    question_type: "tipo de pregunta"
+    add_choice_limit: "Añadir Límite de elecciones"
+    disable_choice_limit: "Desactivar Límite de elecciones"
+    options_available: "Las opciones disponibles"
+    add_another_option: "Añadir otra opción"
+    show_que_for_specific_ticket_types: "Mostrar esta pregunta por los tipos de entradas específicas"
+    show_attendee_answer_this_que_order_confirmation: "Mostrar la respuesta de asistentes a esta pregunta en la confirmación de la orden"
+
+  # type and language
+  type_and_language:
+    set_event_type: "Establecer el tipo de evento"
+    attendees_will_see_settings_select: "Los asistentes podrán ver los seleccionados"
+    ticketed_event: "evento con entradas"  
+    choose_option_ticket_eg_example: "Elija esta opción si el evento es un evento con boleto (por ejemplo, la música y las artes escénicas, comedia, festivales, etc) Términos Ejemplo:. Comprar entradas, información de entradas, Tipo billete"
+    registration_event: "Evento registro"
+    choose_option_registration_event_eg: "Elija esta opción si el evento es un evento de registro (por ejemplo, conferencia, evento de resistencia, etc.)"
+    example_registration_info_type: "Términos Ejemplo: Registro, información de registro, registro Tipo"
+    language_regional_settings: "Idioma y Configuración regional"
+    your_event_display_date_time_language: "Su evento se mostrará en la fecha, hora y formato de idioma de su elección."
+    save_changes: "Guardar cambios"
+    
+  #waitlist enable
+  waitlist_setting:
+    waitlist_enable: "Lista de Espera Activa"
+    waitlist_trigger: "disparo de Lista de Espera"
+    activate_waitlist_ticket_sells_out: "Activar lista de espera cuando este tipo de entrada se agota"
+    capacity: "capacidad"
+    active_waitlist_total_event_capacity: "Activar lista de espera cuando se supera la capacidad total del evento"
+    maximum_waitlist_size: "Tamaño máximo de Lista de Espera"
+    zero_for_unlimited: "Zero para un número ilimitado"
+    attendee_info_collected: "Información recopilada de asistentes"
+    full_name: "Nombre Completo"
+    phone_number: "número de teléfono"
+    edit_waitlist_response_ticket_release_msg: "Edite la respuesta Lista de Espera y entradas mensajes de liberación"
+    you_editing_auto_response_msg: "Que está editando el mensaje Auto-Respuesta"
+    edit_waitlist_ticket_release_msg: "Editar la Lista de Espera Ticket mensaje liberación"
+    maximum_time_attendee_ticket_release_msg: "Tiempo máximo de asistentes tiene que responder a entradas mensaje liberación"
+    until_next_waitlist_postion_contacted: "Hasta que se contactó posición siguiente lista de espera"
+    enable: "permitir"
+    disable: "inhabilitar"
+    
+    #manage event controller
+  manage_event_controller:
+    info_save_successfully: "Información guardado correctamente ."
+    que_added_order_successfully: "Pregunta se añade a oreder Formulario éxito ."
+    que_deleted_order_successfully: "Pregunta se elimina del formulario Oreder éxito ."
+    update_is_required: "Se requiere actualización."
+    update_added_successfully: "Update añadido correctamente ."
+    update_updated_successfully: "Actualizar actualizado correctamente ."
+    update_delete_successfully: "Actualizar eliminado correctamente ."
+    google_analytics_saved_successfully: "Google Analytics Código guardado correctamente ."
+    order_info_updated_successfully: "Información para el pedido actualizado correctamente ."
+    waitlist_settings_saved_successfully: "Configuración de lista de espera han guardado correctamente ."
+    edit_promotional_code: "Editar código promocional"
+    promotional_code_added_successfully: "Código promocional añadido con éxito ."
+    promotional_code_updated_successfully: "Código promocional actualizado correctamente ."
+    promotional_code_deleted_successfully: "Código promocional eliminado con éxito ."
+    affiliate_code_added_successfully: "Código de afiliados Alta éxito ."
+    affiliate_code_updated_successfully: "Código de afiliados actualizado correctamente ."
+    affiliate_code_deleted_successfully: "Código de afiliados eliminado con éxito ."
+    event_copied_successfully: "Evento copiado correctamente ."
+    event_cancelled_successfully: "Evento cancelado con éxito ."
+    event_submitted_publishing_wait_admin_approval: "Evento presentado para su publicación. Espere a que la aprobación del administrador ."
+    event_published_successfully: "Evento publicado correctamente ."
+    event_deleted_successfully: "Evento eliminado correctamente ."
+
+    ### manage account
+  # manage account
+  account_sidebar:
+    account: "cuenta"
+    contact_info: "Información del Contacto"
+    change_pwd: "Cambiar contraseña"
+    email_preferences: "Preferencias de correo electrónico"
+    payment_account: "Cuentas de pago"
+    multi_user_access: "Acceso multiusuario"
+    unused_org: "Los organizadores no utilizados"
+    referral_program: "Programa de Referidos"
+    affiliate_program: "Programa de Afiliados"
+    my_earnings: "Mis Ganancias"
+    account_cancelled_orders: "Las órdenes canceladas"
+    close_account: "Cerrar cuenta"
+  
+  #account top 
+  account_top:
+    account_since: "cuenta desde" 
+   
+   # add user form  
+  add_user_form:
+    email_address_valid: "E-mail es válido!"
+    edit_permissions_for: "Editar permisos para"
+    add_new_email_address_to_this_account: "Añadir Nueva Dirección de correo electrónico a esta cuenta"
+    give_user_access_your_account_add_user_email: "Para dar a un usuario acceso a su cuenta, agregar la dirección de correo electrónico del usuario. El envío se hará en un vínculo que les permite configurar una contraseña para su cuenta."
+    add_user_form_user: "usuario"
+    grant_this_user_access_to: "Otorgar acceso a este usuario a"
+    selected_events_only: "Eventos seleccionados sólo"
+    select_all_events: "Seleccione Todos los eventos"
+    deselect_all_events: "Desmarque Todos los eventos"
+    actions_this_user_perform: "Acciones del usuario pueden realizar"
+    all_actions: "Todas las acciones"
+    selected_actions_only: "Sólo acciones seleccionadas"
+    create_new_events: "Crear nuevos eventos"
+    edit_event_details_including_payment_options: "Editar detalles del evento sin incluir las opciones de pago "
+    edit_ticket_types: "Editar tipos de boletos"
+    customize_registration_page: "Personalizar la página de registro"
+    edit_payment_options_eg: "Editar opciones de pago (por ejemplo, pagos de tarjetas de crédito, PayPal, Google caja)"
+    view_order_attendee_repots: "Ver informes de pedidos y los asistentes (sólo lectura)"
+    manage_orders_and_attendees: "Gestionar pedidos y asistentes"
+    manage_discount_codes: "Manejar los códigos de descuento"
+    manage_affiliate_links: "Administrar vínculos de afiliación"
+    send_invites_manage_contacts: "Enviar invitaciones, gestionar contactos"
+    email_attendees: "asistentes de correo electrónico"
+    view_fees_and_invoices: "Ver tarifas y facturas"
+    check_in_attendees: "Llegada asistentes"
+    at_the_door: "En la puerta"
+    access_and_edit_org_profile: "El acceso y editar Organizador Perfil"
+    auto_assign_num_to_attendees: "El acceso y editar Organizador Perfil"
+    this_user_receive_copy_of: "Este usuario debe recibir una copia de"
+    all_emails: "Todos los correos electrónicos"
+    selected_emails_only: "Los correos electrónicos seleccionados solamente"
+    order_confirmations: "confirmaciones de pedidos"
+    monthly_invoices: "facturas mensuales"
+    contact_the_organizer: "Póngase en contacto con el Organizador"
+    no_emails: "No hay mensajes de correo electrónico"
+    
+    # manage account affiliates
+  manage_account_affiliates:
+    refferal_link: "Refferral Enlace"
+    site_visits: "VISITAS"
+    tickets_sold: "ENTRADAS VENDIDAS"
+    capital_sales: "VENTAS"
+    your_share: "SU PARTE"
+    you_have_not_join_affiliates_till: "Usted no se ha inscrito ningún afiliados hasta ahora."
+    join_now: "Únete ahora"
+    affiliate_program: "Programa de Afiliados"
+    faq_s: "Preguntas frecuentes"
+    
+    #apikey
+  manage_account_apikey: 
+    your_api_user_key: "Su clave de API de usuario"
+    what_is_api_user_key: "¿Qué es una clave de API de usuario?"
+    user_key_unique_assigned: "La clave de usuario es una cadena única asignada por" 
+    which_identifies_user_API_call: "que identifica al usuario realizar una llamada a la API."
+    only_this: "este"
+    replaces: "reemplaza"
+    basic_user_pwd_authentication: "autenticación básica de usuario / contraseña"
+    a_valid_user_key_recommended_user_authentication: "Una de las claves de usuario válido es el método recomendado para la autenticación de usuario con el"
+    API: "API."
+    how_different_application_key: "¿Cómo es esto diferente a una clave de aplicación?"
+    the_application_key_string_assigned_by: "La clave de la aplicación es una cadena asignada por"
+    which_identifies_application_making_method_call: "que identifica la aplicación que efectúa la llamada al método."
+    you_might_have_many_keys_only_have_one_user_key: "Es posible que tenga muchas teclas de aplicación, pero sólo tendrá una clave de usuario."
+    more_details_on_the: "Más detalles sobre el"
+    only_api: "API"
+    request_application_key: "Solicite una clave de aplicación"
+
+    #charges
+  manage_account_charges:
+    charges: "Cargos"
+    credits: "Créditos"
+    you_have_no_charges_or_credits_your_account: "No tiene cargos o abonos en la cuenta."
+    
+    #close_account
+  manage_account_close_account:
+    please_provide_reson_you_are_leaving: "Proporcione razón por la que está saliendo."    
+    plase_enter_close_text_box: 'Por favor, ingrese "CIERRE" en el cuadro de texto.'
+    plase_enter_current_pwd: "Introduzca su contraseña actual."
+    close: "cerrar"
+    thank_you_for_using: "Gracias por usar"
+    event_if_there_anything_keep_please_let_know: "Eventos. Si hay algo que podemos hacer para que usted mantenga con nosotros, por favor háganoslo saber."
+    please_take_moment_let_know_you_are_leaving: "Por favor tome un momento para dejarnos saber qué te vas"
+    i_do_recall_signing_up_for: "No recuerdo la firma de"
+    the_product_too_difficult: "El producto es demasiado difícil de usar"
+    i_chose_different_solution: "Elegí una solución diferente"
+    the_pricing_too_high: "El precio es demasiado alto"
+    the_product_laks_necessary_features: "El producto carece de las características necesarias"
+    the_pricing_confusing: "La fijación de precios es confuso"
+    i_do_not_host_event: "No realizar eventos"
+    other_please_explain: "Otro (explique)"
+    please_enter_close_your_pwd_below_confirm_that_wish_close_account: 'Por favor, ingrese "CLOSE" y su contraseña a continuación para confirmar que desea cerrar su cuenta'
+    type_close: "Tipo CIERRE"
+    enter_your_pwd: "Introduzca su contraseña"
+    
+  #close page
+  manage_account_close_page:
+    your_account_closed_now_thanks: "Su cuenta cerrada ahora. Gracias por estar con nosotros ."
+  
+    #credit card
+  manage_account_credit_card:
+    saved_credit_cards: "Tarjetas de crédito guardadas"
+    you_have_no_credit_cards_saved: "No tiene tarjetas de crédito salvos."
+
+    #emails 
+  manage_account_emails:
+    attendings: "Asistir"
+    news_and_update_event_created_event_organizers: "Noticias y actualizaciones sobre los eventos creados por los organizadores del evento"
+    buyer_info: "Información del comprador"
+    updates_about_new: "Actualizaciones sobre la nueva"
+    features_and_announcements: "características y anuncios"
+    a_digest_of_personalized_event_recommendations: "Un resumen de las recomendaciones de eventos personalizados"
+    picks: "Selecciones"
+    unsubscribe_from_all: "Darse de baja de todos los"
+    newsletters_and_updates_for_attendees: "boletines y actualizaciones para los asistentes"
+    notifications: "Notificaciones"
+    when_friends_buy_tickets_or_register_events_near_me: "Cuando los amigos compran entradas o regístrese para eventos cercanos a"
+    organizing: "Organizador"
+    helpful_update_and_tips_org_events: "Actualizaciones y consejos útiles para la organización de eventos en"
+    account_clone: "clonar"
+    important_reminders_for_my_next_event: "Recordatorios importantes para mi próximo evento"
+    order_confirmation_from_my_attendees: "Solicitar confirmaciones de mis asistentes"
+    save_preferences: "Guardar preferencias"
+    
+    # invoices
+  manage_account_invoices:
+    invoices: "Facturas"
+    you_no_invoices_generated: "No tiene facturas generadas"
+
+  #multi users
+  manage_account_multi_user:
+    are_you_sure_want_to_delete_this_user: "¿Está seguro que desea eliminar este usuario?"
+    email_address_access_this_account: "Direcciones de correo electrónico con acceso a esta cuenta"
+    administrator: "administrador"
+    add_email: "Agregar Email"
+
+  # manage account password
+  manage_account_password:
+    old_pwd: "Contraseña anterior"
+
+  #payaccounts
+  payaccounts:
+    this_update_paypal_address_all_events_currently: "Esto actualizará la dirección de correo electrónico de PayPal para todos sus eventos con CurrentY"
+    as_the_paypal_email_ok_to_confirm: 'como la dirección de correo electrónico de PayPal. Haga clic en "Aceptar" para confirmar.'
+    paypal_email_address_used_your_events: "Dirección de correo electrónico de PayPal utiliza para sus eventos"
+    used_in: "Utilizado en"
+    small_events: "eventos"
+    show: "mostrar"
+    paypal_account_used_for: "Cuenta de PayPal utiliza para"
+    referral payouts: "pagos de referencia"
+    
+  #referral program
+  manage_account_referral_program:
+    enter_valid_alpha_numeric_referral_code: "Introduzca un código de referencia alfanumérica válida."
+    your_referral_link_created_successfully: "Su vínculo de referencia ha sido creado con éxito ."
+    type_valid_alpha_numeric_referral_code: "Escriba el código de referencia alfanumérica válida."
+    create_unique_link: "Crear un enlace único"
+    promote_your_link: "Promociona tu enlace"
+    examples: "Ejemplos"
+    post_on_your_website: "Publicar en su página web"
+    email_to_prospective_event_holders: "Enviar a los titulares de eventos futuros"
+    account_signups: "inscripciones CUENTA"
+    paypal: "PayPal"
+    small_account: "cuenta"
+    pleace_specify_the_paypal_account_which_like_referral_bonuses_if_you_have_account: "Por favor, especifique la cuenta PayPal a la que le gustaría que sus bonos de referencia depositados cada mes. Si usted no tiene una cuenta PayPal, puede"
+    create_one_now: "crear una ahora"
+    paypal_email_address: "Dirección de correo electrónico de PayPal"
+
+  #requestapi
+  requestapi:
+    application_keys: "Teclas de aplicación"
+    my_api_keys: "Mis llaves API"
+    no_keys_currently_associated_with_account: "No hay claves están asociados con esta cuenta..."
+    request_a_new_key: "Solicitar una nueva clave"
+    contact_info: "información de contacto"
+    title_role: "Título / Rol"
+    company_name: "nombre de compañía"
+    application_details: "Detalles de la aplicación"
+    application_url: "aplicación URL"
+    auth_redirect_url: "OAuth Redirect URL"
+    application_name: "Application name"
+    requestapi_description: "Description"
+    is_appli_commercial: "Is this application commercial?"
+    add_this_our_public_list_api_application: "Add this to our public list of API applications?"
+    no: "No"
+    yes: "Yes"
+    i_have_read_the: "I have read the"
+    terms_of_use: "terms of use"
+    and_agree_their_terms: "and agree to their terms."
+    developer_resources: "Developer Resources"
+    site_developer: "sitio revelador"
+    api_getting_started_guide: "API Getting Started Guide"
+    api_methods: "API Methods"
+    api_clients: "API Clients"
+    authentication: "Authentication"
+    developer_terms_of_use: "Developer Terms of Use"
+    branding_guidelines: "Branding Guidelines"
+    announcements: "Announcements"
+    api_discussion: "API Discussion"
+    open_source: "Open Source"
+    application_showcase: "Showcase Aplicación"
+
+  #unuse org
+  unuse_org:
+    want_to_delete_org: "¿Está seguro que desea eliminar este organizador?"
+    unused: "no usado"
+    organizers: "organizadores"
+    followings_org_created_not_use_any_events_if_planning_to_use_them: "Los siguientes organizadores fueron creados, pero no están en uso en cualquiera de sus eventos. Si usted no tiene intención de utilizarlos,"
+    you_may_want_delete_them_your_account: "es posible que desee eliminarlos de tu cuenta."
+    no_unused_org_available: "No hay organizadores no utilizados disponibles"
+    
+    # manage account index
+  manage_account_index:
+    pwd_is_required: "La contraseña se requiere"
+    pwd_is_valid: "La contraseña es válida."
+    pwd_should_8_25_char_on_digit_one_lowercase_one_upercase_one_special: "La contraseña debe tener 8-25 caracteres, que contenga al menos un dígito, una letra minúscula, una mayúscula y un carácter especial."
+    your_account: "Su cuenta"
+    small_address: "dirección de correo electrónico"
+    new_email_address: "Nueva dirección de correo electrónico"
+    your_current_pwd: "Tu contraseña actual"
+
+    #application controller
+  application_controller:
+    can_not_access_pages_from_domain: "No se puede acceder a estas páginas de ese dominio ."
+    please_login_access_page: "Por favor, identifíquese para acceder a esta página ."
+    set_your_login_details_first: "Establece tus datos de acceso primero ."
+    your_account_deactivated_by_admin: "Cuenta desactivada por el administrador ."
+    multiple_tickets: "múltiples Entradas"
+    
+    #auth controller  
+  auth_controller:
+    somethings_wrong_connecting_process_try_again: "Algo está mal en la conexión de proceso. Inténtalo de nuevo o Ingresar / Registrarse a través del sitio."
+
+    #manage account controller
+  manage_account_controller:
+    verification_email_sent_new_email_address: "Mensaje de verificación enviado a su nueva dirección de correo electrónico. Verifique su cuenta para utilizar su nuevo ID de correo electrónico para iniciar sesión ."
+    your_email_id_has_been_saved: "Su ID de correo electrónico ha sido guardada."
+    your_pwd_doesnot_match_records_email_changed: "Tu contraseña no coincide con nuestros registros. Tu email no se ha cambiado."
+    email_change_request_does_not_exists_try_again: "Solicitud de cambio de correo electrónico no existe. Por favor, inténtelo de nuevo ."
+    your_details_saved_successfully: "Sus datos se han guardado correctamente ."
+    your_pwd_updated_successfully: "Su contraseña ha actualizado correctamente ."
+    old_pwd_entered_wrong_pwd_not_changed: "La contraseña antigua introducida es incorrecto. La contraseña no se cambia."
+    your_email_preferences_update_successfully: "Sus preferencias de correo electrónico actualizado correctamente ."
+    your_paypal_email_update_successfully: "Su dirección de correo electrónico de PayPal Actualización éxito ."
+    new_multi_user_account_has_been_created_login_instructions_sent_address_provided: "Cuenta nueva multi-usuario ha sido creado. Un correo electrónico con las instrucciones de acceso han sido enviados a la dirección de correo electrónico proporcionada ."
+    your_user_permission_have_saved: "Los permisos de usuario se han salvado ."
+    org_account_deleted_successfully: "Cuenta Organizador eliminado correctamente ."
+    user_account_updated_successfully: "Cuenta de usuario actualizada correctamente ."
+    your_api_generated_successfully: "Su clave de API genera éxito ."
+    invalid_pwd_try_again: "Contraseña no válida. Inténtelo de nuevo ."
+    user_account_deleted_successfully: "Cuenta de usuario eliminado con éxito ."
+    approved: "aprobado"
+
+    #validation of js 
+  validation_js:
+    event_title_is_required: "Es obligatorio Campo Título del evento."
+    vanue_name_field_is_required: "Se requiere el campo Nombre del sitio."
+    street_address_field_is_required: "Se requiere campo Dirección Street."
+    event_start_date_is_required: "Se requiere Evento Fecha de inicio."
+    event_end_date_is_required: "Se requiere Evento Fecha de finalización."
+    end_date_minimum_three_hours_greater_start_date: "Evento Fecha de finalización debe ser como mínimo de 3 horas más de Evento Fecha de inicio."
+    end_date_greater_start_date: "Evento Fecha de finalización debe ser mayor de Evento Fecha de inicio."
+    evevt_logo_is_required: "Se requiere Logotipo del evento."
+    event_details_is_required: "Se requiere Detalles del evento."
+    org_host_is_required: "Se requiere organización / anfitrión."
+    ticket_name_field_is_required_all_tickets: "Se requiere billete nombre de campo para todos los boletos ."
+    ticket_qty_field_is_required_all_tickets: "Se requiere boleto Cantidad de campo para todos los boletos ."
+    ticekt_price_field_is_required_all_paid_tickets: "Precio de la entrada se requiere práctica para todos los boletos pagados ."
+    ticket_start_sale_date_not_greater_end_sale_date_all_ticekts: "billete inicio Fecha de venta no shloud ser mayor que Fecha de finalización venta de todos los boletos ."
+    ticket_end_sale_not_greater_event_end_date_all_tickets: "billete Fecha de finalización Venta shloud no sea superior Evento Fecha de finalización para todos los boletos ."
+    company_name_field_is_required: "Se requiere el campo Nombre de la Empresa."    
+    phone_number_field_is_required: "Se requiere campo Número de teléfono."
+    application_url_field_is_required: "Se requiere el campo URL."
+    type_valid_application_url: "Escriba una URL válida."
+    type_vlid_oauth_redirect_url: "Escriba una OAuth válida Redireccionar URL."
+    application_name_field_is_required: "Se requiere el campo Nombre de la aplicación."
+    description_field_is_required: "Se requiere campo Descripción."
+    accept_terms_conditions: "Debe aceptar los términos y condiciones."
+    org_name_field_is_required: "Se requiere Campo Organizador."
+    org_logo_is_required: "Se requiere Organizador Logo."
+    about_org_field_is_required: "Sobre el campo es obligatorio organizador."
+    website_field_is_required: "Es obligatorio Campo Sitio Web."
+    type_valid_website_url: "Escriba una URL del sitio web válido."
+    minimum_one_category_is_required: "Se requiere mínimo una categoría."
+    minimum_one_city_is_required: "Se requiere un mínimo ciudad."
+    
+    type_only_alpha_numeric_char: "Introduzca sólo caracteres alfanuméricos y."
+    type_only_alpha_numeric_char_and: "Escriba sólo caracteres alfanuméricos y '_'."
+    pwd_does_not_match: "Las contraseñas no coinciden!"
+    confirm_pwd_match: "Confirmar contraseña es partido."
+    value_cant_be_blank: "El valor no puede estar en blanco."
+
+  custom_validation:
+    field_req: "campo es obligatorio."
+    enter_valid_zipcode: "Introduzca código postal válido."
+    valid_zip: "Código postal válido."
+    enter_valid_ten_digit: "Introduzca válida número de 10 dígitos."
+    valid_number: "El número válido."
+    enter_less_than_15_digit: "Introduzca válida y menos de 15 dígitos."
+    
+  event_controllernot_access_page: "No puede acceder a esta página."
+    
+  activerecord:
+    attributes:
+      user:
+        email: "E-mail"
+      affiliate:
+        name: "Código de Afiliado"
+      contact_list:
+        name: "Contacto Nombre de la lista"
+      contact:
+        email: "E-mail"  
+      event:
+        event_url_link: "Dirección web"
+      invite_guest:
+        email: "E-mail" 
+      organizer:
+        page_url: "Dirección web" 
+      promotional_code:
+        code: "Código promocional"
+      question:
+        que: "pregunta"
+      referral_code:
+        code: "Código de referencia"            
+    errors:
+      models:
+        user:
+          attributes:
+            email:
+              taken: "ya ha sido tomada"    
+        affiliate:
+          attributes:
+            name:
+              taken: "ya ha sido tomada"
+        contact_list:
+          attributes:
+            name:
+              taken: "ya ha sido tomada" 
+        contact:
+          attributes:
+            email:
+              taken: "ya ha sido tomada" 
+        event:
+          attributes:
+            event_url_link:
+              taken: "ya ha sido tomada"
+        invite_guest:
+          attributes:
+            email:
+              taken: "ya ha sido tomada"
+        organizer:
+          attributes:
+            page_url:
+              taken: "ya ha sido tomada" 
+        promotional_code:
+          attributes:
+            code:
+              taken: "ya ha sido tomada"
+        question:
+          attributes:
+            code:
+              taken: "ya ha sido tomada" 
+        referral_code:
+          attributes:
+            code:
+              taken: "ya ha sido tomada"                                                 

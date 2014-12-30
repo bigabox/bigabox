@@ -1,0 +1,54 @@
+<%
+      @user_multi = User.find(session[:user_id]) 
+	 if @user_multi[:ref_id]!=nil && @user_multi[:ref_id]!="" 
+		  @multi = 1
+		  @ses_user = @user_multi[:ref_id]
+	  else
+		  @multi = 0
+		  @ses_user = session[:user_id]
+	  end
+%>
+
+<script type="text/javascript">
+	function chk_name(){
+		var name = $('#contact_list_name').val();
+        
+        if(name==''){
+        	$('#contact_list_name').focus();
+        	$("#namerr").html('<%= I18n.t 'copy.js_script' %>');
+        	return false;
+        }
+        return true;
+	}
+</script>
+
+<script>
+ 	function trim(el) {
+    el.value = el.value.
+    replace(/(^\s*)|(\s*$)/gi, ""). // removes leading and trailing spaces
+    replace(/[ ]{2,}/gi, " "). // replaces multiple spaces with one space 
+    replace(/\n +/, "\n"); // Removes spaces after newlines
+    return;
+}
+ </script>
+
+<div id="repeat_div_pop2" class="popup_Content" >
+              <h2><%= I18n.t 'copy.con_list' %></h2>
+        	<br />
+	<%= form_tag({:controller => 'contact_lists', :action => 'copy'}, :id => 'copycontactForm', :name => 'copycontactForm') do %> 		
+			 <div id="namerr" class="error1" style="margin-left: 30%; height: 12px; display: block;"></div>  
+        	 <div class="form">
+		         <label><%= I18n.t 'copy.enter_name' %> : </label>
+		         <input type="text" name="contact_list[name]" id="contact_list_name" onchange="return trim(this)" class="textbox" value="<%= @contact_list[:name] %>" />   
+          
+            <div class="marT20" align="right">
+              <input type="hidden" name="contact_list[user_id]" id="user_id" value="<%= @ses_user %>"/>
+              <input type="hidden" name="id" id="id" value="<%= params[:id] %>"/>
+        	  <input class="submit_btn" type="submit" value="<%= I18n.t 'button.save' %>" style="margin-top:0px;" onclick='return chk_name();' >
+          	  <a class="btn black_bg" onclick="parent.jQuery.colorbox.close();" style="padding: 16px 20px;"><%= I18n.t 'validation.common.can' %></a>
+          	</div>  
+        <div class="clear"></div>
+             
+      </div>  
+    <% end %>
+   </div>

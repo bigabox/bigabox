@@ -1,0 +1,153 @@
+<%  @user = User.find(session[:user_id]) %>
+
+<div class="right_columm marT60 tab_mobile_mar0">
+        	<div class="marT60">
+			<div class="event_title shadow">
+            	<a href="<%= APP_CONFIG['development']['site_url'] %>manage_event/index/<%= @event[:id] %>" class=" dashboard"> <%= I18n.t 'event_index.event_dashboard'%></a>
+				
+            </div>
+          
+        	<div class="accordion vertical shadow">
+		  <section id="registration">
+		      <h2><a href="#registration"><%= I18n.t 'customize_order_form.registration'%></a></h2>
+		      <p>
+              <div class="inner_cat">
+                  <ul>
+	                	<!-- <li> <a href="javascript://" >Payment Options </a></li><div class="clear"></div>-->
+	                	<% eact = 'custom_register'
+			             @has_register = Event.has_rights(@user, @event, eact) %>
+		
+			             <% if @has_register == 1%>
+	                	<li> <a href="<%= APP_CONFIG['development']['site_url'] %>manage_event/customize_order_form/<%= @event[:id] %>" ><%= I18n.t 'manage_event_sidebar.cusomize_order_form'%> </a></li>
+	               		<% end %>
+	               		<li> <a href="<%= APP_CONFIG['development']['site_url'] %>manage_event/edit_order_confirmation/<%= @event[:id] %>" ><%= I18n.t 'manage_event_sidebar.edit_order_confirmations'%></a></li>
+	                 	<li> <a href="<%= APP_CONFIG['development']['site_url'] %>manage_event/type_and_language/<%= @event[:id] %>" ><%= I18n.t 'manage_event_sidebar.event_type'%> &amp; <%= I18n.t 'manage_event_sidebar.language'%></a></li>
+	                    <li> <a href="<%= APP_CONFIG['development']['site_url'] %>manage_event/news_and_updates/<%= @event[:id] %>" ><%= I18n.t 'manage_event_sidebar.add_news_and_updates'%></a></li>
+                  </ul>
+                  <div class="clear"></div>
+              </div>
+              </p>
+		  </section>
+          </div>
+          
+           <% eact = 'send_invite'
+             @has_invite = Event.has_rights(@user, @event, eact) %>
+             
+             <% if @has_invite == 1 %>
+          <div class="accordion vertical shadow">
+		  <section id="invite">
+		      <h2><a href="#invite"><%= I18n.t 'manage_event_sidebar.invite'%></a></h2>
+		      <p>
+              <div class="inner_cat">
+                  <ul>
+                    <li> <a href="<%= APP_CONFIG['development']['site_url'] %>invites/create/<%= @event[:id] %>" ><%= I18n.t 'invite_index.create_invitation'%></a></li><div class="clear"></div>
+                    <li> <a href="<%= APP_CONFIG['development']['site_url'] %>invites/index/<%= @event[:id] %>" ><%= I18n.t 'manage_event_sidebar.manage_invitations'%> </a></li>
+                   
+                  </ul><div class="clear"></div>
+                  </div>
+              </p>
+		  </section>
+          </div>
+          <% end %>
+          
+          <div class="accordion vertical shadow">
+		  <section id="analyze">
+		      <h2><a href="#analyze"><%= I18n.t 'manage_event_sidebar.analyze'%></a></h2>
+		      <p>
+                  <div class="inner_cat">
+                  <ul>
+                    <li> <a href="<%= APP_CONFIG['development']['site_url'] %>manage_event/google_analytic_code/<%= @event[:id] %>" ><%= I18n.t 'manage_event_sidebar.google_analytics'%> </a></li><div class="clear"></div>
+                  </ul><div class="clear"></div>
+                  </div>
+              </p>
+		  </section>
+          </div>
+          <% eact = 'view_orders'
+             @has_attend = Event.has_rights(@user, @event, eact) %>
+             
+             <% if @has_attend == 1 %>
+          <div class="accordion vertical shadow">
+		  <section id="attendees">
+		      <h2><a href="#attendees"><%= I18n.t 'invite_add_attendee.event_db_attendees' %></a></h2>
+		      <p>
+              <div class="inner_cat">
+                  <ul>
+                    <li> <a href="<%= APP_CONFIG['development']['site_url'] %>manage_event/orders/<%= @event[:id] %>" ><%= I18n.t 'cancel_order.order'%></a></li><div class="clear"></div>
+                      <% eact = 'manage_order'
+	             @has_order = Event.has_rights(@user, @event, eact) %>
+
+	             <% if @has_order == 1%>
+                    <li> <a href="<%= APP_CONFIG['development']['site_url'] %>invites/add_attendee/<%= @event[:id] %>" ><%= I18n.t 'manage_event_sidebar.add_attendees'%></a></li>
+                    <li> <a href="<%= APP_CONFIG['development']['site_url'] %>invites/attendees/<%= @event[:id] %>" ><%= I18n.t 'manage_event_sidebar.all_attendees'%> </a></li>
+                     <% end %>          
+                  </ul><div class="clear"></div>
+                  </div>
+              </p>
+		  </section>
+          </div>
+          <% end %>
+          <div class="accordion vertical shadow">
+		  <section id="waitlist">
+		      <h2><a href="#waitlist"><%= I18n.t 'manage_event_sidebar.waitlist'%></a></h2>
+		      <p>
+              <div class="inner_cat">
+                  <ul>
+                    <li> <a href="<%= APP_CONFIG['development']['site_url'] %>manage_event/waitlist_setting/<%= @event[:id] %>" ><%= I18n.t 'manage_event_sidebar.waitlist_settings'%> </a></li><div class="clear"></div>
+                  </ul><div class="clear"></div>
+                  </div>
+              
+              </p>
+		  </section>
+          </div>
+            <% eact = 'manage_discount'
+             @has_discount = Event.has_rights(@user, @event, eact) %>
+             <% eact = 'manage_affiliate'
+             @has_affiliate = Event.has_rights(@user, @event, eact) %>
+    
+    <% if @has_discount == 1 || @has_affiliate == 1 %>
+          <div class="accordion vertical shadow">
+		  <section id="sell">
+		      <h2><a href="#sell"><%= I18n.t 'manage_event_sidebar.sell'%></a></h2>
+		      <p>
+              <div class="inner_cat">
+                  <ul>
+                   
+             
+             <% if @has_discount == 1 %>
+                    <li> <a href="<%= APP_CONFIG['development']['site_url'] %>manage_event/promotional_codes/<%= @event[:id] %>" ><%= I18n.t 'manage_event_sidebar.create_promotional_codes'%></a></li><div class="clear"></div>
+                <% end %>
+                  
+             
+             <% if @has_affiliate == 1 %>
+                    <li> <a href="<%= APP_CONFIG['development']['site_url'] %>manage_event/affiliate_codes/<%= @event[:id] %>" ><%= I18n.t 'manage_event_sidebar.create_affiliate_programs'%> </a></li>
+                    <% end %>
+                  </ul><div class="clear"></div>
+              </div>
+              
+              </p>
+		  </section>
+          </div>
+          <% end %>
+              <div class="accordion vertical shadow">
+		  <section id="widget">
+		      <h2><a href="#widget"><%= I18n.t 'manage_event_sidebar.widgets'%></a></h2>
+		      <p>
+              <div class="inner_cat">
+                  <ul>
+                    
+                    <li> <a href="<%= APP_CONFIG['development']['site_url'] %>manage_event/button_widget/<%= @event[:id] %>" ><%= I18n.t 'manage_event_sidebar.create_button_widget'%> </a></li>
+                    <li> <a href="<%= APP_CONFIG['development']['site_url'] %>manage_event/form_widget/<%= @event[:id] %>" ><%= I18n.t 'manage_event_sidebar.create_form_widget'%> </a></li>
+
+
+                  </ul><div class="clear"></div>
+              </div>
+              
+              </p>
+		  </section>
+          </div>
+		</div>
+			
+			 <div class="clear"></div>
+			
+			
+            </div>

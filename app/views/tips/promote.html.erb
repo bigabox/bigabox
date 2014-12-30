@@ -1,0 +1,4 @@
+<div>
+	<h2><%= @tip[:title] %></h2>
+	<% if @tip[:desc]!='' && @tip[:desc]!=nil %><%= render :inline => @tip[:desc] %><% end %>
+</div>

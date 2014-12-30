@@ -1,0 +1,117 @@
+<style>
+	@media (max-width: 768px) {
+		.earnings td:nth-of-type(1):before { content: "<%= I18n.t 'pen_paid_table.order' %>";  }
+		.earnings td:nth-of-type(2):before { content: "<%= I18n.t 'pen_paid_table.en' %>";  }
+		.earnings td:nth-of-type(3):before { content: "<%= I18n.t 'pen_paid_table.tn' %>";  }
+		.earnings td:nth-of-type(4):before { content: "<%= I18n.t 'pen_paid_table.tq' %>"; }
+		.earnings td:nth-of-type(5):before { content: "<%= I18n.t 'pen_paid_table.amt' %>"; }
+	}	
+</style>
+
+<section>
+	<%= render(:partial => "/manage_account/account_top" , :object => :collection) %>    
+           
+	<div class="main marTB40">
+    	
+    	<% if flash[:notice1] -%>
+		      <div class="notice" >
+		      	<p><%= flash[:notice1] %></p>
+		      </div>
+		<% end -%>
+		
+    	<div class="leftcol">    	
+            <div class="mtitle">
+            	<h3><%= I18n.t 'cancel_order.can' %> <span><%= I18n.t 'cancel_order.order' %></span></h3>
+            </div>
+            <div class="shadow marT10">
+                	
+            	<div class="responsive-tabs">
+                    
+                    <h2><%= I18n.t 'cancel_order.pen' %></h2>
+                    <div>   
+                    	<div class="shadow earnings pad3">
+                    		<%	if @cancels_pending.count > 0	%>
+	                            <table class="table">
+	                                <thead>
+	                                <tr>
+	                                    <th><%= I18n.t 'pen_paid_table.order' %></th>
+	                                    <th><%= I18n.t 'pen_paid_table.en' %></th>
+	                                    <th><%= I18n.t 'pen_paid_table.tn' %></th>
+	                                    <th><%= I18n.t 'pen_paid_table.tq' %></th>
+	                                    <th><%= I18n.t 'pen_paid_table.amt' %></th>
+	                                </tr>
+	                                </thead>
+	                                <tbody>
+	                               <%  for can in @cancels_pending %>
+	                                <% if can[:ticket_id] > 0 %>
+			 		<tr>
+			 			<td style="color:#7AB922">#<%= can[:purchase_id] %></td>
+				 		<td> <%= event_title(can[:event_id]) %></td>
+				 		<td><%= ticket_name(can[:ticket_id]) %></td>
+				 		<td><%= can[:ticket_qty] %></td>
+						<td><%= set_currency(can[:total]) %></td>
+				 	</tr>
+				 	 <% end %>
+					 <% end %>
+	                                                           
+	                                </tbody>
+	                            </table>
+                            
+                            <% else %>
+                            	<div class="pad10 textcenter"><p><%= I18n.t 'validation.common.no_records_available' %></p></div>
+                            <% end %>
+                            <div class="clear"></div>
+                        </div>                                        
+                    </div>        
+                    
+                   
+                   	  <h2><%= I18n.t 'cancel_order.pad' %></h2>
+	                    <div>   
+	                    	<div class="shadow earnings pad3">
+	                    		<%	if @cancels_paid.count > 0	%>
+		                            <table class="table">
+		                                <thead>
+		                                <tr>
+		                                <th><%= I18n.t 'pen_paid_table.order' %></th>
+		                                <th><%= I18n.t 'pen_paid_table.en' %></th>
+	                                    	<th><%= I18n.t 'pen_paid_table.tn' %></th>
+	                                    	<th><%= I18n.t 'pen_paid_table.tq' %></th>
+	                                    	<th><%= I18n.t 'pen_paid_table.amt' %></th>
+		                                </tr>
+		                                </thead>
+		                                <tbody>
+		                               <%  for paid in @cancels_paid 	%>
+		                               <% if paid[:ticket_id] > 0 %>
+				 		<tr>
+				 			<td style="color:#7AB922">#<%= paid[:purchase_id] %></td>
+					 		<td><%= event_title(paid[:event_id]) %></td>
+					 		<td><%= ticket_name(paid[:ticket_id]) %></td>
+					 		<td><%= paid[:ticket_qty] %></td>
+							<td><%= set_currency(paid[:total]) %></td>
+					 	</tr>
+					 	 <% end %>
+				  		<% end %>
+		                                                           
+		                                </tbody>
+		                            </table>
+	                            
+	                            <% else %>
+	                            	<div class="pad10 textcenter"><p><%= I18n.t 'validation.common.no_records_available' %></p></div>
+	                            <% end %>
+	                            <div class="clear"></div>
+	                        </div>                                        
+	                    </div> 
+	                    
+                </div>
+            	
+            </div>
+            
+        	
+        </div>
+        <% @act_class = 'Cancelled Orders' %>         	
+    	<%= render(:partial => "/manage_account/account_sidebar" , :object => :collection) %>    
+            
+           
+        <div class="clear"></div>
+    </div>    
+</section>

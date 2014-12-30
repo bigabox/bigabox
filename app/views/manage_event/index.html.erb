@@ -1,0 +1,409 @@
+<% @act_class = 'Manage Event' %>  
+<%= render(:partial => "common_banner" , :object => :collection) %> 
+
+<script type="text/javascript">
+			
+	function change_link(type){
+		//alert(type);
+		$('#'+type+'_url_change').show();
+		$('#'+type+'_url').hide();
+	}
+	
+	function cancel_link(type){
+		
+		$('#'+type+'_url_change').hide();
+		$('#'+type+'_url').show();
+	}
+	
+	function set_url(type,id){
+		url_link = $("#"+type+"_url_link");
+		urllinkInfo = $("#"+type+"urllinkInfo");
+		
+		urllinkInfo.text("");
+		
+		var a = url_link.val();
+		var alphanum=/^[a-zA-Z0-9]+$/;
+		
+		var filter = alphanum;
+		//if it's valid email
+		if(a==''){
+			url_link.focus();
+			urllinkInfo.text('<%= I18n.t 'user_profile.type_valid_alpha_numeric'%>');
+			urllinkInfo.addClass("error1");
+			return false;
+		}
+		
+		//if it's NOT valid
+		else if(!filter.test(a)){
+			url_link.focus();
+			urllinkInfo.text('<%= I18n.t 'user_profile.type_valid_alpha_numeric'%>');
+			urllinkInfo.addClass("error1");
+			return false;
+		}
+		else{
+			 	
+			 	var page_path = '/manage_event/'+type+'_url_link/';
+		        
+		        $.ajax({
+		            type: "GET",
+		            data: {id: id, val: a}, 
+		            url: page_path+id,
+		            success: function(data) {
+		               
+		                if(data.msg=='success'){
+		                	
+		                	$("#"+type+"_url_new").text('<%= APP_CONFIG['development']['site_url'] %>'+type+'/'+a);
+		                	$("#"+type+"_url_new").attr('href','<%= APP_CONFIG['development']['site_url'] %>'+type+'/'+a);
+		                	$('#'+type+'_url_change').hide();
+							$('#'+type+'_url').show();
+							
+		                }else{
+		                	url_link.focus();
+							urllinkInfo.text(data.msg);
+							urllinkInfo.addClass("error1");
+		                }
+		                
+		            }
+		        });
+		}
+		
+	}
+	
+	function selectall()
+		{ 
+		
+			var text_val=document.getElementById('copypath');
+			
+			text_val.focus();
+			
+			text_val.select();
+			
+			if (!document.all) return; // IE only
+			
+			r= text_val.createTextRange();
+			
+			r.execCommand('Copy');
+			
+		}
+		</script>
+<style>
+	@media (max-width: 768px) {
+		.manage_event td:nth-of-type(1):before { content: "<%= I18n.t 'event.purchase.order'%> "; }
+		.manage_event td:nth-of-type(2):before { content: "<%= I18n.t 'event.purchase.ticket_buyer'%>"; }
+		.manage_event td:nth-of-type(3):before { content: "<%= I18n.t 'event.view.qty'%>"; }
+		.manage_event td:nth-of-type(4):before { content: "<%= I18n.t 'event.view.price'%>"; }
+		.manage_event td:nth-of-type(5):before { content: "<%= I18n.t 'create_event.date'%>"; }
+		
+		.manage_event_attendee td:nth-of-type(1):before { content: "<%= I18n.t 'orga.contact.name'%>"; }
+		.manage_event_attendee td:nth-of-type(2):before { content: "<%= I18n.t 'event.view.qty'%>"; }
+		.manage_event_attendee td:nth-of-type(3):before { content: "<%= I18n.t 'event.view.price'%>"; }
+	}	
+</style>
+<section>
+
+	<div class="main">
+    	<div class="left_columm">
+    	<div class="marT60">
+        	<div class="mtitle">
+            	<h1> <%= I18n.t 'event.view.event'%> <span> <%= I18n.t 'manage_event_index.dashboard'%> </span></h1>
+            </div> <div class="clear"></div>
+              
+            
+            	<div class="shadow marT10 pad15">
+                    <div>                    	
+                    	<div id="event_url">
+		                 	<h4> <%= I18n.t 'manage_event_index.page_url'%> : 
+                		
+			                	<span class="fontnormal" id="event_url_new">
+			                		<% if @event[:event_url_link]=='' || @event[:event_url_link]==nil %>
+					                 <a href="<%= APP_CONFIG['development']['site_url'] %>events/view/<%= @event[:id] %>" target="_blank">	
+					                 		<%= APP_CONFIG['development']['site_url'] %>events/view/<%= @event[:id] %>
+					                 		
+					                 	</a>
+				                 	<% else %>
+				                 		<a href="<%= APP_CONFIG['development']['site_url'] %>event/<%= @event[:event_url_link] %>" target="_blank">
+				                 			<%= APP_CONFIG['development']['site_url'] %>event/<%= @event[:event_url_link] %>
+				                 			
+				                 		</a>	
+				                 	<% end %> 
+					            </span> 
+			                	<a href="javascript:" onclick="change_link('event');" class="fontnormal">[<%= I18n.t 'button.edit'%>]</a>
+			                </h4>
+			          
+	                 	</div>
+                    	<div id="event_url_change" style="display:none;">
+             	
+			             	<label><%= I18n.t 'manage_event_index.page_url'%> : </label><br />
+						     <span><%= APP_CONFIG['development']['site_url'] %>event/</span> 
+						     <%= text_field_tag :event_url_link, @event[:event_url_link], :class => 'textbox' %>
+						     <div class="clear"></div><br />
+						     <a class="btn" href="javascript:" onclick="set_url('event','<%= @event[:id]%>')"><%= I18n.t 'button.save'%></a>
+						     <a class="btn black_bg" href="javascript:" onclick="cancel_link('event');"><%= I18n.t 'button.cancel'%></a>
+						     
+						    <div id="eventurllinkInfo"></div>
+						    <br />
+			            </div>                         
+                    </div>        
+                </div>
+                
+          
+          
+            
+            
+            <div class="shadow marT15">            	
+            	<div class="responsive-tabs">
+                    <h2><%= I18n.t 'event_index.status'%></h2>
+                    <div>
+                    <div class="status"> 
+                    <div>                   	
+                         <label> <%= I18n.t 'event_index.status'%>: </label>
+                         <span> <% if @event[:cancel]==1 %><%= I18n.t 'cancel_order.can'%>
+						  	<% elsif @event[:active] ==0 %><%= I18n.t 'event_index.draft'%>
+						  	<% elsif @event[:active]==1 && @event[:event_end_date_time] >= DateTime.now %><%= I18n.t 'event_index.live'%>
+						  	<% else %> <%= I18n.t 'event_index.completed'%> <% end %> </span><div class="clear"></div>
+                    </div>
+                     <% if @event[:active]==1 && @event[:event_start_date_time] >= DateTime.now %>
+                    <div class="marT20">     
+                          <label> <%= I18n.t 'manage_event_index.days_to_event'%>: </label>
+                         <span> <%= (@event[:event_start_date_time].to_date - Date.today).to_i %> <%= I18n.t 'invite_create.days'%> </span>   <div class="clear"></div>
+                     </div> 
+                     <% end %>
+                     <div class="marT20">     
+                          <label> <%= I18n.t 'manage_event_index.page_views'%>: </label>
+                         <span> <%= @event[:page_visits] %> </span>     <div class="clear"></div>
+                     </div>               
+                    </div>  
+                    <div class="status_right">   
+                    	<% @sold = Ticket.find_event_sold_count(@event[:id]) %>
+                    	                 	
+                         <label> <%= I18n.t 'manage_event_index.ticket_sold'%> </label><br />
+                         <span> <%= @sold %> </span><div class="clear"></div>
+                          <label> <%= I18n.t 'manage_event_index.tickets_available'%> </label><br />
+                         <span> <% if @event[:event_capacity]!=nil && @event[:event_capacity]!='' %><%= @event[:event_capacity]-@sold %><% else %>0<% end %> </span>   
+                            <div class="clear"></div> 
+                         <br /><a href="<%= APP_CONFIG['development']['site_url'] %>manage_event/download_excel/<%= @event[:id] %>.xls">* <%= I18n.t 'manage_event_index.download_purchase_report'%></a>                
+                    </div>   
+                   <div class="clear"></div>    
+                    </div>  
+                     <%   eact = 'view_fees'
+		      @has_fees = Event.has_rights(@user, @event, eact)
+		         
+		     if @has_fees == 1  %> 
+                    <h2><%= I18n.t 'manage_event_index.total_sales'%></h2>
+                   <div>
+                    <div class="status"> 
+                    <div>                   	
+                         <label> <%= I18n.t 'manage_event_index.gross_sales'%>: </label>
+                         <span> <% @sales = Ticket.find_gross_sales(@event[:id]) %><%= set_currency(@sales) %></span><div class="clear"></div>
+                    </div>
+                    <div class="marT20">     
+                          <label> <%= I18n.t 'manage_event_index.total_manual_sales'%>: </label>
+                         <span> <% @man_sales = Ticket.find_manual_sales(@event[:id]) %><%= set_currency(@man_sales) %> </span>   <div class="clear"></div>
+                     </div> 
+                        
+                      <div class="marT20">     
+                          <label> <%= I18n.t 'manage_event_index.capital_total_sales'%>:  </label>
+                         <span> <%= set_currency(@sales+@man_sales) %> </span>     <div class="clear"></div>
+                     </div>               
+                    </div>  
+                    <div class="status_right">                    	
+                         <label> <%= @site[:site_name] %> <%= I18n.t 'manage_event_index.fees_paid'%>: </label><br />
+                         <span> <% @fees = Ticket.find_total_fees(@event[:id])  %><%= set_currency(@fees) %></span><div class="clear"></div>
+                          <label> <%= I18n.t 'manage_event_index.total_net_sales'%>:   </label><br />
+                         <span> <% total = (@sales+@man_sales).to_f - @fees.to_f %><%= set_currency(total) %> </span>   
+                            <div class="clear"></div>              
+                    </div>   
+                   <div class="clear"></div>    
+                    </div>
+                    <% end %>
+                    
+                 <%   eact = 'send_invite'
+		      @has_invite = Event.has_rights(@user, @event, eact)
+		         
+		     if @has_invite == 1  %>
+	    
+                     <h2><%= I18n.t 'invite_create.invitations'%></h2>
+                   <div>
+                    <div class="status TW97p brnone textcenter"> 
+                     <div>                   	
+                         <label> <%= I18n.t 'manage_event_index.email_invitation_sent'%>: </label>
+                         <span><%= Invite.invite_cnt(@event[:id]) %> </span><div class="clear"></div>
+                    </div>             	
+                        <a href="<%= APP_CONFIG['development']['site_url'] %>invites/index/<%= @event[:id] %>" class="btn marT20"> <%= I18n.t 'manage_event_index.send_invitation'%> </a>
+                            <div class="clear"></div>    
+                                 
+                    </div>  
+                       
+                   <div class="clear"></div>    
+                    </div> 
+                    <% end %>
+                </div>
+            </div>
+        <% eact = 'manage_order'
+             @has_order = Event.has_rights(@user, @event, eact) %>
+             <% if @has_order == 1%>
+            <div class="shadow marT40">
+            	<div class="responsive-tabs">
+                    <h2><%= I18n.t 'manage_event_index.recent_orders'%> </h2>
+                    <div>                    	
+                    	<div class="shadow event pad3">
+                            <% 
+                            	if @orders.count > 0 
+									i=1
+							%>
+                            <table class="manage_event table">
+                                <thead>
+                                <tr>
+                                    <th><%= I18n.t 'event.purchase.order'%></th>
+                                    <th><%= I18n.t 'event.purchase.ticket_buyer'%></th>
+                                    <th><%= I18n.t 'event.view.qty'%></th>
+                                    <th><%= I18n.t 'event.view.price'%></th>
+                                    <th><%= I18n.t 'create_event.date'%></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <% for order in @orders	%>
+                                	<tr>
+                                		<td><span class="green_font"><%= order[:id] %></span></td>
+								 		<td><%= order[:first_name] %> <%= order[:last_name] %></td>
+								 		<td class="textcenter"><%= order[:ticket_qty] %></td>
+								 		<td><%= set_currency(order[:total]) %></td>
+								 		<td><%= order[:created_at].strftime(@site[:date_time_format]) %></td>
+							 		</tr>
+                                <% end %>
+                                </tbody>
+                            </table>
+                            <% else %>
+                            	<p><%= I18n.t 'manage_event_index.no_order_this_event_yet'%> </p>
+                            <% end %>
+                            <div class="clear"></div>
+                        </div>                            
+                    </div>        
+                    <h2><%= I18n.t 'manage_event_index.recent_attendees'%></h2>
+                    <div>                    	
+                    	<div class="shadow event pad3">
+                    		<% 
+                    		if @event_attendee.count > 0 
+								i=1
+							%>
+                            <table class="manage_event table">
+                                <thead>
+                                <tr>
+                                    <th><%= I18n.t 'orga.contact.name'%></th>
+									<th><%= I18n.t 'event.view.qty'%></th>
+									<th><%= I18n.t 'event.view.price'%></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <%
+									 for attendee in @event_attendee
+									  if attendee && attendee !=''
+			 							@pur = Purchase.find(:first, :conditions => ['attendee_id=?', attendee[:id]])
+			 							if @pur && @pur !=''
+									 	%>
+									 		<tr>
+										 		<td><%= @pur[:first_name] %> <%= @pur[:last_name] %></td>
+										 		<td class="textcenter"><%= @pur[:ticket_qty] %></td>
+										 		<td><%= set_currency(@pur[:total]) %></td>
+									 		</tr>
+									 	<%
+									 	end
+									 	end
+									 end
+								%>
+								
+                              
+                                </tbody>
+                            </table>
+                            <% else %>
+                            	<p><%= I18n.t 'manage_event_index.no_attendees_this_evnet_yet'%></p>
+                            <% end %>
+                            <div class="clear"></div>
+                        </div>                            
+                    </div>         
+                       
+                  
+                </div>
+            </div>
+            <% end %>
+            <!-- Promote your event -->
+
+          
+           <!--   <div class="shadow marT10 pad15" style="height: 100%;width: 100%;">
+           
+           	 <% if @event[:event_url_link]=='' || @event[:event_url_link]==nil
+		page_url = APP_CONFIG['development']['site_url']+'events/view/'+@event[:id].to_s 
+		
+	 else 
+		page_url = APP_CONFIG['development']['site_url']+'event/'+@event[:event_url_link] 
+	end %> 
+            
+              
+                  <%
+							logo_img = APP_CONFIG['development']['app_url']+'themes/logo.png'
+							
+				       		if(@site[:site_logo]!=nil)
+					            chk_img = check_img(@site[:site_logo],'other','orig')	
+					         	if chk_img!='0' && chk_img!=''
+								  logo_img = APP_CONFIG['development']['upload_url']+chk_img
+								end
+							end %>  	
+                  <h4 style="padding: 3px;">BUY TICKETS ON </h4> <a href="<%= page_url %>" target="_blank"><img src="<%= logo_img %>"/> </a> 
+                      
+            </div>
+             <div class="clear"></div>--> 
+             
+            <!-- End Promote your event -->
+            
+            
+            <div class="mtitle fl marT40">
+            	<h1> <%= I18n.t 'org_show.organizer'%><span><%= I18n.t 'manage_event_index.page_link'%></span></h1>
+             <% @org = Organizer.find(@event[:organizer_id]) %>
+            </div> <div class="clear"></div>
+            	<div class="shadow marT10 pad15">
+                    <div>                    	
+                    	<div id="org_url">
+		                 	<h4> <%= I18n.t 'manage_event_index.page_url'%> : 
+                		
+		                 	<span class="fontnormal"  id="org_url_new">
+		                 	<% if @org[:page_url]=='' || @org[:page_url]==nil %>
+		                 		<a href="<%= APP_CONFIG['development']['site_url'] %>organizers/show/<%= @org[:id] %>" target="_blank">
+		                 			<%= APP_CONFIG['development']['site_url'] %>organizers/show/<%= @org[:id] %>
+		                 		</a>	
+		                 	<% else %>
+		                 		<a href="<%= APP_CONFIG['development']['site_url'] %>org/<%= @org[:page_url] %>" target="_blank">
+		                 			<%= APP_CONFIG['development']['site_url'] %>org/<%= @org[:page_url] %>
+		                 		</a>	
+		                 	<% end %> </span><a href="javascript:"  onclick="change_link('org');">[<%= I18n.t 'button.edit'%>]</a>
+		                 </h4>	
+	                 	</div>
+                    	<div id="org_url_change" style="display:none;" >
+             	         	<label><%= I18n.t 'manage_event_index.page_url'%>: </label><br />
+						     <span><%= APP_CONFIG['development']['site_url'] %>org/</span> 
+						     <%= text_field_tag :org_url_link, @org[:page_url], :class => 'textbox' %>
+						     <div class="clear"></div><br />
+						     <a class="btn" href="javascript:" onclick="set_url('org','<%= @org[:id]%>')"><%= I18n.t 'button.save' %></a>
+						     <a class="btn black_bg" href="javascript:" onclick="cancel_link('org');"><%= I18n.t 'button.cancel' %></a>
+						     
+						    <div id="orgurllinkInfo"></div>
+						    <br />
+			            </div>                          
+                    </div>        
+                </div>
+            </div>
+            
+         <div class="clear"></div>
+        </div>
+        
+  
+    	       	
+		<%= render(:partial => "manage_event_sidebar" , :object => :collection) %>
+		  
+		<div class="clear"></div>
+        </div>
+           <div class="clear"></div>
+
+</section>
+<% @edit_menu_class = 'Manage' %>
+<%= render(:partial => "edit_menu" , :object => :collection) %> 
+<div class="clear "></div>

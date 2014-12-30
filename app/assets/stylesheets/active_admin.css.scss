@@ -1,0 +1,155 @@
+// SASS variable overrides must be declared before loading up Active Admin's styles.
+//
+// To view the variables that Active Admin provides, take a look at
+// `app/assets/stylesheets/active_admin/mixins/_variables.css.scss` in the
+// Active Admin source.
+//
+// For example, to change the sidebar width:
+// $sidebar-width: 242px;
+
+// Active Admin's got SASS!
+@import "active_admin/mixins";
+@import "active_admin/base";
+
+
+// Overriding any non-variable SASS must be done after the fact.
+// For example, to change the default status-tag color:
+//
+//   body.active_admin {
+//      .status_tag { background: #6090DB; }
+//   }
+//
+// Notice that Active Admin CSS rules are nested within a
+// 'body.active_admin' selector to prevent conflicts with
+// other pages in the app. It is best to wrap your changes in a 
+// namespace so they are properly recognized. You have options
+// if you e.g. want different styles for different namespaces:
+//
+// .active_admin       applies to any Active Admin namespace
+// .admin_namespace    applies to the admin namespace (eg: /admin)
+// .other_namespace    applies to a custom namespace named other (eg: /other)
+
+
+body.active_admin #header h1 img {
+    top: -10px;
+}
+
+body.active_admin #header {
+    padding: 20px 30px;
+}
+
+#footer{
+  background: #44484B;
+  text-align: center;
+  font-size: 1.0em !important;
+  color: #fff;
+  padding: 5px !important;
+}
+
+#footer a{
+  color: #43C8E5;
+  text-decoration: underline;
+}
+
+#footer a:visited, #footer a:hover{
+  text-decoration: none;
+}
+
+#content_wrapper{
+  min-height: 650px;
+}
+
+
+body.active_admin .table_tools{
+  margin: 0;
+  height: 0;
+}
+
+body.active_admin a.green, body.active_admin a:link.green, body.active_admin a:visited.green{
+  color :#1cb514;
+}
+
+body.active_admin a.red, body.active_admin a:link.red, body.active_admin a:visited.red{
+  color :#f00;
+}
+
+body.active_admin #active_admin_content #main_content_wrapper{
+  min-height: 435px;
+}
+
+body.active_admin #header ul.tabs > li.has_nested > a{
+  padding-right: 30px;
+}
+
+
+.cke_chrome{
+    border: 1px solid #B6B6B6 !important;
+  }
+  
+  .cke_top{
+    border-bottom: 1px solid #B6B6B6 !important;
+    padding: 6px 8px 2px !important;
+  }
+  a.cke_button{
+    border: none !important;
+    outline: none !important;
+    padding: 4px 6px !important;
+  }
+  
+  .cke_toolgroup{
+    float:left !important;
+    margin:0 6px 5px 0 !important;
+    border:1px solid #a6a6a6 !important;
+    
+  }
+  
+  .cke_combo_button{
+    border-color: #A6A6A6 #A6A6A6 #979797 !important;
+    border-style: solid !important;
+    border-width: 1px !important;
+    margin: 0 6px 5px 0 !important;
+  }
+  
+  .cke_combo_text{
+    margin-bottom : -1px !important;
+    margin-top : 1px !important;
+    padding-left: 10px  !important;
+  }
+  .cke_combo_open{
+    font-size: 0 !important;
+    margin: 1px 7px !important;
+  }
+  .cke_combo_arrow{
+    border-left: 3px solid transparent !important;
+    border-right: 3px solid transparent !important;
+    border-top: 3px solid #474747 !important;
+    margin: 11px 0 0 !important;
+  }
+  
+  .cke_bottom{
+    padding-bottom: 3px !important;
+    border-top: 1px solid #BFBFBF !important;
+    padding: 6px 8px 2px !important;
+  }
+  .cke_path{
+    margin: -2px 0 2px !important;
+  }
+  
+  .cke_path_item, .cke_path_empty{
+    color: #4C4C4C !important;
+    font-size: 11px !important;
+    font-weight: bold !important;
+    margin-right: 2px !important;
+    padding: 3px 4px !important;
+    text-decoration: none !important;
+  }
+  .cke_resizer{
+    border-color: transparent #666666 transparent transparent !important;
+    border-style: dashed solid dashed dashed !important;
+    border-width: 10px 10px 0 0 !important;
+    margin-bottom: 2px !important;
+    margin-top: 6px !important;
+  }
+  .cke_resizer_ltr{
+    margin-right: -4px !important;
+  }

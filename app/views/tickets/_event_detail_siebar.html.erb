@@ -1,0 +1,165 @@
+<script type="text/javascript">
+	function save_event(){
+		var subcategory_path = '<%= APP_CONFIG['development']['site_url'] %>events/save_event/';
+        var id = '<%= @event[:id] %>';
+        $.ajax({
+            type: "GET",
+            data: {event_id: id}, 
+            url: subcategory_path+id,
+            success: function(data) {
+                if(data.msg=='success'){
+                	$("#saveeventInfo").removeClass('errors');
+	                $("#saveeventInfo").addClass('notice');
+	                $("#saveeventInfo").text('<%= I18n.t 'validation.event_view.event_saved' %>');
+	               
+                }else{
+	                $("#saveeventInfo").removeClass('notice');
+	                $("#saveeventInfo").addClass('errors');
+	                $("#saveeventInfo").text(data.msg);
+	                
+	            }   
+	             setTimeout(function() { 
+	                	$("#saveeventInfo").text('')
+	                	$("#saveeventInfo").removeClass('notice');
+	                	$("#saveeventInfo").removeClass('errors');
+	             }, 1500); 
+            }
+        });
+	}
+</script>
+    
+    
+<% @save_cnt = SaveEvent.where(:event_id => @event[:id]).count %>
+<div class="right_columm marT60">
+        	<div class="marT45">
+        	<div class="save_event">
+				<span class="fl"> <img src="<%= APP_CONFIG['development']['app_url'] %>light.png"  /> </span>
+            	<% 
+	    			if session[:user_id]=='' ||  session[:user_id]==nil 
+	   				session[:return_to] = request.url 
+	   					%><a href="<%= APP_CONFIG['development']['site_url'] %>home/login"  class=" fr pad3-TB"> <%= I18n.t 'event.view.save_this_event' %> </a><%
+	   				else
+	   					%><a href="javascript://" onclick="save_event();" class=" fr pad3-TB"> <%= I18n.t 'event.view.save_this_event' %> </a><%
+	   				end	
+	       		%><div class="clear"></div>
+				
+				<div class="clear"></div>
+				
+            </div>
+			<div class=" marT10 res_Tab">
+				<div id="saveeventInfo"></div>
+				<p class="fr"> <%= @save_cnt %> <%= I18n.t 'event.view.people_saved' %> </p>
+				
+            </div><div class="clear"></div>
+			<div class="mtitle marT45">
+            	<h1><%= I18n.t 'event.view.when' %> <span><%= I18n.t 'event.view.where' %></span></h1>
+              
+            </div>
+			<div class="shadow address pad7 marT20" >
+				<div class="marT10 marB10" style="display: <% if @event[:show_on_map]==1 %> block;<% else %> none;<% end %>">
+					<div id="test" style='width: 100%; height: 150px;'></div>				
+				</div>
+				<h4 class="marT5"> <%= @event[:vanue_name]%> </h4>
+				<p class="marT5" ><%= @event[:street_address]%></p>
+				
+		        <p><%= I18n.t 'event.view.from' %> : <%= @event[:event_start_date_time].strftime(@site[:date_time_format]) %> </p>
+		        <p><%= I18n.t 'event.view.to' %> : <%= @event[:event_end_date_time].strftime(@site[:date_time_format]) %></p>
+	        </div>
+			 <div class="clear"></div>
+			
+			<%
+                    if @event[:organizer_id]!=nil
+                    	@org = Organizer.find(@event[:organizer_id])
+                    
+                    	
+                    if @org	
+                 		if @org[:page_url]=='' || @org[:page_url]==nil 
+		             		page_url = APP_CONFIG['development']['site_url']+'organizers/show/'+@org[:id].to_s 
+		             	else
+		             		page_url = APP_CONFIG['development']['site_url']+'org/'+@org[:page_url]
+		             	end
+                    %>
+                    
+			
+			<div class="mtitle marT45">
+            	<h1><%= I18n.t 'event.view.orga' %><span><%= I18n.t 'event.view.nizer' %></span></h1>
+              
+            </div>
+			<div class="shadow organizer pad5 marT20" >
+			<h4 class="fontbold"><% if @org[:name]!=nil && @org[:name]!='' %> <%= @org[:name]%> <% else %><%= I18n.t 'event.view.unnamed_orga' %><% end %> </h4>
+			<% if @org[:description]!=nil && @org[:description]!='' %> 
+				<p class="marT20">
+					<%= render :inline => truncate(ActionController::Base.helpers.strip_tags(@org[:description]), :length => 100) %>
+				</p>	
+			 <% end %>
+			<div class="textcenter">	
+			 	<a href="<%= APP_CONFIG['development']['site_url'] %>organizers/contact/<%= @org[:id] %>?event_id=<%= @event[:id] %>" oncontextmenu="return false" class="btn font_size15 pad1027 marT20 rr"><%= I18n.t 'event.view.contact_organizer' %> </a><div class="clear"></div>
+			 </div>	
+			 <div class="marT20">
+			 <a href="<%= page_url %>" class="fontbold profile"> <%= I18n.t 'event.view.view_organizer' %></a>
+			 </div>
+			<div class="clear"></div>
+			</div>
+			
+					<% 
+						end 
+					end
+			%>
+            
+            
+            <% if @updates.count > 0 %>
+	                <div class="mtitle marT45">
+		            	<h1><%= I18n.t 'event.view.news' %><span> <%= I18n.t 'event.view.updates' %></span></h1>
+		              
+		            </div>
+	                <div class="shadow organizer pad5 marT20" >
+	                	<% for up in @updates %>
+							<h4><%= up[:updated_at].strftime(@site[:date_time_format]) %></h4>
+							 <% 
+							 	update_text = up[:updates].gsub('&lt;','<')
+							 	update_text = up[:updates].gsub('&gt;','>')
+							 	update_text = up[:updates].gsub('&amp;','&')
+							 	update_text = up[:updates].gsub('&nbsp;',' ') 
+							 %>
+							 <%=  render :inline => update_text %><div class="clr"></div><br />
+						<% end %>
+						<div class="clear"></div>
+	                </div>
+	                	 
+	                 <div class="clear"></div>
+                <% end %>
+                
+          </div><div class="clear"></div>      
+</div>
+
+<script src="<%= APP_CONFIG['development']['js_url'] %>js/map/initmap.min.js" type="text/javascript"></script> 
+ <script type="text/javascript">
+   $(document).ready(function() 
+   {
+	    <% if @event[:street_address]!='' && @event[:street_address]!=nil %> 
+			 val = '<%= @event[:street_address] %>'; 
+			
+			 //setTimeout(function() { $('#mainbg').click(); }, 1000);
+			 //alert(1);
+			 $('#test').initMap({ 
+		   			type : 'roadmap',
+		   			center : val,
+		   			markers : {
+						marker1: { 
+							position: val,
+							animation: 'bounce',
+							info_window : { 
+				               content :val,
+				                maxWidth: 100,
+				                zIndex: 1
+				            } 
+		             	}
+					}
+			 });
+		
+	    <% end %>
+   });
+    
+  		
+	
+</script>

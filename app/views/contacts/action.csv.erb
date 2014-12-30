@@ -1,0 +1,8 @@
+<%= I18n.t 'action.num'%>,<%= I18n.t 'action.email'%>,<%= I18n.t 'action.first_name'%>,<%= I18n.t 'action.last_name'%>
+ <%
+ i=1 
+ for c in @contacts %>
+<%= i %>,<%= c[:email] %>,<%= c[:first_name] %>,<%= c[:last_name] %>
+ <% 
+ i+=1
+ end %>

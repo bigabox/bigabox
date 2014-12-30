@@ -1,0 +1,240 @@
+<style>
+	.form label{
+		text-align:left;
+		width: 50%;
+	}
+	
+</style>	
+<script>
+	function validate_auth_net(){
+		$('#x_card_numInfo').text('');
+		$('#x_exp_dateInfo').text('');
+		$('#x_first_nameInfo').text('');
+		$('#x_last_nameInfo').text('');
+		
+		$('#x_addressInfo').text('');
+		$('#x_cityInfo').text('');
+		$('#x_stateInfo').text('');
+		$('#x_zipInfo').text('');
+		
+		$('#x_countryInfo').text('');
+		$('#x_card_codeInfo').text('');
+		
+		var number=/^[0-9]+$/;
+		
+		if($('#x_card_num').val()==''){
+			$('#x_card_num').focus();
+			$('#x_card_numInfo').text(<%= I18n.t 'tickets_order.credit_card_no_require'%>);
+			return false;
+		}
+		
+		if($('#x_exp_date').val()==''){
+			$('#x_exp_date').focus();
+			$('#x_exp_dateInfo').text(<%= I18n.t 'tickets_order.expire_date_field_require'%>);
+			return false;
+		}
+		
+		if($('#x_card_code').val()=='' || $('#x_card_code').val().length != 3 )
+		{		
+			$('#x_card_code').focus();
+			$('#x_card_codeInfo').text(<%= I18n.t 'tickets_order.ccv_be_3_digit_no'%>);
+			return false;
+		} 
+		else {
+			if(!number.test($('#x_card_code').val())){
+				$('#x_card_code').focus();
+				$('#x_card_codeInfo').text(<%= I18n.t 'tickets_order.ccv_be_3_digit_numeric_only'%>);
+				return false;
+			}
+		}
+		
+		if($('#x_first_name').val()==''){
+			$('#x_first_name').focus();
+			$('#x_first_nameInfo').text(<%= I18n.t 'tickets_order.fname_field_required'%>);
+			return false;
+		}
+		
+		if($('#x_last_name').val()==''){
+			$('#x_last_name').focus();
+			$('#x_last_nameInfo').text(<%= I18n.t 'tickets_order.lname_field_required'%>);
+			return false;
+		}
+		
+		if($('#x_address').val()==''){
+			$('#x_address').focus();
+			$('#x_addressInfo').text(<%= I18n.t 'create_event.address_required'%>);
+			return false;
+		}
+		
+		if($('#x_city').val()==''){
+			$('#x_city').focus();
+			$('#x_cityInfo').text(<%= I18n.t 'tickets_order.city_field_require'%>);
+			return false;
+		}
+		
+		if($('#x_state').val()==''){
+			$('#x_state').focus();
+			$('#x_stateInfo').text(<%= I18n.t 'tickets_order.state_field_required'%>);
+			return false;
+		}
+		
+		if($('#x_zip').val()==''){
+			$('#x_zip').focus();
+			$('#x_zipInfo').text(<%= I18n.t 'tickets_order.zip_code_required'%>);
+			return false;
+		}
+		
+		if($('#x_country').val()==''){
+			$('#x_country').focus();
+			$('#x_countryInfo').text(<%= I18n.t 'tickets_order.country_code_required'%>);
+			return false;
+		}
+		return true;
+	}
+</script>   
+<section>
+	
+	<%= render(:partial => "tickets/event_top_banner" , :object => :collection) %> 	 
+	
+	
+	<div class="main">
+		 <div id="orderInfo"  class="marT60"></div>
+		 <!--Content Left-->
+		 
+    	
+	    	<%= form_tag({:controller => 'tickets', :action => 'auth_net_aim'}, :id => 'auth_net_aim', :name => 'auth_net_aim') do %>	
+	    	
+	    	<div class="marT60">
+	        	<div class="mtitle fl">
+	            	<h1 class="fl"><%= I18n.t 'tickets_order.country_code_required'%> <span><%= I18n.t 'event.view.information'%></span></h1>
+	            </div> <div class="clear"></div>
+	            
+	            <div class="event_detail pad10 marT20 form">
+	            	
+	            	<table border="0" cellpadding="10" width="100%" align="center">
+		                <tr>
+		                	<td>
+		                		<div>
+				                    <label><%= I18n.t 'tickets_order.credit_card_num'%><span class="red"> *</span></label>
+				                    <input type="text" class="textbox" name="x_card_num" id="x_card_num" />
+				                </div>
+				                <div id="x_card_numInfo" class="error1"></div>
+		                	</td>
+		                	<td>
+		                		<div>
+				                    <label><%= I18n.t 'tickets_order.expire_date'%><span class="red"> *</span></label>
+		                    		<input type="text" class="textbox" name="x_exp_date" id="x_exp_date" />
+				                </div>
+				                <div id="x_exp_dateInfo" class="error1"></div>
+		                	</td>
+		                	<td>
+		                		<div>
+				                    <label><%= I18n.t 'tickets_order.CCV'%><span class="red"> *</span></label>
+		                    		<input type="text" class="textbox"  name="x_card_code" id="x_card_code" />
+				                </div>
+				                <div id="x_card_codeInfo" class="error1"></div>
+		                	</td>
+		                </tr>
+		               
+		                
+		                <tr>
+		                	
+		                	<td>
+		                		<div>
+				                     <label><%= I18n.t 'user.fname'%><span class="red"> *</span></label>
+		                    		 <input type="text" class="textbox" name="x_first_name" id="x_first_name" />
+				                </div>
+				                <div id="x_first_nameInfo" class="error1"></div>
+		                	</td>
+		                	<td>
+		                		<div>
+				                    <label><%= I18n.t 'user.lname'%><span class="red"> *</span></label>
+		                    		<input type="text" class="textbox" name="x_last_name" id="x_last_name" />
+				                </div>
+				                <div id="x_last_nameInfo" class="error1"></div>
+		                	</td>
+		                	<td>&nbsp;</td>
+		                </tr>
+		                
+		                <tr>
+		                	
+		                	<td>
+		                		<div>
+				                     <label><%= I18n.t 'user.add'%><span class="red"> *</span></label>
+		                    		 <input type="text" class="textbox" name="x_address" id="x_address" />
+				                </div>
+				                <div id="x_addressInfo" class="error1"></div>
+		                	</td>
+		                	<td>
+		                		<div>
+				                     <label><%= I18n.t 'user.city'%><span class="red"> *</span></label>
+		                    		<input type="text" class="textbox" name="x_city" id="x_city" />
+				                </div>
+				                <div id="x_cityInfo" class="error1"></div>
+		                	</td>
+		                	<td>&nbsp;</td>
+		                </tr>
+		                
+		               
+		                
+		                <tr>
+		                	
+		                	
+		                	<td>
+		                		<div>
+				                    <label><%= I18n.t 'user.state'%><span class="red"> *</span></label>
+		                    		 <input type="text" class="textbox" name="x_state" id="x_state" />
+				                </div>
+				                <div id="x_stateInfo" class="error1"></div>
+		                	</td>
+		                	<td>
+		                		<div>
+				                     <label><%= I18n.t 'tickets_order.zip_code'%><span class="red"> *</span></label>
+		                    		<input type="text" class="textbox" name="x_zip" id="x_zip" />
+				                </div>
+				                <div id="x_zipInfo" class="error1"></div>
+		                	</td>
+		                	
+		                	<td>
+		                		<div>
+				                    <label><%= I18n.t 'user.country'%><span class="red"> *</span></label>
+		                    		<input type="text" class="textbox" name="x_country" id="x_country" />
+				                </div>
+				                <div id="x_countryInfo" class="error1"></div>
+		                	</td>
+		                </tr>
+		                
+		               
+		                
+		             </table>   
+		                
+		               
+		                
+		                <div>
+		                    
+		                </div><br />
+		            
+		               
+				</div><div class="clear"></div>
+				<div class="marT20" align="right">
+	             	<input type="hidden" name="total" id="total" value="<%= @pur[:total] %>" />
+	             	<input type="hidden" name="pur_id" id="pur_id" value="<%= @pur[:id] %>" />
+	             	<input type="submit" value="Pay Now" class="submit_btn" name="submit" id="submit" onclick="return validate_auth_net();" />
+	            </div>
+		            
+		            
+	        </div>
+	        
+	        <% end %>
+	        <div class="clear"></div>
+        
+    </div>
+    
+    
+    
+</section>
+
+
+
+
+	

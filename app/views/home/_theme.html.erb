@@ -1,0 +1,540 @@
+<% 
+  @site_theme = SiteTheme.find(:first)
+  @color = @site_theme[:color]
+  @colordark = @site_theme[:colordark]    
+  @color1 = @site_theme[:color1]
+  @path = APP_CONFIG['development']['app_url']+'themes'
+  @font = '"Droid Serif", Arial, Helvetica, sans-serif'
+  @color2= @site_theme[:color2]
+  @color3= @site_theme[:color3]
+%> 
+
+
+<style>
+::-moz-selection { 
+	background: <%= @color %>; 
+	color: #ffffff; 
+	text-shadow: none; 
+}
+
+::selection { 
+	background: <%= @color %>; 
+	color: #ffffff; 
+	text-shadow: none;
+}
+
+body, .mainbg {	
+	color:#7f7f7f;
+	background:#f2f2f2;
+}
+
+.headerblank, .ticket_article {
+	border-bottom: 10px solid <%= @color %>;
+	
+}
+
+.nav, .login, .mtitle h1, .mtitle h2 ,.eventListH .eventDetail h2, .planevent ul li h2, .BcreBTN h1, .footer_box  h3, #build-menu li a, .event_detail h4, .table th, .save_event a,.mng_inv h4,.mng_inv h3,.accordion section h2 a,.inner_cat ul li a, .date_cat ul li a, .responsive-tabs__list__item, .responsive-tabs__heading, .login_signup label, input[type=submit].submit_btn, .login_using span, .or, .filter_events,.event th, .font, .mtitle h3, .findeventListH .findeventDetail h2, .form label,.acc_link,.event_title a,.edit_menu ul li a, label, .event_name_list li a, .multi_user_p, .news_update, .status label, .status_right label, .status_right span, .create_event label, .upload span, input[type=submit].submit_btn1, .order_list a span, .order_list a.ticketbtn p, .recom_list a, .custom_color_profile li .label, .preview_window_profile .box h3, span.order_form, .email_title a, .order_no, .order_by_detail p, .modal-header h3, .article_left strong, .notice , .errors, .error1, .success {
+	font-family: <%= render :inline => @font %>;		
+}
+
+.nav ul li a, .login ul li a, .footer_box  h3,.acc_link, .acc_link:hover, .news_update, .upload span{
+	color: <%= @color2 %>;
+}
+.accordion section h2 a:hover,.date_cat ul li a:hover ,.active,.event_title a,.edit_menu ul li a,.menu_btn a:hover, .live, input[type=submit].submit_btn1, .order_list a.ticketbtn p, .order_no{
+	color: <%= @color2 %> !important;
+}
+a.white_bg, a.green_bg:hover, .regular-checkbox + label{
+	background: <%= @color2 %> !important;
+}
+a, a:visited, .nav ul li a:hover, .mtitle h1 span, .flexslider .slides h2 span, .mtitle em a, .eventListH .eventDetail h2,.eventListH .eventDetail h2 a, .eventDetail span a:hover, .planevent ul li h2, .BcreBTN h1 span, .copyright span, .copyright a:hover, .footer_box  h3 span, .footer_box li a:hover, #build-menu li a:hover, .mtitle h2 span,.event_detail span,.organizer h4,.mng_inv h3,.login_using span em, .color_1,.findeventListH .findeventDetail h2 ,.findeventListH .findeventDetail h2 a, .mtitle h3 span, .status span, .modal-header h3{
+	color: <%= @color %>;
+}
+
+.responsive-tabs__list__item--active, .responsive-tabs__list__item--active:hover, .responsive-tabs__heading--active, .green_font, .findeventDetail span a:hover, .order_list a.ticketbtn span, .link3 {
+	color: <%= @color %> !important;
+}
+
+a:hover, .mtitle, .mtitle em a:hover, .eventListH .eventDetail h2 a:hover, .eventListH .eventDetail span a, .more a:hover,.BcreBTN h1, .copyright a, .event_detail h3,.address h4,.mng_inv h4,.accordion section h2 a, .login_signup label, .login_using span, .filter_events, .latest_update li a,.findeventListH .findeventDetail h2 a:hover ,.findeventDetail span, .form label ,.save_event a:hover, label, .status label, .status_right label, .status_right span, .create_event label, .event_name_list li , .multi_user_p, span.order_form, .change_color li a{
+	color: <%= @color1 %> ;
+}
+a.white_bg, a.green_bg:hover, .order_list a.ticketbtn, .link2, .order_by_detail p span, .order_by_detail span{
+	color: <%= @color1 %> !important ;
+}
+
+.save_event a,.inner_cat ul li a:hover,.accordion section:target h2 a,.date_cat ul li a:hover, .referral_program label em, .order_list a.ticket1, .order_list a.ticket2, .recom_event li p, .order_by_detail p a, .order_by_detail span a {
+	color: <%= @color2 %> ;
+}
+.inner_cat ul li a,.event_banner h3 ,.date_cat ul li a ,.pagination a, .findeventDetail a, .mtitle h4 p{
+	color: <%= @color3 %> ;
+}
+
+.headerblank, .headerblank1 {
+	background:url(<%= @path %>/patern.png) left top;
+}
+
+.flexslider .slides h2:before {
+	content:url("<%= @path %>/quote.png");
+}
+.edit_menu ul li a:hover ,.menu_selected, .order_list a.ticket2:hover{
+	background:#2b2a2a !important;	
+}
+
+.flex-control-nav, .findevent_head_gradient {
+	background: <%= @color %>;
+	background: -moz-linear-gradient(left, <%= @color %>, <%= @colordark %>);
+	background: -webkit-gradient(linear, left top, right top, color-stop(0%,<%= @colordark %>), color-stop(100%,<%= @color %>));
+	background: -webkit-linear-gradient(left, <%= @color %>,<%= @colordark %>);
+	background: -o-linear-gradient(left, <%= @color %>, <%= @colordark %>);
+	background: -ms-linear-gradient(left, <%= @color %>, <%= @colordark %>);
+	background: linear-gradient(to right, <%= @color %>, <%= @colordark %>);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='<%= @color %>', endColorstr='<%= @colordark %>',GradientType=1 );
+}
+
+.flex-control-paging li a, #mobile-bar a:hover, .save_event,.event_title a,.accordion section:hover,.accordion section:target h2 a, .responsive-tabs__heading, .responsive-tabs__list, input[type=submit].submit_btn, .table th,.action_icon a:hover,.date_cat ul li a:hover, .active, .live, .news_update, .upload span, .recom_event li p{
+	background: <%= @color %>;
+}
+a.black_bg:hover, a.white_bg:hover, input[type=submit].black_bg:hover, .referral_program label em, input[type=submit].submit_btn1:hover, .order_list a.ticket1, .order_list a.ticketbtn p, .upper_tab{
+	background: <%= @color %> !important;
+}
+.flex-control-paging li a:hover, .flex-control-paging li a.flex-active, .order_list a.ticket1:hover, .order_no { 
+	background: <%= @colordark %> !important;
+}
+a.black_bg, input[type=submit].black_bg, .order_list a.ticket2{
+	background: <%= @color1 %> !important ;
+}
+.shadow, .eventListH ul li,.event_detail,.article_right img,.category ul li,.shadow_none ,.findeventListH ul li, .page_nobg, .regular-checkbox + label, .regular-radio + label, .order_list a, .recom_event li{
+
+	box-shadow: 0 0 4px 2px #e0e0e0;
+	-webkit-box-shadow: 0 0 4px 2px #e0e0e0;
+	-moz-box-shadow: 0 0 4px 2px #e0e0e0;
+	-o-box-shadow: 0 0 4px 2px #e0e0e0;
+	-ms-box-shadow: 0 0 4px 2px #e0e0e0;	
+	behavior: url(PIE.htc);
+	position:relative;
+	background:#FFF;
+	word-wrap: break-word;
+}
+.article_right .article_shadow img {
+	padding:0;
+	left:0;
+	bottom:0;
+	box-shadow: 0 0 0 0;
+	margin-top:1px;
+	min-height: 0px;
+}
+
+.search input[type=submit] {
+	background:url('<%= APP_CONFIG['development']['app_url'] %>icon-search.png') center no-repeat <%= @color %>; 
+}
+
+
+.eventListH .eventimg,.organizerListH .organizerimg ,.organizerListH .organizer_right_img ,.findeventListH .findeventimg ,.findeventListH .findeventimg{
+	border: 5px solid <%= @color %>;	
+}
+
+a.btn {
+	font-family:<%= render :inline => @font %>;	
+	font-size:20px;
+	color:#FFF;
+	background: <%= @color %>;
+	padding: 10px 20px;
+	display:inline-block;
+		
+	-webkit-transition:all .3s ease;
+	-moz-transition:all .3s ease;
+	-o-transition:all .3s ease;
+	-ms-transition:all .3s ease;
+	-transition:all .3s ease;
+}
+input[type=submit].btn {
+	font-family:<%= render :inline => @font %>;	
+	font-size:20px;
+	color:#FFF;
+	background: <%= @color %>;
+	padding: 7px 18px;
+	display:inline-block;
+	-webkit-transition:all .3s ease;
+	-moz-transition:all .3s ease;
+	-o-transition:all .3s ease;
+	-ms-transition:all .3s ease;
+	-transition:all .3s ease;
+}
+
+a.btn:hover,.action_icon a, input[type=submit].submit_btn:hover ,input[type=submit].btn:hover, input[type=submit].submit_btn1{
+	background: <%= @color1 %>;
+}
+
+.footerB {
+	background:#0f0f0f;
+	color:#454545;
+}
+.save_event p,.event_detail h4{
+	font-size:14px;
+}
+.mng_inv h4,.inner_cat ul li a,.ankit ,.read_more ,.date_cat ul li a, .multi_user_p, .add_ticket a, .order_list a span, span.order_form, .order_no, .order_by_detail p {
+	font-size:15px !important;
+}
+.temp ,.btns a, .status label, .status span, .status_right label, .order_list a.ticketbtn p{
+	font-size:17px;
+}
+.save_event a,.accordion section h2 a,.event_title a,.edit_menu ul li a, .upload span{
+	font-size:20px;
+}
+.pad3-TB {
+	padding:3% 0!important;
+}
+.responsive-tabs__heading, .responsive-tabs__list__item, input[type=submit].submit_btn {
+	color:#FFF;	
+}
+
+.responsive-tabs__list__item--active, .responsive-tabs__list__item--active:hover, .responsive-tabs__heading--active {  
+	background:  <%= @color2 %>; 
+}
+
+.responsive-tabs__heading--active:after,.edit_menu ul li a:hover ,.menu_selected{
+	border-bottom: 5px solid <%= @color %> !important;
+ }
+ 
+.responsive-tabs__heading:after {
+	border-top: 5px solid #FFF;
+}
+.login_using span, .filter_events, .latest_update li a, .event_name_list li  {
+	font-size:15px;
+}
+.or {
+	font-size:30px;
+}
+.table td:nth-of-type(1):before { color:<%= @color %>; font-family:<%= render :inline => @font %>;}
+.table td:nth-of-type(2):before { color:<%= @color %>; font-family:<%= render :inline => @font %>;}
+.table td:nth-of-type(3):before { color:<%= @color %>; font-family:<%= render :inline => @font %>;}
+.table td:nth-of-type(4):before { color:<%= @color %>; font-family:<%= render :inline => @font %>;}
+.table td:nth-of-type(5):before { color:<%= @color %>; font-family:<%= render :inline => @font %>}
+.table td:nth-of-type(6):before { color:<%= @color %>; font-family:<%= render :inline => @font %>;}
+.table td:nth-of-type(7):before { color:<%= @color %>; font-family:<%= render :inline => @font %>;}
+.table td:nth-of-type(8):before { color:<%= @color %>; font-family:<%= render :inline => @font %>;}
+.table td:nth-of-type(9):before { color:<%= @color %>; font-family:<%= render :inline => @font %>;}
+.table td:nth-of-type(10):before { color:<%= @color %>; font-family:<%= render :inline => @font %>;}
+
+/* Tooltip */
+.hint--bottom:before {
+	border-bottom-color: <%= @color %>; 
+}
+.hint:after, [data-hint]:after {
+	background: <%= @color %>;
+}
+.hint:after, [data-hint]:after {	
+	color: <%= @color2 %>;
+}
+/* Tooltip */
+
+
+.latest_update li a, .event_name_list li {
+	background:url('<%= APP_CONFIG['development']['app_url'] %>arrow.png') no-repeat 10px 50%;
+}
+.latest_update li a:hover, .latest_update li a.selected{
+	background:url('<%= APP_CONFIG['development']['app_url'] %>arrow-hover.png') no-repeat 15px 50% <%= @color %>;
+	color: <%= @color2 %>;
+}
+
+.acc_link {
+	background:url(<%= @path %>/user_bg.png) no-repeat;
+}
+.elastislide-wrapper nav span {
+	background:<%= @color %> url('<%= APP_CONFIG['development']['app_url'] %>nav.png') no-repeat 4px 3px;
+}
+.dashboard {
+		background: url("<%= APP_CONFIG['development']['app_url'] %>dashboard.png") no-repeat scroll 15px center <%= @color %> !important; 
+}
+.selected-button, .datepicker_bootstrap .days .day.selected, .datepicker_bootstrap .days .day.selected:hover, .datepicker_bootstrap .months .month.selected, .datepicker_bootstrap .months .month.selected:hover, .datepicker_bootstrap .years .year.selected, .datepicker_bootstrap .years .year.selected:hover {
+  background-color: <%= @color %>;
+}
+</style>
+
+<!-- Anita  -->
+<style>
+.errors{
+	border: 1px dashed red;
+	padding: 5px;
+	margin-bottom: 2em;
+	background-color: #fdf;
+	color:red;
+	font-size:12px;
+	text-align: center;
+}
+
+.errors li{
+	/*list-style: disc;*/
+}
+
+
+.notice{
+	border: 1px dashed #0f8a20;
+	padding: 5px;
+	margin-bottom: 2em;
+	background-color: #d9e8db;
+	
+	color: #0f8a20;
+	font-size: 12px;
+	text-align: center;
+}
+
+.notice li{
+	list-style: disc;
+}
+
+
+.pagination{
+	text-align: center;
+	float:right;
+}
+.pagination a, .pagination em, em.current{
+	
+    color: <%= @color3 %>;
+     height: 32px;
+    line-height: 30px;
+    margin-top: 3px;
+    text-align: center;
+    width: 32px;
+    
+    box-shadow: 0 0 4px 2px #e0e0e0;
+	-webkit-box-shadow: 0 0 4px 2px #e0e0e0;
+	-moz-box-shadow: 0 0 4px 2px #e0e0e0;
+	-o-box-shadow: 0 0 4px 2px #e0e0e0;
+	-ms-box-shadow: 0 0 4px 2px #e0e0e0;	
+	behavior: url(PIE.htc);
+	position:relative;
+	background:#FFF;
+	float:left;
+}	
+
+.pagination em, em.current{
+	color: <%= @color %>;
+	
+}
+.previous_page, .next_page, a.previous_page{
+	background: url('<%= APP_CONFIG['development']['app_url'] %>page_left.png') no-repeat left top;
+	 margin-left: 5px;
+    margin-right: 5px;
+    width: 40px;
+    font-size: 0px;
+    position: relative;
+    display: inline-block;
+    height: 38px;
+    float:left;
+   
+}
+
+.next_page, a.next_page{
+	background: url('<%= APP_CONFIG['development']['app_url'] %>page_right.png') no-repeat left top;
+	width: 40px;
+	height: 38px;
+}
+
+a.previous_page, a.next_page{
+	border: none;
+	font-size: 0px;
+	padding: 0px;
+	bottom:4px;
+}
+
+.error1, .success{
+	color:#f00;
+	font-weight:normal;
+	font-size:12px;
+	margin-top: 5px;
+}
+
+.success{
+	color: <%= @color %>;
+}
+
+.custom_colors {
+    float: left;
+    overflow: hidden;
+    width: 100%;
+}
+.custom_colors li {
+    cursor: auto;
+    display: inline;
+    float: left;
+   
+    text-align: center;
+    width: 27%;
+}
+.custom_colors li .watch {
+    border: 1px solid <%= @color %>;
+    display: inline-block;
+    height: 80px;
+    
+    padding: 3%;
+    width: 60%;
+}
+
+.color{
+	cursor: pointer;
+    height: 100%;
+    width: 100%;
+}
+
+.logo_img{
+	width:185px;
+	height:185px;
+}
+
+.logo_img img{
+	max-height: 90%;	
+	max-height: 90%;	
+}
+
+/***   theme classes ***/
+
+ 	
+.elastislide-horizontal  .theme_main {
+	width:102px;
+	padding:10px;
+	cursor: pointer;	
+}
+
+.elastislide-horizontal  .theme_head {
+	width:70%;
+	height:10px;
+	margin-bottom:10px;
+}
+
+.elastislide-horizontal .table_class {
+	padding:5px;	
+}
+
+.elastislide-horizontal  .table_head {
+	padding:5px;
+}
+
+.elastislide-horizontal  .table_head h2{
+	padding:3px;
+	width:60%;
+}
+
+.elastislide-horizontal  .table_class td{
+	padding:2px;
+}
+
+.elastislide-carousel  {
+	border: 2px solid white;
+}
+
+.elastislide-carousel  li:hover, .elastislide-carousel  li.selected {
+	box-shadow: 0 0 5px #333333;
+}
+
+#cboxLoadedContent{
+	padding: 15px;
+}
+#cboxLoadedContent h2{
+	border-bottom: 1px solid #eee;
+	font-size: 21px;
+	font-weight: bold;
+	line-height: 20px;
+	color: <%= @color %>;
+}
+
+.create_event_ticket{
+	border: 1px solid <%= @color %>;
+	background: #f6f6f6;
+}
+
+.caroufredsel_wrapper {
+	margin-left: 15px !important;
+	margin-right: 25px !important;
+}
+.pager {
+	display: none !important;
+}
+
+.next, .prev {
+	position: absolute;
+	width: 23px;
+	height: 23px;
+	border-radius: 50%;
+	text-indent: -9000px;
+	cursor: pointer;
+	background: #7ab922 url('<%= APP_CONFIG['development']['app_url'] %>nav.png') no-repeat 4px 3px;
+	top: 60%;
+	margin-top: -11px;
+}
+.next {
+	right: 10px;
+	left: auto;
+	background-position: 4px -17px;
+}
+.prev {
+	right: auto;
+	left: 10px;
+	background-position: 4px 3px;
+}
+
+a.acc_link, a.acc_link:hover,  a.acc_link:visited{
+	color: <%= @color2 %> !important;
+}
+
+ul.autocomplete li.hover{
+  	background-color: <%= @color %>;
+  }	
+  
+
+a.loginbtn {
+	
+	background: #000;
+	
+	-webkit-transform: skew(-25deg);
+	-moz-transform: skew(-25deg);
+	-o-transform: skew(-25deg);
+	transform: skew(-25deg);
+}
+
+a.loginbtn span {
+	-webkit-transform: skew(25deg);
+	-moz-transform: skew(25deg);
+	-o-transform: skew(25deg);
+	transform: skew(25deg);
+	display:inline-block;
+}
+a.loginbtn:hover {
+	background: #7AB922;
+}
+a.signupbtn {
+	background: #7AB922;
+	
+	-webkit-transform: skew(-25deg);
+	-moz-transform: skew(-25deg);
+	-o-transform: skew(-25deg);
+	transform: skew(-25deg);
+}
+a.signupbtn span {
+
+	-webkit-transform: skew(25deg);
+	-moz-transform: skew(25deg);
+	-o-transform: skew(25deg);
+	transform: skew(25deg);
+	display:inline-block;
+}
+a.signupbtn:hover {
+	background-color:#000;
+}  
+
+
+a.acc_link, a.acc_link:hover,  a.acc_link:visited{
+	color: <%= @color2 %> !important;
+}
+
+ul.autocomplete li.hover{
+  	background-color: <%= @color %>;
+}	
+  
+.acc_link, .btn_acc, .btn_log{
+  	background-color: <%= @color %> !important;	
+} 
+
+a.loginbtn:hover, a.signupbtn{
+	background: <%= @color %>;	
+} 
+</style>

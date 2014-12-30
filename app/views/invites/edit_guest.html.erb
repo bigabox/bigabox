@@ -1,0 +1,121 @@
+<script type="text/javascript">
+var email_reg_exp= /^[a-zA-Z0-9]+[a-zA-Z0-9_.-]+[a-zA-Z0-9_-]+@[a-zA-Z0-9]+[a-zA-Z0-9.-]+[a-zA-Z0-9]+.[a-z]{2,4}$/;	
+	function validate_editguestForm(){
+		//alert('hi');
+		var form = $("#editguestForm");	
+		
+		var email = $("#edit_email");
+		var emailInfo = $("#guestemailInfo");
+		
+		var first = $("#edit_first_name");
+		var firstInfo = $("#guestfirstInfo");
+		
+		var last = $("#edit_last_name");
+		var lastInfo = $("#guestlastInfo");
+		
+		
+		
+		//set all errors null 
+		
+		emailInfo.text("");
+		firstInfo.text("");
+		lastInfo.text("");
+		
+		if(first.val()==''){
+			first.focus();
+			firstInfo.text("<%= I18n.t 'edit_guest.enter_fname'%>");
+			return false;
+		}
+		
+		if(last.val()==''){
+			last.focus();
+			lastInfo.text("<%= I18n.t 'edit_guest.enter_lname'%>");
+			return false;
+		}
+		
+		if(email.val()==''){
+			email.focus();
+			emailInfo.text("<%= I18n.t 'edit_guest.enter_valid_email'%>");
+			return false;
+		}
+		
+		if(email.val()!=''){
+			if(!email_reg_exp.test(email.val())){
+				email.focus();	
+				emailInfo.text("<%= I18n.t 'edit_guest.email_should_be_valid'%>");
+				
+				return false;
+			}
+		}
+		
+			///submit form 
+			
+			var url = '/invites/edit_guest/<%= params[:id] %>'; // the script where you handle the form input.
+
+		    $.ajax({
+		           type: "POST",
+		           url: url,
+		           data: $("#editguestForm").serialize(), // serializes the form's elements.
+		           success: function(data)
+		           {
+		               // show response from the php script.
+		                if(data.msg == 'success'){
+		                	var obj = data.guest;
+		                	$('#first_name'+obj["id"]).text(obj["first_name"]);
+		                	$('#last_name'+obj["id"]).text(obj["last_name"]);
+		                	$('#email'+obj["id"]).text(obj["email"]);
+							parent.jQuery.colorbox.close();
+						}else{
+							email.focus();	
+							emailInfo.text(data.msg);
+						}
+						
+		           }
+		         });
+		
+		    return false;
+		
+	
+	}
+
+</script>
+
+<style>
+	.error1, .success{
+		margin-left:30%;
+		height:12px;
+		display:block;
+	}
+</style>
+
+<div class="popup_Content">
+<%= form_tag({:controller => 'invites', :action => 'edit_guest'}, :id => 'editguestForm', :name => 'editguestForm', :multipart => 'true') do %> 
+				<h2><%= I18n.t 'edit_guest.edit_info'%></h2>  
+				 
+				   <div class="form pad10">
+				        
+				        <label><%= I18n.t 'user.fname'%></label>
+				        <input type="text" name="edit_guest[first_name]" id="edit_first_name" value="<%= @guest[:first_name] %>" class="textbox" />
+				        <div id="guestfirstInfo" class="error1" ></div> <div class="clear"></div>
+				        
+				        <label><%= I18n.t 'user.lname'%></label>
+				        <input type="text" name="edit_guest[last_name]" id="edit_last_name" value="<%= @guest[:last_name] %>" class="textbox"/>
+				        <div class="clear"></div><div id="guestlastInfo" class="error1" ></div> 
+				        
+				        <label><%= I18n.t 'user.email'%></label>
+				        <input type="text" name="edit_guest[email]" id="edit_email" value="<%= @guest[:email] %>" class="textbox"/>
+				         <div class="clear"></div><div id="guestemailInfo" class="error1" ></div>
+				        
+				        
+				        <div class="marT10">
+				        	<input type="hidden" name="edit_guest[id]" value="<%= @guest[:id] %>" />
+				        	<a href="javascript:" class="btn" onclick="return validate_editguestForm();"><%= I18n.t 'button.save'%></a>
+				            <a href="javascript:" onclick="parent.jQuery.colorbox.close();" class="btn black_bg"><%= I18n.t 'button.cancel'%></a>
+				       </div>
+				   
+				     
+				    
+				  </div>
+				 
+				  <% end %>  
+</div>

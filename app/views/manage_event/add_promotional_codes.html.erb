@@ -1,0 +1,707 @@
+ <%
+ 	free_tickets = Ticket.get_free_ticket(@event[:id])
+	paid_tickets = Ticket.get_paid_ticket(@event[:id])
+	donation_tickets = Ticket.get_donation_ticket(@event[:id])	
+	chk_access = Ticket.check_allow_access(@event[:id])
+ %>
+
+
+  <style>
+  	.error1{
+  		margin-left:34%;
+  	}
+  	#ticketerrInfo{
+  		margin-left:25%;
+  	}
+  </style> 
+ <script type="text/javascript">
+ 	function chk_access(val){
+ 		
+ 		if(val=='access'){ 
+ 		
+ 			$('#disc_amount').hide();
+ 			$('#disc_label').hide();
+ 			$('#access_label').show();
+ 			
+ 			$('.free').removeAttr('disabled','disabled'); 
+ 			$('.donation').removeAttr('disabled','disabled'); 
+ 			$('.hidden').removeAttr('disabled','disabled');			
+ 			$('.nothidden').attr('disabled','disabled'); 
+ 		  
+ 		  	$('#access_url').show();
+ 			$('#disc_url').hide();
+ 			$('#disc_div').hide();
+ 		}
+ 		if (val == 'disc'){
+ 		 			
+ 			$('.nothidden').removeAttr('disabled');
+ 			$('.free').attr('disabled','disabled'); 
+ 			$('.donation').attr('disabled','disabled');
+ 			$('.hidden').attr('disabled','disabled');
+ 			$('#disc_amount').show(); 	
+ 			$('#disc_label').show();
+ 			$('#access_url').hide();
+ 			$('#disc_url').show();
+ 			$('#disc_div').show();
+ 			$('#access_label').hide();
+ 		}
+ 	}
+ 	
+ 	function set_check(ele){
+ 		if(ele.checked){ 
+ 			$('.ticket').attr('checked','checked'); 
+ 			var chks = document.getElementsByName('ticket[]');
+ 			 for (var i = 0; i < chks.length; i++)
+        	 {
+	 			value = chks[i].value;
+	 			if(chks[i].disabled==true){ 
+	 				chks[i].checked=false;
+	 			} 
+	 		}	
+ 		}else{ 
+ 			$('.ticket').removeAttr('checked');
+ 		}
+ 	}
+ 	
+ 	
+ 	 $(document).ready(function() {
+ 	 	
+ 	 	$('.date_time').datetimepicker({
+				ampm: false,dateFormat:'yy-mm-dd',timeFormat: 'HH:mm',minDate: 0
+		  });
+		$('#ui-datepicker-div').hide();		
+ 	 	
+ 	 	$('#code_val').removeAttr('disabled'); 
+	    $('#file_val').attr('disabled','disabled'); 
+	    $('.code_unlimited').attr('checked', 'checked');
+       	    $('#uses').attr('disabled','disabled'); 
+	    //$('#file_val').val(''); 
+ 	 	// This code used while editting promotional codes.
+ 	 	var str = "" 
+ 	 	str = $('#code_type').val();
+ 	 	if(str != ""){ 	 		
+ 	 		chk_access($('#code_type').val());
+ 	 		return;
+ 	 	} 	 	
+ 	 	 
+ 	 	  
+		$('#access_label').hide();
+  	    
+		
+		$('.free').attr('disabled','disabled'); 
+		$('.donation').attr('disabled','disabled');
+			
+		
+		
+	});
+		
+function validate_submit(){
+		
+		
+		var code_val = $("#code_val");
+		var codeerrInfo = $("#codeerrInfo");
+		
+		<% if @code[:id]==nil || @code[:id]=='' %>
+			var manually = $("#manually");
+			var filedata = $("#filedata");
+			var upload_datafile = $("#file_val");
+			var uploaddatafileInfo = $("#uploaddatafileInfo");
+			uploaddatafileInfo.text("");
+			
+		<% end %>
+		var code_type = $("#code_type");
+		var amterrInfo = $("#amterrInfo");
+		var dateerrInfo = $('#dateerrInfo');
+		var dateerrInfo1 = $('#dateerrInfo1');
+		var dateerrInfo2 = $('#dateerrInfo2');
+		var dateerrInfo3 = $('#dateerrInfo3');
+				
+		var ticketerrInfo = $("#ticketerrInfo");
+		
+		codeerrInfo.text("");
+		
+		amterrInfo.text("");
+		ticketerrInfo.text("");
+		dateerrInfo.text("");
+		dateerrInfo1.text("");
+		dateerrInfo2.text("");
+		dateerrInfo3.text("");
+
+		
+		<% if @code[:id]==nil || @code[:id]=='' %>
+			if(manually.is(':checked') || filedata.is(':checked')){
+				if(manually.is(':checked')){
+						var a = code_val.val();
+						var filter = /^[a-zA-Z0-9_.@]+$/;
+						
+						//if it's valid url
+							if(a==''){
+								code_val.focus();
+								codeerrInfo.text('<%= I18n.t 'validation.event_view.enter_promo'%>');
+								return false;
+							}
+							
+							//if it's NOT valid
+							if(!filter.test(a)){
+								code_val.focus();
+								codeerrInfo.text('<%= I18n.t 'add_promotional_code.type_only_alpha_numeric_character'%>');
+								return false;
+							}
+						
+					}else{
+						chks = upload_datafile;
+						if (chks.val()=='')
+			            {
+			                    upload_datafile.focus();
+								uploaddatafileInfo.text('<%= I18n.t 'jscript.upload_csv'%>');
+								uploaddatafileInfo.addClass("error1");
+								
+								return false;
+			            }
+						else 
+						{
+								value = chks.val();
+								
+								t1 = value.substring(value.lastIndexOf('.') + 1,value.length);
+								
+								if( t1!='csv')
+								{
+									upload_datafile.focus();
+									uploaddatafileInfo.text('<%= I18n.t 'jscript.invalid_file'%>');
+									uploaddatafileInfo.addClass("error1");
+									
+									return false;
+								}
+								
+						}
+						
+					}
+			
+			}else{
+				code_val.focus();
+				codeerrInfo.text("<%= I18n.t 'validation.event_view.enter_promo'%>");
+				return false;
+			}
+		<% else %>
+				var a = code_val.val();
+				var filter = /^[a-zA-Z0-9_.@]+$/;
+				//if it's valid url
+					if(a==''){
+						code_val.focus();
+						codeerrInfo.text("<%= I18n.t 'validation.event_view.enter_promo'%>");
+						return false;
+					}
+					
+					//if it's NOT valid
+					if(!filter.test(a)){
+						code_val.focus();
+						codeerrInfo.text('<%= I18n.t 'add_promotional_code.type_only_alpha_numeric_character'%>');
+						return false;
+					}
+		<% end %>
+
+		if(code_type.val()=='disc'){
+			if(($('#disc_amt').val()=='' || $('#disc_amt').val()==0.0) && ($('#disc_perc').val()=='' || $('#disc_perc').val()==0.0)){
+				$('#disc_amt').focus();
+				amterrInfo.text('<%= I18n.t 'add_promotional_code.enter_amt_or_percentage_ticket_price'%>');
+				return false;
+			}
+		}
+
+		var chks = document.getElementsByName('ticket[]');
+		var tic_arr = [], k=0
+		var flag=true, dis_flag=true;
+		 for (var i = 0; i < chks.length; i++)
+    	 {
+ 			value = chks[i].value;
+ 			
+ 			if(chks[i].checked==true){
+ 				tic_arr[k] = value;
+ 				k++; 
+ 				flag=false;
+ 			} 
+ 			
+ 			if(chks[i].disabled==false){
+ 				dis_flag = false;
+ 			} 
+ 		}
+ 		if(dis_flag){
+ 			ticketerrInfo.text('<%= I18n.t 'add_promotional_code.dont_have_any_ticket'%>');
+ 			return false;
+ 		}
+ 		else if(flag){
+ 			ticketerrInfo.text('<%= I18n.t 'add_promotional_code.select_atleast_one_ticket'%>');
+ 			return false;
+ 		}
+		
+		var flag1=false;
+		if(code_type.val()=='disc'){
+			if($('#disc_amt').val()!='' && $('#disc_perc').val()==''){
+				<% if paid_tickets.count > 0 
+					for paid in paid_tickets
+				%>
+					if ($.inArray('<%= paid[:id] %>', tic_arr) != -1 && $('#disc_amt').val() >= <%= paid[:paid_price] %>){
+						flag1 = true;
+					}
+															
+				<% 
+					end
+				end %>
+			}
+		}
+		
+		
+		if(flag1){
+ 			$('#disc_amt').focus();
+			amterrInfo.text('<%= I18n.t 'add_promotional_code.discount_amt_should_not_greater_or equal_select_ticket_price'%>');
+			return false;
+ 		}
+ 		
+ 		if ($('#disc_perc').val() > 100){
+ 			amterrInfo.text('<%= I18n.t 'add_promotional_code.disc_rate_less_than_or_equal_100'%>');
+ 			return false;
+ 		}
+ 		// code -Uses
+ 		
+		if($('#code_use1').is(':checked')){
+			
+			if($('#uses').val()=='0' || $('#uses').val()==''){
+				$('#usesInfo').text('<%= I18n.t 'add_promotional_code.enter_num_use_promotional_code'%>');
+				
+ 				return false;
+			}
+			
+
+			var flag1=false;
+			if(code_type.val()=='access' || code_type.val()=='disc'){
+			<% if paid_tickets.count > 0 
+					for paid in paid_tickets
+				%>
+					if ($.inArray('<%= paid[:id] %>', tic_arr) != -1 && $('#uses').val() > <%= paid[:paid_qty] %>){
+						flag1 = true;
+					}					
+				<% 
+					end # END FOR
+					
+			end
+				 %>
+				
+				<% if free_tickets.count > 0 
+					for free in free_tickets
+				%>
+					if ($.inArray('<%= free[:id] %>', tic_arr) != -1 && $('#uses').val() > <%= free[:free_qty] %>){
+						flag1 = true;
+					}					
+				<% 
+					end # end for
+				end
+				 %>
+			
+			<% if donation_tickets.count > 0 
+					for donation in donation_tickets
+				%>
+					if ($.inArray('<%= donation[:id] %>', tic_arr) != -1 && $('#uses').val() > <%= donation[:donation_qty] %>){
+						flag1 = true;
+					}					
+				<% 
+					end
+				end %>	
+				}
+			}
+	
+		if(flag1){
+ 			$('#usesInfo').text('<%= I18n.t 'add_promotional_code.uses_less_than_or_equal_selected_ticket_qty' %>');
+ 			return false;
+ 		}
+ 		
+		/* Enter codes */
+		if($('#start_now_date').is(':checked') || $('#start_now_date').is(':focus')){
+			var sd = $("#code_start_date_time").datepicker("getDate");
+			if (sd == null) {
+			 	dateerrInfo.text('<%= I18n.t 'add_promotional_code.enter_start_date'%>');
+			 	return false;
+			}
+		}
+		
+		if($('#end_now_date').is(':checked') || $('#end_now_date').is(':focus')){
+		        var sd = $("#code_start_date_time").datepicker("getDate");
+			var ed = $("#code_end_date_time").datepicker("getDate");
+			if (ed == null) {
+			 	dateerrInfo1.text('<%= I18n.t 'add_promotional_code.enter_end_date'%>');
+			 	return false;
+			}
+			if (sd >= ed ){
+			        dateerrInfo1.text('<%= I18n.t 'add_promotional_code.validate_start_end_date'%>');
+			 	return false;
+			}
+			
+			
+		}
+		
+		
+		
+		if($('#start_now_day').is(':checked')|| $('#start_now_day').is(':focus')){
+			
+			if($('#code_start_day').val() == '' && $('#code_start_hour').val() == '' && $('#code_start_minute').val() == ''){ 
+				dateerrInfo2.text('<%= I18n.t 'add_promotional_code.enter_date'%>');
+			 	return false;
+			}
+			
+			
+		}
+		
+		if($('#end_now_day').is(':checked') || $('#end_now_day').is(':focus')){
+						
+			if($('#code_end_day').val() == '' && $('#code_end_hour').val() == '' && $('#code_end_minute').val() == ''){ 
+				dateerrInfo3.text('<%= I18n.t 'add_promotional_code.enter_date'%>');
+			 	return false;
+			}
+			
+			
+		}
+	
+ 		return true;
+
+ 		
+} //end function
+	
+
+ </script>
+
+<% @act_class = 'Create Promotional Codes' %>         	
+<%= render(:partial => "common_banner" , :object => :collection) %>
+    
+<% @currency_symbol = @site[:currency_code]
+    @currency_code = CurrencyCode.find(:first, :conditions => ['currency_code=?', @site[:currency_code]])
+    @site[:currency_symbol] = @currency_code [:currency_symbol] %>			 
+
+<section>
+	<div class="main">
+		<%= form_tag({:controller => 'manage_event', :action => 'edit_code/'+@event[:id].to_s}, :id => 'edit_code', :name => 'edit_code', :multipart => 'true') do %> 
+			         
+		<% if (@code.errors.full_messages != []) then -%>
+		     <ul class="errors marT60">
+		      <% @code.errors.full_messages.each do |t| %>
+		  		<li><%= t %></li>
+			  <% end %>
+		    </ul>
+	    <% end -%>  
+	    	         
+    	<div class="left_columm">
+    	<div class="marT60">
+        	<div class="mtitle">
+        		
+            	<h1> <% if @code[:id]==nil || @code[:id]=='' %><%= I18n.t 'add_affiliate_code.create_a_new'%><% else %><%= I18n.t 'button.edit'%> <% end %> <span> <%= I18n.t 'add_promotional_code.promotional_code'%> </span></h1>             
+            </div>
+            
+        	<div class="shadow marT40 pad3P promo_code">
+        	<div class="form">
+           
+            <% if @code[:id]==nil || @code[:id]=='' %>
+            <label>Code Type</label>
+            	    <select class="selectbox" name="code[code_type]" id="code_type" onchange="chk_access(this.value);">
+				    	<option value="disc" <% if @code[:code_type]=='disc' %> <% params[:code_type] = 'access' %> selected="selected" <% end %>><%= I18n.t 'add_promotional_code.discount'%> </option>
+				    	<option value="access" <% if @code[:code_type]=='access' %> <% params[:code_type] = 'disc' %>selected="selected" <% end %>><%= I18n.t 'add_promotional_code.access'%></option>
+				    </select>
+			<% else %>
+				<input type="hidden" name="code[code_type]" id="code_type" value="<%= @code[:code_type] %>" />
+			<% end %>	
+                       
+            <label class="marT20">
+            	<% if @code[:id]==nil || @code[:id]=='' %>
+            		<%= I18n.t 'add_promotional_code.code'%>:<span class="red">*</span>
+            	<% else %>
+            		<% if @code[:code_type]=='access' %>
+            			<%= I18n.t 'add_promotional_code.access'%> 
+            		<% else %>
+            			<%= I18n.t 'add_promotional_code.discount'%>
+            		<% end %>
+            		<%= I18n.t 'add_promotional_code.code'%>	
+            	<% end %>
+            		
+            </label>
+            
+            <% if @code[:id]==nil || @code[:id]=='' %>	
+		    	<input type="radio" name="enter_code" id="manually" onclick="$('#code_val').removeAttr('disabled'); $('#file_val').attr('disabled','disabled'); $('#file_val').val('');" value="0" checked="checked"/>&nbsp;&nbsp; 
+		   <% else %>
+		     	<input type="hidden" name="enter_code" id="manually" value="0" />&nbsp;&nbsp;
+		    <% end %>
+		    <input type="text" class="textbox TW57p" id="code_val" value="<%= @code[:code] %>" name="code[code]" placeholder="Enter a single code" onkeyup="$('#manually').attr('checked','checked'); $('#code_val').removeAttr('disabled'); $('#file_val').attr('disabled','disabled'); $('#file_val').val('');" disabled="disabled">								    
+            <br /><div id="codeerrInfo" class="error1"></div>
+			<p class="crete_promo_p"><%= I18n.t 'add_promotional_code.spaces_apostrophes_non_numeric_not_allowed_with_example'%><br /><br />
+            
+            <% if @code[:id]==nil || @code[:id]=='' %>	
+			  	<span class="or">- <%= I18n.t 'home_login.login_or'%> -</span>
+	            </p><br />
+	            <div class="clear"></div>         
+	            <label class="marT20"></label>
+			
+			 	<input type="radio" name="enter_code" id="filedata" onclick="$('#file_val').removeAttr('disabled'); $('#code_val').attr('disabled','disabled'); $('#code_val').val('');"  value="1" />&nbsp;&nbsp; 
+			    
+			    <div class="file_upload TW57p">
+	                <input type="text" placeholder="<%= I18n.t 'create.placeholder' %>" id="file_name" onClick="jQuery('#file_val').click()" readonly="readonly" name="file_name" class="browse"/>
+	             	<div class="upload">
+	                    <span> <%= I18n.t 'create.browse'%> </span>
+	                    <input type="file" value="" name="upload_doc" id="file_val" class="uploads" style="opacity: 0;" />
+	                </div>
+	        	</div>
+	        	<div id="uploaddatafileInfo" class="error1"></div>
+			    <p class="crete_promo_p">Download <a href="<%= APP_CONFIG['development']['upload_url'] %>/data/Sample_Codes.csv">Sample Code </a>File Format </p>
+			    <p class="crete_promo_p"><%= I18n.t 'add_promotional_code.file_must_be_csv_upto_3000_code_separated_comma_maxi_256_spaces_apostrophes_non_numeric_not_allowed_with_example'%></p> 
+		    <% else %></p><% end %>
+            
+             <div id="disc_amount">
+             <label class="marT20"><%= I18n.t 'add_promotional_code.discount_amt' %>:<span class="red">*</span></label>
+             <%= @site[:currency_symbol] %> &nbsp;
+             <input type="text" name="code[disc_amt]"  onclick="this.value ='';"  onkeyup="if(this.value > 0){ $('#disc_perc').val(''); }else{ this.value=''; }" value="<%= @code[:disc_amt] %>" id="disc_amt"  class="textbox  TW100" /> 
+              &nbsp; <%= I18n.t 'home_login.login_or'%> &nbsp;  
+              
+              <input type="text" class="textbox  TW100" name="code[disc_perc]" onclick="this.value ='';" onkeyup="if(this.value > 0){ $('#disc_amt').val(''); }else{ this.value=''; }" value="<%= @code[:disc_perc] %>" id="disc_perc"  />
+              &nbsp; &nbsp; % <%= I18n.t 'add_affiliate_code.off_ticket_price'%>
+              </div>
+              <div id="amterrInfo" class="error1"></div>
+              
+              <div class="marT20">
+              	<label class="fl marT12"><%= I18n.t 'add_promotional_code.applies_to' %>:<span class="red">*</span></label>
+                <div class="fl TW66p">
+                	<div class="all_ticket_types">
+                    	<input type="hidden" name="code[all]" value="0" />
+						<input type="checkbox" id="all" name="code[all]" value="1" <% if @code[:all]==1 %> checked="checked" <% end %> onclick="set_check(this);">
+						
+                        <strong><%= I18n.t 'add_promotional_code.all_ticket_types' %></strong>
+                        
+                         <div id="disc_label">(<%= I18n.t 'add_promotional_code.discount_code_only_applied_paid_tickets' %>)</div>
+
+                         <div id="access_label">(<%= I18n.t 'add_promotional_code.access_code_applied_hidden_tickets' %>)</div>
+                    </div>
+                    <div class="marT15">
+                   		
+                       <% 
+						    if(@code[:tickets] !=nil )
+              						@tic_arr = @code[:tickets].split(",")	
+              				else
+              						@tic_arr = []
+              				end
+              				
+				            if free_tickets
+				 				for free in free_tickets 
+						       		%>
+						       		 <input type="checkbox" name="ticket[]" <% if (@code[:code_type]=='access' && free[:free_ticket_status]!=2) %>disabled="disabled"<% end %> class="ticket free <% if free[:free_ticket_status]==1 %> nothidden <% end %>" <% if(@tic_arr.include?(free[:id].to_s)) %> checked="checked" <% end %> value="<%= free[:id] %>" />
+			                         <span><%= free[:free_ticket_name] %> (<%= I18n.t 'event.view.free'%>) </span>
+			                         <% @freeqty =  free[:free_qty] %>
+			                    	 <div class="clear"></div>
+									<%	 	
+				         		end
+				         	end	
+				         %>
+				          <%
+				            if paid_tickets
+				 				for paid in paid_tickets 
+						       		%>
+						       		<input type="checkbox" name="ticket[]" <% if (@code[:code_type]=='access'  && paid[:paid_ticket_status]!=2) %>disabled="disabled"<% end %> class="ticket paid <% if paid[:paid_ticket_status]==1 %> nothidden <% else %> hidden <% end %>" <% if(@tic_arr.include?(paid[:id].to_s)) %> checked="checked" <% end %> value="<%= paid[:id] %>" />
+						       		<span><%= paid[:paid_ticket_name] %> (<%= set_currency(paid[:paid_price]) %>)</span>
+						       		<% @paidqty = paid[:paid_qty] %>
+			                    	<div class="clear"></div>
+						       		<%	 	
+				         		end
+				         	end	
+				         %>
+				         <%
+				            if donation_tickets
+				 				for donation in donation_tickets 
+						       		%>
+						       		<input type="checkbox" name="ticket[]" <% if (@code[:code_type]=='access'  && donation[:donation_ticket_status]!=2) %>disabled="disabled"<% end %> class="ticket donation <% if donation[:donation_ticket_status]==1 %> nothidden<% end %>" <% if(@tic_arr.include?(donation[:id].to_s)) %> checked="checked" <% end %> value="<%= donation[:id] %>" />
+						       		<span><%= donation[:donation_ticket_name] %> (<%= I18n.t 'event.purchase.pdf_donation'%>)</span>
+			                    	<% @donationqty = donation[:donation_qty] %>
+			                    	<div class="clear"></div>
+						       		
+						       		<%	 	
+				         		end
+				         	end	
+				        %>
+						  
+						  
+   
+                    </div>                    
+                    
+                </div>
+              	  <div class="clear"></div><div id="ticketerrInfo" class="error1" ></div>  
+              </div>
+              <div class="clear"></div>
+              
+              <div class="marT25">
+              	<label class="test_invitation"><%= I18n.t 'add_promotional_code.uses'%>:</label>      	
+                <input type="radio" name="code_use" id="code_unlimited" value="0" <% if @code[:uses]==0 %> checked="checked" <% end %> onclick="disable_uses(this.value);"  />&nbsp;&nbsp; <span><%= I18n.t 'add_promotional_code.unlimited'%></span><br />
+				<div>
+            	<input type="radio" name="code_use" id="code_use1" value="1" <% if @code[:uses]!=0 %> checked="checked" <% end %> onclick="disable_uses(this.value);"  />&nbsp;&nbsp;
+				<input type="text" name="uses" value="<%= @code[:uses] %>"  style="width:75px;" size="30" onkeyup="if(this.value > 0){}else{ this.value=''; }" id="uses" class="textbox TW120 marL10" />
+            	&nbsp;<span><%= I18n.t 'add_promotional_code.uses'%></span>
+            	<div id="usesInfo" class="error1 mar0"></div>
+            </div>            	
+            </div>  
+   <script>
+    //Function to set uses textbox disabled if "unlimited" code uses is selected
+   
+   function disable_uses(val){
+  		if(val==1){
+  			$('#uses').removeAttr('disabled');
+  				if ($('#uses').val() == 0){
+  				$('#uses').val('');
+  			}
+  		}
+  		if(val=='0'){
+  			$('#uses').attr('disabled','disabled');
+  			$('#uses').val('');
+  		}
+   }
+   	function set_disabled (type,val) {
+		 if(type=='start'){
+		 	
+		 	$('#code_start_date_time').attr('disabled','disabled');
+		 	$('#code_start_day').attr('disabled','disabled');
+		 	$('#code_start_hour').attr('disabled','disabled');
+		 	$('#code_start_minute').attr('disabled','disabled');
+		 	
+		 	if(val==1){
+
+		 		$('#code_start_date_time').removeAttr('disabled');
+		 		
+		 		
+		 	}
+		 	if(val==2){
+		 		$('#code_start_day').removeAttr('disabled');
+			 	$('#code_start_hour').removeAttr('disabled');
+			 	$('#code_start_minute').removeAttr('disabled');
+		 	}
+		 }
+		 if(type=='end'){
+		 	$('#code_end_date_time').attr('disabled','disabled');
+		 	$('#code_end_day').attr('disabled','disabled');
+		 	$('#code_end_hour').attr('disabled','disabled');
+		 	$('#code_end_minute').attr('disabled','disabled');
+		 	
+		 	if(val==1){
+		 		$('#code_end_date_time').removeAttr('disabled');
+		 	}
+		 	if(val==2){
+		 		$('#code_end_day').removeAttr('disabled');
+			 	$('#code_end_hour').removeAttr('disabled');
+			 	$('#code_end_minute').removeAttr('disabled');
+		 	}
+		 }
+	 }
+   </script>           
+              <div class="marT25">
+              	<label class="test_invitation"><%= I18n.t 'add_promotional_code.starts' %> : </label>      	
+                <input type="radio" name="code[start_now]" value="0" <% if @code[:start_now]==0 %> checked="checked" <% end %> onclick="set_disabled('start',this.value);" />&nbsp;&nbsp; <span><%= I18n.t 'create_event.now' %></span><br />
+				<div>
+            		<input type="radio" name="code[start_now]" id="start_now_date" value="1" <% if @code[:start_now]==1 %> checked="checked" <% end %> onclick="set_disabled('start',this.value);" />&nbsp;&nbsp; 
+            		<span><%= I18n.t 'invite_create.select_date'%></span>
+            		<input type="text"  class="textbox marL10 date_time TW45p" id="code_start_date_time" name="code[start_date_time]" value="<%= @code[:start_date_time] %>" <% if @code[:start_now]!=1 %> disabled="disabled" <% end %>  readonly="readonly" class="datepicker"  />
+            	</div>
+            	<div id="dateerrInfo" class="error1"></div>	 
+            	<div>
+                    <div class="fl marT20">
+                <input type="radio" name="code[start_now]" id="start_now_day" value="2" <% if @code[:start_now]==2 %> checked="checked" <% end %> onclick="set_disabled('start',this.value);" />&nbsp;&nbsp;
+                </div>
+                    <div>										
+                         <div class="maximum_time">
+                            <input type="text" class="textbox TW50" name="code[start_day]" id="code_start_day" value="<%= @code[:start_day] %>" <% if @code[:start_now]!=2 %> disabled="disabled" <% end %> onkeyup="if(this.value > 0){}else{ this.value=''; }">&nbsp; <%= I18n.t 'invite_create.days'%> &nbsp;
+                         </div>
+                         <div class="maximum_time">
+                            <input type="text" class="textbox TW50" name="code[start_hour]" id="code_start_hour" value="<%= @code[:start_hour] %>" <% if @code[:start_now]!=2 %> disabled="disabled" <% end %> onkeyup="if(this.value > 0){}else{ this.value=''; }"  />&nbsp; <%= I18n.t 'invite_create.hours'%> &nbsp;	
+                         </div>
+                         <div class="maximum_time fn">
+                            <input type="text" class="textbox TW50"  name="code[start_minute]" id="code_start_minute" value="<%= @code[:start_minute] %>" <% if @code[:start_now]!=2 %> disabled="disabled" <% end %> onkeyup="if(this.value > 0){}else{ this.value=''; }" />&nbsp;  <%= I18n.t 'add_promotional_code.minutes_before_event_starts'%>
+                         </div>                
+                     </div>
+                     <div id="dateerrInfo2" class="error1"></div>	 
+                 </div>
+            </div>  
+             
+              
+              <div class="marT25">
+              	<label class="test_invitation"><%= I18n.t 'add_promotional_code.ends'%>:</label>      	
+                <input type="radio" name="code[end_now]" value="0" <% if @code[:end_now]==0 %> checked="checked" <% end %> onclick="set_disabled('end',this.value);" />&nbsp;&nbsp; 
+                <span><%= I18n.t 'add_promotional_code.when_sales_end'%></span><br />
+				<div>
+	            	<input type="radio" name="code[end_now]" id="end_now_date" value="1" <% if @code[:end_now]==1 %> checked="checked" <% end %> onclick="set_disabled('end',this.value);" />&nbsp;&nbsp; 
+	            	<span><%= I18n.t 'invite_create.select_date'%></span>
+	            	<input type="text" class="textbox marL10 date_time TW45p" name="code[end_date_time]" id="code_end_date_time" value="<%= @code[:end_date_time] %>" <% if @code[:end_now]!=1 %> disabled="disabled" <% end %> readonly="readonly" />
+	            </div>
+	            <div id="dateerrInfo1" class="error1"></div>	 
+            	<div>
+                    <div class="fl marT20">
+                		<input type="radio" name="code[end_now]" id="end_now_day" value="2" <% if @code[:end_now]==2 %> checked="checked" <% end %> onclick="set_disabled('end',this.value);" />&nbsp;&nbsp;
+                	</div>
+                    <div>										
+                         <div class="maximum_time">
+                            <input type="text" class="textbox TW50" name="code[end_day]" id="code_end_day" value="<%= @code[:end_day] %>" <% if @code[:end_now]!=2 %> disabled="disabled" <% end %> onkeyup="if(this.value > 0){}else{ this.value=''; }"  />&nbsp; <%= I18n.t 'invite_create.days'%> &nbsp;
+                         </div>
+                         <div class="maximum_time">
+                            <input type="text" class="textbox TW50" name="code[end_hour]" id="code_end_hour" value="<%= @code[:end_hour] %>" <% if @code[:end_now]!=2 %> disabled="disabled" <% end %> onkeyup="if(this.value > 0){}else{ this.value=''; }" />&nbsp; <%= I18n.t 'invite_create.hours'%> &nbsp;	
+                         </div>
+                         <div class="maximum_time fn">
+                            <input type="text" name="code[end_minute]"  class="textbox TW50" id="code_end_minute" value="<%= @code[:end_minute] %>" <% if @code[:end_now]!=2 %> disabled="disabled" <% end %> onkeyup="if(this.value > 0){}else{ this.value=''; }"  />
+                            &nbsp;  <%= I18n.t 'add_promotional_code.minutes_before_event_end'%>
+                         </div>   
+                                     
+                     </div>
+                      <div id="dateerrInfo3" class="error1"></div>	 
+                 </div>
+            </div>
+                        
+            <div class="clear"></div>               
+                    
+            </div>           
+           <div class="clear"></div>
+           <div class="marT25">
+           		<strong><%= I18n.t 'add_promotional_code.tip'%>:</strong> <%= I18n.t 'add_promotional_code.after_creating_promotional_code_embed_code_in_link_publish_website_email_blog_etc'%> 
+           
+           <%
+										     										     											     			
+		     	if @event[:event_url_link]=='' || @event[:event_url_link]==nil
+		     		url1 = APP_CONFIG['development']['site_url']+'events/view/'+@event[:id].to_s+'?disc='
+		     		url2 = APP_CONFIG['development']['site_url']+'events/view/'+@event[:id].to_s+'?access='
+		     	else
+		     		url1 = APP_CONFIG['development']['site_url']+'event/'+@event[:event_url_link]+'?disc='
+		     		url2 = APP_CONFIG['development']['site_url']+'event/'+@event[:event_url_link]+'?access='
+		     	end	
+		     		
+		     	if @code[:code]==nil || @code[:code]==''
+		     		disc_page_url = url1+'EXAMPLE'
+		     		acc_page_url = url2+'EXAMPLE' 
+		     	else
+		     		disc_page_url = url1+@code[:code]
+		     		acc_page_url = url2+@code[:code]
+		     	end	
+		      %>
+		     <a class="nw_mty" id="disc_url" style="display: <% if @code[:code_type]=='disc' %> block; <% else %> none; <% end %>" href="<%= disc_page_url %>"><%= disc_page_url %></a>
+		     <a class="nw_mty" id="access_url" style="display: <% if @code[:code_type]=='access' %> block; <% else %> none; <% end %>" href="<%= acc_page_url %>"><%= acc_page_url %></a> 
+           </div>
+           </div>
+           <div class="marT25">
+            	<input type="hidden" name="code[event_id]" value="<%= @event[:id] %>" />
+    			<input type="hidden" name="code_id" value="<%= @code[:id] %>" />
+        		
+        		<input type="submit" class="submit_btn" value=<%= I18n.t 'button.save'%> onclick="return validate_submit();">
+				<a href="<%= APP_CONFIG['development']['site_url'] %>manage_event/promotional_codes/<%= @event[:id] %>" class="btn black_bg" style="margin-left: 3%; padding: 16px 20px;"><%= I18n.t 'button.cancel'%></a>
+            </div>
+        </div>
+        
+           <div class="clear"></div>
+    </div>  
+    	
+    	<% end %>
+    	 <%= render(:partial => "manage_event_sidebar" , :object => :collection) %>  
+    	
+		<div class="clear"></div>
+        </div>
+           <div class="clear"></div>
+   
+</section>
+
+
+<% @edit_menu_class = 'Manage' %>
+<%= render(:partial => "edit_menu" , :object => :collection) %> 
+<div class="clear "></div>

@@ -1,0 +1,128 @@
+<% @act_class = 'Manage Invitations' %>         	
+<%= render(:partial => "manage_event/common_banner" , :object => :collection) %>
+ 
+<script type="text/javascript">
+
+function confirm_delete_invite(){
+	var con = confirm('<%= I18n.t 'new.confirm'%>');
+	if(con){
+		return true;
+	}
+	return false;
+}
+</script>
+<style>
+	@media (max-width: 768px) {
+		.manage_invi td:nth-of-type(1):before { content: "<%= I18n.t 'invite_index.subject'%>"; }
+		.manage_invi td:nth-of-type(2):before { content: "<%= I18n.t 'invite_index.created_at'%>"; }
+		.manage_invi td:nth-of-type(3):before { content: "<%= I18n.t 'ticket_part.action'%>"; }
+	}	
+</style>
+<section>
+	<div class="main">
+    	<div class="left_columm">
+    	<div class="marT60">
+        	<div class="mtitle fl">
+            	<h1 class="fl"> <%= I18n.t 'invite_index.manage_your'%> <span> <%= I18n.t 'invite_create.invitations'%> </span></h1>
+             
+            </div> <div class="clear"></div>
+            <div class="shadow marT25">
+            	<div class="responsive-tabs">
+                    <h2><%= I18n.t 'invite_index.scheduled'%> (<%= @schedules_invite.count %>)</h2>
+                    <div>                    	
+                    	<div class="event_detail pad3">
+                    		<% if @schedules_invite.count > 0 %>
+	                    		
+				            <table class="manage_invi table">
+			                <thead>
+			                <tr>
+			                    <th><%= I18n.t 'invite_index.subject'%></th>
+			                    <th><%= I18n.t 'invite_index.created_at'%></th>
+			                    <th><%= I18n.t 'ticket_part.action'%></th>
+			               
+			                </tr>
+			                </thead>
+			                <tbody>
+			                <% for inv in @schedules_invite %>
+    							<tr>
+    								<td><%= inv[:subject] %></td>
+    								<td><%= inv[:created_at].strftime(@site[:date_time_format]) %></td>
+    								<td class="action_icon TW100">
+    									<a href="<%= APP_CONFIG['development']['site_url'] %>invites/create/<%= inv[:event_id] %>?invitation_id=<%= inv[:id] %>" class="hint--bottom" data-hint="Edit">
+    										<img src="<%= APP_CONFIG['development']['app_url'] %>icon-edit.png" />
+    									</a>
+    									<a href="<%= APP_CONFIG['development']['site_url'] %>invites/delete/<%= inv[:id] %>" onclick="return confirm_delete_invite();" class="hint--bottom" data-hint="Delete">
+    										<img src="<%= APP_CONFIG['development']['app_url'] %>icon-delete.png" />
+    									</a>
+    								</td>
+    							</tr>
+    						<% end %>
+			               
+			                
+			                </tbody>
+			            </table>
+	            		
+	            		<% else %>
+	            			<p><%= I18n.t 'invite_index.no_email_invitations_sceduled'%></p>
+						<% end %>
+            		<div class="clear"></div>
+		</div> 
+                    	<div class="clear"></div>                          
+                    </div>        
+                    <h2> <%= I18n.t 'event_index.draft'%>(<%= @draft_invite.count %>)</h2>
+                    <div>
+                    <div class="event_detail pad3">
+                    <% if @draft_invite.count > 0 %>	
+			            <table class="manage_invi table">
+			                <thead>
+			                <tr>
+			                    <th><%= I18n.t 'invite_index.subject'%></th>
+			                    <th><%= I18n.t 'invite_index.created_at'%></th>
+			                    <th><%= I18n.t 'ticket_part.action'%></th>
+			               
+			                </tr>
+			                </thead>
+			                <tbody>
+			                
+			                <% for inv in @draft_invite %>
+    							<tr>
+    								<td><%= inv[:subject] %></td>
+    								<td><%= inv[:created_at].strftime(@site[:date_time_format]) %></td>
+    								<td class="action_icon TW100">
+    									<a href="<%= APP_CONFIG['development']['site_url'] %>invites/create/<%= inv[:event_id] %>?invitation_id=<%= inv[:id] %>"  class="hint--bottom" data-hint="Edit">
+    										<img src="<%= APP_CONFIG['development']['app_url'] %>icon-edit.png" />
+    									</a>
+    									<a href="<%= APP_CONFIG['development']['site_url'] %>invites/delete/<%= inv[:id] %>" onclick="return confirm_delete_invite();" class="hint--bottom" data-hint="Delete">
+    										<img src="<%= APP_CONFIG['development']['app_url'] %>icon-delete.png" />
+    									</a>
+    								</td>
+    							</tr>
+    						<% end %>
+			                
+			                </tbody>
+			            </table>
+			        <% else %>
+        				<p><%= I18n.t 'invite_index.no_email_invitation_draft'%></p>
+        			<% end %>  
+            <div class="clear"></div>
+		</div>
+                    	<div class="clear"></div>   
+                    </div>      
+                    </div>
+            </div>
+        <a href="<%= APP_CONFIG['development']['site_url'] %>invites/create/<%= @event[:id] %>" class="btn fr marT20"><%= I18n.t 'invite_index.create_invitation'%> </a>
+           <div class="clear"></div>
+    </div>  
+    </div>
+    	
+    	<%= render(:partial => "manage_event/manage_event_sidebar" , :object => :collection) %> 
+		<div class="clear"></div>
+        </div>
+           <div class="clear"></div>
+  
+</section>
+
+
+<% @edit_menu_class = 'Manage' %>
+<%= render(:partial => "manage_event/edit_menu" , :object => :collection) %> 
+<div class="clear "></div>

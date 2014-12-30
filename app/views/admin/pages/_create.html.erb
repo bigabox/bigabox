@@ -1,0 +1,116 @@
+      
+<% 
+	if params[:id]
+		form_id = 'edit_page'
+		form_act = 'update/'+params[:id].to_s
+	else
+		form_id = 'new_page'
+		form_act = 'create'
+	end	
+	@site = SiteSetting.find(:first)	 
+%>
+<%= form_tag({:action => form_act}, :id => form_id, :novalidate => 'novalidate') do %> 
+	<% if (@page.errors.full_messages != []) then -%>
+     <ul class="errors">
+      <% @page.errors.full_messages.each do |t| %>
+  		<li><%= t %></li>
+	  <% end %>
+    </ul><% end %>
+	<fieldset class="inputs">
+		<ol>
+			<li class="string input required stringish" id="page_pages_title_input">
+				<label class=" label" for="page_pages_title">Page Title<abbr title="required">*</abbr></label>
+				<input id="page_pages_title" maxlength="255" name="page[pages_title]" type="text" value="<%= @page[:pages_title] %>" />
+
+			</li>
+			
+			<li class="string input required stringish" id="page_slug_input">
+				<label class=" label" for="page_slug">Slug<abbr title="required">*</abbr></label>
+				<input id="page_slug" maxlength="255" name="page[slug]" type="text" value="<%= @page[:slug] %>" />
+
+			</li>
+			
+			<li class="input optional" id="page_description_input">
+				<label class=" label" for="page_description" style="float: left; width: 20%;">Content</label>
+				<div style="width: 66%; float: left;">
+					<textarea id="page_description" class="ckeditor" name="page[description]" rows="20" class=""><%= @page[:description] %></textarea>
+				</div>
+				<div style="clear: both"></div>
+
+			</li>
+			
+			<li class="select input optional" id="page_footer_bar_input">
+				<label class=" label" for="page_footer_bar">Footer Menu</label>
+				<select id="page_footer_bar" name="page[footer_bar]">
+					<option value="YES" <% if @page[:footer_bar]=='YES' %> selected="selected" <% end %>>YES</option>
+					<option value="NO" <% if @page[:footer_bar]=='NO' %> selected="selected" <% end %>>NO</option>
+				</select>
+
+			</li>
+			
+			<li class="select input optional" id="page_updates_input">
+				<label class=" label" for="page_latest_update">Updates</label>
+				<select id="page_latest_update" name="page[latest_update]">
+					<option value="0" <% if @page[:latest_update]==0 %> selected="selected" <% end %>>NO</option>
+					<option value="1" <% if @page[:latest_update]==1 %> selected="selected" <% end %>>YES</option>
+				</select>
+			</li>
+			
+		</ol>
+	</fieldset>
+	
+	<fieldset class="inputs">
+		<legend><span>Footer Options</span></legend>
+		<ol>
+			<li class="select input optional" id="page_plan_input">
+				<label class=" label" for="page_plan">Plan Events</label>
+				<select id="page_plan" name="page[plan]">
+					<option value="0"  <% if @page[:plan]==0 %> selected="selected" <% end %>>NO</option>
+					<option value="1" <% if @page[:plan]==1 %> selected="selected" <% end %>>YES</option>
+				</select>
+
+			</li>
+			
+			<li class="select input optional" id="page_using_input">
+				<label class=" label" for="page_using">Using <%= @site[:site_name] %> </label>
+				<select id="page_using" name="page[using]">
+					<option value="0" <% if @page[:using]==0 %> selected="selected" <% end %>>NO</option>
+					<option value="1" <% if @page[:using]==1 %> selected="selected" <% end %>>YES</option>
+				</select>
+
+			</li>
+			
+			<!--<li class="select input optional" id="page_popular_input">
+				<label class=" label" for="page_popular">Popular Searches</label>
+				<select id="page_popular" name="page[popular]">
+					<option value="0" <% if @page[:popular]==0 %> selected="selected" <% end %>>NO</option>
+					<option value="1" <% if @page[:popular]==1 %> selected="selected" <% end %>>YES</option>
+				</select>
+
+			</li>-->			
+			<li class="select input optional" id="page_about_input">
+				<label class=" label" for="page_about">About</label>
+				<select id="page_about" name="page[about]">
+					<option value="0" <% if @page[:about]==0 %> selected="selected" <% end %>>NO</option>
+					<option value="1" <% if @page[:about]==1 %> selected="selected" <% end %>>YES</option>
+				</select>
+
+			</li>
+			
+			
+		</ol>
+	</fieldset>
+	
+	<fieldset class="actions">
+		<ol>
+			<li class="action input_action " id="page_submit_action">
+				<input name="commit" type="submit" value="<% if params[:id] %>Update <% else %> Create<% end %> Page" />
+			</li>
+		</ol>
+	</fieldset>
+<% end %>
+
+
+
+
+<script src="<%= APP_CONFIG['development']['js_url'] %>js/ckeditor/ckeditor.js"></script>

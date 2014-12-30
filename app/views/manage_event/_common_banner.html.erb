@@ -1,0 +1,118 @@
+<style>
+	footer{
+		margin-bottom: 15px;
+	}
+</style>
+	
+<link href="<%= APP_CONFIG['development']['css_url'] %>colorbox.css" media="all" rel="stylesheet" type="text/css" />
+<script src="<%= APP_CONFIG['development']['js_url'] %>js/jquery.colorbox.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+     	/**** pop up *****/
+	 		$(".rr").colorbox({width:"40%"});     
+		/************ pop up end ************/
+	});
+</script>
+<script type="text/javascript">
+	
+	function confirm_delete(type){
+		if(type=='cancel'){
+			var con = confirm('<%= I18n.t 'common_banner.sure_cancel_event'%>');
+		} 
+		else{
+			var con = confirm('<%= I18n.t 'common_banner.permanently_delete_event'%>');
+		}
+		if(con){
+			return true;
+		}
+		return false;
+	}
+</script>
+
+<div class="header marT45">
+		<div class="main">
+            <div class="shadow">
+				<div class="fl pad2" style="width: 55%;">
+                	<div class="fl mtitle">
+                            <h1 class="font_size25"><% if @event[:event_title]!='' %><%= @event[:event_title] %><% else %><%= I18n.t 'application.appli_create_an_event'%><% end %> 
+                             <br /><span class="live"> <% if @event[:cancel]==1 %>(<%= I18n.t 'button.cancel'%>)<% elsif @event[:active]==0 %>(<%= I18n.t 'common_banner.small_draft'%>)<% elsif @event[:event_end_date_time] > Time.now.strftime('%Y-%m-%d %H:%I:%S') %>(<%= I18n.t 'event_index.live'%>)<% else %>(<%= I18n.t 'common_banner.complete'%>)<% end %> </span></h1>
+							 
+							<div class="marT20">
+							
+                            	<p><%= @event[:event_start_date_time].strftime(@site[:date_time_format]) %> - <%= @event[:event_end_date_time].strftime(@site[:date_time_format]) %> </p>
+								</div>
+								<div class="marT20">
+                           		 <p><% if @event[:online_event_option]!=1 %> <%= @event[:vanue_name] %> | <%= @event[:street_address] %><% end %></p>
+                    		 </div>
+					 </div><div class="clear"></div>
+					 </div>
+					 <% @user = User.find(session[:user_id])  %>
+  <% @permission = Permission.find(:first, :conditions => ['user_id=? AND admin_id=?', @user[:id], @user[:ref_id]]) %>
+
+					 
+					  <% 
+		                if @event[:active]==0
+		                	page_url = APP_CONFIG['development']['site_url']+'events/theme/'+@event[:id].to_s
+		                else	
+			                if @event[:event_url_link]=='' || @event[:event_url_link]==nil 
+			             		page_url = APP_CONFIG['development']['site_url']+'events/view/'+@event[:id].to_s 
+			             	else
+			             		page_url = APP_CONFIG['development']['site_url']+'event/'+@event[:event_url_link]
+			             	end
+		               end %>
+		               
+		               <%  if @act_class == 'Manage Event' %> 
+	                     <div class="common_art_right pad2">
+	                     	<%= form_tag({:controller => 'invites',:action => 'search/'+@event[:id].to_s}) do %>
+	                     	 <div class="search pr">
+	                     	 	<input type="text" value="" name="keyword" id="keyword" placeholder="<%= I18n.t 'common_banner.find_attendees'%>" class="textbox" />
+	                     	 	<input type="submit" value=" " />
+	                     	 </div>
+	                     	 <%end%>
+	                     	 <div class="clear"></div>
+	                       		
+	                       		 <%  @has = 0
+						  act="create_event"
+						  if @user[:ref_id]!=nil && @user[:ref_id]!='' && @user[:ref_id] > 0 
+							    @per_act = @permission[:action].split(',')
+							  if ((@permission[:action]=='all' || @per_act.include?(act)) )
+							      @has = 1
+							 else
+							      @has = 2
+							 end
+						  end	    	
+						  %>
+	                       		
+	                       		<div class="marT20 btns">
+  	                       		            <% if @has == 1 || @has == 0 %>
+								   <a href="<%= APP_CONFIG['development']['site_url'] %>manage_event/copy/<%= @event[:id] %>" class="btn rr"><%= I18n.t 'user_profile.profile_copy'%></a>
+						     <% end %>		   
+								   <a href="<%= APP_CONFIG['development']['site_url'] %>manage_event/cancel/<%= @event[:id] %>" onclick="return confirm_delete('cancel');" class="btn"><%= I18n.t 'button.cancel'%></a>
+								   <a href="<%= APP_CONFIG['development']['site_url'] %>manage_event/delete/<%= @event[:id] %>" onclick="return confirm_delete('del');" class="btn black_bg"><%= I18n.t 'common_banner.delete'%></a>
+								</div>
+	                     </div>
+	                  <% end %>
+                     <div class="clear"></div>
+            </div>
+            <div><img src="<%= APP_CONFIG['development']['app_url'] %>shadow.png" /></div> 
+            <div class="clear"></div>
+		</div>
+	    <div class="clear"></div>
+     </div>
+<div class="clear"></div>	
+<% if flash[:notice1] -%>
+	  <div class="main">
+		  <div class="notice marT60">
+			<p><%= flash[:notice1] %></p>
+		  </div>
+	</div>	  
+<% end -%>
+
+ <% if flash[:notice] -%>
+     <div class="main">
+	      <div class="errors marT60">
+	      	<p><%= flash[:notice] %></p>
+	      </div>
+	</div>
+  <% end -%>

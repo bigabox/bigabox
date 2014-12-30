@@ -1,0 +1,71 @@
+<div class="column">
+ 
+		<div class="panel">
+		              <h3>Transaction Details</h3>
+		              <div class="panel_contents">
+		                <div class="attributes_table site_setting" id="attributes_table_site_setting_1">
+		                  <table border="0" cellspacing="0" cellpadding="0">
+			                   <% if @with[:withdraw_method] == "1"%>
+			                   	<tr class="row">
+			                      <th><%= I18n.t 'wallet_withdraw.gateway_name'%></th>
+			                      <td><%= @with_detail[:gateway_name]%></td>
+			                    </tr>
+			                    
+			                    <tr class="row">
+			                      <th><%= I18n.t 'wallet_withdraw.gateway_acc'%>e</th>
+			                      <td><%= @with_detail[:gateway_account]%></td>
+			                    </tr>
+			                   <% elsif @with[:withdraw_method] == "2" %>
+			                   <tr class="row">
+			                      <th><%= I18n.t 'wallet_withdraw.bank'%> <%= I18n.t 'wallet_withdraw.nm'%></th>
+			                      <td><%= @with_detail[:bank_name]%></td>
+			                    </tr>
+			                    
+			                    <tr class="row">
+			                      <th><%= I18n.t 'wallet_withdraw.bank'%> <%= I18n.t 'wallet_withdraw.br'%></th>
+			                      <td><%= @with_detail[:bank_branch]%></td>
+			                    </tr>
+			                    
+			                    <tr class="row">
+			                      <th><%= I18n.t 'wallet_withdraw.bank'%> <%= I18n.t 'wallet_withdraw.ifsc'%> </th>
+			                      <td><%= @with_detail[:bank_ifsc_code]%></td>
+			                    </tr>
+			                    
+			                    <tr class="row">
+			                      <th><%= I18n.t 'wallet_withdraw.holder'%></th>
+			                      <td><%= @with_detail[:bank_account_holder_name]%></td>
+			                    </tr>
+			                    
+			                     <tr class="row">
+			                      <th><%= I18n.t 'wallet_withdraw.accnum'%></th>
+			                      <td><%= @with_detail[:bank_account_number]%></td>
+			                    </tr>
+			                    
+			                   <% elsif @with[:withdraw_method] == "3" %> 
+			                   
+			                    <tr class="row">
+			                      <th><%= I18n.t 'wallet_withdraw.cheque'%> <%= I18n.t 'wallet_withdraw.nm'%></th>
+			                      <td><%= @with_detail[:cheque_name]%></td>
+			                    </tr>
+			                    
+			                    <tr class="row">
+			                      <th><%= I18n.t 'wallet_withdraw.br'%> </th>
+			                      <td><%= @with_detail[:cheque_branch]%></td>
+			                    </tr>
+			                    
+			                    <tr class="row">
+			                      <th><%= I18n.t 'wallet_withdraw.ifsc'%> </th>
+			                      <td><%= @with_detail[:cheque_ifsc_code]%></td>
+			                    </tr>
+			                    
+			                     <tr class="row">
+			                      <th><%= I18n.t 'wallet_withdraw.accnum'%></th>
+			                      <td><%= @with_detail[:cheque_account_number]%></td>
+			                    </tr>
+			                    
+			                    <% end %>
+		                  </table>
+		                </div>
+		              </div>
+		            </div>
+</div>	

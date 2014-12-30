@@ -1,0 +1,110 @@
+<style>
+	.error1{
+		margin-left: 30%;
+		display:block;
+		height: 12px;
+	}
+</style>
+<script>
+	
+	  
+       function validate_form(){
+        	
+        	$('#contactnameInfo').text('');
+        	$('#contactemailInfo').text('');
+        	$('#contactmsgInfo').text('');
+        	
+        	var name = $('#contact_name');
+        	var email = $('#contact_email');
+        	var msg = $('#contact_message');
+        	
+        	if(name.val()==''){
+        		name.focus();
+        		$('#contactnameInfo').text("<%= I18n.t 'validation.orga_contact.name_req'  %>");
+        		return false;
+        	}
+        	
+        	if(email.val()==''){
+        		email.focus();
+        		$('#contactemailInfo').text("<%= I18n.t 'validation.common.email_req'  %>");
+        		return false;
+        	}
+        	
+        	if(email.val()!=''){
+        		var email_reg_exp= /^[a-zA-Z0-9]+[a-zA-Z0-9_.-]+[a-zA-Z0-9_-]+@[a-zA-Z0-9]+[a-zA-Z0-9.-]+[a-zA-Z0-9]+.[a-z]{2,4}$/;
+        		a = email.val();
+        		
+        		
+        		if(!email_reg_exp.test(a)){
+					email.focus();
+					$('#contactemailInfo').text("<%= I18n.t 'validation.common.valid_email'  %>");
+					return false;
+				}
+				
+        	}
+        	
+        	if(msg.val()==''){
+        		msg.focus();
+        		$('#contactmsgInfo').text("<%= I18n.t 'validation.orga_contact.msg_req'  %>");
+        		return false;
+        	}
+        	
+        	
+			    var url = "/organizers/contact/<%= @org[:id] %>"; // the script where you handle the form input.
+
+			    $.ajax({
+			           type: "POST",
+			           url: url,
+			           data: $("#org_contact").serialize(), // serializes the form's elements.
+			           success: function(data)
+			           {
+			               //alert(data); // show response from the php script.
+			               $('#notice').text(data.msg);
+			               $('#notice').show();
+			               setTimeout(function() { parent.jQuery.colorbox.close(); }, 1000);
+			           }
+			         });
+			
+			    return false;
+			    
+       }
+    </script>
+
+
+<div id="login-box1" class="popup_Content">
+         <h2><%= I18n.t 'orga.contact.head'  %></h2><br />
+          
+		     <div style=" height: 20px; display: block;"> 
+		      	<div class="notice" id="notice" style="display: none;"></div>
+			 </div><br/>
+		  
+        <%= form_tag({:controller => 'organizers', :action => 'contact'}, :id => 'org_contact', :name => 'org_contact', :target => '_self') do %>	
+         
+	         <div class="form">
+			        
+			          <label ><%= I18n.t 'orga.contact.name'  %> : <span class="red">*</span> </label>
+			          <input type="text" class="textbox TW62p" name="contact[name]" id="contact_name"  />
+			          <div class="error1" id="contactnameInfo"></div>
+			          <div class="clear"></div>
+			         
+			          <label><%= I18n.t 'orga.contact.email'  %> : <span class="red">*</span> </label>
+			          <input type="text" class="textbox TW62p" name="contact[email]" id="contact_email"  />
+			          <div class="error1" id="contactemailInfo"></div>
+			         <div class="clear"></div>
+			         
+			          <label><%= I18n.t 'orga.contact.msg'  %> : <span class="red">*</span> </label>
+			          <textarea name="contact[message]" id="contact_message" class=" TW62p"></textarea>
+			          <div class="error1" id="contactmsgInfo"></div>
+			       <div class="clear"></div>
+			       
+			       <div class="marT15 fr">
+				       	<input type="hidden" value="<%= @org[:id] %>" name="contact[organizer_id]" />
+				       	<input type="hidden" name="event_id" value="<%= @event_id %>" />
+			          	<a class="btn" href="javascript://" onclick="validate_form();"><%= I18n.t 'button.send'  %></a>
+			          	<a class="btn black_bg" href="javascript://" onclick="parent.jQuery.colorbox.close();"><%= I18n.t 'button.cancel'  %></a>
+			       </div>  
+	          <div class="clear"></div>
+	          </div>
+	          	
+        <% end %>  	
+</div>    

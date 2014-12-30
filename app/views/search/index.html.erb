@@ -1,0 +1,273 @@
+<script src="<%= APP_CONFIG['development']['js_url'] %>js/map/gmap3.min.js" type="text/javascript"></script>
+<script src="<%= APP_CONFIG['development']['js_url'] %>js/map/jquery-autocomplete.min.js" type="text/javascript"></script>
+<% @subcategory = Category.select("DISTINCT categories.category_name") 
+	 @catarr = ''
+	 i=0
+     for e in @subcategory
+        @catarr+= '-_-'+e[:category_name].to_s
+        i+=1
+     end    
+%>
+<style>
+	.search_event ul.autocomplete {
+		top: 47px!important;
+		width: 43% !important;
+	}
+</style>
+<link href="<%= APP_CONFIG['development']['js_url'] %>js/map/jquery-autocomplete.css" media="all" rel="stylesheet" type="text/css" />
+<script type="text/javascript">
+$( document ).ready(function() {
+   original_val= $('#search_city_home').val();
+});
+	$(function() {
+		
+          $('#search_city_home').autocomplete({
+            source: function() {
+              $("#test1").gmap3({
+                action:'getAddress',
+                address: $(this).val(),
+                callback:function(results){
+                  if (!results) return;
+                 // alert(results);
+                 // console.log(results);	
+                  $('#search_city_home').autocomplete(
+                    'display', 
+                    results,
+                    false
+                  );
+                }
+              });
+            },
+            cb:{
+              cast: function(item){
+			  
+                return item.formatted_address;
+              },
+              select: function(item) {
+                
+              }
+            }
+         
+          });
+          
+          
+              var availableTags1   = "<%= @catarr.gsub('"','\'') %>"; 
+			var availableTags   = availableTags1.split('-_-'); 
+			
+			
+			$( "#search_category" ).autocomplete({
+				source: availableTags
+			});
+	});  
+	
+
+$(function () {
+    $('.right_columm a').click(function(event){
+      xval= $('#search_city_home').val();
+       href_val=$(this).attr("href");
+        
+        href_val = href_val.replace(original_val,xval);
+        window.location.href = href_val;
+        return false ;
+    });
+});
+	
+</script>   
+
+<script type="text/javascript" language="javascript">
+
+function form_validate_home()
+{
+	if($('#search_city_home').val() == "" && $('#search_category').val() == "")
+	{
+		return false;
+	}
+	else
+	{
+		return true;
+	}
+}
+
+
+</script>
+ <div class="header">
+            	<div class="ticket_article">
+                	 <div class="findevent_head_gradient"></div><div class="clear"></div>
+                     
+                     
+                     <div class="fl mtitle event_banner res-mtitle">
+                            <h1 class="fl"><%= I18n.t 'search_index.local'%> <span> <%= I18n.t 'event_title.events'%> </span></h1>
+                            <h3 class="fontnormal"> <% if @city!='' && 	@city!=nil	%> <%= I18n.t 'search_index.near'%> <%= @city %> <% end %></h3>
+                     </div>
+                     <div class="clear"></div>
+                    
+                </div>
+                <div><img src="<%= APP_CONFIG['development']['app_url'] %>shadow.png" /></div> 
+                <div class="clear"></div>
+                
+            </div>
+        </div> 
+    </div>  <div class="clear"></div>
+</header>
+
+<section>
+	<div class="main">
+    	<div class="shadow_none marT40">
+        	<div class="search_event">
+        	  <%= form_tag({:controller => 'search', :action => 'index'}, :id => 'searchFormhome') do %>
+        	 	<input type="text" value="<%= @search_category %>" name="search_category" id="search_category" placeholder="<%= I18n.t 'place.search_for_category'%>" class="find_textbox search_img" />
+            
+              	<input type="text" name="search_city" id="search_city_home" value="<%= @city %>" placeholder="<%= I18n.t 'place.enter_a_location'%>" class="find_textbox search_location brnone" />
+              	<input type="submit" value=<%= I18n.t 'button.search' %>  class="btn fr" onclick="return form_validate_home();" />
+              <% end %>
+              <div class="clear"></div>
+              	<div style="display: none;"><div id="test1"></div></div>
+              </div>
+        </div>
+    	<!-- Side bar -->
+    	<div class="right_columm marT45">
+        	
+               <div class="mtitle">
+            	<h1><%= I18n.t 'create_event.date'%></h1>
+            	</div>
+               <div class="shadow marT20">
+		  
+	              <div class="date_cat pad7">
+	                  <ul>
+	                       <li><a href="<%= APP_CONFIG['development']['site_url'] %>search?type=all_date&search_city=<%= params[:search_city] %>&search_category=<%= params[:search_category] %>" <% if params[:type]=='all_date'%> class="active" <% end %> ><%= I18n.t 'search_index.all_dates'%></a></li>
+				            <li><a href="<%= APP_CONFIG['development']['site_url'] %>search?type=today&search_city=<%= params[:search_city] %>&search_category=<%= params[:search_category] %>"  <% if params[:type]=='today'%> class="active" <% end %> ><%= I18n.t 'search_index.today'%></a></li>
+				            <li><a href="<%= APP_CONFIG['development']['site_url'] %>search?type=tomorrow&search_city=<%= params[:search_city] %>&search_category=<%= params[:search_category] %>"  <% if params[:type]=='tomorrow'%> class="active" <% end %>><%= I18n.t 'search_index.tomorrow'%></a></li>
+				            <li><a href="<%= APP_CONFIG['development']['site_url'] %>search?type=this_week&search_city=<%= params[:search_city] %>&search_category=<%= params[:search_category] %>"  <% if params[:type]=='this_week'%> class="active" <% end %>><%= I18n.t 'search_index.this_week'%></a></li>
+				            
+				            <li><a href="<%= APP_CONFIG['development']['site_url'] %>search?type=weekend&search_city=<%= params[:search_city] %>&search_category=<%= params[:search_category] %>"  <% if params[:type]=='weekend'%> class="active" <% end %>><%= I18n.t 'search_index.this_weekend'%></a></li>
+				            <li><a href="<%= APP_CONFIG['development']['site_url'] %>search?type=next_week&search_city=<%= params[:search_city] %>&search_category=<%= params[:search_category] %>"  <% if params[:type]=='next_week'%> class="active" <% end %>><%= I18n.t 'search_index.next_week'%></a></li>
+				            <li><a href="<%= APP_CONFIG['development']['site_url'] %>search?type=month&search_city=<%= params[:search_city] %>&search_category=<%= params[:search_category] %>" <% if params[:type]=='month'%> class="active" <% end %>><%= I18n.t 'search_index.this_month'%></a></li>
+				           
+	                  </ul><div class="clear"></div>
+	                  </div>
+	             </div>
+            
+        	<div class="clear"></div>
+        	
+        	<div class="mtitle marT45">
+            	<h1><%= I18n.t 'event.view.price'%></h1>
+            	</div>
+               <div class="shadow marT20">
+		  
+	              <div class="date_cat pad7">
+	                  <ul>
+	                       <li><a href="<%= APP_CONFIG['development']['site_url'] %>search?type=all_price&search_city=<%= params[:search_city] %>&search_category=<%= params[:search_category] %>" <% if params[:type]=='all_price'%> class="active" <% end %> ><%= I18n.t 'search_index.all_prices'%></a></li>
+				           <li><a href="<%= APP_CONFIG['development']['site_url'] %>search?type=free&search_city=<%= params[:search_city] %>&search_category=<%= params[:search_category] %>"  <% if params[:type]=='free'%> class="active" <% end %> ><%= I18n.t 'event.view.free'%></a></li>
+				           <li><a href="<%= APP_CONFIG['development']['site_url'] %>search?type=not_free&search_city=<%= params[:search_city] %>&search_category=<%= params[:search_category] %>"  <% if params[:type]=='not_free'%> class="active" <% end %>><%= I18n.t 'event.purchase.pdf_paid'%>/<%= I18n.t 'event.purchase.pdf_donation'%></a></li>
+				      </ul><div class="clear"></div>
+	                  </div>
+	             </div>
+            
+        	<div class="clear"></div>
+            
+            <div class="mtitle marT45">
+            	<h1><%= I18n.t 'search_index.category'%></h1>
+            	</div>
+               <div class="shadow marT20">
+		  
+              <div class="date_cat pad7">
+                  <ul>
+                        <li> <a href="<%= APP_CONFIG['development']['site_url'] %>search?category=all&search_city=<%= params[:search_city] %>&search_category=<%= params[:search_category] %>" <% if params[:category]=='all' %> class="active" <% end %>><%= I18n.t 'search_index.all_categories'%> </a></li><div class="clear"></div>
+                        <% @cat = Category.parent_category 
+				    		
+			    			if @cat.count > 0 
+			    				for c in @cat
+			    					%><li><a href="<%= APP_CONFIG['development']['site_url'] %>search/category/<%= c[:id] %>?search_city=<%= params[:search_city] %>&search_category=<%= params[:search_category] %>" <% if params[:id]==c[:id].to_s %> class="active" <% end %> ><%= c[:category_name] %></a></li><%
+			    				end	
+			    			end	
+			    		%>
+			    		
+                  </ul><div class="clear"></div>
+                  </div>
+             </div>
+        </div>	
+        
+        <!--  Sidebar ends -->
+        
+    	<div class="left_columm marT20">
+    		<div class="findeventListH">
+        	<% if @event_s.count > 0 %>
+            <ul>
+            	<%	
+            	i=0
+            	for event in @event_s %>
+            	<li class="<% if i%2==0 %> fl <% else %> findevent_right fr <% end %>">
+                	<div class="findeventimg">
+                    	<%
+       						if event[:event_url_link]=='' || event[:event_url_link]==nil 
+			             		page_url = APP_CONFIG['development']['site_url']+'events/view/'+event[:id].to_s 
+			             	 else
+			             		page_url = APP_CONFIG['development']['site_url']+'event/'+event[:event_url_link]
+			             	 end
+       						
+       						image_check = 0
+
+				       		if(event[:event_logo]!=nil)
+					            img_full_path = check_img(event[:event_logo],'event','thumb')	
+					         	if img_full_path!='0' && img_full_path!='' 
+								  image_check = 1
+								  %>
+								  <a href="<%= page_url %>"><img src="<%= APP_CONFIG['development']['upload_url'] %><%= img_full_path %>" alt="<%= event[:event_title] %>" /></a>
+								  <%
+								end
+							end
+							
+							if image_check==0
+								%>
+								<a href="<%= page_url %>"><img src="<%= APP_CONFIG['development']['app_url'] %>demo_image.png"  alt="<%= event[:event_title] %>"  /></a>
+								<%
+							end	
+       					%>
+                    </div>
+                    <div class="findeventDetail">
+                    	<h2><a href="<%= page_url %>"><%= truncate(event[:event_title], :length => 50) %></a></h2>
+                        <%
+		                    if event[:organizer_id]!=nil
+		                    	@org = Organizer.find(event[:organizer_id])
+		                    
+		                    	
+		                    if @org	
+		                 		if @org[:page_url]=='' || @org[:page_url]==nil 
+				             		org_page_url = APP_CONFIG['development']['site_url']+'organizers/show/'+@org[:id].to_s 
+				             	else
+				             		org_page_url = APP_CONFIG['development']['site_url']+'org/'+@org[:page_url]
+				             	end
+		                  %>
+		                    
+                        <span><strong><%= I18n.t 'search_index.organized_by'%></strong> 
+                        	<a href="<%= org_page_url %>"><% if @org[:name]!='' && @org[:name]!=nil %><%= truncate(@org[:name], :length => 50) %><% else %> <%= I18n.t 'home_index.un_org'%> <% end %></a></span>
+                        	<% end 
+                        	end
+                        	%>
+                        <div class="timing"><%= event[:event_start_date_time].strftime(@site[:date_time_format]) %></div>
+                        <div class="clear"></div>
+                    </div><div class="clear"></div>
+                </li><div class="clear"></div>
+                <% 
+                	i+=1
+                end %>
+                
+                <div class="clear"></div>
+            </ul>            
+        	<% else	%><p><%= I18n.t 'search_index.no_events_found_here'%></p><% end %>
+        </div>
+           <div class="clear"></div>
+      	<br /> 
+   
+        <div class="pagination marT45 fr">
+        	<%= will_paginate @event_s, :params => { :search_city => params[:search_city], :search_category => params[:search_category], :type => params[:type], :id => params[:id]} %> 
+        	
+             <div class="clear"></div>
+        </div><div class="clear"></div>
+         </div>
+        <div class="clear"></div>
+           
+    </div>
+    
+    
+</section>

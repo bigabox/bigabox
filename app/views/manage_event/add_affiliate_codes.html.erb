@@ -1,0 +1,177 @@
+<% @currency_symbol = @site[:currency_code]
+     @currency_code = CurrencyCode.find(:first, :conditions => ['currency_code=?', @site[:currency_code]]) 
+     @site[:currency_symbol] = @currency_code [:currency_symbol] %>
+
+<style>
+	.error1{
+		margin-left: 30%;
+	}
+	.refrel_fee span {
+		margin: 30px 1%;
+	}
+</style>
+<link href="<%= APP_CONFIG['development']['css_url'] %>colorbox.css" media="all" rel="stylesheet" type="text/css" />
+<script src="<%= APP_CONFIG['development']['js_url'] %>js/jquery.colorbox.js" type="text/javascript"></script>
+<script type="text/javascript" src="<%= APP_CONFIG['development']['js_url'] %>js/jquery.tipsy.js"></script>
+<script type="text/javascript">
+ 	function validate_submit(){
+		
+		
+		var name = $("#name");
+		var nameInfo = $("#nameInfo");
+		
+		
+		var feeInfo = $("#feeInfo");
+		
+		
+		nameInfo.text("");
+		
+		feeInfo.text("");
+				
+				var a = name.val();
+				var filter=/^[a-zA-Z0-9]+$/;
+				//if it's valid url
+					if(a==''){
+						name.focus();
+						nameInfo.text('<%= I18n.t 'add_affiliate_code.enter_valid_affiliate_code'%>');
+						return false;
+					}
+					
+					//if it's NOT valid
+					if(!filter.test(a)){
+						name.focus();
+						nameInfo.text('<%= I18n.t 'add_affiliate_code.only_alpha_numeric_char'%>');
+						return false;
+					}
+		
+
+	
+		if(($('#fee_amt').val()=='' && $('#fee_perc').val()=='') || ($('#fee_amt').val()<=0 && $('#fee_perc').val()<=0)){
+			$('#fee_amt').focus();
+			feeInfo.text('<%= I18n.t 'add_affiliate_code.enter_amt_percentage_referral_fee'%>');
+			return false;
+		}
+	
+
+		
+ 		return true;
+
+ 		
+	}
+ </script>
+ 
+  <script type="text/javascript">
+        $(document).ready(function() {
+        	
+		 $(".rr").colorbox();     
+		 $(".inline").colorbox({inline:true});	
+		 
+		
+	/************ pop up end ************/
+		
+		$('#tool_tip a').tipsy({gravity: 'w'});	
+		$('#social_link a').tipsy({gravity: 'w'});	
+		$('.bs-docs-tooltip-examples li a').tipsy({gravity: 'n'});		
+					
+		});	
+	
+	
+    </script>
+ 
+ <% @act_class = 'Create Affiliate Programs' %>         	
+ <%= render(:partial => "common_banner" , :object => :collection) %>   
+
+<section>
+	<div class="main">
+
+     <%= form_tag({:controller => 'manage_event', :action => 'edit_affiliate_code/'+@event[:id].to_s}, :id => 'edit_affiliate_code', :name => 'edit_affiliate_code') do %> 
+     
+     <% if (@code.errors.full_messages != []) then -%>
+	     <ul class="errors marT60" >
+	      <% @code.errors.full_messages.each do |t| %>
+	  		<li><%= t %></li>
+		  <% end %>
+	    </ul>
+    <% end -%>
+         
+    	<div class="left_columm">
+    	<div class="marT60">
+        	<div class="mtitle fl">
+            	<h1 class="fl"> <%= I18n.t 'add_affiliate_code.create_a_new'%> <span> <%= I18n.t 'add_affiliate_code.affiliate_program'%></span></h1>
+             
+            </div> <div class="clear"></div>
+            
+        	<div class="shadow marT10 pad3P">
+            	<div class="form affiliate">
+                <div>
+                	<label class="marT5"><%= I18n.t 'add_affiliate_code.code_of_affiliate_program'%></label>
+                    <input type="text" class="textbox TW66p" style="width:350px; margin-top: 0px;" value="<%= @code[:name] %>" name="code[name]" id="name">
+                    <div id="nameInfo" class="error1"></div>
+                    <p class="fr TW70p marT5"> <%= I18n.t 'add_affiliate_code.spaces_apostrophes_non_numeric_not_allowed'%> 
+<%= I18n.t 'add_affiliate_code.ex_earlybirdspecial_membersonly_dc121232'%></p>
+                    <div class="clear"></div>
+                    </div>
+                	
+                    <div class="refrel_fee" id="tool_tip">
+                        <label class="fl"><%= I18n.t 'affiliates.referral Fee'%></label>
+                        <%= @site[:currency_symbol] %>
+                        <input type="text" class="textbox TW100" name="code[fee_amt]" value="<%= @code[:fee_amt] %>" id="fee_amt" onkeyup="if(this.value > 0){ $('#fee_perc').val(''); }else{ this.value=''; }" />
+
+                        <span > <%= I18n.t 'home_login.login_or'%> </span>
+                        <input type="text" class="textbox TW100" name="code[fee_perc]" value="<%= @code[:fee_perc] %>" id="fee_perc" onkeyup="if(this.value > 0){ $('#fee_amt').val(''); }else{ this.value=''; }" />
+                        <span >  % <%= I18n.t 'add_affiliate_code.off_ticket_price'%> </span>
+                         <a href="#" title="Select which type of referral fee mechanism you want to setup for this affiliate.If you want to create link(without fee) create a tracking link bellow." class="tool_tip_class"></a>
+                        <div class="clear"></div>
+                         <div id="feeInfo" class="error1"></div>
+                    </div>
+                  <div class="marT10 checkbox" id="tool_tip">
+                	<label class="fl"><%= I18n.t 'add_affiliate_code.make_public'%> </label>
+                
+             		<input type="hidden" name="code[public]" value="0" />
+					<input type="checkbox" class="fl" name="code[public]" value="1" <% if @code[:public]==1 %>checked="checked"<% end %> style="margin: 3px 2%;" />	
+                    
+                    <span class="fl font_size15"> 
+                    	<a href="<%= APP_CONFIG['development']['site_url'] %>affiliates" target="_blank"><%= I18n.t 'add_affiliate_code.public_affiliates_page'%></a>  
+                    	</span>
+                    		 <a href="#" title="Choose if this affiliate should appear in the public affiliate listings provided by this site.By making your affiliate codes available publicly, you will be able to promote your event to a wider audience and increse your sales." class="tool_tip_class"></a>
+                    		
+                    <div class="clear"></div>
+                  </div>
+                    <label class="marT20"><%= I18n.t 'invite_add_attendee.notes'%></label>
+                    <textarea class="textbox TW66p" name="code[notes]" id="notes"><%= @code[:notes] %></textarea>
+                    
+                    <input type="hidden" name="code[event_id]" value="<%= @event[:id] %>" />
+        			<input type="hidden" name="code_id" value="<%= @code[:id] %>" />
+            		
+            		
+					<a href="<%= APP_CONFIG['development']['site_url'] %>manage_event/affiliate_codes/<%= @event[:id] %>" class="btn fr marT15 black_bg"><%= I18n.t 'button.cancel'%></a>
+					<input type="submit" class="btn fr marT15 marR10" value="Save" onclick="return validate_submit();">
+                    
+                     <div class="clear"></div>
+                    </div>
+               
+                <div class="clear"></div>
+            </div>
+           
+           
+           
+        </div>
+        
+           <div class="clear"></div>
+    </div>  
+    	
+    <% end %>	
+    	 <%= render(:partial => "manage_event_sidebar" , :object => :collection) %>   
+    	 
+		<div class="clear"></div>
+        </div>
+           <div class="clear"></div>
+   
+    
+</section>
+
+
+
+<% @edit_menu_class = 'Manage' %>
+<%= render(:partial => "edit_menu" , :object => :collection) %> 
+<div class="clear "></div>

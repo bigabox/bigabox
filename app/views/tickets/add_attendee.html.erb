@@ -1,0 +1,3644 @@
+<script type="text/javascript" src="<%= APP_CONFIG['development']['js_url'] %>jquery.countdown.js"></script>
+<link rel="stylesheet" href="<%= APP_CONFIG['development']['css_url'] %>jquery.countdown.css">
+<script type="text/javascript" src="<%= APP_CONFIG['development']['js_url'] %>countdown.min.js"></script>
+
+<style>
+	@media (max-width: 768px) {
+		.ticket td:nth-of-type(1):before { content: "<%= I18n.t 'event.view.ticket_title' %>"; font-weight:bold; }
+		.ticket td:nth-of-type(2):before { content: "<%= I18n.t 'event.view.price' %>"; font-weight:bold; }
+		.ticket td:nth-of-type(3):before { content: "<%= I18n.t 'event.view.fee' %>"; font-weight:bold; }
+		.ticket td:nth-of-type(4):before { content: "<%= I18n.t 'event.view.qty' %>"; font-weight:bold; }
+		.ticket td:nth-of-type(5):before { content: "<%= I18n.t 'event.purchase.total' %>"; font-weight:bold; }
+	}
+	
+
+.cntSeparator {
+	font-size: 40px;
+	margin-top: 7px;
+	
+}	
+</style>
+<%
+	@country = Country.find_all_country()
+	
+	free_tickets = Ticket.get_free_ticket(@event[:id])
+	paid_tickets = Ticket.get_paid_ticket(@event[:id])
+	donation_tickets = Ticket.get_donation_ticket(@event[:id])
+	
+	@order = OrderForm.find(:first, :conditions => ['event_id=?', @event[:id]])
+	if @order
+	else
+		@order = OrderForm.new
+	end
+			
+	@user_address = UserAddress.user_address(@user[:id])
+	if @user_address
+	else
+		@user_address = UserAddress.new
+	end
+	
+%> 
+	
+<% sy = Time.now.year - 100
+   ey = Time.now.year %>
+   
+   
+   
+   
+<script>
+ $(document).ready(function() {
+		var myDate = new Date();
+		var nowDate = new Date(myDate.getTime() - 1*24*60*60*1000);
+		
+	
+		$('.date_only').datepicker({
+				ampm: false,dateFormat:'yy-mm-dd',minDate: 0
+		  });
+		$('#ui-datepicker-div').hide();
+		
+		
+	});
+	
+
+</script>  										
+		<script>
+			function submit_check_form(){
+				var chk = false;
+				
+				//set_payment_gateway();// Call function to set default paypal in site_settings if radio button is not selected.
+				
+				// $('#stop_dclick').attr('disabled','disabled');
+               			// $('#stop_dclick').text('Please wait...');
+                
+				$('#orderInfo').text("");
+				//$('#place_orderform').submit();
+				<% if @order[:prefix]=='11' %> 
+					// alert('pre');
+					 var prefix = document.getElementsByName('prefix[]'); 
+					 var chk = 0;
+					 
+					 for (var i = 0; i < prefix.length; i++)
+			         {
+			         	 if(prefix[i].value==''){
+			         	 	//chk=true;
+			         	 	
+			         	 	$('#orderInfo').text("<%= I18n.t 'validation.ticket_purchase.prefix_req' %>");
+							$('#orderInfo').addClass("errors");
+							$('html, body').animate({ scrollTop: 0 }, 'slow');
+							return false;
+							
+			         	 }
+			         }
+				<% end %>
+				
+				
+				<% if @order[:first_name]=='11' %> 
+					
+					 var first_name = document.getElementsByName('first_name[]'); 
+					 var chk = 0;
+					 
+					 for (var i = 0; i < first_name.length; i++)
+			         {
+			         	 if(first_name[i].value==''){
+			         	 	//chk=true;
+			         	 	$('#orderInfo').text("<%= I18n.t 'validation.ticket_purchase.fname_req' %>");
+							$('#orderInfo').addClass("errors");
+							$('html, body').animate({ scrollTop: 0 }, 'slow');
+							return false;
+			         	 }
+			         }
+				<% end %>
+				
+				
+				<% if @order[:last_name]=='11' %>
+					
+					 var last_name = document.getElementsByName('last_name[]'); 
+					 var chk = 0;
+					 
+					 for (var i = 0; i < last_name.length; i++)
+			         {
+			         	 if(last_name[i].value==''){
+			         	 	//chk=true;
+			         	 	$('#orderInfo').text("<%= I18n.t 'validation.ticket_purchase.lname_req' %>");
+							$('#orderInfo').addClass("errors");
+							$('html, body').animate({ scrollTop: 0 }, 'slow');
+							return false;
+			         	 }
+			         }
+				<% end %>
+				
+				<% if @order[:suffix]=='11' %>
+					
+					 var suffix = document.getElementsByName('suffix[]'); 
+					 var chk = 0;
+					 
+					 for (var i = 0; i < suffix.length; i++)
+			         {
+			         	 if(suffix[i].value==''){
+			         	 	//chk=true;
+			         	 	$('#orderInfo').text("<%= I18n.t 'validation.ticket_purchase.suffix_req' %>");
+							$('#orderInfo').addClass("errors");
+							$('html, body').animate({ scrollTop: 0 }, 'slow');
+							return false;
+			         	 }
+			         }
+				<% end %>
+				
+				<% if @order[:email]=='11' %>
+					 
+					 var email = document.getElementsByName('email[]'); 
+					 var chk = 0;
+					 
+					 for (var i = 0; i < email.length; i++)
+			         {
+			         	 if(email[i].value==''){
+			         	 	//chk=true;
+			         	 	$('#orderInfo').text("<%= I18n.t 'validation.ticket_purchase.email_req' %>");
+							$('#orderInfo').addClass("errors");
+							$('html, body').animate({ scrollTop: 0 }, 'slow');
+							return false;
+			         	 }
+			         }
+				<% end %>
+				
+				
+				
+				<% if @order[:home_phone]=='11' %>
+					 var home_phone = document.getElementsByName('home_phone[]'); 
+					 var chk = 0;
+					 
+					 for (var i = 0; i < home_phone.length; i++)
+			         {
+			         	 if(home_phone[i].value==''){
+			         	 	//chk=true;
+			         	 	$('#orderInfo').text("<%= I18n.t 'validation.ticket_purchase.home_phone' %>");
+							$('#orderInfo').addClass("errors");
+							$('html, body').animate({ scrollTop: 0 }, 'slow');
+							return false;
+			         	 }
+			         }
+				<% end %>
+				
+				
+				<% if @order[:cell_phone]=='11' %>
+					 var cell_phone = document.getElementsByName('cell_phone[]'); 
+					 var chk = 0;
+					 
+					 for (var i = 0; i < cell_phone.length; i++)
+			         {
+			         	 if(cell_phone[i].value==''){
+			         	 	//chk=true;
+			         	 	$('#orderInfo').text("<%= I18n.t 'validation.ticket_purchase.cell_phone' %>");
+							$('#orderInfo').addClass("errors");
+							$('html, body').animate({ scrollTop: 0 }, 'slow');
+							return false;
+			         	 }
+			         }
+				<% end %>
+				
+				/// billing address ////////////
+				
+				<% if @order[:billing_address]=='11' %>
+					 var bill_cntry = document.getElementsByName('bill_country[]'); 
+					 var chk = 0;
+					 
+					 for (var i = 0; i < bill_cntry.length; i++)
+			         {
+			         	 if(bill_cntry[i].value==''){
+			         	 	//chk=true;
+			         	 	$('#orderInfo').text("<%= I18n.t 'validation.ticket_purchase.bill_country' %>");
+							$('#orderInfo').addClass("errors");
+							$('html, body').animate({ scrollTop: 0 }, 'slow');
+							return false;
+			         	 }
+			         }
+			         
+			         
+			         var bill_add1 = document.getElementsByName('bill_add1[]'); 
+					 var chk = 0;
+					 
+					 for (var i = 0; i < bill_add1.length; i++)
+			         {
+			         	 if(bill_add1[i].value==''){
+			         	 	//chk=true;
+			         	 	$('#orderInfo').text("<%= I18n.t 'validation.ticket_purchase.bill_add' %>");
+							$('#orderInfo').addClass("errors");
+							$('html, body').animate({ scrollTop: 0 }, 'slow');
+							return false;
+			         	 }
+			         }
+			         
+			         
+			         var bill_add2 = document.getElementsByName('bill_add2[]'); 
+					 var chk = 0;
+					 
+					 for (var i = 0; i < bill_add2.length; i++)
+			         {
+			         	 if(bill_add2[i].value==''){
+			         	 	//chk=true;
+			         	 	$('#orderInfo').text("<%= I18n.t 'validation.ticket_purchase.bill_add2' %>");
+							$('#orderInfo').addClass("errors");
+							$('html, body').animate({ scrollTop: 0 }, 'slow');
+							return false;
+			         	 }
+			         }
+			         
+			         var bill_city = document.getElementsByName('bill_city[]'); 
+					 var chk = 0;
+					 
+					 for (var i = 0; i < bill_city.length; i++)
+			         {
+			         	 if(bill_city[i].value==''){
+			         	 	//chk=true;
+			         	 	$('#orderInfo').text("<%= I18n.t 'validation.ticket_purchase.bill_city' %>");
+							$('#orderInfo').addClass("errors");
+							$('html, body').animate({ scrollTop: 0 }, 'slow');
+							return false;
+			         	 }
+			         }
+			         
+			         var bill_state = document.getElementsByName('bill_state[]'); 
+					 var chk = 0;
+					 
+					 for (var i = 0; i < bill_state.length; i++)
+			         {
+			         	 if(bill_state[i].value==''){
+			         	 	//chk=true;
+			         	 	$('#orderInfo').text("<%= I18n.t 'validation.ticket_purchase.bill_state' %>");
+							$('#orderInfo').addClass("errors");
+							$('html, body').animate({ scrollTop: 0 }, 'slow');
+							return false;
+			         	 }
+			         }
+			         
+			         var bill_zip = document.getElementsByName('bill_zip[]'); 
+					 var chk = 0;
+					 
+					 for (var i = 0; i < bill_zip.length; i++)
+			         {
+			         	 if(bill_zip[i].value==''){
+			         	 	//chk=true;
+			         	 	$('#orderInfo').text("<%= I18n.t 'validation.ticket_purchase.bill_zip' %>");
+							$('#orderInfo').addClass("errors");
+							$('html, body').animate({ scrollTop: 0 }, 'slow');
+							return false;
+			         	 }
+			         }
+				<% end %>
+				 //chk = false;
+				 
+				 
+				 ///////////  home_adrress //////////
+				 
+				 <% if @order[:home_address]=='11' %>
+					  var home_cntry = document.getElementsByName('home_country[]'); 
+					 var chk = 0;
+					 
+					 for (var i = 0; i < home_cntry.length; i++)
+			         {
+			         	 if(home_cntry[i].value==''){
+			         	 	//chk=true;
+			         	 	$('#orderInfo').text("<%= I18n.t 'validation.ticket_purchase.home_country' %>");
+							$('#orderInfo').addClass("errors");
+							$('html, body').animate({ scrollTop: 0 }, 'slow');
+							return false;
+			         	 }
+			         }
+			         
+			         
+			         var home_add1 = document.getElementsByName('home_add1[]'); 
+					 var chk = 0;
+					 
+					 for (var i = 0; i < home_add1.length; i++)
+			         {
+			         	 if(home_add1[i].value==''){
+			         	 	//chk=true;
+			         	 	$('#orderInfo').text("<%= I18n.t 'validation.ticket_purchase.home_add' %>");
+							$('#orderInfo').addClass("errors");
+							$('html, body').animate({ scrollTop: 0 }, 'slow');
+							return false;
+			         	 }
+			         }
+			         
+			         
+			         var home_add2 = document.getElementsByName('home_add2[]'); 
+					 var chk = 0;
+					 
+					 for (var i = 0; i < home_add2.length; i++)
+			         {
+			         	 if(home_add2[i].value==''){
+			         	 	//chk=true;
+			         	 	$('#orderInfo').text("<%= I18n.t 'validation.ticket_purchase.home_add2' %>");
+							$('#orderInfo').addClass("errors");
+							$('html, body').animate({ scrollTop: 0 }, 'slow');
+							return false;
+			         	 }
+			         }
+			         
+			         var home_city = document.getElementsByName('home_city[]'); 
+					 var chk = 0;
+					 
+					 for (var i = 0; i < home_city.length; i++)
+			         {
+			         	 if(home_city[i].value==''){
+			         	 	//chk=true;
+			         	 	$('#orderInfo').text("<%= I18n.t 'validation.ticket_purchase.home_city' %>");
+							$('#orderInfo').addClass("errors");
+							$('html, body').animate({ scrollTop: 0 }, 'slow');
+							return false;
+			         	 }
+			         }
+			         
+			         var home_state = document.getElementsByName('home_state[]'); 
+					 var chk = 0;
+					 
+					 for (var i = 0; i < home_state.length; i++)
+			         {
+			         	 if(home_state[i].value==''){
+			         	 	//chk=true;
+			         	 	$('#orderInfo').text("<%= I18n.t 'validation.ticket_purchase.home_state' %>");
+							$('#orderInfo').addClass("errors");
+							$('html, body').animate({ scrollTop: 0 }, 'slow');
+							return false;
+			         	 }
+			         }
+			         
+			         var home_zip = document.getElementsByName('home_zip[]'); 
+					 var chk = 0;
+					 
+					 for (var i = 0; i < home_zip.length; i++)
+			         {
+			         	 if(home_zip[i].value==''){
+			         	 	//chk=true;
+			         	 	$('#orderInfo').text("<%= I18n.t 'validation.ticket_purchase.home_zip' %>");
+							$('#orderInfo').addClass("errors");
+							$('html, body').animate({ scrollTop: 0 }, 'slow');
+							return false;
+			         	 }
+			         }
+				<% end %>
+				
+				//// shipping address //////////////
+				
+				<% if @order[:shipping_address]=='11' %>
+					 var ship_cntry = document.getElementsByName('ship_country[]'); 
+					 var chk = 0;
+					 
+					 for (var i = 0; i < ship_cntry.length; i++)
+			         {
+			         	 if(ship_cntry[i].value==''){
+			         	 	//chk=true;
+			         	 	$('#orderInfo').text("<%= I18n.t 'validation.ticket_purchase.ship_country' %>");
+							$('#orderInfo').addClass("errors");
+							$('html, body').animate({ scrollTop: 0 }, 'slow');
+							return false;
+			         	 }
+			         }
+			         
+			         
+			         var ship_add1 = document.getElementsByName('ship_add1[]'); 
+					 var chk = 0;
+					 
+					 for (var i = 0; i < ship_add1.length; i++)
+			         {
+			         	 if(ship_add1[i].value==''){
+			         	 	//chk=true;
+			         	 	$('#orderInfo').text("<%= I18n.t 'validation.ticket_purchase.ship_add' %>");
+							$('#orderInfo').addClass("errors");
+							$('html, body').animate({ scrollTop: 0 }, 'slow');
+							return false;
+			         	 }
+			         }
+			         
+			         
+			         var ship_add2 = document.getElementsByName('ship_add2[]'); 
+					 var chk = 0;
+					 
+					 for (var i = 0; i < ship_add2.length; i++)
+			         {
+			         	 if(ship_add2[i].value==''){
+			         	 	//chk=true;
+			         	 	$('#orderInfo').text("<%= I18n.t 'validation.ticket_purchase.ship_add2' %>");
+							$('#orderInfo').addClass("errors");
+							$('html, body').animate({ scrollTop: 0 }, 'slow');
+							return false;
+			         	 }
+			         }
+			         
+			         var ship_city = document.getElementsByName('ship_city[]'); 
+					 var chk = 0;
+					 
+					 for (var i = 0; i < ship_city.length; i++)
+			         {
+			         	 if(ship_city[i].value==''){
+			         	 	//chk=true;
+			         	 	$('#orderInfo').text("<%= I18n.t 'validation.ticket_purchase.ship_city' %>");
+							$('#orderInfo').addClass("errors");
+							$('html, body').animate({ scrollTop: 0 }, 'slow');
+							return false;
+			         	 }
+			         }
+			         
+			         var ship_state = document.getElementsByName('ship_state[]'); 
+					 var chk = 0;
+					 
+					 for (var i = 0; i < ship_state.length; i++)
+			         {
+			         	 if(ship_state[i].value==''){
+			         	 	//chk=true;
+			         	 	$('#orderInfo').text("<%= I18n.t 'validation.ticket_purchase.ship_state' %>");
+							$('#orderInfo').addClass("errors");
+							$('html, body').animate({ scrollTop: 0 }, 'slow');
+							return false;
+			         	 }
+			         }
+			         
+			         var ship_zip = document.getElementsByName('ship_zip[]'); 
+					 var chk = 0;
+					 
+					 for (var i = 0; i < ship_zip.length; i++)
+			         {
+			         	 if(ship_zip[i].value==''){
+			         	 	//chk=true;
+			         	 	$('#orderInfo').text("<%= I18n.t 'validation.ticket_purchase.ship_zip' %>");
+							$('#orderInfo').addClass("errors");
+							$('html, body').animate({ scrollTop: 0 }, 'slow');
+							return false;
+			         	 }
+			         }
+				<% end %>
+				
+				
+				
+				///// work address /////////
+				<% if @order[:work_address]=='11' %>
+					 var work_cntry = document.getElementsByName('work_country[]'); 
+					 var chk = 0;
+					 
+					 for (var i = 0; i < work_cntry.length; i++)
+			         {
+			         	 if(work_cntry[i].value==''){
+			         	 	//chk=true;
+			         	 	$('#orderInfo').text("<%= I18n.t 'validation.ticket_purchase.work_country' %>");
+							$('#orderInfo').addClass("errors");
+							$('html, body').animate({ scrollTop: 0 }, 'slow');
+							return false;
+			         	 }
+			         }
+			         
+			         
+			         var work_add1 = document.getElementsByName('work_add1[]'); 
+					 var chk = 0;
+					 
+					 for (var i = 0; i < work_add1.length; i++)
+			         {
+			         	 if(work_add1[i].value==''){
+			         	 	//chk=true;
+			         	 	$('#orderInfo').text("<%= I18n.t 'validation.ticket_purchase.work_add' %>");
+							$('#orderInfo').addClass("errors");
+							$('html, body').animate({ scrollTop: 0 }, 'slow');
+							return false;
+			         	 }
+			         }
+			         
+			         
+			         var work_add2 = document.getElementsByName('work_add2[]'); 
+					 var chk = 0;
+					 
+					 for (var i = 0; i < work_add2.length; i++)
+			         {
+			         	 if(work_add2[i].value==''){
+			         	 	//chk=true;
+			         	 	$('#orderInfo').text("<%= I18n.t 'validation.ticket_purchase.work_add2' %>");
+							$('#orderInfo').addClass("errors");
+							$('html, body').animate({ scrollTop: 0 }, 'slow');
+							return false;
+			         	 }
+			         }
+			         
+			         var work_city = document.getElementsByName('work_city[]'); 
+					 var chk = 0;
+					 
+					 for (var i = 0; i < work_city.length; i++)
+			         {
+			         	 if(work_city[i].value==''){
+			         	 	//chk=true;
+			         	 	$('#orderInfo').text("<%= I18n.t 'validation.ticket_purchase.work_city' %>");
+							$('#orderInfo').addClass("errors");
+							$('html, body').animate({ scrollTop: 0 }, 'slow');
+							return false;
+			         	 }
+			         }
+			         
+			         var work_state = document.getElementsByName('work_state[]'); 
+					 var chk = 0;
+					 
+					 for (var i = 0; i < work_state.length; i++)
+			         {
+			         	 if(work_state[i].value==''){
+			         	 	//chk=true;
+			         	 	$('#orderInfo').text("<%= I18n.t 'validation.ticket_purchase.work_state' %>");
+							$('#orderInfo').addClass("errors");
+							$('html, body').animate({ scrollTop: 0 }, 'slow');
+							return false;
+			         	 }
+			         }
+			         
+			         var work_zip = document.getElementsByName('work_zip[]'); 
+					 var chk = 0;
+					 
+					 for (var i = 0; i < work_zip.length; i++)
+			         {
+			         	 if(work_zip[i].value==''){
+			         	 	//chk=true;
+			         	 	$('#orderInfo').text("<%= I18n.t 'validation.ticket_purchase.work_zip' %>");
+							$('#orderInfo').addClass("errors");
+							$('html, body').animate({ scrollTop: 0 }, 'slow');
+							return false;
+			         	 }
+			         }
+				<% end %>
+				
+				
+				<% if @order[:job_title]=='11' %>
+					 var work_job_title = document.getElementsByName('work_job_title[]'); 
+					 var chk = 0;
+					 
+					 for (var i = 0; i < work_job_title.length; i++)
+			         {
+			         	 if(work_job_title[i].value==''){
+			         	 	//chk=true;
+			         	 	$('#orderInfo').text("<%= I18n.t 'validation.ticket_purchase.work_job' %>");
+							$('#orderInfo').addClass("errors");
+							$('html, body').animate({ scrollTop: 0 }, 'slow');
+							return false;
+			         	 }
+			         }
+				<% end %>
+				
+		       	 <% if @order[:company]=='11' %>
+					 var company = document.getElementsByName('work_company[]'); 
+					 var chk = 0;
+					 
+					 for (var i = 0; i < company.length; i++)
+			         {
+			         	 if(company[i].value==''){
+			         	 	//chk=true;
+			         	 	$('#orderInfo').text("<%= I18n.t 'validation.ticket_purchase.work_company' %>");
+							$('#orderInfo').addClass("errors");
+							$('html, body').animate({ scrollTop: 0 }, 'slow');
+							return false;
+			         	 }
+			         }
+				<% end %>
+		       	 
+		       <% if @order[:work_phone]=='11' %>
+					 var work_phone = document.getElementsByName('work_phone[]'); 
+					 var chk = 0;
+					 
+					 for (var i = 0; i < work_phone.length; i++)
+			         {
+			         	 if(work_phone[i].value==''){
+			         	 	//chk=true;
+			         	 	$('#orderInfo').text("<%= I18n.t 'validation.ticket_purchase.work_phone' %>");
+							$('#orderInfo').addClass("errors");
+							$('html, body').animate({ scrollTop: 0 }, 'slow');
+							return false;
+			         	 }
+			         }
+				<% end %>
+				
+		       
+		       <% if @order[:bolg]=='11' %>
+					 var bolg = document.getElementsByName('work_bolg[]'); 
+					 var chk = 0;
+					 
+					 for (var i = 0; i < bolg.length; i++)
+			         {
+			         	 if(bolg[i].value==''){
+			         	 	//chk=true;
+			         	 	$('#orderInfo').text("<%= I18n.t 'validation.ticket_purchase.work_blog' %>");
+							$('#orderInfo').addClass("errors");
+							$('html, body').animate({ scrollTop: 0 }, 'slow');
+							return false;
+			         	 }
+			         }
+				<% end %>
+				
+				
+				<% if @order[:website]=='11' %>
+					 var website = document.getElementsByName('work_website[]'); 
+					 var chk = 0;
+					 
+					 for (var i = 0; i < website.length; i++)
+			         {
+			         	 if(website[i].value==''){
+			         	 	//chk=true;
+			         	 	$('#orderInfo').text("<%= I18n.t 'validation.ticket_purchase.work_website' %>");
+							$('#orderInfo').addClass("errors");
+							$('html, body').animate({ scrollTop: 0 }, 'slow');
+							return false;
+			         	 }
+			         }
+				<% end %>
+				
+				<% if @order[:gender]=='11' %>
+					 var gender = document.getElementsByName('gender[]'); 
+					 var chk = 0;
+					 
+					 for (var i = 0; i < gender.length; i++)
+			         {
+			         	 if(gender[i].value==''){
+			         	 	//chk=true;
+			         	 	$('#orderInfo').text("<%= I18n.t 'validation.ticket_purchase.gender' %>");
+							$('#orderInfo').addClass("errors");
+							$('html, body').animate({ scrollTop: 0 }, 'slow');
+							return false;
+			         	 }
+			         }
+				<% end %>
+				
+				<% if @order[:birth_date]=='11' %>
+					 var birth_date = document.getElementsByName('birth_date[]'); 
+					 var chk = 0;
+					 
+					 for (var i = 0; i < birth_date.length; i++)
+			         {
+			         	 if(birth_date[i].value==''){
+			         	 	//chk=true;
+			         	 	$('#orderInfo').text("<%= I18n.t 'validation.ticket_purchase.bdate' %>");
+							$('#orderInfo').addClass("errors");
+							$('html, body').animate({ scrollTop: 0 }, 'slow');
+							return false;
+			         	 }
+			         }
+				<% end %>
+				
+				
+				<% if @order[:age]=='11' %>
+					 var age = document.getElementsByName('age[]'); 
+					 var chk = 0;
+					 
+					 for (var i = 0; i < age.length; i++)
+			         {
+			         	 if(age[i].value==''){
+			         	 	//chk=true;
+			         	 	$('#orderInfo').text("<%= I18n.t 'validation.ticket_purchase.age' %>");
+							$('#orderInfo').addClass("errors");
+							$('html, body').animate({ scrollTop: 0 }, 'slow');
+							return false;
+			         	 }
+			         }
+				<% end %>
+				
+				
+				
+					<% 
+					i=0
+					if @order[:ctype]==1 
+						
+						if  @questions.count > 0
+	              				@ticks = params[:ticket_qty] 
+	              				for q in @questions
+	              					@ask = 1
+	              					if (q[:rules]=='11') 
+	              						
+	              						if q[:spec_ticket]==1
+		              						@ask = 0
+		              						@que_ticks = q[:tickets].split(',')
+		              						@que_ticks.each do |ticks|
+		              							if(@ticks.include?(ticks))
+		              								 @ask = 1
+		              							end	
+		              						end	
+	              						end	
+	              						
+	              					if(@ask==1) 
+	              						 if q[:que_type]=='text' || q[:que_type]=='para' || q[:que_type]=='select' 
+	              						 	%>
+		              						 	 var ques = document.getElementsByName('que[<%= q[:id] %>][]'); 
+												 var chk = 0;
+												 
+												 for (var i = 0; i < ques.length; i++)
+										         {
+										         	 if(ques[i].value==''){
+										         	 	//chk=true;
+										         	 	$('#orderInfo').text("<%= I18n.t 'validation.ticket_purchase.starf' %>");
+														$('#orderInfo').addClass("errors");
+														$('html, body').animate({ scrollTop: 0 }, 'slow');
+														return false;
+										         	 }
+										         }
+	              						 	
+	              						 	<%
+	              						 else
+	              						 	%>
+		              						 	 var ques = document.getElementsByName('que[<%= q[:id] %>][]'); 
+												 var chk = 1;
+												 
+												 for (var i = 0; i < ques.length; i++)
+										         {
+										         	 if(ques[i].checked==true){
+										         	 	//chk=true;
+										         	 	chk = 0;
+										         	 }
+										         }
+										         
+										         if(chk==1){
+										         	$('#orderInfo').text("<%= I18n.t 'validation.ticket_purchase.starf' %>");
+													$('#orderInfo').addClass("errors");
+													$('html, body').animate({ scrollTop: 0 }, 'slow');
+													return false;
+										         }
+	              						 	<%
+	              						
+	                  					 end 
+	              					end
+	              				end
+	              			end
+	              		end	
+	              		
+	              		
+	              		 if @waivers.count > 0 
+	              				@ticks = params[:ticket_qty] 
+	              				for q in @waivers
+	              					@ask = 1
+	              					if (q[:rules]=='11') 
+	              						
+	              						if q[:spec_ticket]==1
+		              						@ask = 0
+		              						@que_ticks = q[:tickets].split(',')
+		              						@que_ticks.each do |ticks|
+		              							if(@ticks.include?(ticks))
+		              								 @ask = 1
+		              							end	
+		              						end	
+	              						end	
+	              							
+	              					if(@ask==1) 
+	              						%>
+		              						 	 var ques = document.getElementsByName('que[<%= q[:id] %>][]'); 
+												 var chk = 0;
+												 
+												 for (var i = 0; i < ques.length; i++)
+										         {
+										         	 if(ques[i].checked==false){
+										         	 	chk=1
+										         	 }
+										         	 	
+										         }
+										         
+										         if(chk==1){
+										         	$('#orderInfo').text("<%= I18n.t 'validation.ticket_purchase.starw' %>");
+													$('#orderInfo').addClass("errors");
+													$('html, body').animate({ scrollTop: 0 }, 'slow');
+													return false;
+										         }
+	              						 	<%
+	              					
+	              						end
+	              					end
+	              				end 
+	              			 end
+	              			 
+	              	end		%>
+	              		
+	              		
+	              		
+	              		     
+	                    <%	
+	                    
+	                    if @order[:ctype]==2 
+	                    	##### freee starts 
+	                    if free_tickets.count > 0
+		 
+				       			 for free in free_tickets 
+				       			 	
+	                    			if params[:ticket_qty][free[:id].to_s] && params[:ticket_qty][free[:id].to_s]!='0'
+	                    		%>
+		                          <% if @questions.count > 0 
+              					
+	              				
+			              				for q in @questions
+			              					@ask = 1
+			              					if (q[:rules]=='11') 
+			              						
+			              						if q[:spec_ticket]==1
+				              						@ask = 0
+				              						@que_ticks = q[:tickets].split(',')
+			              							if(@que_ticks.include?(free[:id]))
+			              								 @ask = 1
+			              							end	
+				              					end	
+			              						
+			              					if(@ask==1) 
+			              						 if q[:que_type]=='text' || q[:que_type]=='para' || q[:que_type]=='select' 
+			              						 	%>
+				              						 	 var ques = document.getElementsByName('que[<%= free[:id] %>][]'); 
+														 var chk = 0;
+														 
+														 for (var i = 0; i < ques.length; i++)
+												         {
+												         	 if(ques[i].value==''){
+												         	 	//chk=true;
+												         	 	$('#orderInfo').text("<%= I18n.t 'validation.ticket_purchase.starf' %>");
+																$('#orderInfo').addClass("errors");
+																$('html, body').animate({ scrollTop: 0 }, 'slow');
+																return false;
+												         	 }
+												         }
+			              						 	
+			              						 	<%
+			              						 else
+			              						 	%>
+				              						 	 var ques = document.getElementsByName('que[<%= free[:id] %>][]'); 
+														 var chk = 1;
+														 
+														 for (var i = 0; i < ques.length; i++)
+												         {
+												         	 if(ques[i].checked==true){
+												         	 	//chk=true;
+												         	 	chk = 0;
+												         	 }
+												         }
+												         
+												         if(chk==1){
+												         	$('#orderInfo').text("<%= I18n.t 'validation.ticket_purchase.starf' %>");
+															$('#orderInfo').addClass("errors");
+															$('html, body').animate({ scrollTop: 0 }, 'slow');
+															return false;
+												         }
+			              						 	<%
+	              							end
+			              				end
+			              			end 
+			              		end %>
+		              				
+		              				
+		              				<% if @waivers.count > 0 
+			              				for q in @waivers
+			              					@ask = 1
+			              					if q[:rules]=='11'
+			              						
+			              						if q[:spec_ticket]==1
+				              						@ask = 0
+				              						@que_ticks = q[:tickets].split(',')
+			              							if(@que_ticks.include?(free[:id]))
+			              								 @ask = 1
+			              							end	
+				              					end	
+			              						
+			              						if(@ask==1) 
+			              							%>
+				              						 	 var ques = document.getElementsByName('que[<%= free[:id] %>][]'); 
+														 var chk = 0;
+														 
+														 for (var i = 0; i < ques.length; i++)
+												         {
+												         	 if(ques[i].checked==false){
+												         	 	chk=1
+												         	 }
+												         	 	
+												         }
+												         
+												         if(chk==1){
+												         	$('#orderInfo').text("<%= I18n.t 'validation.ticket_purchase.starw' %>");
+															$('#orderInfo').addClass("errors");
+															$('html, body').animate({ scrollTop: 0 }, 'slow');
+															return false;
+												         }
+			              						 	<%
+			              					
+			              						end
+			              					end
+			              				end 
+			              			 end 
+			              			 
+                        			i+=1
+                        			end
+                        		end 
+                        	end	
+                        end		
+                        	
+                        	
+                        	
+                        	##### paid starts 
+	                    if paid_tickets.count > 0
+		 
+				       			 for paid in paid_tickets 
+				       			 	
+	                    			if params[:ticket_qty][paid[:id].to_s] && params[:ticket_qty][paid[:id].to_s]!='0' 
+	                    		%>
+		                          <% if @questions.count > 0 
+              					
+	              				
+			              				for q in @questions
+			              					@ask = 1
+			              					if (q[:rules]=='11') 
+			              						
+			              						if q[:spec_ticket]==1
+				              						@ask = 0
+				              						@que_ticks = q[:tickets].split(',')
+			              							if(@que_ticks.include?(paid[:id]))
+			              								 @ask = 1
+			              							end	
+				              					end	
+			              						
+			              					if(@ask==1) 
+			              						 if q[:que_type]=='text' || q[:que_type]=='para' || q[:que_type]=='select' 
+			              						 	%>
+				              						 	 var ques = document.getElementsByName('que[<%= paid[:id] %>][]'); 
+														 var chk = 0;
+														 
+														 for (var i = 0; i < ques.length; i++)
+												         {
+												         	 if(ques[i].value==''){
+												         	 	//chk=true;
+												         	 	$('#orderInfo').text("<%= I18n.t 'validation.ticket_purchase.starf' %>");
+																$('#orderInfo').addClass("errors");
+																$('html, body').animate({ scrollTop: 0 }, 'slow');
+																return false;
+												         	 }
+												         }
+			              						 	
+			              						 	<%
+			              						 else
+			              						 	%>
+				              						 	 var ques = document.getElementsByName('que[<%= paid[:id] %>][]'); 
+														 var chk = 1;
+														 
+														 for (var i = 0; i < ques.length; i++)
+												         {
+												         	 if(ques[i].checked==true){
+												         	 	//chk=true;
+												         	 	chk = 0;
+												         	 }
+												         }
+												         
+												         if(chk==1){
+												         	$('#orderInfo').text("<%= I18n.t 'validation.ticket_purchase.starf' %>");
+															$('#orderInfo').addClass("errors");
+															$('html, body').animate({ scrollTop: 0 }, 'slow');
+															return false;
+												         }
+			              						 	<%
+	              							end
+			              				end
+			              			end 
+			              		end %>
+		              				
+		              				
+		              				<% if @waivers.count > 0 
+			              				for q in @waivers
+			              					@ask = 1
+			              					if q[:rules]=='11'
+			              						
+			              						if q[:spec_ticket]==1
+				              						@ask = 0
+				              						@que_ticks = q[:tickets].split(',')
+			              							if(@que_ticks.include?(paid[:id]))
+			              								 @ask = 1
+			              							end	
+				              					end	
+			              						
+			              						if(@ask==1) 
+			              							%>
+				              						 	 var ques = document.getElementsByName('que[<%= paid[:id] %>][]'); 
+														 var chk = 0;
+														 
+														 for (var i = 0; i < ques.length; i++)
+												         {
+												         	 if(ques[i].checked==false){
+												         	 	chk=1
+												         	 }
+												         	 	
+												         }
+												         
+												         if(chk==1){
+												         	$('#orderInfo').text("<%= I18n.t 'validation.ticket_purchase.starw' %>");
+															$('#orderInfo').addClass("errors");
+															$('html, body').animate({ scrollTop: 0 }, 'slow');
+															return false;
+												         }
+			              						 	<%
+			              					
+			              						end
+			              					end
+			              				end 
+			              			 end 
+			              			 
+                        			i+=1
+                        			end
+                        		end 
+                        	end	
+                        	
+                       end 	
+                        	
+
+                        	
+                        	##### donation starts 
+	                    if donation_tickets.count > 0
+		 
+				       			 for donation in donation_tickets 
+				       			 	
+	                    			if params[:ticket_qty][donation[:id].to_s] && params[:ticket_qty][donation[:id].to_s]!='0'
+	                    		%>
+		                          <% if @questions.count > 0 
+              					
+	              				
+			              				for q in @questions
+			              					@ask = 1
+			              					if (q[:rules]=='11') 
+			              						
+			              						if q[:spec_ticket]==1
+				              						@ask = 0
+				              						@que_ticks = q[:tickets].split(',')
+			              							if(@que_ticks.include?(donation[:id]))
+			              								 @ask = 1
+			              							end	
+				              					end	
+			              						
+			              					if(@ask==1) 
+			              						 if q[:que_type]=='text' || q[:que_type]=='para' || q[:que_type]=='select' 
+			              						 	%>
+				              						 	 var ques = document.getElementsByName('que[<%= donation[:id] %>][]'); 
+														 var chk = 0;
+														 
+														 for (var i = 0; i < ques.length; i++)
+												         {
+												         	 if(ques[i].value==''){
+												         	 	//chk=true;
+												         	 	$('#orderInfo').text("<%= I18n.t 'validation.ticket_purchase.starf' %>");
+																$('#orderInfo').addClass("errors");
+																$('html, body').animate({ scrollTop: 0 }, 'slow');
+																return false;
+												         	 }
+												         }
+			              						 	
+			              						 	<%
+			              						 else
+			              						 	%>
+				              						 	 var ques = document.getElementsByName('que[<%= donation[:id] %>][]'); 
+														 var chk = 1;
+														 
+														 for (var i = 0; i < ques.length; i++)
+												         {
+												         	 if(ques[i].checked==true){
+												         	 	//chk=true;
+												         	 	chk = 0;
+												         	 }
+												         }
+												         
+												         if(chk==1){
+												         	$('#orderInfo').text("<%= I18n.t 'validation.ticket_purchase.starf' %>");
+															$('#orderInfo').addClass("errors");
+															$('html, body').animate({ scrollTop: 0 }, 'slow');
+															return false;
+												         }
+			              						 	<%
+	              							end
+			              				end
+			              			end 
+			              		end %>
+		              				
+		              				
+		              				<% if @waivers.count > 0 
+			              				for q in @waivers
+			              					@ask = 1
+			              					if q[:rules]=='11'
+			              						
+			              						if q[:spec_ticket]==1
+				              						@ask = 0
+				              						@que_ticks = q[:tickets].split(',')
+			              							if(@que_ticks.include?(donation[:id]))
+			              								 @ask = 1
+			              							end	
+				              					end	
+			              						
+			              						if(@ask==1) 
+			              							%>
+				              						 	 var ques = document.getElementsByName('que[<%= donation[:id] %>][]'); 
+														 var chk = 0;
+														 
+														 for (var i = 0; i < ques.length; i++)
+												         {
+												         	 if(ques[i].checked==false){
+												         	 	chk=1
+												         	 }
+												         	 	
+												         }
+												         
+												         if(chk==1){
+												         	$('#orderInfo').text("<%= I18n.t 'validation.ticket_purchase.starw' %>");
+															$('#orderInfo').addClass("errors");
+															$('html, body').animate({ scrollTop: 0 }, 'slow');
+															return false;
+												         }
+			              						 	<%
+			              					
+			              						end
+			              					end
+			              				end 
+			              			 end 
+			              			 
+                        			i+=1
+                        			end
+                        		end 
+                        	end	
+                        end		
+                        		### all ends 
+                        end 	
+                        %>
+                                
+                                
+	              			
+              				
+              				
+				
+		       	 
+		       	 if(chk){
+		       	 		$('#orderInfo').text("<%= I18n.t 'validation.ticket_purchase.starall' %>");
+						$('#orderInfo').addClass("errors");
+						$('html, body').animate({ scrollTop: 0 }, 'slow');
+						return false;
+		       	 }else{
+		       	 		$('#stop_dclick').attr('disabled','disabled');
+               			 	$('#stop_dclick').text('Please wait...');
+		       	 		$('#place_orderform').submit();
+		       	 }
+				
+			}
+			
+			
+			function set_state(val, type){
+					var n = type.split("_"); 
+					type = n[0];
+			        var state_path = '/manage_account/state_selection/';
+			        var country_id = val;
+			        $.ajax({
+			            type: "GET",
+			            data: {country_id: country_id, add_type: type}, 
+			            url: state_path+country_id,
+			            success: function(data) {
+			             //  alert(data);
+			                
+			                if(n.length==2){
+			                	$("#"+type+n[1]+"_state_list").html(data);
+			                }else{
+			                	$("#"+type+"_state_list").html(data);
+			                }
+			            }
+			        });
+			   
+			}
+		</script>
+
+	<!-- Function to select payment gateway and store in db -->		
+		<script>
+			function set_payment_gateway(){
+				
+				var result_value="";
+				if (document.getElementById('paypal').checked) {
+				  result_value = document.getElementById('paypal').value;
+				}
+				if (document.getElementById('auth').checked) {
+				  result_value = document.getElementById('auth').value;
+				}
+				
+				 $.ajax({
+		            type: "GET",
+		            data: {payment_gateway: result_value}, 
+		            url: '/tickets/check_gateway',
+		            success: function(data) {}
+        		});
+			}
+		</script>  
+<section>
+	
+	<%= render(:partial => "tickets/event_top_banner" , :object => :collection) %> 	 
+	
+	
+	<div class="main">
+		 <div id="orderInfo"  class="marT60"></div>
+		 <!--Content Left-->
+		 
+    	<div class="left_columm">
+	    <%= form_tag({:controller => 'tickets', :action => 'place_order_attendee'}, :id => 'place_orderform', :name => 'place_orderform') do %>	
+	    	
+	    	<div class="marT60">
+	        	<div class="mtitle fl">
+	            	<h1 class="fl"><%= I18n.t 'event.view.ticket' %> <span><%= I18n.t 'event.view.information' %></span></h1>
+	            </div> <div class="clear"></div>
+	            
+	            <div class="event_detail pad3 marT20">
+		            <table class="ticket table">
+		                <thead>
+			                <tr>
+			                    <th style="width: 157px;"><%= I18n.t 'event.view.ticket_title' %></th>
+			                    <th style="width: 101px;"><%= I18n.t 'event.view.price' %></th>
+			                    <th style="width: 96px;"><%= I18n.t 'event.view.qty' %></th>
+			                    <th style="width: 99px;"><%= I18n.t 'event.purchase.total' %></th>
+			                    
+			                </tr>
+		                </thead>
+	              		<tbody>
+	              			<%
+                                	
+                                	total=0
+                                	qty = 0
+                                	ticket_amt = 0
+                                	total_fees = 0
+                                	
+                                	if free_tickets.count > 0
+       			 
+						       			 for free in free_tickets 
+						       			 	
+                                			if params[:ticket_qty][free[:id].to_s] && params[:ticket_qty][free[:id].to_s]!='0'
+                                %>
+		                                		 <tr>
+				                                  	 <td><%= free[:free_ticket_name] %></td>
+				                                  	 <td><%= set_currency(0) %></td>
+				                                  	 <td><%= params[:ticket_qty][free[:id].to_s] %></td>
+				                                  	 <td><%= set_currency(0) %><% total+=0 %>
+				                                  	 	<input type="hidden" name="ticket_qty_total[<%= free[:id] %>]" value="0" />
+				                                  	 	<input type="hidden" name="ticket_ids[]" value="<%= free[:id] %>" />
+				                                  	 	<input type="hidden" name="ticket_totals[]" value="0" />
+				                                  	 	<input type="hidden" name="ticket_amt[]" value="0" />
+				                                  	 	<input type="hidden" name="ticket_qtys[]" value="<%= params[:ticket_qty][free[:id].to_s] %>" />
+				                                  	 </td>
+				                                </tr>
+                                <%
+                                			qty+=params[:ticket_qty][free[:id].to_s].to_i
+                                			end
+                                		end 
+                                	end	
+                                %>
+                                 
+                                 <%
+                                	if paid_tickets.count > 0
+       			 
+						       			 for paid in paid_tickets 
+						       			 	
+                               				if params[:ticket_qty][paid[:id].to_s] && params[:ticket_qty][paid[:id].to_s]!='0'
+                                %>
+		                                		 <tr>
+		                                		 	<td>
+		                                		 	
+		                                		 		<% if params[:promo_code_id] %>		 
+				                                  	 	<%
+				                                  	 	 if params[:promo_code_id].to_i > 0
+		                                		 		@promo_code = PromotionalCode.find(params[:promo_code_id].to_i)
+                        								@promo_tkts = @promo_code[:tickets] 
+		                                		 		
+						                    
+						                    	 if @promo_tkts!= '' || @promo_tkts!=nil%>
+						                    
+						                    		<% if(@promo_tkts.include?(paid[:id].to_s))  %>				                    		
+						                    				<%= paid[:paid_ticket_name]%>
+							                    			   <% if params[:promo_code_amt].to_f > 0.0 %>
+										                    	<br /> (Discounted <%= set_currency(params[:promo_code_amt]) %>)
+										                    	<% end %>	
+										                    	<%if params[:promo_code_perc]!= '' && params[:promo_code_perc].to_f > 0.0 %>
+										                    	<br /> (Discounted <%=  params[:promo_code_perc] %>%)
+										                    	<% end%>
+										                <% else %>
+										                <%= paid[:paid_ticket_name]%>
+										                    
+						                    		<% end  %>				                    
+				                    			<% end 
+				                    			end %>
+				                    			<% else %>
+									 <%= paid[:paid_ticket_name]%>
+				                    		<% end %> 
+		                                		 	</td>
+				                                  	<td>
+				                                  	 	<% if params[:promo_code_id] %>		 
+				                                  	 	<%
+				                                  	 	 if params[:promo_code_id].to_i > 0
+                        								@promo_code = PromotionalCode.find(params[:promo_code_id].to_i)
+                        								@promo_tkts = @promo_code[:tickets] 
+									                    if @promo_tkts 
+									                     if(@promo_tkts.include?(paid[:id].to_s))                     			
+				                                  	 		
+                                								if @promo_code && @promo_code[:code_type]=='disc'
+										       			 			if @promo_code[:disc_amt]!=nil && @promo_code[:disc_amt]!='' && @promo_code[:disc_amt] > 0
+										       			 				paid[:paid_price] = paid[:paid_price].to_f-@promo_code[:disc_amt].to_f
+										       			 				paid[:paid_buyer_total] = paid[:paid_buyer_total].to_f-@promo_code[:disc_amt].to_f
+										       			 				
+										       			 			elsif @promo_code[:disc_perc]!=nil && @promo_code[:disc_perc]!='' && @promo_code[:disc_perc] > 0
+										       			 				@perc = ((paid[:paid_price].to_f * @promo_code[:disc_perc].to_f) / 100)
+										       			 				paid[:paid_price] = paid[:paid_price].to_f - @perc.to_f
+										       			 				paid[:paid_buyer_total] = paid[:paid_buyer_total].to_f - @perc.to_f
+										       			 			end		
+										       			 		end 
+										       			 		else
+										       			 			paid[:paid_price] = paid[:paid_price].to_f
+										       			 		end # end include 
+										       			   end
+										       			 	end 	
+										       			end
+										       							
+                                						%>
+				                                  	 	<%= set_currency(paid[:paid_price]) %>
+				                                  	 
+				                                  	 </td>
+				                                  	 
+				                                  	 <td><%= params[:ticket_qty][paid[:id].to_s] %></td>
+				                                  	 <td>
+				                                  	 	<% 
+				                                  	 	if paid[:paid_buyer_total]=='' || paid[:paid_buyer_total]==nil
+				                                  	 		paid[:paid_buyer_total]=paid[:paid_price] 
+				                                  	 	end
+				                                  	 	amt= params[:ticket_amount][paid[:id].to_s].to_i
+				                                  	 	#fee=0.0
+				                                  	 	#if @event[:event_pass_fees]==1
+				                                  	 		#amt = params[:ticket_qty][paid[:id].to_s].to_i * paid[:paid_buyer_total]
+				                                  	 	#elsif @event[:event_pass_fees]==3
+				                                  	 		#if paid[:paid_service_fee]==1
+				                                  	 			#amt = params[:ticket_qty][paid[:id].to_s].to_i * paid[:paid_buyer_total]
+				                                  	 		#else
+				                                  	 			#amt = paid[:paid_price] * params[:ticket_qty][paid[:id].to_s].to_i
+				                                  	 			#ticket_amt -= fee
+				                                  	 			#ticket_amt_per -= fee
+				                                  	 		#end			
+				                                  	 	#else
+				                                  	 			#amt = paid[:paid_price] * params[:ticket_qty][paid[:id].to_s].to_i
+				                                  	 			#ticket_amt -= fee
+				                                  	 			#ticket_amt_per -= fee
+				                                  	 	#end		 
+				                                  	 	if amt==nil
+				                                  	 		amt=0
+				                                  	 	end	
+				                                  	 	
+				                                  	 	%>
+				                                  	 	<%= set_currency(amt) %><% total+=amt %>
+				                                  	 	<input type="hidden" name="ticket_qty_total[<%= paid[:id] %>]" value="paid[:paid_price] %>" />
+				                                  	 	<input type="hidden" name="ticket_ids[]" value="<%= paid[:id] %>" />
+				                                  	 	<input type="hidden" name="ticket_totals[]" value="<%= amt %>" />
+										<input type="hidden" name="ticket_amts[]" value="<%= params[:ticket_amount][paid[:id].to_s]%>" />
+				                                  	 	<input type="hidden" name="ticket_qtys[]" value="<%= params[:ticket_qty][paid[:id].to_s] %>" />
+				                                  	 </td>
+				                                  	 
+				                                </tr>
+                                <%
+                                			qty+=params[:ticket_qty][paid[:id].to_s].to_i
+                                			end
+                                		end 
+                                	end	
+                                %>
+                                 <%
+                                	if donation_tickets.count > 0
+       			 
+       			     			 for donation in donation_tickets 
+						       			
+                               	if params[:ticket_qty][donation[:id].to_s] && params[:ticket_qty][donation[:id].to_s]!='0' && params[:ticket_qty][donation[:id].to_s].to_f>0
+                               
+                               
+                                %>
+		                                		 <tr>
+				                                  	 <td> <%= donation[:donation_ticket_name] %></td>
+				                                  	 <td> <%= set_currency(params[:ticket_qty][donation[:id].to_s]) %></td>
+				                                  	 <td>1</td>
+				                                  	 <td><% 
+				                                  	 
+				                                  	
+				                                  	 #if @event[:event_pass_fees]==1
+				                                  	 		# amt = params[:ticket_qty][donation[:id].to_s].to_f + fee 
+				                                  	 	#elsif @event[:event_pass_fees]==3
+				                                  	 #		if donation[:donation_service_fee]==1
+				                                  	 #			 amt = params[:ticket_qty][donation[:id].to_s].to_f + fee 
+				                                  	 #		else
+				                                  	 #			amt = params[:ticket_qty][donation[:id].to_s].to_f
+				                                  	 #			ticket_amt -= fee
+				                                  	 #			ticket_amt_per -= fee
+				                                  	 #		end			
+				                                  	 #	else
+				                                  	 			amt = params[:ticket_qty][donation[:id].to_s].to_f
+				                                  	 #			ticket_amt -= fee
+				                                  	 #			ticket_amt_per -= fee
+				                                  	 #	end	
+				                                  	 %><%= set_currency(amt) %><% total+=amt %>
+				                                  	    <input type="hidden" name="ticket_qty_total[<%= donation[:id] %>]" value="<%= amt %>" />
+				                                  	 	<input type="hidden" name="ticket_ids[]" value="<%= donation[:id] %>" />
+				                                  	 	<input type="hidden" name="ticket_totals[]" value="<%= amt %>" />
+				                                  	 	<input type="hidden" name="ticket_qtys[]" value="1" />
+				                                  	 	
+				                                  	 	<input type="hidden" name="ticket_amts[]" value="<%= amt %>" />
+				                                  	 	
+				                                  	 	
+				                                  	 </td>
+				                                </tr>
+                                <%
+                                			qty+=1
+                                			end
+                                		end 
+                                	end	
+                                %>
+                                
+	              		</tbody>
+	              	</table>
+	              	<div class="total_main fr">
+						<div class="total_amount"><%= I18n.t 'event.purchase.total_amount' %></div>
+						<div class="total_div"><%= set_currency(total) %></div>
+						<div class="clear"></div>
+					</div><div class="clear"></div>
+					
+	              		<input type="hidden" name="purchase_addresse[event_id]" id="event_id" value="<%= @event[:id] %>" />
+                        <input type="hidden" name="purchase_addresse[total]" id="total" value="<%= total %>" />
+                        <input type="hidden" name="purchase_addresse[random_no]" id="random_no" value="<%= @random_no %>" />
+                        <input type="hidden" name="purchase_addresse[barcode_random]" id="barcode_random" value="<%= @barcode %>" />
+                        <input type="hidden" name="purchase_addresse[user_id]" id="user_id" value="<%= @user[:id] %>" />
+                        <input type="hidden" name="purchase_addresse[ticket_qty]" id="user_id" value="<%= qty %>" />
+                        
+                        <input type="hidden" name="attendee[payment_type]" value="<%= params[:attendee][:payment_type] %>" />
+                        <input type="hidden" name="attendee[event_id]" value="<%= @event[:id] %>" />
+                        <input type="hidden" name="attendee[notes]" value="<%= params[:attendee][:notes] %>" />
+                        <input type="hidden" name="attendee[total]"  value="<%= total %>" />
+                        <input type="hidden" name="attendee[attendee_id]" value="<%= @event_attendee[:id] %>" />
+	                        
+	                    <input type="hidden" name="ctype" value="<%= @order[:ctype] %>" />
+	                    
+	            	
+	            	<div class="clear"></div>
+				</div><div class="clear"></div>
+	        </div>
+	        
+	        <div class="marT45">
+	        	<div class="mtitle fl">
+	            	<h1 class="fl">
+	            		<% if @order %>
+	            			<% if @order[:title_of_page]!=nil && @order[:title_of_page]!='' %>
+	            				<%= @order[:title_of_page] %>
+	            			<% else %>
+	            				<%= I18n.t 'event.purchase.reg_info' %>
+	            			<% end %>
+	            	    <% else %>
+	            	    	<%= I18n.t 'event.purchase.reg_info' %>
+	            	    <% end %>
+	            	</h1>
+	            </div><div class="clear"></div>
+	        </div>
+	        
+	        
+   <% if @order[:time_limit]!=nil && @order[:time_limit]!='' && @order[:time_limit]!=0 %>
+   
+   <%if @order[:time_limit] < 10 
+         @new_timer = "0#{@order[:time_limit]}"
+        else
+        @new_timer = @order[:time_limit]
+        end
+      %>
+   
+<script>  
+
+  $('#countdown').countdown({
+		    stepTime: 1,
+		    digitWidth: 34,
+		    digitHeight: 45,
+		    format: 'mm:ss',
+		    startTime: "<%= @new_timer %>:05",
+		   //startTime: "01:10",
+		    timerEnd: function () {
+		      window.location.href = "<%= @return_url %>?err=redirect";
+		      //window.history.back();
+		    },
+		    image: "http://s21.postimg.org/nfgjv6b7r/digits2.png"
+		});
+ 
+
+</script>  
+  <div class="marT20 event_detail pad3P">
+ 	       <div class="marB15" id="countdown"></div>
+	      <span>  <%= I18n.t 'event.purchase.please_complete_registration_within' %> <%= @order[:time_limit] %> <%= I18n.t 'event.purchase.minutes_after' %> <%= @order[:time_limit] %> <%= I18n.t 'event.purchase.the_reservation_we_re_holding_will_be_released_to_others' %> </span>
+	</div>		
+   <% end %>
+	
+	
+	<% if @order[:instructions]!=nil && @order[:instructions]!='' %>
+	 <div class="marT20 event_detail pad3P">
+	    <%= @order[:instructions] %>
+	 </div>	
+	<% end %>
+	
+	        
+	        
+	        <div class="event_detail marT20 pad3P">
+            	<div class="login_signup">
+            		<h3><%= I18n.t 'event.purchase.ticket_buyer' %></h3>
+            		
+					<% if ((@order[:prefix]=='10' || @order[:prefix]=='11' || @order[:prefix]=='1' ) && @order[:ctype]==1) %>
+						<div class="marT20">
+	                        <label><%= I18n.t 'user.prefix' %> : <% if @order[:prefix]=='11' %><span class="red">*</span><% end %></label>
+	                        <input type="text" name="prefix[]" id="buyer_prefix" value="<%= @user[:prefix] %>" class="textbox TW97p" placeholder="<%= I18n.t 'place.prefix' %>" />
+	                    </div>
+                    <% end %>
+                    
+                    	<div class="marT20">
+	                        <label><%= I18n.t 'user.fname' %> : <span class="red">*</span></label>
+	                        <input type="text" name="first_name[]" id="buyer_first_name" value="<%= @user[:first_name] %>" class="textbox TW97p" placeholder="<%= I18n.t 'place.fname' %>" />
+	                    </div>
+	                    
+	                    <div class="marT20">
+	                        <label><%= I18n.t 'user.lname' %> : <span class="red">*</span></label>
+	                        <input type="text" name="last_name[]" id="buyer_last_name" value="<%= @user[:last_name] %>" class="textbox TW97p" placeholder="<%= I18n.t 'place.lname' %>" />
+	                    </div>
+	                
+	                <% if ((@order[:suffix]=='10' || @order[:suffix]=='11' || @order[:suffix]=='1') && @order[:ctype]==1) %>
+						<div class="marT20">
+	                        <label><%= I18n.t 'user.suffix' %> : <% if @order[:suffix]=='11' %><span class="red">*</span><% end %></label>
+	                        <input type="text" name="suffix[]" id="buyer_suffix" value="<%= @user[:suffix] %>" class="textbox TW97p" placeholder="<%= I18n.t 'place.suffix' %>" />
+	                    </div>
+                    <% end %> 
+                    
+                    	<div class="marT20">
+	                        <label><%= I18n.t 'user.email' %> : <span class="red">*</span></label>
+	                        <input type="text" name="email[]" id="buyer_email" value="<%= @user[:email] %>" class="textbox TW97p" placeholder="<%= I18n.t 'place.email' %>" />
+	                    </div>  
+	                    
+	                
+      				<% if @order[:ctype]==1 %>
+      				
+      				<div>
+      					<% if @order[:home_phone]=='10' || @order[:home_phone]=='11' || @order[:home_phone]=='1' %>
+	      					<div class="marT20">
+		                        <label><%= I18n.t 'user.home_phone' %> : <% if @order[:home_phone]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="home_phone[]" id="buyer_home_phone" value="<%= @user[:home_phone] %>" class="textbox TW97p" placeholder="<%= I18n.t 'place.home_phone' %>" />
+		                    </div>
+		                <% end %>     
+      					
+      					<% if @order[:cell_phone]=='10' || @order[:cell_phone]=='11' || @order[:cell_phone]=='1' %>
+          					<div class="marT20">
+		                        <label><%= I18n.t 'user.cell_phone' %> : <% if @order[:cell_phone]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="cell_phone[]" id="buyer_cell_phone" value="<%= @user[:cell_phone] %>" class="textbox TW97p" placeholder="<%= I18n.t 'place.cell_phone' %>" />
+		                    </div>
+          				<% end %>
+      			
+      			
+      					
+				<% if @order[:billing_address]=='10' || @order[:billing_address]=='11' || @order[:billing_address]=='1' %>
+  					<br /><h3><%= I18n.t 'user.bill_add' %></h3>
+					
+							<div class="marT20">
+		                        <label><%= I18n.t 'user.country' %> : <% if @order[:billing_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <% if @country.count > 0 %>
+		                        <div class="posrel">
+                                    <select name="bill_country[]" id="user_address_bill_country" class="table_selectbox TW97p W50P_T" onchange="set_state(this.value, 'bill')">
+                                       	  <option value="">-- <%= I18n.t 'user.select_country' %> --</option>
+										  <% for ct in @country %>
+										    	<option value="<%= ct[:country_name] %>" <% if(ct[:country_name] == @user_address[:bill_country]) %> selected="selected" <% end %>><%= ct[:country_name] %></option>
+										  <% end %> 
+                                    </select><div class="clear"></div>
+				        		</div>
+				        		<% else %>
+			                    	<input type="text" name="bill_country[]" id="user_address_bill_country" value="<%= @user_address[:bill_country] %>" class="textbox TW97p" placeholder="<%= I18n.t 'place.bill_country' %>" />
+			                    <% end %> 
+		                    </div>
+          				
+          					<div class="marT20">
+		                        <label><%= I18n.t 'user.add' %> : <% if @order[:billing_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="bill_add1[]" id="user_address_bill_add1"  value="<%= @user_address[:bill_add1] %>" class="textbox TW97p" placeholder="<%= I18n.t 'place.bill_add' %>" />
+		                    </div>
+		                    
+		                    <div class="marT20">
+		                        <label><%= I18n.t 'user.add2' %> : <% if @order[:billing_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="bill_add2[]" id="user_address_bill_add2"  value="<%= @user_address[:bill_add2] %>" class="textbox TW97p" placeholder="<%= I18n.t 'place.bill_add2' %>" />
+		                    </div>
+		                    
+		                    <div class="marT20">
+		                        <label><%= I18n.t 'user.city' %> : <% if @order[:billing_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="bill_city[]" id="user_address_bill_city"  value="<%= @user_address[:bill_city] %>" class="textbox TW97p" placeholder="<%= I18n.t 'place.bill_city' %> " />
+		                    </div>
+          				
+          				 <%
+	                        if @user_address[:bill_country] == 0 || @user_address[:bill_country] == nil || @user_address[:bill_country] == ''
+			
+								@state = State.find_all_state()
+						    else
+								
+								@state = State.find_state_by_country(@user_address[:bill_country])
+						    end	
+							
+	                      %>
+	                      
+	                      <div class="marT20">
+		                        <label><%= I18n.t 'user.state' %> : <% if @order[:billing_address]=='11' %><span class="red">*</span><% end %></label>
+		                       <% if @state.count > 0 %>
+		                        <div class="posrel">
+	                                <div id="bill_state_list">
+	                                <select class="table_selectbox TW97p W50P_T" name="bill_state[]" id="user_address_bill_state">
+	                                   	  <option value="">-- <%= I18n.t 'user.select_state' %> --</option>
+										   <% for st in @state %>
+												    <option value="<%= st[:state_name] %>" <% if(st[:state_name] == @user_address[:bill_state]) %> selected="selected" <% end %>><%= st[:state_name] %></option>
+										   <% end %>
+	                                </select>
+	                                </div><div class="clear"></div>
+				        		</div>
+				        		<% else %>
+			                    	<%= text_field_tag :bill_state, @user_address[:bill_state], :class => 'textbox TW97p', :name => 'bill_state[]', :id => 'bill_state', :placeholder =>  (I18n.t 'place.bill_state') %>
+			                    <% end %> 
+		                 </div>
+		                    
+          				
+          				 <div class="marT20">
+	                        <label><%= I18n.t 'user.zip' %> : <% if @order[:billing_address]=='11' %><span class="red">*</span><% end %></label>
+	                        <input type="text" name="bill_zip[]" id="user_address_bill_zip"  value="<%= @user_address[:bill_zip] %>" class="textbox TW97p" placeholder="<%= I18n.t 'place.bill_zip' %> " />
+		                 </div>
+          				
+				<% end %>
+				<div class="clear"></div>
+				
+				
+				<% if @order[:home_address]=='10' || @order[:home_address]=='11' || @order[:home_address]=='1' %>
+  					<br /><h3><%= I18n.t 'user.home_add' %></h3>
+					
+							<div class="marT20">
+		                        <label><%= I18n.t 'user.country' %> : <% if @order[:home_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <% if @country.count > 0 %>
+		                        <div class="posrel">
+                                    <select name="home_country[]" id="user_address_home_country" class="table_selectbox TW97p W50P_T" onchange="set_state(this.value, 'home')">
+                                       	  <option value="">-- <%= I18n.t 'user.select_country' %> --</option>
+										  <% for ct in @country %>
+										    	<option value="<%= ct[:country_name] %>" <% if(ct[:country_name] == @user_address[:home_country]) %> selected="selected" <% end %>><%= ct[:country_name] %></option>
+										  <% end %> 
+                                    </select><div class="clear"></div>
+				        		</div>
+				        		<% else %>
+			                    	<input type="text" name="home_country[]" id="user_address_home_country" value="<%= @user_address[:home_country] %>" class="textbox TW97p" placeholder="<%= I18n.t 'place.home_country' %>" />
+			                    <% end %> 
+		                    </div>
+          				
+          					<div class="marT20">
+		                        <label><%= I18n.t 'user.add' %> : <% if @order[:home_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="home_add1[]" id="user_address_home_add1"  value="<%= @user_address[:home_add1] %>" class="textbox TW97p" placeholder="<%= I18n.t 'place.home_add' %>" />
+		                    </div>
+		                    
+		                    <div class="marT20">
+		                        <label><%= I18n.t 'user.add2' %> : <% if @order[:home_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="home_add2[]" id="user_address_home_add2"  value="<%= @user_address[:home_add2] %>" class="textbox TW97p" placeholder="<%= I18n.t 'place.home_add2' %> " />
+		                    </div>
+		                    
+		                    <div class="marT20">
+		                        <label><%= I18n.t 'user.city' %> : <% if @order[:home_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="home_city[]" id="user_address_home_city"  value="<%= @user_address[:home_city] %>" class="textbox TW97p" placeholder="<%= I18n.t 'place.home_city' %> " />
+		                    </div>
+          				
+          				 <%
+	                        if @user_address[:home_country] == 0 || @user_address[:home_country] == nil || @user_address[:home_country] == ''
+			
+								@state = State.find_all_state()
+						    else
+								
+								@state = State.find_state_by_country(@user_address[:home_country])
+						    end	
+							
+	                      %>
+	                      
+	                      <div class="marT20">
+		                        <label><%= I18n.t 'user.state' %> : <% if @order[:home_address]=='11' %><span class="red">*</span><% end %></label>
+		                       <% if @state.count > 0 %>
+		                        <div class="posrel">
+	                                <div id="home_state_list">
+	                                <select class="table_selectbox TW97p W50P_T" name="home_state[]" id="user_address_home_state">
+	                                   	  <option value="">-- <%= I18n.t 'user.select_state' %> --</option>
+										   <% for st in @state %>
+												    <option value="<%= st[:state_name] %>" <% if(st[:state_name] == @user_address[:home_state]) %> selected="selected" <% end %>><%= st[:state_name] %></option>
+										   <% end %>
+	                                </select>
+	                                </div><div class="clear"></div>
+				        		</div>
+				        		<% else %>
+			                    	<%= text_field_tag :home_state, @user_address[:home_state], :class => "textbox TW97p", :name => "home_state[]", :id => "home_state", :placeholder => (I18n.t 'place.home_state') %>
+			                    <% end %> 
+		                 </div>
+		                    
+          				
+          				 <div class="marT20">
+	                        <label><%= I18n.t 'user.zip' %> : <% if @order[:home_address]=='11' %><span class="red">*</span><% end %></label>
+	                        <input type="text" name="home_zip[]" id="user_address_home_zip"  value="<%= @user_address[:home_zip] %>" class="textbox TW97p" placeholder="<%= I18n.t 'place.home_zip' %> " />
+		                 </div>
+				<% end %>
+				<div class="clear"></div>
+			<% if @order[:shipping_address]=='10' || @order[:shipping_address]=='11' || @order[:shipping_address]=='1' %>
+  					<br /><h3><%= I18n.t 'user.ship_add' %></h3>
+					
+							<div class="marT20">
+		                        <label><%= I18n.t 'user.country' %> : <% if @order[:shipping_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <% if @country.count > 0 %>
+		                        <div class="posrel">
+                                    <select name="ship_country[]" id="user_address_ship_country" class="table_selectbox TW97p W50P_T" onchange="set_state(this.value, 'ship')">
+                                       	  <option value="">-- <%= I18n.t 'user.select_country' %> --</option>
+										  <% for ct in @country %>
+										    	<option value="<%= ct[:country_name] %>" <% if(ct[:country_name] == @user_address[:ship_country]) %> selected="selected" <% end %>><%= ct[:country_name] %></option>
+										  <% end %> 
+                                    </select><div class="clear"></div>
+				        		</div>
+				        		<% else %>
+			                    	<input type="text" name="ship_country[]" id="user_address_ship_country" value="<%= @user_address[:ship_country] %>" class="textbox TW97p" placeholder="<%= I18n.t 'place.ship_country' %>" />
+			                    <% end %> 
+		                    </div>
+          				
+          					<div class="marT20">
+		                        <label><%= I18n.t 'user.add' %> : <% if @order[:shipping_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="ship_add1[]" id="user_address_ship_add1"  value="<%= @user_address[:ship_add1] %>" class="textbox TW97p" placeholder="<%= I18n.t 'place.ship_add' %>" />
+		                    </div>
+		                    
+		                    <div class="marT20">
+		                        <label><%= I18n.t 'user.add2' %> : <% if @order[:shipping_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="ship_add2[]" id="user_address_ship_add2"  value="<%= @user_address[:ship_add2] %>" class="textbox TW97p" placeholder="<%= I18n.t 'place.ship_add2' %> " />
+		                    </div>
+		                    
+		                    <div class="marT20">
+		                        <label><%= I18n.t 'user.city' %> : <% if @order[:shipping_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="ship_city[]" id="user_address_ship_city"  value="<%= @user_address[:ship_city] %>" class="textbox TW97p" placeholder="<%= I18n.t 'place.ship_city' %> " />
+		                    </div>
+          				
+          				 <%
+	                        if @user_address[:ship_country] == 0 || @user_address[:ship_country] == nil || @user_address[:ship_country] == ''
+			
+								@state = State.find_all_state()
+						    else
+								
+								@state = State.find_state_by_country(@user_address[:ship_country])
+						    end	
+							
+	                      %>
+	                      
+	                      <div class="marT20">
+		                        <label><%= I18n.t 'user.state' %> : <% if @order[:shipping_address]=='11' %><span class="red">*</span><% end %></label>
+		                       <% if @state.count > 0 %>
+		                        <div class="posrel">
+	                                <div id="ship_state_list">
+	                                <select class="table_selectbox TW97p W50P_T" name="ship_state[]" id="user_address_ship_state">
+	                                   	  <option value="">-- <%= I18n.t 'user.select_state' %> --</option>
+										   <% for st in @state %>
+												    <option value="<%= st[:state_name] %>" <% if(st[:state_name] == @user_address[:ship_state]) %> selected="selected" <% end %>><%= st[:state_name] %></option>
+										   <% end %>
+	                                </select>
+	                                </div><div class="clear"></div>
+				        		</div>
+				        		<% else %>
+			                    	<%= text_field_tag :ship_state, @user_address[:ship_state], :class => "textbox TW97p", :name => "ship_state[]", :id => "ship_state", :placeholder => (I18n.t 'place.ship_state') %>
+			                    <% end %> 
+		                 </div>
+		                    
+          				
+          				 <div class="marT20">
+	                        <label><%= I18n.t 'user.zip' %> : <% if @order[:shipping_address]=='11' %><span class="red">*</span><% end %></label>
+	                        <input type="text" name="ship_zip[]" id="user_address_ship_zip"  value="<%= @user_address[:ship_zip] %>" class="textbox TW97p" placeholder="<%= I18n.t 'place.ship_zip' %> " />
+		                 </div>
+				<% end %>
+				<div class="clear"></div>
+				
+				
+				<% if @order[:work_address]=='10' || @order[:work_address]=='11' || @order[:work_address]=='1' %>
+  					<br /><h3><%= I18n.t 'user.work_add' %></h3>
+					
+							<div class="marT20">
+		                        <label><%= I18n.t 'user.country' %> : <% if @order[:working_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <% if @country.count > 0 %>
+		                        <div class="posrel">
+                                    <select name="work_country[]" id="user_address_work_country" class="table_selectbox TW97p W50P_T" onchange="set_state(this.value, 'work')">
+                                       	  <option value="">-- <%= I18n.t 'user.select_country' %> --</option>
+										  <% for ct in @country %>
+										    	<option value="<%= ct[:country_name] %>" <% if(ct[:country_name] == @user_address[:work_country]) %> selected="selected" <% end %>><%= ct[:country_name] %></option>
+										  <% end %> 
+                                    </select><div class="clear"></div>
+				        		</div>
+				        		<% else %>
+			                    	<input type="text" name="work_country[]" id="user_address_work_country" value="<%= @user_address[:work_country] %>" class="textbox TW97p" placeholder="<%= I18n.t 'place.work_country' %>" />
+			                    <% end %> 
+		                    </div>
+          				
+          					<div class="marT20">
+		                        <label><%= I18n.t 'user.add' %> : <% if @order[:working_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="work_add1[]" id="user_address_work_add1"  value="<%= @user_address[:work_add1] %>" class="textbox TW97p" placeholder="<%= I18n.t 'place.work_add' %>" />
+		                    </div>
+		                    
+		                    <div class="marT20">
+		                        <label><%= I18n.t 'user.add2' %> : <% if @order[:working_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="work_add2[]" id="user_address_work_add2"  value="<%= @user_address[:work_add2] %>" class="textbox TW97p" placeholder="<%= I18n.t 'place.work_add2' %> " />
+		                    </div>
+		                    
+		                    <div class="marT20">
+		                        <label><%= I18n.t 'user.city' %> : <% if @order[:working_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="work_city[]" id="user_address_work_city"  value="<%= @user_address[:work_city] %>" class="textbox TW97p" placeholder="<%= I18n.t 'place.work_city' %> " />
+		                    </div>
+          				
+          				 <%
+	                        if @user_address[:work_country] == 0 || @user_address[:work_country] == nil || @user_address[:work_country] == ''
+			
+								@state = State.find_all_state()
+						    else
+								
+								@state = State.find_state_by_country(@user_address[:work_country])
+						    end	
+							
+	                      %>
+	                      
+	                      <div class="marT20">
+		                        <label><%= I18n.t 'user.state' %> : <% if @order[:working_address]=='11' %><span class="red">*</span><% end %></label>
+		                       <% if @state.count > 0 %>
+		                        <div class="posrel">
+	                                <div id="work_state_list">
+	                                <select class="table_selectbox TW97p W50P_T" name="work_state[]" id="user_address_work_state">
+	                                   	  <option value="">-- <%= I18n.t 'user.select_state' %> --</option>
+										   <% for st in @state %>
+												    <option value="<%= st[:state_name] %>" <% if(st[:state_name] == @user_address[:work_state]) %> selected="selected" <% end %>><%= st[:state_name] %></option>
+										   <% end %>
+	                                </select>
+	                                </div><div class="clear"></div>
+				        		</div>
+				        		<% else %>
+			                    	<%= text_field_tag :work_state, @user_address[:work_state], :class => 'textbox TW97p', :name => 'work_state[]', :id => 'work_state', :placeholder => (I18n.t 'place.work_state') %>
+			                    <% end %> 
+		                 </div>
+		                    
+          				
+          				 <div class="marT20">
+	                        <label><%= I18n.t 'user.zip' %> : <% if @order[:working_address]=='11' %><span class="red">*</span><% end %></label>
+	                        <input type="text" name="work_zip[]" id="user_address_work_zip"  value="<%= @user_address[:work_zip] %>" class="textbox TW97p" placeholder="<%= I18n.t 'place.work_zip' %> " />
+		                 </div>
+      					
+      			<% if @order[:job_title]=='10' || @order[:job_title]=='11' || @order[:job_title]=='1' %>
+  						 <div class="marT20">
+	                        <label><%= I18n.t 'user.job' %> : <% if @order[:job_title]=='11' %><span class="red">*</span><% end %></label>
+	                        <input type="text" name="work_job_title[]" id="user_address_work_job_title"  value="<%= @user_address[:work_job_title] %>" class="textbox TW97p" placeholder="<%= I18n.t 'place.work_job' %> " />
+		                 </div>
+  				<% end %>
+  				
+  				
+  				<% if @order[:company]=='10' || @order[:company]=='11' || @order[:company]=='1' %>
+  						<div class="marT20">
+	                        <label><%= I18n.t 'user.company' %> : <% if @order[:company]=='11' %><span class="red">*</span><% end %></label>
+	                        <input type="text" name="work_company[]" id="user_address_work_company"  value="<%= @user_address[:work_company] %>" class="textbox TW97p" placeholder="<%= I18n.t 'place.company' %>" />
+		            	</div>
+  				<% end %>
+  				
+  				
+  				<% if @order[:work_phone]=='10' || @order[:work_phone]=='11' || @order[:work_phone]=='1' %>
+  						<div class="marT20">
+	                        <label><%= I18n.t 'user.work_phone' %> : <% if @order[:work_phone]=='11' %><span class="red">*</span><% end %></label>
+	                        <input type="text" name="work_phone[]" id="user_address_work_phone"  value="<%= @user_address[:work_phone] %>" class="textbox TW97p" placeholder="<%= I18n.t 'place.work_phone' %> " />
+		            	</div>
+		        <% end %>
+  				
+  				
+  				<% if @order[:blog]=='10' || @order[:blog]=='11' || @order[:blog]=='1' %>
+  						<div class="marT20">
+	                        <label><%= I18n.t 'user.blog' %> : <% if @order[:blog]=='11' %><span class="red">*</span><% end %></label>
+	                        <input type="text" name="work_blog[]" id="user_address_work_blog"  value="<%= @user_address[:work_blog] %>" class="textbox TW97p" placeholder="<%= I18n.t 'place.blog' %> " />
+		            	</div>
+		       <% end %>
+  				
+  				
+  				<% if @order[:website]=='10' || @order[:website]=='11' || @order[:website]=='1' %>
+  						<div class="marT20">
+	                        <label><%= I18n.t 'user.website' %> : <% if @order[:website]=='11' %><span class="red">*</span><% end %></label>
+	                        <input type="text" name="work_website[]" id="user_address_work_website"  value="<%= @user_address[:work_website] %>" class="textbox TW97p" placeholder="<%= I18n.t 'place.website' %> " />
+		            	</div>
+  				<% end %>
+  				
+			<% end %>
+			<div class="clear"></div>
+  				
+  				
+  				<% if @order[:gender]=='10' || @order[:gender]=='11' || @order[:gender]=='1' || @order[:birth_date]=='10' || @order[:birth_date]=='11' || @order[:birth_date]=='1' || @order[:age]=='10' || @order[:age]=='11' || @order[:age]=='1' %>
+  					<br /><h3><%= I18n.t 'user.other' %></h3>
+					<% if @order[:gender]=='10' || @order[:gender]=='11' || @order[:gender]=='1' %>
+						<div class="marT20">
+		                        <label><%= I18n.t 'user.gender' %> : <% if @order[:gender]=='11' %><span class="red">*</span><% end %></label>
+				                       
+								<div class="posrel">
+			                        <%= select_tag :gender, options_for_select(User::GENDER,@user_address[:gender]), :name => 'gender[]', :id => 'purchase_addresse_gender', :class => 'table_selectbox TW97p W50P_T' %>
+			                       <div class="clear"></div>
+				        		</div>
+				        </div>		
+		        	<% end %>	
+  				
+  					<% if @order[:birth_date]=='10' || @order[:birth_date]=='11' || @order[:birth_date]=='1' %>
+	  						<div class="marT20">
+		                        <label><%= I18n.t 'user.bdate' %> : <% if @order[:birth_date]=='11' %><span class="red">*</span><% end %></label>
+		                        <%= text_field_tag :birth_date, @user_address[:birth_date], :class => 'textbox TW25p date_only', :name => 'birth_date[]' %>
+		                    </div>
+	  				<% end %>
+	  				
+  				
+  				
+  					<% if @order[:age]=='10' || @order[:age]=='11' || @order[:age]=='1' %>
+  							<div class="marT20">
+		                        <label><%= I18n.t 'user.age' %> : <% if @order[:age]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="age[]" id="age"  class="textbox TW97p" placeholder="<%= I18n.t 'place.age' %> " />
+		                    </div>
+  					<% end %>
+  				
+  				
+  				<% end %><div class="clear"></div>
+  				
+  				
+  				
+  				<% if @questions.count > 0 %>
+      				<br /><br /><h3><%= I18n.t 'user.que' %></h3>
+  						
+      				<%
+      				@ticks = params[:ticket_qty] 
+      				for q in @questions
+      					@ask = 1
+      					if (q[:rules]=='11' || q[:rules]=='1') 
+      						
+      						if q[:spec_ticket]==1
+          						@ask = 0
+          						@que_ticks = q[:tickets].split(',')
+          						@que_ticks.each do |ticks|
+          							if(@ticks.include?(ticks))
+          								 @ask = 1
+          							end	
+          						end	
+      						end	
+      						
+      					if(@ask==1) %>
+      					
+      						<div class="marT20">
+		                        <label><%= q[:que] %> : <% if q[:rules]=='11' %><span class="red">*</span><% end %></label>
+		                         <% if q[:que_type]=='text' %>
+		                        	<input type="text" name="que[<%= q[:id] %>][]" id="que_<%= q[:id] %>"  class="textbox TW97p"  />
+		                         <% elsif q[:que_type]=='para' %>
+		                         	<textarea name="que[<%= q[:id] %>][]" id="que_<%= q[:id] %>" class="TW97p" ></textarea>
+		                         <% else
+          						 	%>
+          						 	<br />	
+          						 	<%
+          						 	@que_options = QuestionOption.find(:all, :conditions => ['que_id=?', q[:id]])
+              						 i=0
+              						 if q[:que_type]=='select'
+              						 	%>
+              						 		<div class="posrel">
+				                                <select class="table_selectbox TW97p W50P_T" name="que[<%= q[:id] %>][]" id="que_<%= q[:id] %>">
+              						 	<%
+              						 end	
+              						 for opt in @que_options
+                  						 if q[:que_type]=='radio' %>
+                  						 		<input type="radio" class="regular-radio" name="que[<%= q[:id] %>][]" id="que_<%= q[:id] %><%= opt[:id] %>" value="<%= opt[:value] %>" <% if i==0 %> checked="checked" <% end %> />
+                  						 		<label class="mar0" for="que_<%= q[:id] %><%= opt[:id] %>"></label>
+												<label class="font_size14" style="margin: 0 3%;"><%= opt[:value] %></label>
+                  						 <% elsif q[:que_type]=='check' %>
+                  						 		<input type="checkbox" class="regular-checkbox" name="que[<%= q[:id] %>][]" id="que_<%= q[:id] %><%= opt[:id] %>"  value="<%= opt[:value] %>" <% if i==0 %> checked="checked" <% end %> />
+                  						 		<label class="mar0" for="que_<%= q[:id] %><%= opt[:id] %>"></label>
+												<label class="font_size14" style="margin: 0 3%;"><%= opt[:value] %></label>
+                  						 		
+                  						 <% else %>
+                  						 		<option value="<%= opt[:value] %>" ><%= opt[:value] %></option>
+                  						 <% end 
+                  					 	i+=1
+                  					 end
+                  					 if q[:que_type]=='select'
+              						 	%>
+              						 		</select></div>
+              						 	<%
+              						 end		 
+                  					%>
+          						 	
+          						 <% end %>
+          						 	
+          						<div class="clear"></div>
+          						
+		                    </div>
+		            	<% 
+      						end
+      					end
+      				end %>
+      				
+  				<% end %>
+  				
+  				
+  				<% if @waivers.count > 0 %>
+      				<br /><br /><h3><%= I18n.t 'user.wiever' %></h3>
+  						
+      				<%
+      				@ticks = params[:ticket_qty] 
+      				for q in @waivers
+      					@ask = 1
+      					if (q[:rules]=='11' || q[:rules]=='1') 
+      						
+      						if q[:spec_ticket]==1
+          						@ask = 0
+          						@que_ticks = q[:tickets].split(',')
+          						@que_ticks.each do |ticks|
+          							if(@ticks.include?(ticks))
+          								 @ask = 1
+          							end	
+          						end	
+      						end	
+      						
+      					if(@ask==1) 
+      					@que_options = QuestionOption.find(:first, :conditions => ['que_id=?', q[:id]])
+      					%>
+      						<div class="marT20">
+		                        <label><%= q[:que] %> : <% if q[:rules]=='11' %><span class="red">*</span><% end %></label>
+		                        <textarea readonly="readonly" class="TW97p"><%= @que_options[:value] %></textarea>
+		                        <br/><br/><input type="checkbox" name="que[<%= q[:id] %>][]" id="que_<%= q[:id] %><%= @que_options[:id] %>" value="1" class="regular-checkbox" />
+          						<label class="mar0" for="que_<%= q[:id] %><%= @que_options[:id] %>"></label>
+								<label class="font_size14" style="margin: 0 3%;"> <%= I18n.t 'user.agree_wiever' %> </label>
+          						
+		                    </div>
+		                <% 
+      						end
+      					end
+      				end %>
+      				
+  				<% end %>
+  				
+  				
+  				<input type="hidden" name="ticket_id[]" value="0" />
+  			</div>
+  			
+  			
+  					<% end %>     
+                    
+                    <% if @order[:ctype]==2 %> 
+                     <!--  free starts -->    
+                    	<%
+                                	tick_count = 1
+                                	if free_tickets.count > 0
+       			 
+						       			 for free in free_tickets 
+						       			 	
+                                			if params[:ticket_qty][free[:id].to_s] && params[:ticket_qty][free[:id].to_s]!='0'
+                                %>
+                                
+		                           <%   free_tick_count = 0 %>      	
+							
+				             <%if @order[:tickets].include?(free[:id].to_s) %>  <!--  if include start -->
+				              
+		                   
+		 						<% while free_tick_count < params[:ticket_qty][free[:id].to_s].to_i  do %> <!--  while start -->
+		                               
+		                                		
+		                          <br /><h2><%= I18n.t 'event.view.ticket' %> #<%= tick_count %>  <%= free[:free_ticket_name]%></h2>         		
+		                 		
+      				<div>
+      					
+	      					<% if ((@order[:prefix]=='10' || @order[:prefix]=='11' || @order[:prefix]=='1' ) && @order[:ctype]==1) %>
+								<div class="marT20">
+			                        <label><%= I18n.t 'user.prefix' %> : <% if @order[:prefix]=='11' %><span class="red">*</span><% end %></label>
+			                        <input type="text" name="prefix[]" id="buyer_prefix" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.prefix' %>" />
+			                    </div>
+		                    <% end %>
+		                    
+		                    	<div class="marT20">
+			                        <label><%= I18n.t 'user.fname' %> : <span class="red">*</span></label>
+			                        <input type="text" name="first_name[]" id="buyer_first_name" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.fname' %>" />
+			                    </div>
+			                    
+			                    <div class="marT20">
+			                        <label><%= I18n.t 'user.lname' %> : <span class="red">*</span></label>
+			                        <input type="text" name="last_name[]" id="buyer_last_name" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.lname' %>" />
+			                    </div>
+			                
+			                <% if ((@order[:suffix]=='10' || @order[:suffix]=='11' || @order[:suffix]=='1') && @order[:ctype]==1) %>
+								<div class="marT20">
+			                        <label><%= I18n.t 'user.suffix' %> : <% if @order[:suffix]=='11' %><span class="red">*</span><% end %></label>
+			                        <input type="text" name="suffix[]" id="buyer_suffix" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.suffix' %>" />
+			                    </div>
+		                    <% end %> 
+	                    
+	                    	<div class="marT20">
+		                        <label><%= I18n.t 'user.email' %> : <span class="red">*</span></label>
+		                        <input type="text" name="email[]" id="buyer_email" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.email' %>" />
+		                    </div>  
+		                    
+      					<% if @order[:home_phone]=='10' || @order[:home_phone]=='11' || @order[:home_phone]=='1' %>
+	      					<div class="marT20">
+		                        <label><%= I18n.t 'user.home_phone' %> : <% if @order[:home_phone]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="home_phone[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.home_phone' %>" />
+		                    </div>
+		                <% end %>     
+      					
+      					<% if @order[:cell_phone]=='10' || @order[:cell_phone]=='11' || @order[:cell_phone]=='1' %>
+          					<div class="marT20">
+		                        <label><%= I18n.t 'user.cell_phone' %> : <% if @order[:cell_phone]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="cell_phone[]"  value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.cell_phone' %>" />
+		                    </div>
+          				<% end %>
+      			
+      			
+      					
+				<% if @order[:billing_address]=='10' || @order[:billing_address]=='11' || @order[:billing_address]=='1' %>
+  					<br /><h3><%= I18n.t 'user.bill_add' %></h3>
+					
+							<div class="marT20">
+		                        <label><%= I18n.t 'user.country' %> : <% if @order[:billing_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <% if @country.count > 0 %>
+		                        <div class="posrel">
+                                    <select name="bill_country[]" class="table_selectbox TW97p W50P_T" onchange="set_state(this.value, 'bill_<%= tick_count %>')">
+                                       	  <option value="">-- <%= I18n.t 'user.select_country' %> --</option>
+										  <% for ct in @country %>
+										    	<option value="<%= ct[:country_name] %>" ><%= ct[:country_name] %></option>
+										  <% end %> 
+                                    </select><div class="clear"></div>
+				        		</div>
+				        		<% else %>
+			                    	<input type="text" name="bill_country[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.bill_country' %>" />
+			                    <% end %> 
+		                    </div>
+          				
+          					<div class="marT20">
+		                        <label><%= I18n.t 'user.add' %> : <% if @order[:billing_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="bill_add1[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.bill_add' %>" />
+		                    </div>
+		                    
+		                    <div class="marT20">
+		                        <label><%= I18n.t 'user.add2' %> : <% if @order[:billing_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="bill_add2[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.bill_add2' %> " />
+		                    </div>
+		                    
+		                    <div class="marT20">
+		                        <label><%= I18n.t 'user.city' %> : <% if @order[:billing_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="bill_city[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.bill_city' %> " />
+		                    </div>
+          				
+          				 <%	@state = State.find_all_state()   %>
+	                      
+	                      <div class="marT20">
+		                        <label><%= I18n.t 'user.state' %> : <% if @order[:billing_address]=='11' %><span class="red">*</span><% end %></label>
+		                       <% if @state.count > 0 %>
+		                        <div class="posrel">
+	                                <div id="bill<%= tick_count %>_state_list">
+	                                <select class="table_selectbox TW97p W50P_T" name="bill_state[]">
+	                                   	  <option value="">-- <%= I18n.t 'user.select_state' %> --</option>
+										   <% for st in @state %>
+												    <option value="<%= st[:state_name] %>" ><%= st[:state_name] %></option>
+										   <% end %>
+	                                </select>
+	                                </div><div class="clear"></div>
+				        		</div>
+				        		<% else %>
+			                    	<%= text_field_tag :bill_state, '', :class => 'textbox TW97p', :name => 'bill_state[]', :placeholder => (I18n.t 'place.bill_state') %>
+			                    <% end %> 
+		                 </div>
+		                    
+          				
+          				 <div class="marT20">
+	                        <label><%= I18n.t 'user.zip' %> : <% if @order[:billing_address]=='11' %><span class="red">*</span><% end %></label>
+	                        <input type="text" name="bill_zip[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.bill_zip' %> " />
+		                 </div>
+          				
+				<% end %>
+				<div class="clear"></div>
+				
+				
+				<% if @order[:home_address]=='10' || @order[:home_address]=='11' || @order[:home_address]=='1' %>
+  					<br /><h3><%= I18n.t 'user.home_add' %></h3>
+					
+							<div class="marT20">
+		                        <label><%= I18n.t 'user.country' %> : <% if @order[:home_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <% if @country.count > 0 %>
+		                        <div class="posrel">
+                                    <select name="home_country[]" class="table_selectbox TW97p W50P_T" onchange="set_state(this.value, 'home_<%= tick_count %>')">
+                                       	  <option value="">-- <%= I18n.t 'user.select_country' %> --</option>
+										  <% for ct in @country %>
+										    	<option value="<%= ct[:country_name] %>" ><%= ct[:country_name] %></option>
+										  <% end %> 
+                                    </select><div class="clear"></div>
+				        		</div>
+				        		<% else %>
+			                    	<input type="text" name="home_country[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.home_country' %>" />
+			                    <% end %> 
+		                    </div>
+          				
+          					<div class="marT20">
+		                        <label><%= I18n.t 'user.add' %> : <% if @order[:home_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="home_add1[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.home_add' %>" />
+		                    </div>
+		                    
+		                    <div class="marT20">
+		                        <label><%= I18n.t 'user.add2' %> : <% if @order[:home_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="home_add2[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.home_add2' %> " />
+		                    </div>
+		                    
+		                    <div class="marT20">
+		                        <label><%= I18n.t 'user.city' %> : <% if @order[:home_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="home_city[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.home_city' %> " />
+		                    </div>
+          				
+          				 <% @state = State.find_all_state() %>
+	                      
+	                      <div class="marT20">
+		                        <label><%= I18n.t 'user.state' %> : <% if @order[:home_address]=='11' %><span class="red">*</span><% end %></label>
+		                       <% if @state.count > 0 %>
+		                        <div class="posrel">
+	                                <div id="home<%= tick_count %>_state_list">
+	                                <select class="table_selectbox TW97p W50P_T" name="home_state[]">
+	                                   	  <option value="">-- <%= I18n.t 'user.select_state' %> --</option>
+										   <% for st in @state %>
+												    <option value="<%= st[:state_name] %>" ><%= st[:state_name] %></option>
+										   <% end %>
+	                                </select>
+	                                </div><div class="clear"></div>
+				        		</div>
+				        		<% else %>
+			                    	<%= text_field_tag :home_state, '', :class => 'textbox TW97p', :name => 'home_state[]', :placeholder => (I18n.t 'place.home_state') %>
+			                    <% end %> 
+		                 </div>
+		                    
+          				
+          				 <div class="marT20">
+	                        <label><%= I18n.t 'user.zip' %> : <% if @order[:home_address]=='11' %><span class="red">*</span><% end %></label>
+	                        <input type="text" name="home_zip[]"  value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.home_zip' %> " />
+		                 </div>
+				<% end %>
+				<div class="clear"></div>
+				
+  			
+  			
+  			
+				
+				<% if @order[:shipping_address]=='10' || @order[:shipping_address]=='11' || @order[:shipping_address]=='1' %>
+  					<br /><h3><%= I18n.t 'user.ship_add' %></h3>
+					
+							<div class="marT20">
+		                        <label><%= I18n.t 'user.country' %> : <% if @order[:shipping_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <% if @country.count > 0 %>
+		                        <div class="posrel">
+                                    <select name="ship_country[]" class="table_selectbox TW97p W50P_T" onchange="set_state(this.value, 'ship_<%= tick_count %>')">
+                                       	  <option value="">-- <%= I18n.t 'user.select_country' %> --</option>
+										  <% for ct in @country %>
+										    	<option value="<%= ct[:country_name] %>" ><%= ct[:country_name] %></option>
+										  <% end %> 
+                                    </select><div class="clear"></div>
+				        		</div>
+				        		<% else %>
+			                    	<input type="text" name="ship_country[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.ship_country' %>" />
+			                    <% end %> 
+		                    </div>
+          				
+          					<div class="marT20">
+		                        <label><%= I18n.t 'user.add' %> : <% if @order[:shipping_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="ship_add1[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.ship_add' %>" />
+		                    </div>
+		                    
+		                    <div class="marT20">
+		                        <label><%= I18n.t 'user.add2' %> : <% if @order[:shipping_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="ship_add2[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.ship_add2' %> " />
+		                    </div>
+		                    
+		                    <div class="marT20">
+		                        <label><%= I18n.t 'user.city' %> : <% if @order[:shipping_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="ship_city[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.ship_city' %> " />
+		                    </div>
+          				
+          				 <% @state = State.find_all_state()  %>
+	                      
+	                      <div class="marT20">
+		                        <label><%= I18n.t 'user.state' %> : <% if @order[:shipping_address]=='11' %><span class="red">*</span><% end %></label>
+		                       <% if @state.count > 0 %>
+		                        <div class="posrel">
+	                                <div id="ship<%= tick_count %>_state_list">
+	                                <select class="table_selectbox TW97p W50P_T" name="ship_state[]">
+	                                   	  <option value="">-- <%= I18n.t 'user.select_state' %> --</option>
+										   <% for st in @state %>
+												    <option value="<%= st[:state_name] %>"><%= st[:state_name] %></option>
+										   <% end %>
+	                                </select>
+	                                </div><div class="clear"></div>
+				        		</div>
+				        		<% else %>
+			                    	<%= text_field_tag :ship_state, '', :class => 'textbox TW97p', :name => 'ship_state[]', :placeholder => (I18n.t 'place.ship_state') %>
+			                    <% end %> 
+		                 </div>
+		                    
+          				
+          				 <div class="marT20">
+	                        <label><%= I18n.t 'user.zip' %> : <% if @order[:shipping_address]=='11' %><span class="red">*</span><% end %></label>
+	                        <input type="text" name="ship_zip[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.ship_zip' %> " />
+		                 </div>
+				<% end %>
+				<div class="clear"></div>
+				
+				
+				<% if @order[:work_address]=='10' || @order[:work_address]=='11' || @order[:work_address]=='1' %>
+  					<br /><h3><%= I18n.t 'user.work_add' %></h3>
+					
+							<div class="marT20">
+		                        <label><%= I18n.t 'user.country' %> : <% if @order[:working_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <% if @country.count > 0 %>
+		                        <div class="posrel">
+                                    <select name="work_country[]" class="table_selectbox TW97p W50P_T" onchange="set_state(this.value, 'work_<%= tick_count %>')">
+                                       	  <option value="">-- <%= I18n.t 'user.select_country' %> --</option>
+										  <% for ct in @country %>
+										    	<option value="<%= ct[:country_name] %>" ><%= ct[:country_name] %></option>
+										  <% end %> 
+                                    </select><div class="clear"></div>
+				        		</div>
+				        		<% else %>
+			                    	<input type="text" name="work_country[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.work_country' %>" />
+			                    <% end %> 
+		                    </div>
+          				
+          					<div class="marT20">
+		                        <label><%= I18n.t 'user.add' %> : <% if @order[:working_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="work_add1[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.work_add' %>" />
+		                    </div>
+		                    
+		                    <div class="marT20">
+		                        <label><%= I18n.t 'user.add2' %> : <% if @order[:working_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="work_add2[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.work_add2' %> " />
+		                    </div>
+		                    
+		                    <div class="marT20">
+		                        <label><%= I18n.t 'user.city' %> : <% if @order[:working_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="work_city[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.work_city' %> " />
+		                    </div>
+          				
+          				 <% @state = State.find_all_state()      %>
+	                      
+	                      <div class="marT20">
+		                        <label><%= I18n.t 'user.state' %> : <% if @order[:working_address]=='11' %><span class="red">*</span><% end %></label>
+		                       <% if @state.count > 0 %>
+		                        <div class="posrel">
+	                                <div id="work<%= tick_count %>_state_list">
+	                                <select class="table_selectbox TW97p W50P_T" name="work_state[]">
+	                                   	  <option value="">-- <%= I18n.t 'user.select_state' %> --</option>
+										   <% for st in @state %>
+												    <option value="<%= st[:state_name] %>" ><%= st[:state_name] %></option>
+										   <% end %>
+	                                </select>
+	                                </div><div class="clear"></div>
+				        		</div>
+				        		<% else %>
+			                    	<%= text_field_tag :work_state, '', :class => 'textbox TW97p', :name => 'work_state[]', :placeholder => (I18n.t 'place.work_state') %>
+			                    <% end %> 
+		                 </div>
+		                    
+          				
+          				 <div class="marT20">
+	                        <label><%= I18n.t 'user.zip' %> : <% if @order[:working_address]=='11' %><span class="red">*</span><% end %></label>
+	                        <input type="text" name="work_zip[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.work_zip' %> " />
+		                 </div>
+      					
+      			<% if @order[:job_title]=='10' || @order[:job_title]=='11' || @order[:job_title]=='1' %>
+  						 <div class="marT20">
+	                        <label><%= I18n.t 'user.job' %> : <% if @order[:job_title]=='11' %><span class="red">*</span><% end %></label>
+	                        <input type="text" name="work_job_title[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.work_job' %> " />
+		                 </div>
+  				<% end %>
+  				
+  				
+  				<% if @order[:company]=='10' || @order[:company]=='11' || @order[:company]=='1' %>
+  						<div class="marT20">
+	                        <label><%= I18n.t 'user.company' %> : <% if @order[:company]=='11' %><span class="red">*</span><% end %></label>
+	                        <input type="text" name="work_company[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.company' %> " />
+		            	</div>
+  				<% end %>
+  				
+  				
+  				<% if @order[:work_phone]=='10' || @order[:work_phone]=='11' || @order[:work_phone]=='1' %>
+  						<div class="marT20">
+	                        <label><%= I18n.t 'user.work_phone' %> : <% if @order[:work_phone]=='11' %><span class="red">*</span><% end %></label>
+	                        <input type="text" name="work_phone[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.work_phone' %> " />
+		            	</div>
+		        <% end %>
+  				
+  				
+  				<% if @order[:blog]=='10' || @order[:blog]=='11' || @order[:blog]=='1' %>
+  						<div class="marT20">
+	                        <label><%= I18n.t 'user.blog' %> : <% if @order[:blog]=='11' %><span class="red">*</span><% end %></label>
+	                        <input type="text" name="work_blog[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.blog' %> " />
+		            	</div>
+		       <% end %>
+  				
+  				
+  				<% if @order[:website]=='10' || @order[:website]=='11' || @order[:website]=='1' %>
+  						<div class="marT20">
+	                        <label><%= I18n.t 'user.website' %> : <% if @order[:website]=='11' %><span class="red">*</span><% end %></label>
+	                        <input type="text" name="work_website[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.website' %> " />
+		            	</div>
+  				<% end %>
+  				
+			<% end %>
+			<div class="clear"></div>
+  				
+  				
+  				<% if @order[:gender]=='10' || @order[:gender]=='11' || @order[:gender]=='1' || @order[:birth_date]=='10' || @order[:birth_date]=='11' || @order[:birth_date]=='1' || @order[:age]=='10' || @order[:age]=='11' || @order[:age]=='1' %>
+  					<br /><h3><%= I18n.t 'user.other' %></h3>
+					<% if @order[:gender]=='10' || @order[:gender]=='11' %>
+						<div class="marT20">
+		                        <label><%= I18n.t 'user.gender' %> : <% if @order[:gender]=='11' %><span class="red">*</span><% end %></label>
+				               
+							<div class="posrel">
+		                        <%= select_tag :gender, options_for_select(User::GENDER), :name => 'gender[]', :class => 'table_selectbox TW97p W50P_T' %>
+		                       <div class="clear"></div>
+			        		</div>
+			        	</div>	
+		        	<% end %>	
+  				
+  					<% if @order[:birth_date]=='10' || @order[:birth_date]=='11' %>
+	  						<div class="marT20">
+		                        <label><%= I18n.t 'user.bdate' %> : <% if @order[:birth_date]=='11' %><span class="red">*</span><% end %></label>
+		                        <%= text_field_tag :birth_date, '', :class => 'textbox TW97p', :name => 'birth_date[]' %>
+		                    </div>
+	  				<% end %>
+	  				
+  				
+  				
+  					<% if @order[:age]=='10' || @order[:age]=='11' %>
+  							<div class="marT20">
+		                        <label><%= I18n.t 'user.age' %> : <% if @order[:age]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="age[]" class="textbox TW97p" placeholder="<%= I18n.t 'place.age' %> " />
+		                    </div>
+  					<% end %>
+  				
+  				
+  				<% end %><div class="clear"></div>
+  				
+  				<input type="hidden" name="ticket_id[]" value="<%= free[:id] %>" />
+              	<input type="hidden" name="ticket_qty[]" value="<%= params[:ticket_qty][free[:id].to_s] %>" />
+              				
+              				
+              				
+  				
+  				<% if @questions.count > 0 %>
+      				<br /><br /><h3><%= I18n.t 'user.que' %></h3>
+  						
+      				<%
+      				
+      				for q in @questions
+      					@ask = 1
+      					if (q[:rules]=='11' || q[:rules]=='1') 
+      						
+      						if q[:spec_ticket]==1
+          						@ask = 0
+          						@que_ticks = q[:tickets].split(',')
+      							if(@que_ticks.include?(free[:id]))
+      								 @ask = 1
+      							end	
+          					end	
+      						
+      					if(@ask==1) %>
+      					
+      						<div class="marT20">
+		                        <label><%= q[:que] %> : <% if q[:rules]=='11' %><span class="red">*</span><% end %></label>
+		                         <% if q[:que_type]=='text' %>
+		                        	<input type="text" name="que[<%= q[:id] %>][]" id="que_<%= q[:id] %>"  class="textbox TW97p"  />
+		                         <% elsif q[:que_type]=='para' %>
+		                         	<textarea name="que[<%= q[:id] %>][]" id="que_<%= q[:id] %>" class="TW97p" ></textarea>
+		                         <% else
+          						 	%>
+          						 	<br />	
+          						 	<%
+          						 	@que_options = QuestionOption.find(:all, :conditions => ['que_id=?', q[:id]])
+              						 i=0
+              						 if q[:que_type]=='select'
+              						 	%>
+              						 		<div class="posrel">
+				                                <select class="table_selectbox TW97p W50P_T" name="que[<%= q[:id] %>][]" id="que_<%= q[:id] %>">
+              						 	<%
+              						 end	
+              						 for opt in @que_options
+                  						 if q[:que_type]=='radio' %>
+                  						 		<input type="radio" class="regular-radio" name="que[<%= q[:id] %><%= tick_count %>][]" id="que_<%= i %><%= q[:id] %><%= opt[:id] %><%= tick_count %>" value="<%= opt[:value] %>" <% if i==0 %> checked="checked" <% end %> />
+                  						 		<label class="mar0" for="que_<%= i %><%= q[:id] %><%= opt[:id] %><%= tick_count %>"></label>
+												<label class="font_size14" style="margin: 0 3%;"><%= opt[:value] %></label>
+                  						 <% elsif q[:que_type]=='check' %>
+                  						 		<input type="checkbox" class="regular-checkbox" name="que[<%= q[:id] %>][]" id="que_<%= i %><%= q[:id] %><%= opt[:id] %><%= tick_count %>"  value="<%= opt[:value] %>" <% if i==0 %> checked="checked" <% end %> />
+                  						 		<label class="mar0" for="que_<%= i %><%= q[:id] %><%= opt[:id] %><%= tick_count %>"></label>
+												<label class="font_size14" style="margin: 0 3%;"><%= opt[:value] %></label>
+                  						 		
+                  						 <% else %>
+                  						 		<option value="<%= opt[:value] %>" ><%= opt[:value] %></option>
+                  						 <% end 
+                  					 	i+=1
+                  					 end
+                  					 if q[:que_type]=='select'
+              						 	%>
+              						 		</select></div>
+              						 	<%
+              						 end		 
+                  					%>
+          						 	
+          						 <% end %>
+          						 	
+          						<div class="clear"></div>
+          						
+		                    </div>
+		            	<% 
+          						end
+          					end
+          				end %>
+      				
+  				<% end %>
+  				
+  				
+  				<% if @waivers.count > 0 %>
+      				<br /><br /><h3><%= I18n.t 'user.wiever' %></h3>
+  						
+      				<%
+      				for q in @waivers
+      					@ask = 1
+      					if (q[:rules]=='11' || q[:rules]=='1') 
+      						
+      						if q[:spec_ticket]==1
+          						@ask = 0
+          						@que_ticks = q[:tickets].split(',')
+      							if(@que_ticks.include?(free[:id]))
+      								 @ask = 1
+      							end	
+          					end	
+      						
+      					if(@ask==1) 
+      					@que_options = QuestionOption.find(:first, :conditions => ['que_id=?', q[:id]])
+      					%>
+      						<div class="marT20">
+		                        <label><%= q[:que] %> : <% if q[:rules]=='11' %><span class="red">*</span><% end %></label>
+		                        <textarea readonly="readonly" class="TW97p"><%= @que_options[:value] %></textarea>
+		                        <br/><br/><input type="checkbox" name="que[<%= q[:id] %>][]" id="que_<%= i %><%= q[:id] %><%= @que_options[:id] %>" value="1" class="regular-checkbox" />
+          						<label class="mar0" for="que_<%= i %><%= q[:id] %><%= @que_options[:id] %>"></label>
+								<label class="font_size14" style="margin: 0 3%;"> <%= I18n.t 'user.agree_wiever' %> </label>
+          						
+		                    </div>
+		                <% 
+          						end
+          					end
+          				end %>
+      				
+  				<% end %>
+  				
+  				
+  			</div>
+  			
+  			
+		                 		<% free_tick_count+=1  
+		                 		 tick_count+=1 
+		                 		%>
+		                 		<% end %> <!--  while end -->
+		                 		<% end %> <!--  if include end -->
+		                 		<%
+		                        	    
+		                        			end
+		                        		end 
+		                        	end	
+                        %>
+                            
+                            
+                      <!--  free ends -->         
+                       <!-- paid starts -->
+                       <%
+                                	
+                                	if paid_tickets.count > 0
+       			 
+						       			 for paid in paid_tickets 
+						       			 	
+                                			if params[:ticket_qty][paid[:id].to_s] && params[:ticket_qty][paid[:id].to_s]!='0'
+                                                            
+                                %>
+                                
+                                 <%   paid_tick_count = 0 %>    
+		                         <%if @order[:tickets].include?(paid[:id].to_s) %>  <!--  if include start -->
+				              
+		                   
+		 						<% while paid_tick_count < params[:ticket_qty][paid[:id].to_s].to_i  do %> <!--  while start -->
+		                               
+		                                		
+		                          <br /><h2><%= I18n.t 'event.view.ticket' %> #<%= tick_count %>  <%= paid[:paid_ticket_name]%></h2>            		
+		                 		
+      				<div>
+      					<% if ((@order[:prefix]=='10' || @order[:prefix]=='11' || @order[:prefix]=='1' ) && @order[:ctype]==1) %>
+								<div class="marT20">
+			                        <label><%= I18n.t 'user.prefix' %> : <% if @order[:prefix]=='11' %><span class="red">*</span><% end %></label>
+			                        <input type="text" name="prefix[]" id="buyer_prefix" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.prefix' %>" />
+			                    </div>
+		                    <% end %>
+		                    
+		                    	<div class="marT20">
+			                        <label><%= I18n.t 'user.fname' %> : <span class="red">*</span></label>
+			                        <input type="text" name="first_name[]" id="buyer_first_name" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.fname' %>" />
+			                    </div>
+			                    
+			                    <div class="marT20">
+			                        <label><%= I18n.t 'user.lname' %> : <span class="red">*</span></label>
+			                        <input type="text" name="last_name[]" id="buyer_last_name" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.lname' %>" />
+			                    </div>
+			                
+			                <% if ((@order[:suffix]=='10' || @order[:suffix]=='11' || @order[:suffix]=='1') && @order[:ctype]==1) %>
+								<div class="marT20">
+			                        <label><%= I18n.t 'user.suffix' %> : <% if @order[:suffix]=='11' %><span class="red">*</span><% end %></label>
+			                        <input type="text" name="suffix[]" id="buyer_suffix" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.suffix' %>" />
+			                    </div>
+		                    <% end %> 
+	                    
+	                    	<div class="marT20">
+		                        <label><%= I18n.t 'user.email' %> : <span class="red">*</span></label>
+		                        <input type="text" name="email[]" id="buyer_email" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.email' %>" />
+		                    </div>  
+      					
+      					<% if @order[:home_phone]=='10' || @order[:home_phone]=='11' || @order[:home_phone]=='1' %>
+	      					<div class="marT20">
+		                        <label><%= I18n.t 'user.home_phone' %> : <% if @order[:home_phone]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="home_phone[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.home_phone' %>" />
+		                    </div>
+		                <% end %>     
+      					
+      					<% if @order[:cell_phone]=='10' || @order[:cell_phone]=='11' || @order[:cell_phone]=='1' %>
+          					<div class="marT20">
+		                        <label><%= I18n.t 'user.cell_phone' %> : <% if @order[:cell_phone]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="cell_phone[]"  value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.cell_phone' %>" />
+		                    </div>
+          				<% end %>
+      			
+      			
+      					
+				<% if @order[:billing_address]=='10' || @order[:billing_address]=='11' || @order[:billing_address]=='1' %>
+  					<br /><h3><%= I18n.t 'user.bill_add' %></h3>
+					
+							<div class="marT20">
+		                        <label><%= I18n.t 'user.country' %> : <% if @order[:billing_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <% if @country.count > 0 %>
+		                        <div class="posrel">
+                                    <select name="bill_country[]" class="table_selectbox TW97p W50P_T" onchange="set_state(this.value, 'bill_<%= tick_count %>')">
+                                       	  <option value="">-- <%= I18n.t 'user.select_country' %> --</option>
+										  <% for ct in @country %>
+										    	<option value="<%= ct[:country_name] %>" ><%= ct[:country_name] %></option>
+										  <% end %> 
+                                    </select><div class="clear"></div>
+				        		</div>
+				        		<% else %>
+			                    	<input type="text" name="bill_country[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.bill_country' %>" />
+			                    <% end %> 
+		                    </div>
+          				
+          					<div class="marT20">
+		                        <label><%= I18n.t 'user.add' %> : <% if @order[:billing_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="bill_add1[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.bill_add' %>" />
+		                    </div>
+		                    
+		                    <div class="marT20">
+		                        <label><%= I18n.t 'user.add2' %> : <% if @order[:billing_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="bill_add2[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.bill_add2' %> " />
+		                    </div>
+		                    
+		                    <div class="marT20">
+		                        <label><%= I18n.t 'user.city' %> : <% if @order[:billing_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="bill_city[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.bill_city' %> " />
+		                    </div>
+          				
+          				 <%	@state = State.find_all_state()   %>
+	                      
+	                      <div class="marT20">
+		                        <label><%= I18n.t 'user.state' %> : <% if @order[:billing_address]=='11' %><span class="red">*</span><% end %></label>
+		                       <% if @state.count > 0 %>
+		                        <div class="posrel">
+	                                <div id="bill<%= tick_count %>_state_list">
+	                                <select class="table_selectbox TW97p W50P_T" name="bill_state[]">
+	                                   	  <option value="">-- <%= I18n.t 'user.select_state' %> --</option>
+										   <% for st in @state %>
+												    <option value="<%= st[:state_name] %>" ><%= st[:state_name] %></option>
+										   <% end %>
+	                                </select>
+	                                </div><div class="clear"></div>
+				        		</div>
+				        		<% else %>
+			                    	<%= text_field_tag :bill_state, '', :class => 'textbox TW97p', :name => 'bill_state[]', :placeholder => (I18n.t 'place.bill_state') %>
+			                    <% end %> 
+		                 </div>
+		                    
+          				
+          				 <div class="marT20">
+	                        <label><%= I18n.t 'user.zip' %> : <% if @order[:billing_address]=='11' %><span class="red">*</span><% end %></label>
+	                        <input type="text" name="bill_zip[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.bill_zip' %> " />
+		                 </div>
+          				
+				<% end %>
+				<div class="clear"></div>
+				
+				
+				<% if @order[:home_address]=='10' || @order[:home_address]=='11' || @order[:home_address]=='1' %>
+  					<br /><h3><%= I18n.t 'user.home_add' %></h3>
+					
+							<div class="marT20">
+		                        <label><%= I18n.t 'user.country' %> : <% if @order[:home_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <% if @country.count > 0 %>
+		                        <div class="posrel">
+                                    <select name="home_country[]" class="table_selectbox TW97p W50P_T" onchange="set_state(this.value, 'home_<%= tick_count %>')">
+                                       	  <option value="">-- <%= I18n.t 'user.select_country' %> --</option>
+										  <% for ct in @country %>
+										    	<option value="<%= ct[:country_name] %>" ><%= ct[:country_name] %></option>
+										  <% end %> 
+                                    </select><div class="clear"></div>
+				        		</div>
+				        		<% else %>
+			                    	<input type="text" name="home_country[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.home_country' %>" />
+			                    <% end %> 
+		                    </div>
+          				
+          					<div class="marT20">
+		                        <label><%= I18n.t 'user.add' %> : <% if @order[:home_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="home_add1[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.home_add' %>" />
+		                    </div>
+		                    
+		                    <div class="marT20">
+		                        <label><%= I18n.t 'user.add2' %> : <% if @order[:home_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="home_add2[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.home_add2' %> " />
+		                    </div>
+		                    
+		                    <div class="marT20">
+		                        <label><%= I18n.t 'user.city' %> : <% if @order[:home_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="home_city[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.home_city' %> " />
+		                    </div>
+          				
+          				 <% @state = State.find_all_state() %>
+	                      
+	                      <div class="marT20">
+		                        <label><%= I18n.t 'user.state' %> : <% if @order[:home_address]=='11' %><span class="red">*</span><% end %></label>
+		                       <% if @state.count > 0 %>
+		                        <div class="posrel">
+	                                <div id="home<%= tick_count %>_state_list">
+	                                <select class="table_selectbox TW97p W50P_T" name="home_state[]">
+	                                   	  <option value="">-- <%= I18n.t 'user.select_state' %> --</option>
+										   <% for st in @state %>
+												    <option value="<%= st[:state_name] %>" ><%= st[:state_name] %></option>
+										   <% end %>
+	                                </select>
+	                                </div><div class="clear"></div>
+				        		</div>
+				        		<% else %>
+			                    	<%= text_field_tag :home_state, '', :class => 'textbox TW97p', :name => 'home_state[]', :placeholder => (I18n.t 'place.home_state') %>
+			                    <% end %> 
+		                 </div>
+		                    
+          				
+          				 <div class="marT20">
+	                        <label><%= I18n.t 'user.zip' %> : <% if @order[:home_address]=='11' %><span class="red">*</span><% end %></label>
+	                        <input type="text" name="home_zip[]"  value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.home_zip' %> " />
+		                 </div>
+				<% end %>
+				<div class="clear"></div>
+				
+  			
+  			
+  			
+				
+				<% if @order[:shipping_address]=='10' || @order[:shipping_address]=='11' || @order[:shipping_address]=='1' %>
+  					<br /><h3><%= I18n.t 'user.ship_add' %></h3>
+					
+							<div class="marT20">
+		                        <label><%= I18n.t 'user.country' %> : <% if @order[:shipping_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <% if @country.count > 0 %>
+		                        <div class="posrel">
+                                    <select name="ship_country[]" class="table_selectbox TW97p W50P_T" onchange="set_state(this.value, 'ship_<%= tick_count %>')">
+                                       	  <option value="">-- <%= I18n.t 'user.select_country' %> --</option>
+										  <% for ct in @country %>
+										    	<option value="<%= ct[:country_name] %>" ><%= ct[:country_name] %></option>
+										  <% end %> 
+                                    </select><div class="clear"></div>
+				        		</div>
+				        		<% else %>
+			                    	<input type="text" name="ship_country[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.ship_country' %>" />
+			                    <% end %> 
+		                    </div>
+          				
+          					<div class="marT20">
+		                        <label><%= I18n.t 'user.add' %> : <% if @order[:shipping_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="ship_add1[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.ship_add' %>" />
+		                    </div>
+		                    
+		                    <div class="marT20">
+		                        <label><%= I18n.t 'user.add2' %> : <% if @order[:shipping_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="ship_add2[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.ship_add2' %> " />
+		                    </div>
+		                    
+		                    <div class="marT20">
+		                        <label><%= I18n.t 'user.city' %> : <% if @order[:shipping_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="ship_city[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.ship_city' %> " />
+		                    </div>
+          				
+          				 <% @state = State.find_all_state()  %>
+	                      
+	                      <div class="marT20">
+		                        <label><%= I18n.t 'user.state' %> : <% if @order[:shipping_address]=='11' %><span class="red">*</span><% end %></label>
+		                       <% if @state.count > 0 %>
+		                        <div class="posrel">
+	                                <div id="ship<%= tick_count %>_state_list">
+	                                <select class="table_selectbox TW97p W50P_T" name="ship_state[]">
+	                                   	  <option value="">-- <%= I18n.t 'user.select_state' %> --</option>
+										   <% for st in @state %>
+												    <option value="<%= st[:state_name] %>"><%= st[:state_name] %></option>
+										   <% end %>
+	                                </select>
+	                                </div><div class="clear"></div>
+				        		</div>
+				        		<% else %>
+			                    	<%= text_field_tag :ship_state, '', :class => 'textbox TW97p', :name => 'ship_state[]', :placeholder => (I18n.t 'place.ship_state') %>
+			                    <% end %> 
+		                 </div>
+		                    
+          				
+          				 <div class="marT20">
+	                        <label><%= I18n.t 'user.zip' %> : <% if @order[:shipping_address]=='11' %><span class="red">*</span><% end %></label>
+	                        <input type="text" name="ship_zip[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.ship_zip' %> " />
+		                 </div>
+				<% end %>
+				<div class="clear"></div>
+				
+				
+				<% if @order[:work_address]=='10' || @order[:work_address]=='11' || @order[:work_address]=='1' %>
+  					<br /><h3><%= I18n.t 'user.work_add' %></h3>
+					
+							<div class="marT20">
+		                        <label><%= I18n.t 'user.country' %> : <% if @order[:working_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <% if @country.count > 0 %>
+		                        <div class="posrel">
+                                    <select name="work_country[]" class="table_selectbox TW97p W50P_T" onchange="set_state(this.value, 'work_<%= tick_count %>')">
+                                       	  <option value="">-- <%= I18n.t 'user.select_country' %> --</option>
+										  <% for ct in @country %>
+										    	<option value="<%= ct[:country_name] %>" ><%= ct[:country_name] %></option>
+										  <% end %> 
+                                    </select><div class="clear"></div>
+				        		</div>
+				        		<% else %>
+			                    	<input type="text" name="work_country[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.work_country' %>" />
+			                    <% end %> 
+		                    </div>
+          				
+          					<div class="marT20">
+		                        <label><%= I18n.t 'user.add' %> : <% if @order[:working_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="work_add1[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.work_add' %>" />
+		                    </div>
+		                    
+		                    <div class="marT20">
+		                        <label><%= I18n.t 'user.add2' %> : <% if @order[:working_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="work_add2[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.work_add2' %> " />
+		                    </div>
+		                    
+		                    <div class="marT20">
+		                        <label><%= I18n.t 'user.city' %> : <% if @order[:working_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="work_city[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.work_city' %>  " />
+		                    </div>
+          				
+          				 <% @state = State.find_all_state()      %>
+	                      
+	                      <div class="marT20">
+		                        <label><%= I18n.t 'user.state' %> : <% if @order[:working_address]=='11' %><span class="red">*</span><% end %></label>
+		                       <% if @state.count > 0 %>
+		                        <div class="posrel">
+	                                <div id="work<%= tick_count %>_state_list">
+	                                <select class="table_selectbox TW97p W50P_T" name="work_state[]">
+	                                   	  <option value="">-- <%= I18n.t 'user.select_state' %> --</option>
+										   <% for st in @state %>
+												    <option value="<%= st[:state_name] %>" ><%= st[:state_name] %></option>
+										   <% end %>
+	                                </select>
+	                                </div><div class="clear"></div>
+				        		</div>
+				        		<% else %>
+			                    	<%= text_field_tag :work_state, '', :class => 'textbox TW97p', :name => 'work_state[]', :placeholder => (I18n.t 'place.work_state') %>
+			                    <% end %> 
+		                 </div>
+		                    
+          				
+          				 <div class="marT20">
+	                        <label><%= I18n.t 'user.zip' %> : <% if @order[:working_address]=='11' %><span class="red">*</span><% end %></label>
+	                        <input type="text" name="work_zip[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.work_zip' %> " />
+		                 </div>
+      					
+      			<% if @order[:job_title]=='10' || @order[:job_title]=='11' || @order[:job_title]=='1' %>
+  						 <div class="marT20">
+	                        <label><%= I18n.t 'user.job' %> : <% if @order[:job_title]=='11' %><span class="red">*</span><% end %></label>
+	                        <input type="text" name="work_job_title[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.work_job' %> " />
+		                 </div>
+  				<% end %>
+  				
+  				
+  				<% if @order[:company]=='10' || @order[:company]=='11' || @order[:company]=='1' %>
+  						<div class="marT20">
+	                        <label><%= I18n.t 'user.company' %> : <% if @order[:company]=='11' %><span class="red">*</span><% end %></label>
+	                        <input type="text" name="work_company[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.company' %> " />
+		            	</div>
+  				<% end %>
+  				
+  				
+  				<% if @order[:work_phone]=='10' || @order[:work_phone]=='11' || @order[:work_phone]=='1' %>
+  						<div class="marT20">
+	                        <label><%= I18n.t 'user.work_phone' %> : <% if @order[:work_phone]=='11' %><span class="red">*</span><% end %></label>
+	                        <input type="text" name="work_phone[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.work_phone' %> " />
+		            	</div>
+		        <% end %>
+  				
+  				
+  				<% if @order[:blog]=='10' || @order[:blog]=='11' || @order[:blog]=='1' %>
+  						<div class="marT20">
+	                        <label><%= I18n.t 'user.blog' %> : <% if @order[:blog]=='11' %><span class="red">*</span><% end %></label>
+	                        <input type="text" name="work_blog[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.blog' %> " />
+		            	</div>
+		       <% end %>
+  				
+  				
+  				<% if @order[:website]=='10' || @order[:website]=='11' || @order[:website]=='1' %>
+  						<div class="marT20">
+	                        <label><%= I18n.t 'user.website' %> : <% if @order[:website]=='11' %><span class="red">*</span><% end %></label>
+	                        <input type="text" name="work_website[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.website' %> " />
+		            	</div>
+  				<% end %>
+  				
+			<% end %>
+			<div class="clear"></div>
+  				
+  				
+  				<% if @order[:gender]=='10' || @order[:gender]=='11' || @order[:gender]=='1' || @order[:birth_date]=='10' || @order[:birth_date]=='11' || @order[:birth_date]=='1' || @order[:age]=='10' || @order[:age]=='11' ||  @order[:age]=='1' %>
+  					<br /><h3><%= I18n.t 'user.other' %></h3>
+					<% if @order[:gender]=='10' || @order[:gender]=='11' || @order[:gender]=='1' %>
+						<div class="marT20">
+		                        <label><%= I18n.t 'user.gender' %> : <% if @order[:gender]=='11' %><span class="red">*</span><% end %></label>
+					               
+							<div class="posrel">
+		                        <%= select_tag :gender, options_for_select(User::GENDER), :name => 'gender[]', :class => 'table_selectbox TW97p W50P_T' %>
+		                       <div class="clear"></div>
+			        		</div>
+			        	</div>	
+		        	<% end %>	
+  				
+  					<% if @order[:birth_date]=='10' || @order[:birth_date]=='11' || @order[:birth_date]=='1' %>
+	  						<div class="marT20">
+		                        <label><%= I18n.t 'user.bdate' %> : <% if @order[:birth_date]=='11' %><span class="red">*</span><% end %></label>
+		                        <%= text_field_tag :birth_date, '', :class => 'textbox TW97p', :name => 'birth_date[]' %>
+		                    </div>
+	  				<% end %>
+	  				
+  				
+  				
+  					<% if @order[:age]=='10' || @order[:age]=='11' || @order[:age]=='1' %>
+  							<div class="marT20">
+		                        <label><%= I18n.t 'user.age' %> : <% if @order[:age]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="age[]" class="textbox TW97p" placeholder="<%= I18n.t 'place.age' %> " />
+		                    </div>
+  					<% end %>
+  				
+  				
+  				<% end %><div class="clear"></div>
+  				
+  				<input type="hidden" name="ticket_id[]" value="<%= paid[:id] %>" />
+              	<input type="hidden" name="ticket_qty[]" value="<%= params[:ticket_qty][paid[:id].to_s] %>" />
+              				
+              				
+              				
+  				
+  				<% if @questions.count > 0 %>
+      				<br /><br /><h3><%= I18n.t 'user.que' %></h3>
+  						
+      				<%
+      				
+      				for q in @questions
+      					@ask = 1
+      					if (q[:rules]=='11' || q[:rules]=='1') 
+      						
+      						if q[:spec_ticket]==1
+          						@ask = 0
+          						@que_ticks = q[:tickets].split(',')
+      							if(@que_ticks.include?(paid[:id]))
+      								 @ask = 1
+      							end	
+          					end	
+      						
+      					if(@ask==1) %>
+      					
+      						<div class="marT20">
+		                        <label><%= q[:que] %> : <% if q[:rules]=='11' %><span class="red">*</span><% end %></label>
+		                         <% if q[:que_type]=='text' %>
+		                        	<input type="text" name="que[<%= q[:id] %>][]" id="que_<%= q[:id] %>"  class="textbox TW97p"  />
+		                         <% elsif q[:que_type]=='para' %>
+		                         	<textarea name="que[<%= q[:id] %>][]" id="que_<%= q[:id] %>" class="TW97p" ></textarea>
+		                         <% else
+          						 	%>
+          						 	<br />	
+          						 	<%
+          						 	@que_options = QuestionOption.find(:all, :conditions => ['que_id=?', q[:id]])
+              						 i=0
+              						 if q[:que_type]=='select'
+              						 	%>
+              						 		<div class="posrel">
+				                                <select class="table_selectbox TW97p W50P_T" name="que[<%= q[:id] %>][]" id="que_<%= q[:id] %>">
+              						 	<%
+              						 end	
+              						 for opt in @que_options
+                  						 if q[:que_type]=='radio' %>
+                  						 		<input type="radio" class="regular-radio" name="que[<%= q[:id] %>][]" id="que_<%= i %><%= q[:id] %><%= opt[:id] %><%= tick_count %>" value="<%= opt[:value] %>" <% if i==0 %> checked="checked" <% end %> />
+                  						 		<label class="mar0" for="que_<%= i %><%= q[:id] %><%= opt[:id] %><%= tick_count %>"></label>
+										<label class="font_size14" style="margin: 0 3%;"><%= opt[:value] %></label>
+                  						 <% elsif q[:que_type]=='check' %>
+                  						 		<input type="checkbox" class="regular-checkbox" name="que[<%= q[:id] %>][]" id="que_<%= i %><%= q[:id] %><%= opt[:id] %><%= tick_count %>"  value="<%= opt[:value] %>" <% if i==0 %> checked="checked" <% end %> />
+                  						 		<label class="mar0" for="que_<%= i %><%= q[:id] %><%= opt[:id] %><%= tick_count %>"></label>
+												<label class="font_size14" style="margin: 0 3%;"><%= opt[:value] %></label>
+                  						 		
+                  						 <% else %>
+                  						 		<option value="<%= opt[:value] %>" ><%= opt[:value] %></option>
+                  						 <% end 
+                  					 	i+=1
+                  					 end
+                  					 if q[:que_type]=='select'
+              						 	%>
+              						 		</select></div>
+              						 	<%
+              						 end		 
+                  					%>
+          						 	
+          						 <% end %>
+          						 	
+          						<div class="clear"></div>
+          						
+		                    </div>
+		            	<% 
+          						end
+          					end
+          				end %>
+      				
+  				<% end %>
+  				
+  				
+  				<% if @waivers.count > 0 %>
+      				<br /><br /><h3><%= I18n.t 'user.wiever' %></h3>
+  						
+      				<%
+      				for q in @waivers
+      					@ask = 1
+      					if (q[:rules]=='11' || q[:rules]=='1') 
+      						
+      						if q[:spec_ticket]==1
+          						@ask = 0
+          						@que_ticks = q[:tickets].split(',')
+      							if(@que_ticks.include?(paid[:id]))
+      								 @ask = 1
+      							end	
+          					end	
+      						
+      					if(@ask==1) 
+      					@que_options = QuestionOption.find(:first, :conditions => ['que_id=?', q[:id]])
+      					%>
+      						<div class="marT20">
+		                        <label><%= q[:que] %> : <% if q[:rules]=='11' %><span class="red">*</span><% end %></label>
+		                        <textarea readonly="readonly" class="TW97p"><%= @que_options[:value] %></textarea>
+		                        <br/><br/><input type="checkbox" name="que[<%= q[:id] %>][]" id="que_<%= i %><%= q[:id] %><%= @que_options[:id] %>" value="1" class="regular-checkbox" />
+          						<label class="mar0" for="que_<%= i %><%= q[:id] %><%= @que_options[:id] %>"></label>
+								<label class="font_size14" style="margin: 0 3%;"> <%= I18n.t 'user.agree_wiever' %> </label>
+          						
+		                    </div>
+		                <% 
+          						end
+          					end
+          				end %>
+      				
+  				<% end %>
+  				
+  				
+  			</div>
+  			
+  			
+		                 		<% paid_tick_count+=1  
+		                 		   tick_count+=1
+		                 		%>
+		                 		<% end %> <!--  while end -->
+		                 		<% end %> <!--  if include end -->
+		                 		<%
+		                        			
+		                        			end
+		                        		end 
+		                        	end	
+                        %>
+                            
+                       <!-- paid ends -->  
+                       
+                       <!-- donation starts -->
+                        <%
+                                	
+                                	if donation_tickets.count > 0
+       			                                              
+						       			 for donation in donation_tickets 
+						       			 	
+                                			if params[:ticket_qty][donation[:id].to_s] && params[:ticket_qty][donation[:id].to_s]!='0' #&& params[:ticket_qty][donation[:id].to_s]!=''
+                               %>
+		                                		
+		                     <%   don_tick_count = 0 %>    
+		                   <%if @order[:tickets].include?(donation[:id].to_s) %>  <!--  if include start -->
+		                                		
+		                  <br /><h2><%= I18n.t 'event.view.ticket' %> #<%= tick_count %>  <%= donation[:donation_ticket_name]%></h2>           		
+		                 		
+      				<div>
+      					<% if ((@order[:prefix]=='10' || @order[:prefix]=='11' || @order[:prefix]=='1' ) && @order[:ctype]==1) %>
+								<div class="marT20">
+			                        <label><%= I18n.t 'user.prefix' %> : <% if @order[:prefix]=='11' %><span class="red">*</span><% end %></label>
+			                        <input type="text" name="prefix[]" id="buyer_prefix" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.prefix' %>" />
+			                    </div>
+		                    <% end %>
+		                    
+		                    	<div class="marT20">
+			                        <label><%= I18n.t 'user.fname' %> : <span class="red">*</span></label>
+			                        <input type="text" name="first_name[]" id="buyer_first_name" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.fname' %>" />
+			                    </div>
+			                    
+			                    <div class="marT20">
+			                        <label><%= I18n.t 'user.lname' %> : <span class="red">*</span></label>
+			                        <input type="text" name="last_name[]" id="buyer_last_name" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.lname' %>" />
+			                    </div>
+			                
+			                <% if ((@order[:suffix]=='10' || @order[:suffix]=='11' || @order[:suffix]=='1') && @order[:ctype]==1) %>
+								<div class="marT20">
+			                        <label><%= I18n.t 'user.suffix' %> : <% if @order[:suffix]=='11' %><span class="red">*</span><% end %></label>
+			                        <input type="text" name="suffix[]" id="buyer_suffix" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.suffix' %>" />
+			                    </div>
+		                    <% end %> 
+	                    
+	                    	<div class="marT20">
+		                        <label><%= I18n.t 'user.email' %> : <span class="red">*</span></label>
+		                        <input type="text" name="email[]" id="buyer_email" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.email' %>" />
+		                    </div>  
+      					<% if @order[:home_phone]=='10' || @order[:home_phone]=='11' || @order[:home_phone]=='1' %>
+	      					<div class="marT20">
+		                        <label><%= I18n.t 'user.home_phone' %> : <% if @order[:home_phone]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="home_phone[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.home_phone' %>" />
+		                    </div>
+		                <% end %>     
+      					
+      					<% if @order[:cell_phone]=='10' || @order[:cell_phone]=='11' || @order[:cell_phone]=='1' %>
+          					<div class="marT20">
+		                        <label><%= I18n.t 'user.cell_phone' %> : <% if @order[:cell_phone]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="cell_phone[]"  value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.cell_phone' %>" />
+		                    </div>
+          				<% end %>
+      			
+      			
+      					
+				<% if @order[:billing_address]=='10' || @order[:billing_address]=='11' || @order[:billing_address]=='1' %>
+  					<br /><h3><%= I18n.t 'user.bill_add' %></h3>
+					
+							<div class="marT20">
+		                        <label><%= I18n.t 'user.country' %> : <% if @order[:billing_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <% if @country.count > 0 %>
+		                        <div class="posrel">
+                                    <select name="bill_country[]" class="table_selectbox TW97p W50P_T" onchange="set_state(this.value, 'bill_<%= tick_count %>')">
+                                       	  <option value="">-- <%= I18n.t 'user.select_country' %> --</option>
+										  <% for ct in @country %>
+										    	<option value="<%= ct[:country_name] %>" ><%= ct[:country_name] %></option>
+										  <% end %> 
+                                    </select><div class="clear"></div>
+				        		</div>
+				        		<% else %>
+			                    	<input type="text" name="bill_country[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.bill_country' %>" />
+			                    <% end %> 
+		                    </div>
+          				
+          					<div class="marT20">
+		                        <label><%= I18n.t 'user.add' %> : <% if @order[:billing_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="bill_add1[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.bill_add' %>" />
+		                    </div>
+		                    
+		                    <div class="marT20">
+		                        <label><%= I18n.t 'user.add2' %> : <% if @order[:billing_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="bill_add2[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.bill_add2' %>  " />
+		                    </div>
+		                    
+		                    <div class="marT20">
+		                        <label><%= I18n.t 'user.city' %> : <% if @order[:billing_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="bill_city[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.bill_city' %> " />
+		                    </div>
+          				
+          				 <%	@state = State.find_all_state()   %>
+	                      
+	                      <div class="marT20">
+		                        <label><%= I18n.t 'user.state' %> : <% if @order[:billing_address]=='11' %><span class="red">*</span><% end %></label>
+		                       <% if @state.count > 0 %>
+		                        <div class="posrel">
+	                                <div id="bill<%= tick_count %>_state_list">
+	                                <select class="table_selectbox TW97p W50P_T" name="bill_state[]">
+	                                   	  <option value="">-- <%= I18n.t 'user.select_state' %> --</option>
+										   <% for st in @state %>
+												    <option value="<%= st[:state_name] %>" ><%= st[:state_name] %></option>
+										   <% end %>
+	                                </select>
+	                                </div><div class="clear"></div>
+				        		</div>
+				        		<% else %>
+			                    	<%= text_field_tag :bill_state, '', :class => 'textbox TW97p', :name => 'bill_state[]', :placeholder => (I18n.t 'place.bill_state') %>
+			                    <% end %> 
+		                 </div>
+		                    
+          				
+          				 <div class="marT20">
+	                        <label><%= I18n.t 'user.zip' %> : <% if @order[:billing_address]=='11' %><span class="red">*</span><% end %></label>
+	                        <input type="text" name="bill_zip[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.bill_zip' %> " />
+		                 </div>
+          				
+				<% end %>
+				<div class="clear"></div>
+				
+				
+				<% if @order[:home_address]=='10' || @order[:home_address]=='11' || @order[:home_address]=='1' %>
+  					<br /><h3><%= I18n.t 'user.home_add' %></h3>
+					
+							<div class="marT20">
+		                        <label><%= I18n.t 'user.country' %> : <% if @order[:home_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <% if @country.count > 0 %>
+		                        <div class="posrel">
+                                    <select name="home_country[]" class="table_selectbox TW97p W50P_T" onchange="set_state(this.value, 'home_<%= tick_count %>')">
+                                       	  <option value="">-- <%= I18n.t 'user.select_country' %> --</option>
+										  <% for ct in @country %>
+										    	<option value="<%= ct[:country_name] %>" ><%= ct[:country_name] %></option>
+										  <% end %> 
+                                    </select><div class="clear"></div>
+				        		</div>
+				        		<% else %>
+			                    	<input type="text" name="home_country[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.home_country' %>" />
+			                    <% end %> 
+		                    </div>
+          				
+          					<div class="marT20">
+		                        <label><%= I18n.t 'user.add' %> : <% if @order[:home_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="home_add1[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.home_add' %>" />
+		                    </div>
+		                    
+		                    <div class="marT20">
+		                        <label><%= I18n.t 'user.add2' %> : <% if @order[:home_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="home_add2[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.home_add2' %> " />
+		                    </div>
+		                    
+		                    <div class="marT20">
+		                        <label><%= I18n.t 'user.city' %> : <% if @order[:home_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="home_city[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.home_city' %> " />
+		                    </div>
+          				
+          				 <% @state = State.find_all_state() %>
+	                      
+	                      <div class="marT20">
+		                        <label><%= I18n.t 'user.state' %> : <% if @order[:home_address]=='11' %><span class="red">*</span><% end %></label>
+		                       <% if @state.count > 0 %>
+		                        <div class="posrel">
+	                                <div id="home<%= tick_count %>_state_list">
+	                                <select class="table_selectbox TW97p W50P_T" name="home_state[]">
+	                                   	  <option value="">-- <%= I18n.t 'user.select_state' %> --</option>
+										   <% for st in @state %>
+												    <option value="<%= st[:state_name] %>" ><%= st[:state_name] %></option>
+										   <% end %>
+	                                </select>
+	                                </div><div class="clear"></div>
+				        		</div>
+				        		<% else %>
+			                    	<%= text_field_tag :home_state, '', :class => 'textbox TW97p', :name => 'home_state[]', :placeholder => (I18n.t 'place.home_state') %>
+			                    <% end %> 
+		                 </div>
+		                    
+          				
+          				 <div class="marT20">
+	                        <label><%= I18n.t 'user.zip' %> : <% if @order[:home_address]=='11' %><span class="red">*</span><% end %></label>
+	                        <input type="text" name="home_zip[]"  value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.home_zip' %> " />
+		                 </div>
+				<% end %>
+				<div class="clear"></div>
+				
+  			
+  			
+  			
+				
+				<% if @order[:shipping_address]=='10' || @order[:shipping_address]=='11' || @order[:shipping_address]=='1' %>
+  					<br /><h3><%= I18n.t 'user.ship_add' %></h3>
+					
+							<div class="marT20">
+		                        <label><%= I18n.t 'user.country' %> : <% if @order[:shipping_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <% if @country.count > 0 %>
+		                        <div class="posrel">
+                                    <select name="ship_country[]" class="table_selectbox TW97p W50P_T" onchange="set_state(this.value, 'ship_<%= tick_count %>')">
+                                       	  <option value="">-- <%= I18n.t 'user.select_country' %> --</option>
+										  <% for ct in @country %>
+										    	<option value="<%= ct[:country_name] %>" ><%= ct[:country_name] %></option>
+										  <% end %> 
+                                    </select><div class="clear"></div>
+				        		</div>
+				        		<% else %>
+			                    	<input type="text" name="ship_country[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.ship_country' %>" />
+			                    <% end %> 
+		                    </div>
+          				
+          					<div class="marT20">
+		                        <label><%= I18n.t 'user.add' %> : <% if @order[:shipping_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="ship_add1[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.ship_add' %>" />
+		                    </div>
+		                    
+		                    <div class="marT20">
+		                        <label><%= I18n.t 'user.add2' %> : <% if @order[:shipping_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="ship_add2[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.ship_add2' %>" />
+		                    </div>
+		                    
+		                    <div class="marT20">
+		                        <label><%= I18n.t 'user.city' %> : <% if @order[:shipping_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="ship_city[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.ship_city' %> " />
+		                    </div>
+          				
+          				 <% @state = State.find_all_state()  %>
+	                      
+	                      <div class="marT20">
+		                        <label><%= I18n.t 'user.state' %> : <% if @order[:shipping_address]=='11' %><span class="red">*</span><% end %></label>
+		                       <% if @state.count > 0 %>
+		                        <div class="posrel">
+	                                <div id="ship<%= tick_count %>_state_list">
+	                                <select class="table_selectbox TW97p W50P_T" name="ship_state[]">
+	                                   	  <option value="">-- <%= I18n.t 'user.select_state' %> --</option>
+										   <% for st in @state %>
+												    <option value="<%= st[:state_name] %>"><%= st[:state_name] %></option>
+										   <% end %>
+	                                </select>
+	                                </div><div class="clear"></div>
+				        		</div>
+				        		<% else %>
+			                    	<%= text_field_tag :ship_state, '', :class => 'textbox TW97p', :name => 'ship_state[]', :placeholder => (I18n.t 'place.ship_state') %>
+			                    <% end %> 
+		                 </div>
+		                    
+          				
+          				 <div class="marT20">
+	                        <label><%= I18n.t 'user.zip' %> : <% if @order[:shipping_address]=='11' %><span class="red">*</span><% end %></label>
+	                        <input type="text" name="ship_zip[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.ship_zip' %> " />
+		                 </div>
+				<% end %>
+				<div class="clear"></div>
+				
+				
+				<% if @order[:work_address]=='10' || @order[:work_address]=='11' || @order[:work_address]=='1' %>
+  					<br /><h3><%= I18n.t 'user.work_add' %></h3>
+					
+							<div class="marT20">
+		                        <label><%= I18n.t 'user.country' %> : <% if @order[:working_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <% if @country.count > 0 %>
+		                        <div class="posrel">
+                                    <select name="work_country[]" class="table_selectbox TW97p W50P_T" onchange="set_state(this.value, 'work_<%= tick_count %>')">
+                                       	  <option value="">-- <%= I18n.t 'user.select_country' %> --</option>
+										  <% for ct in @country %>
+										    	<option value="<%= ct[:country_name] %>" ><%= ct[:country_name] %></option>
+										  <% end %> 
+                                    </select><div class="clear"></div>
+				        		</div>
+				        		<% else %>
+			                    	<input type="text" name="work_country[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.work_country' %>" />
+			                    <% end %> 
+		                    </div>
+          				
+          					<div class="marT20">
+		                        <label><%= I18n.t 'user.add' %> : <% if @order[:working_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="work_add1[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.work_add' %>" />
+		                    </div>
+		                    
+		                    <div class="marT20">
+		                        <label><%= I18n.t 'user.add2' %> : <% if @order[:working_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="work_add2[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.work_add2' %> " />
+		                    </div>
+		                    
+		                    <div class="marT20">
+		                        <label><%= I18n.t 'user.city' %> : <% if @order[:working_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="work_city[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.work_city' %> " />
+		                    </div>
+          				
+          				 <% @state = State.find_all_state()      %>
+	                      
+	                      <div class="marT20">
+		                        <label><%= I18n.t 'user.state' %> : <% if @order[:working_address]=='11' %><span class="red">*</span><% end %></label>
+		                       <% if @state.count > 0 %>
+		                        <div class="posrel">
+	                                <div id="work<%= tick_count %>_state_list">
+	                                <select class="table_selectbox TW97p W50P_T" name="work_state[]">
+	                                   	  <option value="">-- <%= I18n.t 'user.select_state' %> --</option>
+										   <% for st in @state %>
+												    <option value="<%= st[:state_name] %>" ><%= st[:state_name] %></option>
+										   <% end %>
+	                                </select>
+	                                </div><div class="clear"></div>
+				        		</div>
+				        		<% else %>
+			                    	<%= text_field_tag :work_state, '', :class => 'textbox TW97p', :name => 'work_state[]', :placeholder => (I18n.t 'place.work_state') %>
+			                    <% end %> 
+		                 </div>
+		                    
+          				
+          				 <div class="marT20">
+	                        <label><%= I18n.t 'user.zip' %> : <% if @order[:working_address]=='11' %><span class="red">*</span><% end %></label>
+	                        <input type="text" name="work_zip[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.work_zip' %> " />
+		                 </div>
+      					
+      			<% if @order[:job_title]=='10' || @order[:job_title]=='11' || @order[:job_title]=='1' %>
+  						 <div class="marT20">
+	                        <label><%= I18n.t 'user.job' %> : <% if @order[:job_title]=='11' %><span class="red">*</span><% end %></label>
+	                        <input type="text" name="work_job_title[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.work_job' %> " />
+		                 </div>
+  				<% end %>
+  				
+  				
+  				<% if @order[:company]=='10' || @order[:company]=='11' || @order[:company]=='1' %>
+  						<div class="marT20">
+	                        <label><%= I18n.t 'user.company' %> : <% if @order[:company]=='11' %><span class="red">*</span><% end %></label>
+	                        <input type="text" name="work_company[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.company' %> " />
+		            	</div>
+  				<% end %>
+  				
+  				
+  				<% if @order[:work_phone]=='10' || @order[:work_phone]=='11' || @order[:work_phone]=='1' %>
+  						<div class="marT20">
+	                        <label><%= I18n.t 'user.work_phone' %> : <% if @order[:work_phone]=='11' %><span class="red">*</span><% end %></label>
+	                        <input type="text" name="work_phone[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.work_phone' %> " />
+		            	</div>
+		        <% end %>
+  				
+  				
+  				<% if @order[:blog]=='10' || @order[:blog]=='11' || @order[:blog]=='1' %>
+  						<div class="marT20">
+	                        <label><%= I18n.t 'user.blog' %> : <% if @order[:blog]=='11' %><span class="red">*</span><% end %></label>
+	                        <input type="text" name="work_blog[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.blog' %> " />
+		            	</div>
+		       <% end %>
+  				
+  				
+  				<% if @order[:website]=='10' || @order[:website]=='11' || @order[:website]=='1' %>
+  						<div class="marT20">
+	                        <label><%= I18n.t 'user.website' %> : <% if @order[:website]=='11' %><span class="red">*</span><% end %></label>
+	                        <input type="text" name="work_website[]" value="" class="textbox TW97p" placeholder="<%= I18n.t 'place.website' %> " />
+		            	</div>
+  				<% end %>
+  				
+			<% end %>
+			<div class="clear"></div>
+  				
+  				
+  				<% if @order[:gender]=='10' || @order[:gender]=='11' || @order[:gender]=='1' || @order[:birth_date]=='10' || @order[:birth_date]=='11' || @order[:birth_date]=='1' || @order[:age]=='10' || @order[:age]=='11' || @order[:age]=='1' %>
+  					<br /><h3><%= I18n.t 'user.other' %></h3>
+					<% if @order[:gender]=='10' || @order[:gender]=='11' || @order[:gender]=='1' %>
+						<div class="posrel">
+	                        <%= select_tag :gender, options_for_select(User::GENDER), :name => 'gender[]', :class => 'table_selectbox TW97p W50P_T' %>
+	                       <div class="clear"></div>
+		        		</div>
+		        	<% end %>	
+  				
+  					<% if @order[:birth_date]=='10' || @order[:birth_date]=='11' || @order[:birth_date]=='1' %>
+	  						<div class="marT20">
+		                        <label><%= I18n.t 'user.bdate' %> : <% if @order[:birth_date]=='11' %><span class="red">*</span><% end %></label>
+		                        <%= text_field_tag :birth_date, '', :class => 'textbox TW97p', :name => 'birth_date[]' %>
+		                    </div>
+	  				<% end %>
+	  				
+  				
+  				
+  					<% if @order[:age]=='10' || @order[:age]=='11' || @order[:age]=='1' %>
+  							<div class="marT20">
+		                        <label><%= I18n.t 'user.age' %> : <% if @order[:age]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="age[]" class="textbox TW97p" placeholder="<%= I18n.t 'place.age' %> " />
+		                    </div>
+  					<% end %>
+  				
+  				
+  				<% end %><div class="clear"></div>
+  				
+  				<input type="hidden" name="ticket_id[]" value="<%= donation[:id] %>" />
+              	<input type="hidden" name="ticket_qty[]" value="<%= params[:ticket_qty][donation[:id].to_s] %>" />
+              				
+              				
+              				
+  				
+  				<% if @questions.count > 0 %>
+      				<br /><br /><h3><%= I18n.t 'user.que' %></h3>
+  						
+      				<%
+      				is_que = 0
+      				for q in @questions
+      					@ask = 1
+      					
+      					if (q[:rules]=='11' || q[:rules]=='1') 
+      						
+      						if q[:spec_ticket]==1
+          						@ask = 0
+          						@que_ticks = q[:tickets].split(',')
+      							if(@que_ticks.include?(donation[:id]))
+      								 @ask = 1
+      								 is_que = 1
+      							end	
+          					end	
+      						
+      					if(@ask==1) %>
+      					
+      						<div class="marT20">
+		                        <label><%= q[:que] %> : <% if q[:rules]=='11' %><span class="red">*</span><% end %></label>
+		                         <% if q[:que_type]=='text' %>
+		                        	<input type="text" name="que[<%= q[:id] %>][]" id="que_<%= q[:id] %>"  class="textbox TW97p"  />
+		                         <% elsif q[:que_type]=='para' %>
+		                         	<textarea name="que[<%= q[:id] %>][]" id="que_<%= q[:id] %>" class="TW97p" ></textarea>
+		                         <% else
+          						 	%>
+          						 	<br />	
+          						 	<%
+          						 	@que_options = QuestionOption.find(:all, :conditions => ['que_id=?', q[:id]])
+              						 i=0
+              						 if q[:que_type]=='select'
+              						 	%>
+              						 		<div class="posrel">
+				                                <select class="table_selectbox TW97p W50P_T" name="que[<%= q[:id] %>][]" id="que_<%= q[:id] %>">
+              						 	<%
+              						 end	
+              						 for opt in @que_options
+                  						 if q[:que_type]=='radio' %>
+                  						 		<input type="radio" class="regular-radio" name="que[<%= q[:id] %>][]" id="que_<%= i %><%= q[:id] %><%= opt[:id] %><%= tick_count %>" value="<%= opt[:value] %>" <% if i==0 %> checked="checked" <% end %> />
+                  						 		<label class="mar0" for="que_<%= i %><%= q[:id] %><%= opt[:id] %><%= tick_count %>"></label>
+												<label class="font_size14" style="margin: 0 3%;"><%= opt[:value] %></label>
+                  						 <% elsif q[:que_type]=='check' %>
+                  						 		<input type="checkbox" class="regular-checkbox" name="que[<%= q[:id] %>][]" id="que_<%= i %><%= q[:id] %><%= opt[:id] %><%= tick_count %>"  value="<%= opt[:value] %>" <% if i==0 %> checked="checked" <% end %> />
+                  						 		<label class="mar0" for="que_<%= i %><%= q[:id] %><%= opt[:id] %><%= tick_count %>"></label>
+												<label class="font_size14" style="margin: 0 3%;"><%= opt[:value] %></label>
+                  						 		
+                  						 <% else %>
+                  						 		<option value="<%= opt[:value] %>" ><%= opt[:value] %></option>
+                  						 <% end 
+                  					 	i+=1
+                  					 end
+                  					 if q[:que_type]=='select'
+              						 	%>
+              						 		</select></div>
+              						 	<%
+              						 end		 
+                  					%>
+          						 	
+          						 <% end %>
+          						 	
+          						<div class="clear"></div>
+          						
+		                    </div>
+		            	<% 
+          						end
+          					end
+          				end %>
+      				
+  				<% end %>
+  				
+  				
+  				<% if @waivers.count > 0 %>
+      				<br /><br /><h3><%= I18n.t 'user.wiever' %></h3>
+  						
+      				<%
+      				for q in @waivers
+      					@ask = 1
+      					if (q[:rules]=='11' || q[:rules]=='1') 
+      						
+      						if q[:spec_ticket]==1
+          						@ask = 0
+          						@que_ticks = q[:tickets].split(',')
+      							if(@que_ticks.include?(donation[:id]))
+      								 @ask = 1
+      							end	
+          					end	
+      						
+      					if(@ask==1) 
+      					@que_options = QuestionOption.find(:first, :conditions => ['que_id=?', q[:id]])
+      					%>
+      						<div class="marT20">
+		                        <label><%= q[:que] %> : <% if q[:rules]=='11' %><span class="red">*</span><% end %></label>
+		                        <textarea readonly="readonly" class="TW97p"><%= @que_options[:value] %></textarea>
+		                        <br/><br/><input type="checkbox" name="que[<%= q[:id] %>][]" id="que_<%= i %><%= q[:id] %><%= @que_options[:id] %>" value="1" class="regular-checkbox" />
+          						<label class="mar0" for="que_<%= i %><%= q[:id] %><%= @que_options[:id] %>"></label>
+								<label class="font_size14" style="margin: 0 3%;"> <%= I18n.t 'user.agree_wiever' %> </label>
+          						
+		                    </div>
+		                <% 
+          						end
+          					end
+          				end %>
+      				
+  				<% end %>
+  				
+  				
+  			</div>
+  			
+  								<% don_tick_count+=1 
+  								 tick_count+=1
+  								 %>
+		                 	
+		                 		<% end %> <!--  if include end -->				
+  			                 	<%
+		                        			
+		                        			end
+		                        		end 
+		                        	end	
+                        %>
+                       <!-- donation ends -->               
+                    
+                    <% end %>            		
+            		
+            		</div>
+            <div class="clear">
+            
+            	</div>
+            </div>
+	        
+	        <div class="marT20"><a id="stop_dclick" href="javascript:" class="btn fr" onclick="submit_check_form();"><%= I18n.t 'event.purchase.pay_now' %></a></div>
+			<div class="clear"></div>
+	        
+	        <% end %>
+	        <div class="clear"></div>
+        </div>
+        
+        <!--Content Right-->
+        <%= render(:partial => "tickets/event_detail_siebar" , :object => :collection) %> 
+           <div class="clear"></div>
+    </div>
+   
+</section>
+
+
+	

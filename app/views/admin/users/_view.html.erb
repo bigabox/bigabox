@@ -1,0 +1,310 @@
+ <%  
+ 	 @user = User.find(params[:id]) 
+  	 @show = UserAddress.find(:first, :conditions => ['user_id=?', @user[:id]])
+  	 if @show
+  	 else
+  	 	@show = UserAddress.new	
+  	 end		 
+  	 @site = SiteSetting.find(:first)
+ %>
+ <style>
+ 	.columns .column{
+ 		width: 47%;
+ 	}
+ </style>
+ <div class="columns">
+ 	
+ <div class="column">
+ 
+		<div class="panel">
+		              <h3>User Details</h3>
+		              <div class="panel_contents">
+		                <div class="attributes_table site_setting" id="attributes_table_site_setting_1">
+		                  <table border="0" cellspacing="0" cellpadding="0">
+			                    
+			                    <tr class="row">
+			                      <th>Prefix</th>
+			                      <td><%= @user[:prefix] %></td>
+			                    </tr>
+			                    
+			                    <tr class="row">
+			                      <th>Name</th>
+			                      <td><%= @user[:first_name] %> <%= @user[:last_name] %></td>
+			                    </tr>
+			                    
+			                    
+			                    <tr class="row">
+			                      <th>Suffix</th>
+			                      <td><%= @user[:suffix] %></td>
+			                    </tr>
+			                    
+			                    <tr class="row">
+			                      <th>Email</th>
+			                      <td><%= @user[:email] %></td>
+			                    </tr>
+			                    
+			                    <tr class="row">
+			                      <th>Home Phone</th>
+			                      <td><%= @user[:home_phone] %></td>
+			                    </tr>
+			                    
+			                    <tr class="row">
+			                      <th>Cell Phone</th>
+			                      <td><%= @user[:cell_phone] %></td>
+			                    </tr>
+			                    
+			                    
+		                    
+		                  </table>
+		                </div>
+		              </div>
+		            </div>
+</div>		 
+<div style="margin-left: 10px;" class="column">		 
+ 
+		<div  class="panel">
+              <h3>Home Address</h3>
+              <div class="panel_contents">
+                <div class="attributes_table site_setting" id="attributes_table_site_setting_1">
+                  <table border="0" cellspacing="0" cellpadding="0">
+	                    
+	                    <tr class="row">
+	                      <th>Address</th>
+	                      <td><%= @show[:home_add1] %></td>
+	                    </tr>
+	                    
+	                    <tr class="row">
+	                      <th>Address2</th>
+	                      <td><%= @show[:home_add2] %></td>
+	                    </tr>
+	                    
+	                     <tr class="row">
+	                      <th>City</th>
+	                      <td><%= @show[:home_city] %></td>
+	                    </tr>
+	                    
+	                    <tr class="row">
+	                      <th>State</th>
+	                      <td><%= @show[:home_state] %></td>
+	                    </tr>
+	                    
+	                    <tr class="row">
+	                      <th>Country</th>
+	                      <td><%= @show[:home_country] %></td>
+	                    </tr>
+	                    
+	                    <tr class="row">
+	                      <th>Zip/Postal Code</th>
+	                      <td><%= @show[:home_zip] %></td>
+	                    </tr>
+	                    
+                  </table>
+                </div>
+              </div>
+            </div>
+            
+</div>
+
+<div style="clear:both;"></div>
+<div class="column">            
+            <div class="panel">
+              <h3>Billing Address</h3>
+              <div class="panel_contents">
+                <div class="attributes_table site_setting" id="attributes_table_site_setting_1">
+                  <table border="0" cellspacing="0" cellpadding="0">
+	                    
+	                    <tr class="row">
+	                      <th>Address</th>
+	                      <td><%= @show[:bill_add1] %></td>
+	                    </tr>
+	                    
+	                    <tr class="row">
+	                      <th>Address2</th>
+	                      <td><%= @show[:bill_add2] %></td>
+	                    </tr>
+	                    
+	                     <tr class="row">
+	                      <th>City</th>
+	                      <td><%= @show[:bill_city] %></td>
+	                    </tr>
+	                    
+	                    <tr class="row">
+	                      <th>State</th>
+	                      <td><%= @show[:bill_state] %></td>
+	                    </tr>
+	                    
+	                    <tr class="row">
+	                      <th>Country</th>
+	                      <td><%= @show[:bill_country] %></td>
+	                    </tr>
+	                    
+	                    <tr class="row">
+	                      <th>Zip/Postal Code</th>
+	                      <td><%= @show[:bill_zip] %></td>
+	                    </tr>
+	                    
+                  </table>
+                </div>
+              </div>
+            </div>
+            
+ </div>
+ <div style="margin-left: 10px;" class="column">           
+            <div class="panel">
+              <h3>Shipping Address</h3>
+              <div class="panel_contents">
+                <div class="attributes_table site_setting" id="attributes_table_site_setting_1">
+                  <table border="0" cellspacing="0" cellpadding="0">
+	                    
+	                    <tr class="row">
+	                      <th>Address</th>
+	                      <td><%= @show[:ship_add1] %></td>
+	                    </tr>
+	                    
+	                    <tr class="row">
+	                      <th>Address2</th>
+	                      <td><%= @show[:ship_add2] %></td>
+	                    </tr>
+	                    
+	                     <tr class="row">
+	                      <th>City</th>
+	                      <td><%= @show[:ship_city] %></td>
+	                    </tr>
+	                    
+	                    <tr class="row">
+	                      <th>State</th>
+	                      <td><%= @show[:ship_state] %></td>
+	                    </tr>
+	                    
+	                    <tr class="row">
+	                      <th>Country</th>
+	                      <td><%= @show[:ship_country] %></td>
+	                    </tr>
+	                    
+	                    <tr class="row">
+	                      <th>Zip/Postal Code</th>
+	                      <td><%= @show[:ship_zip] %></td>
+	                    </tr>
+	                    
+                  </table>
+                </div>
+              </div>
+            </div>
+ </div>
+ 
+ <div style="clear:both"></div>
+ <div class="column">           
+            <div  class="panel">
+              <h3>Working Address</h3>
+              <div class="panel_contents">
+                <div class="attributes_table site_setting" id="attributes_table_site_setting_1">
+                  <table border="0" cellspacing="0" cellpadding="0">
+	                    
+	                    <tr class="row">
+	                      <th>Address</th>
+	                      <td><%= @show[:work_add1] %></td>
+	                    </tr>
+	                    
+	                    <tr class="row">
+	                      <th>Address2</th>
+	                      <td><%= @show[:work_add2] %></td>
+	                    </tr>
+	                    
+	                     <tr class="row">
+	                      <th>City</th>
+	                      <td><%= @show[:work_city] %></td>
+	                    </tr>
+	                    
+	                    <tr class="row">
+	                      <th>State</th>
+	                      <td><%= @show[:work_state] %></td>
+	                    </tr>
+	                    
+	                    <tr class="row">
+	                      <th>Country</th>
+	                      <td><%= @show[:work_country] %></td>
+	                    </tr>
+	                    
+	                    <tr class="row">
+	                      <th>Zip/Postal Code</th>
+	                      <td><%= @show[:work_zip] %></td>
+	                    </tr>
+	                    
+	                    <tr class="row">
+	                      <th>Job Title</th>
+	                      <td><%= @show[:work_job_title] %></td>
+	                    </tr>
+	                    
+	                    <tr class="row">
+	                      <th>Company</th>
+	                      <td><%= @show[:work_company] %></td>
+	                    </tr>
+	                    
+	                    <tr class="row">
+	                      <th>Phone</th>
+	                      <td><%= @show[:work_phone] %></td>
+	                    </tr>
+	                    
+	                    <tr class="row">
+	                      <th>Blog</th>
+	                      <td><%= @show[:work_blog] %></td>
+	                    </tr>
+	                    
+	                    <tr class="row">
+	                      <th>Website</th>
+	                      <td><%= @show[:work_website] %></td>
+	                    </tr>
+	                    
+                  </table>
+                </div>
+              </div>
+            </div>
+ </div>
+ <div style="margin-left: 10px;" class="column">           
+             <div class="panel">
+              <h3>Other Information</h3>
+              <div class="panel_contents">
+                <div class="attributes_table site_setting" id="attributes_table_site_setting_1">
+                  <table border="0" cellspacing="0" cellpadding="0">
+	                    
+	                    <tr class="row">
+	                      <th>Gender</th>
+	                      <td><%= @show[:gender] %></td>
+	                    </tr>
+	                    
+	                    <tr class="row">
+	                      <th>Birth Date</th>
+	                      <td><% if @show[:birth_date]!=nil %><%= @show[:birth_date].strftime(@site[:date_format]) %><% end %></td>
+	                    </tr>
+	                    
+                  </table>
+                </div>
+              </div>
+            </div>
+ </div>  
+ 
+ <div style="margin-left: 10px;" class="column">           
+             <div class="panel">
+              <h3>Payment Accounts</h3>
+              <div class="panel_contents">
+                <div class="attributes_table site_setting" id="attributes_table_site_setting_1">
+                  <table border="0" cellspacing="0" cellpadding="0">
+	                    
+	                    <tr class="row">
+	                      <th>Event Payment Account</th>
+	                      <td><%= @user[:event_pay_account] %></td>
+	                    </tr>
+	                    
+	                    <tr class="row">
+	                      <th>Refferral/Affiliate Payment Account</th>
+	                      <td><%= @user[:ref_pay_account] %></td>
+	                    </tr>
+	                    
+                  </table>
+                </div>
+              </div>
+            </div>
+ </div>  
+ 
+ <div style="clear:both;"</div>                  
+ </div>

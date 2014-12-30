@@ -1,0 +1,85 @@
+<%
+	@back = @one_theme[:background]
+	@title = @one_theme[:event_title]
+	@head_text = @one_theme[:header_text]
+	@box_back = @one_theme[:box_background]
+	@body_text = @one_theme[:body_text]
+	@box_border = @one_theme[:box_border]
+	@link = @one_theme[:links]
+	@box_head = @one_theme[:box_header]
+%>
+<style>
+	::-moz-selection { 
+		background: <%= @box_head %>;
+		color: <%= @head_text %>; 
+	}
+	
+	body, .mainbg{
+		color: <%= @body_text %>;
+		background: <%= @back %>;
+	}
+	
+	.headerblank, .ticket_article{
+		border-bottom: 10px solid <%= @box_head %>;
+	}
+	
+	.ticket_article{
+		background: <%= @box_back %>;	
+	}
+	
+	.mtitle h1{
+		color: <%= @head_text %>;
+	}
+	
+	.mtitle h1 span, .mtitle h2 span, .event_detail span, .organizer h4{
+		color: <%= @box_head %>;
+	}
+	
+	
+	.event_detail, .article_shadow, .article_shadow img, .shadow  {
+		background: <%= @box_back %>;	
+	}
+	
+	.res-mtitle h1{
+		color: <%= @title %>;
+	}
+	
+	.event_detail a, .event_detail a:visited, .shadow a, .shadow a:visited,.organizer a, .organizer a:visited, a.profile {
+		color: <%= @link %>;
+	}
+	
+	.table th, a.btn, .save_event, .save_event a{
+		background: <%= @box_head %>;
+		color: <%= @head_text %> !important;
+	}
+	
+	
+	a.btn:hover,.action_icon a, input[type=submit].submit_btn:hover ,input[type=submit].btn:hover, input[type=submit].submit_btn1{
+		background: <%= @head_text %>;
+		color: <%= @box_head %> !important;
+	}
+	
+	a.black_bg,a.black_bg:hover,a.black_bg:visited{
+		color: #ffffff !important;
+	}
+	
+	.posrel{
+		width: 103%;
+	}
+	.posrel .table_selectbox{
+		width: 88%;
+		height: 35px;
+		line-height: 30px;
+		padding: 9px 2.5%;
+	}
+	
+	.event_detail h3 {
+		color: <%= @box_head %>;
+		text-decoration: underline;
+	}
+	
+	#event_view_page_theme .event_detail,#event_view_page_theme  .shadow{
+		box-shadow: none;
+		border: 1px solid <%= @box_border %>;
+	}
+</style>

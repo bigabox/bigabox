@@ -1,0 +1,215 @@
+<style>
+	body.active_admin .panel_contents table tr.odd td {
+	    background: #FFFFFF;
+	}
+</style>
+
+<script>
+	function show_content_div(id){
+		if ($("#"+id).is(":hidden")) {
+			$("#"+id).slideDown("slow");
+		} else {
+			$("#"+id).slideUp("slow");
+		}
+	}
+	
+	
+</script>
+
+
+<div class="columns">
+	
+	<div align="right" style="width: 98.5%;">
+      	
+      	<%=
+  			 if @event[:active]==0 || @event[:cancel]==1
+                links = link_to image_tag('tick1.png', :title => 'Activate Account') + ' Make Live Event', {:action => 'active', :id => @event[:id] }
+              else  
+                links = link_to image_tag('eb_close.png', :title => 'Deactivate Account') + ' Cancel Event', {:action => 'inactive', :id => @event[:id] }
+              end  
+      	%>
+      </div><br />
+	<%
+		                    if @event[:organizer_id]!=nil
+		                    	@org = Organizer.find(@event[:organizer_id])
+		                    
+		                    	
+		                    if @org	
+		                 		if @org[:page_url]=='' || @org[:page_url]==nil 
+				             		page_url = APP_CONFIG['development']['site_url']+'organizers/show/'+@org[:id].to_s 
+				             	else
+				             		page_url = APP_CONFIG['development']['site_url']+'org/'+@org[:page_url]
+				             	end
+		                 %>
+		                    
+				<div class="column" style="width: 98.5%; " >
+                <div class="panel">
+                  <h3>Organizer's Details </h3>
+                  <div class="panel_contents" style="width: 50%; float: left;">
+                 		<br />
+                 		 <p><strong>Organizer Name : </strong><% if @org[:name]!=nil && @org[:name]!='' %> <%= @org[:name]%> <% else %>Unnamed Organizer <% end %> </p>
+                  		 <p><strong>Organizer Page URL : </strong><a href="<%= page_url %>" target="_blank"><%= page_url %></a></p>
+                  		 
+                  </div>
+                  <div class="panel_contents" style="width: 40%; float: left;">
+                  	<% @user=User.find(@event[:user_id]) %><br />
+                  	<p><strong>Email : </strong><%= @user[:email] %></p>
+                    <p><strong>Phone Number : </strong><% if @user[:home_phone]!=nil && @user[:home_phone]!='' %> <%= @user[:home_phone]%> <% elsif @user[:cell_phone]!=nil && @user[:cell_phone]!='' %> <%= @user[:cell_phone]%> <% else %> N/A <% end %> </p>
+                  		 
+                  </div>	<div style="clear: both;"></div>	
+                </div>
+              </div>
+            
+              
+              <% 
+						end 
+					end
+			 %>
+            	
+            	
+              <div class="column" style="width: 49%;" >
+                <div class="panel">
+                	
+                  <h3>Event Report</h3>
+                   <div class="panel_contents" style="float:left; width: 27%;" >
+                  		<% @sold = Ticket.find_event_sold_count(@event[:id]) %>
+	                    <% if @event[:active]==1 && @event[:event_start_date_time] >= DateTime.now %>
+	                    	<p><strong>Days to Event :</strong> <%= (@event[:event_start_date_time].to_date - Date.today).to_i %> days </p>
+	                    <% end %>
+	                    <p><strong>Page Views :</strong> <%= @event[:page_visits] %> </p>
+	                    <p><strong>Tickets Sold :</strong> <%= @sold %> </p>
+	                    <p><strong>Tickets Available :</strong> <% if @event[:event_capacity]!=nil && @event[:event_capacity]!='' %><%= @event[:event_capacity]-@sold %><% else %>0<% end %> </p>
+	                    
+	              </div>
+	              <div class="panel_contents" style="float:left; width: 27%;" >      
+	                    <p><strong>Gross Sales :</strong> <% @sales = Ticket.find_gross_sales(@event[:id]) %><%= set_currency(@sales) %> </p>
+	                    <p><strong>Total Manual Sales :</strong> <% @man_sales = Ticket.find_manual_sales(@event[:id]) %><%= set_currency(@man_sales) %> </p>
+	                    <p><strong>TOTAL SALES :</strong> <%= set_currency(@sales+@man_sales) %> </p>
+	              </div>
+	              <div class="panel_contents" style="float:left; width: 30%;" >
+	                    <p><a href="<%= APP_CONFIG['development']['site_url'] %>manage_event/download_excel/<%= @event[:id] %>.xls">* Download Purchase Report</a></p>
+	                    <p><strong><%= @site[:site_name] %> Fees Paid : </strong><% @fees = Ticket.find_total_fees(@event[:id]) %><%= set_currency(@fees) %></p>
+	                    <p><strong>Total Net Sales : </strong><% total = (@sales+@man_sales).to_f - @fees.to_f %><%= set_currency(total) %></p>
+	              </div><div style="clear: both;"></div>
+	              
+                </div>
+              </div>
+              
+              <div class="column" style="width: 49%; margin-left: 10px;" >
+                <div class="panel">
+                  <h3>Event's Details </h3>
+                  <div class="panel_contents">
+                  	    
+                 		 <p><strong>Event Status : </strong><% if @event[:cancel]==1 %>CANCEL<% elsif @event[:active]==0 %>DRAFT<% elsif @event[:event_end_date_time] > Time.now.strftime('%Y-%m-%d %H:%I:%S') %>LIVE<% else %>COMPLETE<% end %></p> 		 
+                  		 <p><strong>Date - Time : </strong><%= @event[:event_start_date_time].strftime(@site[:date_time_format]) %> - <%= @event[:event_end_date_time].strftime(@site[:date_time_format]) %> </p>
+                  		 <p><strong>Venue :</strong> <% if @event[:online_event_option]!=1 %> <%= @event[:vanue_name] %> | <%= @event[:street_address] %><% else %>This event is online.<% end %></p>
+                  		 <p><strong>Page URL : </strong>
+                  		 	<% if @event[:event_url_link]=='' || @event[:event_url_link]==nil %>
+			                 	<a href="<%= APP_CONFIG['development']['site_url'] %>events/view/<%= @event[:id] %>" target="_blank"> <%= APP_CONFIG['development']['site_url'] %>events/view/<%= @event[:id] %></a>
+		                 	<% else %>
+		                 		<a href="<%= APP_CONFIG['development']['site_url'] %>event/<%= @event[:event_url_link] %>" target="_blank"><%= APP_CONFIG['development']['site_url'] %>event/<%= @event[:event_url_link] %></a>
+		                 	<% end %>	
+                  		 </p>
+                  		 
+                  </div><div style="clear: both;"></div>	
+                </div>
+              </div> 
+              
+              
+            	
+              
+              
+			<div style="clear: both;"></div>	
+            
+              <div class="column" style="width: 49%;" >
+                <div class="panel">
+                  <h3 onclick="show_content_div('purchase_div')">Orders <img src="<%= APP_CONFIG['development']['app_url'] %>down-arrow.png" alt="" style="float: right;" />
+                  	<div style="clear:both;"></div></h3>
+                  <div class="panel_contents" id="purchase_div" style="display:block;">
+                   	<%  
+                            	if @orders.count > 0 
+									i=1
+							%>
+                            <table class="index_table index">
+                                <thead>
+                                <tr>
+                                    <th>Order #</th>
+                                    <th>Ticket Buyer</th>
+                                    <th>Quantity</th>
+                                    <th>Price</th>
+                                    <th>Date</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <% for order in @orders	%>
+                                	<tr>
+                                		<td><span class="green_font">#<%= order[:id] %></span></td>
+								 		<td><%= order[:first_name] %> <%= order[:last_name] %></td>
+								 		<td class="textcenter"><%= order[:ticket_qty] %></td>
+								 		<td><%= set_currency(order[:total]) %></td>
+								 		<td><%= order[:created_at].strftime(@site[:date_time_format]) %></td>
+							 		</tr>
+                                <% end %>
+                                </tbody>
+                            </table>
+                            <%= will_paginate(@orders, :param_name => 'order_page') %>
+							 <div style="clear:both;"></div>
+                            <% else %>
+                            	<p>No Orders for this event yet .</p>
+                            <% end %>
+                  </div>
+                </div>
+              </div>
+    			
+    		 
+              <div class="column" style="margin-left: 10px; width: 49%;" >
+                <div class="panel">
+                  <h3 onclick="show_content_div('cancel_div')">Attendees <img src="<%= APP_CONFIG['development']['app_url'] %>down-arrow.png" alt="" style="float: right;" />
+                  	<div style="clear:both;"></div></h3>
+                  <div class="panel_contents" id="cancel_div" style="display:block;">
+                    <% 
+                    		
+          		if @event_attendee.count > 0 
+								i=1
+							%>
+                            <table class="index_table index">
+                                <thead>
+                                <tr>
+                                    <th>Name</th>
+									<th>Quantity</th>
+									<th>Price</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <%
+									 for attendee in @event_attendee
+			 							@pur = Purchase.find(:first, :conditions => ['attendee_id=?', attendee[:id]])
+									 	%>
+									 		<tr>
+										 		<td><%= @pur[:first_name] %> <%= @pur[:last_name] %></td>
+										 		<td class="textcenter"><%= @pur[:ticket_qty] %></td>
+										 		<td><%= set_currency(@pur[:total]) %></td>
+									 		</tr>
+									 	<%
+									 end
+								%>
+								
+                              
+                                </tbody>
+                            </table>
+                            <%= will_paginate(@event_attendee, :param_name => 'attendee_page') %>
+                             <div style="clear:both;"></div>
+                            <% else %>
+                            	<p>No Attendees for this event yet .</p>
+                            <% end %>
+                    
+                  </div>
+                </div>
+              </div>
+    
+         
+    
+            
+            <div style="clear:both;"></div>
+            
+            </div>

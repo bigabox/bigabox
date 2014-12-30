@@ -1,0 +1,137 @@
+<% @act_class = 'All Attendees' %>         	
+<%= render(:partial => "manage_event/common_banner" , :object => :collection) %>
+    
+<script type="text/javascript">
+function set_action(ele,id){
+	var act=ele.value;
+	var newurl="";	
+										
+	if(act=='edit'){
+		newurl="<%= APP_CONFIG['development']['site_url'] %>manage_event/edit_order/"+id;
+	}
+	else if(act=='cancel'){
+		var con = confirm('Are you sure you want to cancel this order?');
+		if(con){
+			newurl="<%= APP_CONFIG['development']['site_url'] %>purchases/cancel/"+id;	
+		}
+		
+	}
+	else if(act=='view'){
+		newurl="<%= APP_CONFIG['development']['site_url'] %>purchases/show/"+id;	
+	}
+	else if(act=='resend'){
+		newurl="<%= APP_CONFIG['development']['site_url'] %>purchases/resend/"+id;	
+	}
+	else if(act=='print'){
+		newurl="<%= APP_CONFIG['development']['site_url'] %>my_tickets/download_pdf/"+id;	
+	}else{
+		newurl="javascript:";
+	}
+	ele.value='';
+	$('option:selected', ele).removeAttr('selected');
+	if(newurl!=''){
+		document.getElementById("action_anchor").href=newurl;
+		//alert(document.getElementById("action_anchor").href);
+		
+		//$('#action_anchor').click();
+		window.location.href = newurl;
+	}
+	
+}
+</script>
+
+<style>
+	@media (max-width: 768px) {
+		.all_attendees td:nth-of-type(1):before { content: "<%= I18n.t 'user_fname'%>"; }
+		.all_attendees td:nth-of-type(2):before { content: "<%= I18n.t 'user_lname'%>"; }
+		.all_attendees td:nth-of-type(3):before { content: "<%= I18n.t 'user_email'%>"; }
+		.all_attendees td:nth-of-type(4):before { content: "<%= I18n.t 'ticket_part.action'%>"; }
+	}	
+</style>
+
+<section>
+	<div class="main">
+    	<% if flash[:notice] -%>
+	      <div class="errors marT60" >
+	      	<p><%= flash[:notice] %></p>
+	      </div>
+	
+	   <% end -%> 
+	   <a href="#" style="display: none;" id="action_anchor"><%= I18n.t 'attendees.one_two_three'%>&nbsp;</a>	
+	     
+    	<div class="left_columm">
+    	<div class="marT60">
+        	<div class="mtitle">
+            	<h1> <%= I18n.t 'attendees.all'%> <span> <%= I18n.t 'attendees.attendees'%>  </span></h1>             
+            </div> 
+            <div class="shadow pad7 marT25">
+            	
+<% if  @event_attendee_search !=nil && @event_attendee_search.count > 0
+	i=1
+	 
+%>
+	
+            <table class="all_attendees table">
+                <thead>
+                <tr>
+                    <th><%= I18n.t 'user.fname'%></th>
+                    <th><%= I18n.t 'user.lname'%></th>
+                    <th><%= I18n.t 'user.email'%></th>
+                    <th><%= I18n.t 'ticket_part.action'%></th>
+                </tr>
+                </thead>
+                <tbody>
+                
+                <% 
+			for attendee_search in @event_attendee_search
+		%> 
+				 	
+				 		<tr>
+				 			<td><%= attendee_search[:first_name] %></td>
+				 			<td><%= attendee_search[:last_name] %></td>
+				 			<td><%= attendee_search[:email] %></td>
+				 			<td>
+				 				<select class="table_selectbox TW150" onchange="set_action(this, '<%= attendee_search[:id] %>')">
+			                    	<option value=""><%= I18n.t 'attendees.quick_actions'%></option>
+			                        <option value="edit"><%= I18n.t 'attendees.edit_ticket_buyer'%></option>
+			                        <option value="cancel"><%= I18n.t 'attendees.cancel_this_order'%></option>
+			                        <option value="view"><%= I18n.t 'attendees.view_attendee_report'%></option>
+			                        <option value="resend"><%= I18n.t 'attendees.resend_confirmation_email'%></option>
+			                        <option value="print"><%= I18n.t 'attendees.print_tickets'%></option>
+			                      </select>
+			     			</td>
+				 		</tr>       
+			                
+				<% 	end
+					i+=1 %>
+	
+                </tbody>
+            </table>
+            
+            
+            <div class="clear"></div>
+ <% else %>
+		<p style="text-align: center;"><%= I18n.t 'attendees.no_attendees_available'%></p>
+ <% end %>
+
+	</div>
+<br />
+<div class="clear"></div>
+<div align="left">
+<%= will_paginate @event_attendee_search , :params => { :keyword => params[:keyword]} %>
+</div> 
+        </div>
+        
+           <div class="clear"></div>
+    </div>  
+    	<%= render(:partial => "manage_event/manage_event_sidebar" , :object => :collection) %> 
+		<div class="clear"></div>
+        </div>
+           <div class="clear"></div>
+    
+</section>
+
+
+<% @edit_menu_class = 'Manage' %>
+<%= render(:partial => "manage_event/edit_menu" , :object => :collection) %> 
+<div class="clear "></div>

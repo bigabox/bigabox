@@ -1,0 +1,447 @@
+<style>
+.responsive-tabs__list__item {
+	padding: 22px 27.3px 23px;
+}
+
+.table th, a.btn, .save_event, .save_event a{
+	background: <%= @one_theme[:box_header] %> !important;
+	color: <%= @one_theme[:header_text] %> !important;
+}
+
+.responsive-tabs__list, .responsive-tabs__list__item{
+	background: <%= @one_theme[:box_header] %> !important;
+	color: <%= @one_theme[:header_text] %> !important;
+}
+
+.responsive-tabs__list__item--active, .responsive-tabs__list__item--active:hover, .responsive-tabs__heading--active, .responsive-tabs__heading--active, .green_font, .findeventDetail span a:hover, .order_list a.ticketbtn span, .link3{
+	color: <%= @one_theme[:box_header] %> !important;
+	background:  <%= @one_theme[:box_background] %> !important;
+}
+
+.organizerListH ul li{
+	background: <%= @one_theme[:box_background] %> !important;
+}
+
+</style>
+
+<section>
+	<div class="main">
+    	<div class="header">
+            	<div class="ticket_article shadow marT80 smallonly_marT150 ">                	
+                     <div class="fr article_right min_img_size">
+	                     	<%
+			                   	image_check = 0
+			                   	if(session[:social_id] == 'fb')
+			                   	if(!@org[:fb_logo].nil?)
+			                   		image_check = 1 %>
+			                   		 <img src="<%= @org[:fb_logo] %>" alt=""  height="154" width="201" />
+			                   	
+					      	<% end
+					      	end
+					      	if(session[:social_id] == 'tw')
+		                   		if(!@org[:tw_logo].nil?)
+		                   		image_check = 1 %>
+			                    <img src="<%= @org[:tw_logo] %>" alt=""  height="154" width="201" />
+			                   	<% end
+						      	end
+						      	if(@org[:org_logo]!=nil && @org[:fb_logo].nil? && @org[:tw_logo].nil? )
+						            chk_img = check_img(@org[:org_logo],'org','thumb')	
+						         	if chk_img!='0' && chk_img!='' 
+									  image_check = 1  %>
+									  <img src="<%= APP_CONFIG['development']['upload_url'] %><%= chk_img %>" alt=""  height="154" width="201" />
+									<%	end
+									
+								end
+								if image_check==0
+									%>
+									<img src="<%= APP_CONFIG['development']['app_url'] %>article_img.png" alt="" />
+									<%
+								end		
+							%>
+                     	
+                     	<div class="article_shadow ">
+                     		<img src="<%= APP_CONFIG['development']['app_url'] %>article_shadow.png" />
+                     	</div>
+                       
+                     </div>
+                     
+                     <div class="fl mtitle article_left res-mtitle">
+                            <h1><% if @org[:name]=='' 
+		                	 			name = 'Unnamed Organizer'
+		                	 		else
+		                	 			name = @org[:name]
+		                	 		end		
+		                	 	%>
+					     		<%= name %></h1>
+                            
+                            <% if @org[:show_website]==1 %>
+		                    	<h2 class="mar0"><span><a href="<%= @org[:website] %>" target="_blank" ><%= @org[:website] %></a></span></h2>
+		                    <% end %>
+		                    
+                            <% if @org[:show_no_event]==1 %>
+		                    	<strong><%= I18n.t 'org_show.event_held'%>: <span><%= @org[:event_cnt] %></span></strong>
+		                    <% end %>
+                            
+                            <% if @org[:show_category]==1 %>
+		                    	<strong><%= I18n.t 'org_show.top_categories'%>: 
+		                    		<span>
+		                            	<% if @org[:category1]!=nil && @org[:category1]!='' %> <%= Category.category_name(@org[:category1]) %> <% end %>
+				                    	<% if @org[:category1]!=nil && @org[:category1]!='' && @org[:category2]!=nil && @org[:category2]!='' %>, <% end %>
+				                    	<% if @org[:category2]!=nil && @org[:category2]!='' %> <%= Category.category_name(@org[:category2]) %> <% end %>
+		                            </span>
+	                            </strong>
+		                    <% end %>
+		                    
+                            <% if @org[:show_location]==1 %>
+		                    	<strong><%= I18n.t 'org_show.primary_location'%> 
+	                            	<span>
+	                            		<% if @org[:city1]!=nil && @org[:city1]!='' %><%= @org[:city1] %><% end %>
+	                            		<% if @org[:city1]!=nil && @org[:city1]!='' && @org[:city2]!=nil && @org[:city2]!='' %>, <% end %>
+			                    		<% if @org[:city2]!=nil && @org[:city2]!='' %><%= @org[:city2] %><% end %>
+	                            	</span>
+	                            </strong>
+		                    <% end %>
+		                    
+                            
+                     </div>
+                     <div class="clear"></div>
+                     <div class="head_gradient"></div><div class="clear"></div>
+                </div>
+                <div><img src="<%= APP_CONFIG['development']['app_url'] %>shadow.png" /></div> 
+                <div class="clear"></div>
+                
+            </div><div class="clear"></div>
+    	<div class="left_columm">
+    	<div class="marT60">
+        	<div class="mtitle fl">
+            	<h1 class="fl"><%= I18n.t 'org_show.about'%><span><%= I18n.t 'org_show.organizer'%></span></h1>
+             
+            </div> <div class="clear"></div>
+            <div class="event_detail  marT20 pad3P">
+            	<% if @org[:description]=='' || @org[:description]==nil %>
+	     			<%= I18n.t 'org_show.check_out_evnets_org'%><%= name %>
+	     		<% else %>
+	     			<%=  render :inline => @org[:description] %>
+	     		<% end %>
+            <!--<a href="javascript://" class="btn read_more fr"> Read more </a>-->
+            <div class="clear"></div>
+		</div>
+           
+            <div class="clear"></div>
+        </div>
+        
+        <div class="marT45">
+        	<div class="mtitle">
+            	<h1><%= I18n.t 'event_title.events'%></h1>
+              
+            </div>
+            
+          <% if @org[:display_event]!=0 && @org[:display_event]!=nil %>  
+          <% 
+          	if @org[:display_event]==1
+          		@live = Event.find_live_org_events(@org[:id])
+          		@pass = Event.find_pass_org_events(@org[:id])
+          	else
+          		@live = Event.find_live_events(@org[:user_id])
+          		@pass = Event.find_pass_events(@org[:user_id])
+          	end		 
+          
+          %>
+            
+            <div class="shadow marT20">            	
+            	<div class="responsive-tabs ">
+                    <h2><%= I18n.t 'org_show.current_events'%></h2>
+                    <div> 
+                    	 <% if @live.count > 0 %>
+                    	 	<div class="organizerListH">
+					        	<ul>
+						 	<% for lv in @live %>
+						 			<li>
+					                	<div class="organizerimg">
+					                		<%
+									          	 if lv[:event_url_link]=='' || lv[:event_url_link]==nil 
+								             		page_url = APP_CONFIG['development']['site_url']+'events/view/'+lv[:id].to_s 
+								             	 else
+								             		page_url = APP_CONFIG['development']['site_url']+'event/'+lv[:event_url_link]
+								             	 end
+										       	 
+										       	 image_check = 0
+										       	
+										       	 if(lv[:event_logo]!=nil)
+										            img_full_path = check_img(lv[:event_logo],'event','thumb')	
+										         	if img_full_path!='0' && img_full_path!='' 
+													  image_check = 1
+													  %>
+													  <a href="<%= page_url %>"><img src="<%= APP_CONFIG['development']['upload_url'] %><%= img_full_path %>" alt=""  /></a>
+													  <%
+													end
+												 end
+												 if image_check==0
+													%>
+													<a href="<%= page_url %>"><img src="<%= APP_CONFIG['development']['app_url'] %>no_img.png" alt="" /></a>
+													<%
+												end		
+											 %>
+					                    	
+					                    </div>
+					                    <div class="organizerDetail fl" style="max-width: 50%">
+					                    	<h2><a href="<%= page_url %>"><%= lv[:event_title]%></a></h2>
+					                         <div class="timing"><%= lv[:event_start_date_time].strftime(@site[:date_time_format]) %></div>
+					                       <div class="location">
+						                       	<% if lv[:street_address]!='' && lv[:online_event_option]!='1' %>
+			                      					<%  
+			                      						@add = lv[:street_address].gsub(",", "_")
+			                      						@add = @add.gsub(" ", "_")
+			                      					 %>
+			                      					 <strong><%= lv[:street_address] %>  |</strong> <a href="https://maps.google.com/maps?q=<%= @add %>&hl=en" target="_blank"><%= I18n.t 'invite_create.view_map'%></a>
+			                      				<% end %>
+					                       	
+					                       	</div>
+					                       
+					                    </div>
+					                    <div class="fr marT20">
+					                    	<a href="<%= page_url %>" class="btn font_size17 pad1027 marT20 fr"><%= I18n.t 'org_show.attend'%></a>
+					                    </div>
+					                </li>
+							<% end %>
+								</ul>            
+					        	<div class="clear"></div>
+					        </div> 
+						 <% else %>
+						 	<p><%= I18n.t 'org_show.currently'%>, <%= name %> <%= I18n.t 'org_show.not_have_any_live'%></p>
+						 <% end %>
+						   		 			                   	
+				                                   
+                    </div>        
+                    <h2><%= I18n.t 'org_show.past_events'%></h2>
+                    <div>
+                         <% if @pass.count > 0 %>
+                         <div class="organizerListH">
+				        	<ul>
+							 	<% for lv in @pass %>
+							 	<li>
+				                	<div class="organizerimg">
+				                    	<%
+								         	 if lv[:event_url_link]=='' || lv[:event_url_link]==nil 
+							             		page_url = APP_CONFIG['development']['site_url']+'events/view/'+lv[:id].to_s 
+							             	 else
+							             		page_url = APP_CONFIG['development']['site_url']+'event/'+lv[:event_url_link]
+							             	 end
+									       	 
+									       	 image_check = 0
+									       	
+									       	 if(lv[:event_logo]!=nil)
+									            img_full_path = check_img(lv[:event_logo],'event','thumb')	
+									         	if img_full_path!='0' && img_full_path!='' 
+												  image_check = 1
+												  %>
+												  <a href="<%= page_url %>"><img src="<%= APP_CONFIG['development']['upload_url'] %><%= img_full_path %>" alt=""  /></a>
+												  
+												  <%
+												end
+											 end
+											if image_check==0
+												%>
+												<a href="<%= page_url %>"><img src="<%= APP_CONFIG['development']['app_url'] %>no_img.png" alt=""  />
+												<%
+											end		
+												
+											
+								         %>
+				                    	
+				                    </div>
+				                    <div class="organizerDetail fl"  style="max-width: 50%">
+				                    	<h2><a href="<%= page_url %>"><%= lv[:event_title]%></a></h2>
+				                         <div class="timing"><%= lv[:event_start_date_time].strftime(@site[:date_time_format]) %></div>
+				                       	 <div class="location">
+					                       	<% if lv[:street_address]!='' && lv[:online_event_option]!='1' %>
+		                      					<%  
+		                      						@add = lv[:street_address].gsub(",", "_")
+		                      						@add = @add.gsub(" ", "_")
+		                      					 %>
+		                      					<strong><%= lv[:street_address] %>  |</strong> <a href="https://maps.google.com/maps?q=<%= @add %>&hl=en" target="_blank"><%= I18n.t 'invite_create.view_map'%></a>
+		                      				<% end %>
+				                       	</div>
+				                    </div>
+				                    <div class="fr marT20">
+				                    	<a href="<%= page_url %>" class="btn font_size17 pad1027 marT20 fr"><%= I18n.t 'org_show.show_view'%></a>
+				                    </div>
+				                </li>
+				            	
+							 	<% end %>
+							 </ul>            
+					        	<div class="clear"></div>
+					        </div>	
+						 <% else %>
+						 		<p><%= I18n.t 'org_show.currently'%>, <%= name %> <%= I18n.t 'org_show.not_have_any_live'%></p>
+						 <% end %>   
+                        
+                        
+                    </div> 
+                </div>
+            </div>
+          
+          <% end %>  
+             <div class="clear"></div>
+        </div>
+           
+           <div class="clear"></div>
+        </div>
+        <div class="right_columm marT60">
+        
+        <% if(@org[:featured_id]!=nil && @org[:featured_id]!=0) 
+	             		@event = Event.find(@org[:featured_id])
+	             %>	
+        	<div class="mtitle">
+            	<h1><%= I18n.t 'org_show.featured'%></h1>
+              
+            </div>
+            <div class="shadow marT20">    
+            <div class="organizerListH pad15">                
+                <div class="organizer_right_img marT5">
+                    <%
+			           if @event[:event_url_link]=='' || @event[:event_url_link]==nil 
+		             		page_url = APP_CONFIG['development']['site_url']+'events/view/'+@event[:id].to_s 
+		             	else
+		             		page_url = APP_CONFIG['development']['site_url']+'event/'+@event[:event_url_link]
+		             	end
+		             	
+		             		
+				       	 image_check = 0
+				       	
+				       	 if(@event[:event_logo]!=nil)
+				           img_full_path = check_img(@event[:event_logo],'event','thumb')	
+								         	if img_full_path!='0' && img_full_path!='' 
+											  image_check = 1
+							  %>
+							  <a href="<%= page_url %>"><img src="<%= APP_CONFIG['development']['upload_url'] %><%= img_full_path %>" alt=""  /></a>
+							  
+							  <%
+							end
+						 end
+						if image_check==0
+							%>
+							<a href="<%= page_url %>"><img src="<%= APP_CONFIG['development']['app_url'] %>no_img.png" alt=""  /></a>
+							<%
+						end		
+							
+						
+			         %>
+                </div>
+                <div class="organizerDetail fl">
+                    <h2><a href="<%= page_url %>"><%= @event[:event_title]%></a></h2>
+                     <div class="timing"><%= @event[:event_start_date_time].strftime(@site[:date_time_format]) %></div>
+                   <div class="location">
+                   		<% if @event[:street_address]!='' && @event[:online_event_option]!='1' %>
+          					<%  
+          						@add = @event[:street_address].gsub(",", "_")
+          						@add = @add.gsub(" ", "_")
+          					 %>
+          					<strong><%= @event[:street_address] %>  |</strong> <a href="https://maps.google.com/maps?q=<%= @add %>&hl=en" target="_blank"><%= I18n.t 'invite_create.view_map'%></a>
+          				<% end %>
+                   		
+                   	</div>
+                   
+                </div>
+                <div class="fr marT20">
+                    <a href="<%= page_url %>" class="btn font_size17 pad1027 marT20 fr"><%= I18n.t 'org_show.attend'%></a>
+                </div>                   
+            <div class="clear"></div>              
+         </div> 
+        </div>
+        <% end %>
+       	<!--- third part -->
+     		  <% if @org[:add_facebook]==1 || @org[:add_username]==1 || @org[:add_username]==2 %>
+     		 
+		        <div class="shadow marT40"> 
+		        	<div class="responsive-tabs ">
+		                <% if @org[:add_facebook]==1 %> 
+		                <h2><%= I18n.t 'invite_create.facebook'%></h2>
+		                <div> 
+		                   <div class="fb-like-box" data-href="http://www.facebook.com/<%= @org[:facebook_link] %>" data-width="215"  data-height="555" data-show-faces="true" data-stream="true" data-header="true"></div>                 	
+		                </div>
+		                <% end %>      
+		                <% if @org[:add_username]==1 || @org[:add_username]==2 %>
+		                <h2>Twitter</h2>
+		                <div>                    	
+		                    <script src="http://widgets.twimg.com/j/2/widget.js"></script>
+							<% if @org[:add_username]==1 %>							          
+							<script>
+							new TWTR.Widget({
+							  version: 2,
+							  type: 'profile',
+							  rpp: 30,
+							  interval: 6000,
+							  width: 215,
+							  height: 475,
+							  theme: {
+							    shell: {
+							      background: '<%= @one_theme[:box_header] %>',
+							      color: '<%= @one_theme[:header_text] %>'
+							    },
+							    tweets: {
+							      background: '<%= @one_theme[:box_background] %>',
+							      color: '<%= @one_theme[:body_text] %>',
+							      links: '<%= @one_theme[:links] %>'
+							    }
+							  },
+							  features: {
+							    scrollbar: true,
+							    loop: false,
+							    live: false,
+							    hashtags: true,
+							    timestamp: true,
+							    avatars: true,
+							    behavior: 'all'
+							  }
+							}).render().setUser('<%= @org[:twitter_link] %>').start();
+							</script>  
+							 
+							<% else %>
+							
+							<script>
+							new TWTR.Widget({
+							  version: 2,
+							  type: '<%= I18n.t 'button.search' %>',
+							  search: '<%= @org[:search_link] %>',
+							  interval: 6000,
+							  title: '<%= I18n.t 'org_show.search_results_for' %>:',
+							  subject: '<%= @org[:search_link] %>',
+							  width: 215,
+							  height: 475,
+							  theme: {
+							    shell: {
+							      background: '<%= @one_theme[:box_header] %>',
+							      color: '<%= @one_theme[:header_text] %>'
+							    },
+							    tweets: {
+							      background: '<%= @one_theme[:box_background] %>',
+							      color: '<%= @one_theme[:body_text] %>',
+							      links: '<%= @one_theme[:links] %>'
+							    }
+							  },
+							  features: {
+							    scrollbar: true,
+							    loop: false,
+							    live: false,
+							    hashtags: true,
+							    timestamp: true,
+							    avatars: true,
+							    toptweets: true,
+							    behavior: 'all'
+							  }
+							}).render().start();
+							</script>
+							<% end %>                        
+		                </div> 
+		                <% end %>                    
+		            </div>        
+		        </div>
+        
+        	<% end %>
+        <div class="clear"></div>
+    
+    </div><div class="clear"></div>
+    </div>
+    
+</section>

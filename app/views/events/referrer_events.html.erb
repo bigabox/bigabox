@@ -1,0 +1,409 @@
+<style>
+.responsive-tabs__list__item {padding: 23px 3.86%; text-align: center; font-size:12px;}
+@media (max-width: 960px) {
+	.responsive-tabs__list__item {
+		padding: 23px 0px; 
+		width: 25%; 
+		text-align: center; 
+		font-size:12px;
+	}
+}
+
+
+@media (max-width: 768px) {
+	.event td:nth-of-type(1):before { content: "<%= I18n.t 'pen_paid_table.en' %>"; font-weight:bold; }
+	.event td:nth-of-type(2):before { content: "<%= I18n.t 'pen_paid_table.date' %>"; font-weight:bold; }
+	.event td:nth-of-type(3):before { content: "<%= I18n.t 'event_index.status' %>"; font-weight:bold; }
+	.event td:nth-of-type(4):before { content: "<%= I18n.t 'event_index.sold' %>"; font-weight:bold; }
+	.event td:nth-of-type(5):before { content: "<%= I18n.t 'new.table.ql' %>"; font-weight:bold; }	
+}	
+</style>
+<section>
+	
+<!--	<div class="main marTB40 shadow pad15">
+<%= @reffer %>
+    	<div class="fl">
+        	<%= link_to (I18n.t 'application.appli_create_an_event'), { :action => 'create_event'}, :class=> 'btn' %>
+        </div>
+         <%
+            @organizers = Organizer.find(:all, :conditions => ['user_id=?', session[:user_id]])
+            if @organizers.count > 0
+            %>
+	           <%= form_tag({:controller => 'events', :action => 'index'}, :id => 'orgeventform', :name => 'orgeventform') do %> 
+			        <div class="fr">
+			        	<div class="filter_events">
+			            	<%= I18n.t  'event_index.filter_events_by_organizer' %>
+			            </div>
+			        	<div class="shadow fr">
+			                <select id="org_id" name="org_id" onchange="$('#orgeventform').submit();" class="selectbox TW150">
+			                	<option value=""> <%= I18n.t  'event_index.all_events' %> </option>
+			                	<% for org in @organizers %>
+			                		<option value="<%= org[:id] %>" <% if org[:id] == params[:org_id] %> selected="selected"<% end %>>
+			                			<% if org[:name]!='' && org[:name]!=nil %><%= org[:name] %>
+			                			<% else %> <%= I18n.t  'event.view.unnamed_orga' %> <% end %>
+			                		</option>
+			                	<% end %>
+			                </select>
+			            </div>
+			        </div> 
+        	  <% end %>
+           <% end %>
+        <div class="clear"></div>
+    </div> -->
+    
+	<div class="main marTB40">
+    	 <% if flash[:notice] -%>
+			      <div class="errors">
+			      	<p><%= flash[:notice] %></p>
+			      </div>
+			
+			   <% end -%>
+			   
+			   
+	             <% if flash[:notice1] -%>
+			      <div class="notice">
+			      	<p><%= flash[:notice1] %></p>
+			      </div>
+			
+			   <% end -%>
+    	<div class="leftcol">
+        	<div class="mtitle">
+            	<h1><% if params[:org_id]!='' && params[:org_id]!=nil 
+                		@one_org = Organizer.find(params[:org_id])
+                		if @one_org[:name]!=nil &&  @one_org[:name]!=''
+                			title = @one_org[:name]+ (I18n.t 'event_title.events')
+                		else
+                			title = I18n.t 'event_title.unnamed_org_event'
+                		end		
+                	else
+                		title = I18n.t 'event_title.referred_events'
+                	end	
+                	%>
+                	<%= title %></h1>
+            </div>
+
+            <div class="shadow marT20">
+            	<% if (@live_events.count > 0 || @draft_events.count > 0 || @pass_events.count > 0 || @cancel_events.count > 0) %> 
+					<div class="responsive-tabs">
+                          
+                          <% live_count=0 
+					      for live in @live_events 
+		                                	eact = ''
+                     						@has = Event.has_rights(@user, live, eact)
+	                          if @has == 1
+	                          	live_count=live_count+1  
+	                          end
+	                        end		 
+	                      %>
+	                    <% if (live_count > 0) %>
+					  
+					    	
+		                    <h2><%= I18n.t 'event_index.live_events'%> &nbsp;(<%= live_count %>)</h2>
+		                    <div>                    	
+		                    	<div class="shadow event pad3">
+		                            <table class="table">
+		                                <thead>
+		                                <tr>
+		                                    <th width="25%"><%= I18n.t 'pen_paid_table.en' %></th>
+		                                    <th><%= I18n.t 'pen_paid_table.date' %></th>
+		                                    <th><%= I18n.t 'event_index.status' %></th>
+		                                    <th><%= I18n.t 'event_index.sold' %></th>
+		                                    <th><%= I18n.t 'new.table.ql' %></th>
+		                                </tr>
+		                                </thead>
+		                                <tbody>
+		                                <% for live in @live_events 
+		                                	eact = ''
+                     						@has = Event.has_rights(@user, live, eact)
+                     						if @has==1	
+					                     		if live[:event_url_link]=='' || live[:event_url_link]==nil 
+								             		page_url = APP_CONFIG['development']['site_url']+'events/view/'+live[:id].to_s 
+								             	else
+								             		page_url = APP_CONFIG['development']['site_url']+'event/'+live[:event_url_link]
+								             	end
+					                     %>
+		                                <tr>
+		                                	
+		                                    <td><strong><a href="<%= page_url %>"><%= live[:event_title] %></a> </strong></td>
+		                                    <td><%= live[:event_start_date_time].strftime(@site[:date_time_format]) %></td>
+		                                    <td><span class="color_1"><%= I18n.t 'event_index.live' %></span></td>
+		                                    <td><% if live[:event_capacity]!='' && live[:event_capacity]!=nil %> <%= Ticket.find_event_sold_count(live[:id]) %>/<%= live[:event_capacity] %><% else %> N/A <% end %></td>
+		                                    <td class="action_icon TW150">
+		                                    	<a href="<%= APP_CONFIG['development']['site_url'] %>manage_event/index/<%= live[:id] %>" class="hint--bottom" data-hint=<%= I18n.t 'create_data_hint.data_hint_manage'%>>
+		                                    		<img src="<%= APP_CONFIG['development']['app_url'] %>icon-manage.png" />
+		                                    	</a>
+		                                    	<% if Event.has_rights(@user, live, 'edit_event')==1 %>
+		                                    	<a href="<%= APP_CONFIG['development']['site_url'] %>events/edit/<%= live[:id] %>" class="hint--bottom" data-hint=<%= I18n.t 'create_data_hint.data_hint_edit'%>>
+		                                    		<img src="<%= APP_CONFIG['development']['app_url'] %>icon-edit.png" />
+		                                    	</a>
+		                                    	<% end %>
+		                                    	<a href="<%= page_url %>" class="hint--bottom" data-hint=<%= I18n.t 'create_data_hint.data_hint_view'%>>
+		                                    		<img src="<%= APP_CONFIG['development']['app_url'] %>icon-view.png" />
+		                                    	</a>
+		                                    	<% if Event.has_rights(@user, live, 'send_invite')==1 %>
+		                                    	<a href="<%= APP_CONFIG['development']['site_url'] %>invites/index/<%= live[:id] %>" class="hint--bottom" data-hint=<%= I18n.t 'create_data_hint.data_hint_invite'%>>
+		                                    		<img src="<%= APP_CONFIG['development']['app_url'] %>icon-invite.png" />
+		                                    	</a>
+		                                    	<% end %>
+		                                    </td>
+		                                </tr> 
+		                                <% end 
+		                                end %>
+		                                </tbody>
+		                            </table>
+		                            <div class="clear"></div>
+		                        </div>                            
+		                    </div>        
+		                    
+					    <% end %>
+					    
+					    <% draft_count=0 
+					     for draft in @draft_events 
+			                      	eact = ''
+	                        		@has = Event.has_rights(@user, draft, eact)
+	                          if @has == 1
+	                          	draft_count=draft_count+1  
+	                          end
+	                        end		 
+	                      %>
+					    
+					    <% if (draft_count > 0) %>
+					    
+					    	<h2><%= I18n.t 'event_index.draft' %> &nbsp;(<%= draft_count %>)</h2>
+		                    <div>
+		                    	<div class="shadow event pad3">
+		                            <table class="table"> 
+		                                <thead>
+			                                <tr>
+			                                    <th width="25%"><%= I18n.t 'pen_paid_table.en' %></th>
+			                                  <th><%= I18n.t 'pen_paid_table.date' %></th>
+			                                    <th><%= I18n.t 'event_index.status' %></th>
+			                                    <th><%= I18n.t 'event_index.sold' %></th>
+			                                    <th><%= I18n.t 'new.table.ql' %></th>
+			                                </tr>
+		                                </thead>
+		                                <tbody>
+			                               <% for draft in @draft_events 
+			                                	eact = ''
+			                                	@has=0
+	                     						@has = Event.has_rights(@user, draft, eact) %>
+	                     					<%	if @has==1	
+			                                %>
+			                                
+			                               <% @count=Ticket.find(:all,:conditions =>["event_id=?",draft[:id]]) %>
+			                               
+			                                
+			                                <tr>
+			                                    <td><strong><a href="<%= APP_CONFIG['development']['site_url'] %>events/theme/<%= draft[:id] %>"><%= draft[:event_title] %></a></strong></td>
+			                                    <td><%= draft[:event_start_date_time].strftime(@site[:date_time_format]) %></td>
+			                                    <td><span class="color_1"><%= I18n.t 'event_index.draft'%></span></td>
+			                                    <td><% if draft[:event_capacity]!='' && draft[:event_capacity]!=nil %> 0/<%= draft[:event_capacity] %><% else %> N/A  <% end %></td>
+			                                    <td class="action_icon TW150">
+			                                    	<a href="<%= APP_CONFIG['development']['site_url'] %>manage_event/index/<%= draft[:id] %>" class="hint--bottom" data-hint=<%= I18n.t 'create_data_hint.data_hint_manage'%>>
+			                                    		<img src="<%= APP_CONFIG['development']['app_url'] %>icon-manage.png" />
+			                                    	</a>
+			                                    	<% if Event.has_rights(@user, draft, 'edit_event')==1 %>
+			                                    	<a href="<%= APP_CONFIG['development']['site_url'] %>events/edit/<%= draft[:id] %>" class="hint--bottom" data-hint=<%= I18n.t 'create_data_hint.data_hint_edit'%>>
+			                                    		<img src="<%= APP_CONFIG['development']['app_url'] %>icon-edit.png" />
+			                                    	</a>
+			                                    	<% end %>
+			                                    	<a href="<%= APP_CONFIG['development']['site_url'] %>events/theme/<%= draft[:id] %>" class="hint--bottom" data-hint=<%= I18n.t 'create_data_hint.data_hint_view'%>>
+			                                    		<img src="<%= APP_CONFIG['development']['app_url'] %>icon-view.png" />
+			                                    	</a>
+			                                    	<% if Event.has_rights(@user, draft, 'create_event')==1 && Event.has_rights(@user, draft, 'edit_event')==1 %>
+				                                    	<% if @count.count!=0%>
+					                                    	<a href="<%= APP_CONFIG['development']['site_url'] %>manage_event/publish/<%= draft[:id] %>" class="hint--bottom"  data-hint=<%= I18n.t 'create_data_hint.data_hint_publish'%>>
+					                                    		<img src="<%= APP_CONFIG['development']['app_url'] %>publish.png" />
+					                                    	</a> 
+				                                       	<% end %>
+			                                       	<% end %>
+			                                    </td>
+			                                </tr>
+			                                <% end 
+			                                end
+			                                %>
+		                                </tbody>
+		                            </table>
+		                            <div class="clear"></div>
+		                        </div>    
+		                    </div>         
+		                    
+					    <% end %>
+					    
+					       <% pass_count=0 
+					     for pass in @pass_events 
+						      	eact = ''
+	                     		@has = Event.has_rights(@user, pass, eact)
+	                          if @has == 1
+	                          	pass_count=pass_count+1  
+	                          end
+	                        end		 
+	                      %>
+					       
+					    <% if (pass_count > 0) %>
+					    	<h2><%= I18n.t 'event_index.completed_events' %> &nbsp;(<%= pass_count %>)</h2>
+		                    <div>
+		                    	<div class="shadow pad7 event pad3">
+		                            <table class="table">
+		                                <thead>
+		                                <tr>
+		                                    <th width="25%"><%= I18n.t 'pen_paid_table.en' %></th>
+			                                    <th><%= I18n.t 'pen_paid_table.date' %></th>
+			                                    <th><%= I18n.t 'event_index.status' %></th>
+			                                    <th><%= I18n.t 'event_index.sold' %></th>
+			                                    <th><%= I18n.t 'new.table.ql' %></th>
+		                                </tr>
+		                                </thead>
+		                                <tbody>
+			                                    <% for pass in @pass_events 
+						                     	eact = ''
+	                     						@has = Event.has_rights(@user, pass, eact) %>
+	                     			
+	                     					<%	if @has==1	
+	                     							
+						                     		if pass[:event_url_link]=='' || pass[:event_url_link]==nil 
+									             		page_url = APP_CONFIG['development']['site_url']+'events/view/'+pass[:id].to_s 
+									             	else
+									             		page_url = APP_CONFIG['development']['site_url']+'event/'+pass[:event_url_link]
+									             	end
+						                     %>
+			                                <tr>
+			                                    <td><strong><a href="<%= page_url %>"><%= pass[:event_title] %></a></strong></td>
+			                                    <td><%= pass[:event_start_date_time].strftime(@site[:date_time_format]) %></td>
+			                                    <td><span class="color_1"><%= I18n.t 'event_index.completed'%></span></td>
+			                                    <td><% if pass[:event_capacity]!='' && pass[:event_capacity]!=nil %> <%= Ticket.find_event_sold_count(pass[:id]) %>/<%= pass[:event_capacity] %><% else %> N/A  <% end %></td>
+			                                    <td class="action_icon TW150">
+			                                    	<a href="<%= APP_CONFIG['development']['site_url'] %>manage_event/index/<%= pass[:id] %>" class="hint--bottom" data-hint=<%= I18n.t 'create_data_hint.data_hint_manage'%>>
+			                                    		<img src="<%= APP_CONFIG['development']['app_url'] %>icon-manage.png" />
+			                                    	</a>
+			                                    	<% if Event.has_rights(@user, pass, 'edit_event')==1 %>
+			                                    	<a href="<%= APP_CONFIG['development']['site_url'] %>events/edit/<%= pass[:id] %>" class="hint--bottom" data-hint=<%= I18n.t 'create_data_hint.data_hint_edit'%>>
+			                                    		<img src="<%= APP_CONFIG['development']['app_url'] %>icon-edit.png" />
+			                                    	</a>
+			                                    	<% end %>
+			                                    	<a href="<%= page_url %>" class="hint--bottom" data-hint=<%= I18n.t 'create_data_hint.data_hint_view'%>>
+			                                    		<img src="<%= APP_CONFIG['development']['app_url'] %>icon-view.png" />
+			                                    	</a>
+			                                    	<% if Event.has_rights(@user, pass, 'send_invite')==1 %>
+			                                    	<a href="<%= APP_CONFIG['development']['site_url'] %>invites/index/<%= pass[:id] %>" class="hint--bottom" data-hint=<%= I18n.t 'create_data_hint.data_hint_invite'%>>
+			                                    		<img src="<%= APP_CONFIG['development']['app_url'] %>icon-invite.png" />
+			                                    	</a>
+			                                    	<% end %>
+			                                    </td>
+			                                </tr> 
+		                                     <% end 
+		                                     end
+		                                     %>                         
+		                                </tbody>
+		                            </table>
+		                            <div class="clear"></div>
+		                        </div>    
+		                    </div>         
+		                   
+					    <% end %>
+					    
+					     
+					    
+					     <% cancel_count=0 
+					     for can in @cancel_events  
+		                     	eact = ''
+                     			@has = Event.has_rights(@user, can, eact)
+	                          if @has == 1
+	                          	cancel_count=cancel_count+1  
+	                          end
+	                        end		 
+	                      %>
+					    
+					     <% if (cancel_count > 0) %>
+					    
+					    	<h2><%= I18n.t 'event_index.cancel' %>&nbsp;(<%= cancel_count %>)</h2>
+					    	 
+					   <div>
+		                    	<div class="shadow event pad3">
+		                            <table class="table">
+		                                <thead>
+		                                <tr>
+		                                    <th width="25%"><%= I18n.t 'pen_paid_table.en' %></th>
+			                                    <th><%= I18n.t 'pen_paid_table.en' %></th>
+			                                    <th><%= I18n.t 'event_index.status' %></th>
+			                                    <th><%= I18n.t 'event_index.sold' %></th>
+			                                    <th><%= I18n.t 'new.table.ql' %></th>
+		                                </tr>
+		                                </thead>
+		                                <tbody>
+		                                <% for can in @cancel_events  
+		                                	eact = ''
+                     						@has = Event.has_rights(@user, can, eact) 
+                     						
+                     						if @has==1
+                     						%>
+                     						
+                     			        <tr>
+		                                    <td><strong><a href="<%= APP_CONFIG['development']['site_url'] %>events/theme/<%= can[:id] %>"><%= can[:event_title] %></a></strong></td>
+		                                    <td><%= can[:event_start_date_time].strftime(@site[:date_time_format]) %></td>
+		                                    <td><span class="color_1"><%= I18n.t 'cancel_order.can' %></span></td>
+		                                    <td><% if can[:event_capacity]!='' && can[:event_capacity]!=nil %> <%= Ticket.find_event_sold_count(can[:id]) %>/<%= can[:event_capacity] %><% else %> N/A  <% end %></td>
+		                                    <td class="action_icon TW150">
+		                                    	<a href="<%= APP_CONFIG['development']['site_url'] %>manage_event/index/<%= can[:id] %>" class="hint--bottom" data-hint=<%= I18n.t 'create_data_hint.data_hint_manage'%>>
+		                                    		<img src="<%= APP_CONFIG['development']['app_url'] %>icon-manage.png" />
+		                                    	</a>
+		                                    	<% if Event.has_rights(@user, can, 'edit_event')==1 %>
+		                                    	<a href="<%= APP_CONFIG['development']['site_url'] %>events/edit/<%= can[:id] %>" class="hint--bottom" data-hint=<%= I18n.t 'create_data_hint.data_hint_edit'%>>
+		                                    		<img src="<%= APP_CONFIG['development']['app_url'] %>icon-edit.png" />
+		                                    	</a>
+		                                    	<% end %>
+		                                    	<a href="<%= APP_CONFIG['development']['site_url'] %>events/theme/<%= can[:id] %>" class="hint--bottom" data-hint=<%= I18n.t 'create_data_hint.data_hint_view'%>>
+		                                    		<img src="<%= APP_CONFIG['development']['app_url'] %>icon-view.png" />
+		                                    	</a>
+		                                    	<% if Event.has_rights(@user, can, 'send_invite')==1 %>
+		                                    	<a href="<%= APP_CONFIG['development']['site_url'] %>manage_event/publish/<%= can[:id] %>" class="hint--bottom" data-hint=<%= I18n.t 'create_data_hint.data_hint_publish'%>>
+		                                    		<img src="<%= APP_CONFIG['development']['app_url'] %>publish.png" />
+		                                    	</a>
+		                                    	<% end %>
+		                                    </td>
+		                                </tr>
+		                                <% end 
+		                                end
+		                                %>
+		                                </tbody>
+		                            </table>
+		                            <div class="clear"></div>
+		                        </div>    
+		                    </div>         
+ 							<% end %> 
+					</div>
+			  <% else %>
+			  		<div style="padding:10px;">
+
+					<p class="no_list_event"><%= I18n.t 'event_index.you_not_have_events'%></p>
+					
+					<p class="font_size15" style=""><%= I18n.t 'event_index.create_new_event'%> <%= link_to 'Click Here', { :action => 'create_event'}, :class => 'btn' %></p>
+					
+					</div>
+			  		
+			  		
+			  		
+			  <% end %>	
+			  	
+                </div>
+           
+            </div>
+        
+        <div class="rightcol">
+        	<div class="mtitle">
+            	<h1><%= I18n.t 'event_index.latest' %> <span><%= I18n.t 'event_index.update' %></span></h1>
+            </div>
+            <div class="shadow marT20 latest_update pad3">
+            	<ul>
+                	<li><a target="_blank" href="<%= APP_CONFIG['development']['site_url'] %>content/register"><%= I18n.t 'event_index.regi_terminology' %></a></li>
+                	<li><a target="_blank" href="<%= APP_CONFIG['development']['site_url'] %>content/order_form"><%= I18n.t 'event_index.customize_your_order_form' %></a></li>
+                	<li><a target="_blank" href="<%= APP_CONFIG['development']['site_url'] %>content/event_dashboard"><%= I18n.t 'event_index.event_dashboard' %></a></li>
+                	<li><a target="_blank" href="<%= APP_CONFIG['development']['site_url'] %>content/colors_themes"><%= I18n.t 'event_index.new_event_page _colors' %> &amp; <%= I18n.t 'event_index.themes' %></a></li>
+                </ul>
+                <div class="pad15"><%= I18n.t 'event_index.learn_about_all' %> <a href="<%= APP_CONFIG['development']['site_url'] %>content/recently"><%= I18n.t 'event_index.recently_launched' %></a></div>
+            </div>        	
+            
+        </div>
+        <div class="clear"></div>
+    </div>    
+</section>

@@ -1,0 +1,38 @@
+<script type="text/javascript">
+	function chk_name(){
+		var name = $('#event_title').val();
+        
+        if(name==''){
+        	$('#event_title').focus();
+        	$("#namerr").html('New Event Name is required..!!');
+        	return false;
+        }
+        return true;
+	}
+</script>
+<div id="repeat_div_pop2" class="popup_Content">
+              <h2>Copy This Event</h2>
+        	<br />
+	<%= form_tag({:controller => 'manage_event', :action => 'copy'}, :id => 'copyeventForm', :name => 'copyeventForm') do %> 		
+			 
+        	 <div class="form">
+		        
+				<p>May copy this event to quickly create a new event with the same description, ticket types, survey, and dates. 
+					You may also make whatever changes are necessary to the new event, both before and after publishing. 
+					You must press the Publish Event button on the next page before the new event will be available for attendee registrations.</p> 
+		         <br />
+		         <label>New Event Name :</label>
+		         <input type="text" name="event_title" id="event_title" class="textbox" value="<%= params[:event_title] %>" />   
+	             <div class="clear"></div><div id="namerr" class="error1" style="margin-left: 30%; height: 12px; display: block;"></div>  <br />
+	            
+	             <div class="marT15" align="right">
+	             	  <input type="hidden" name="id" id="id" value="<%= params[:id] %>"/>
+		        	  <input class="submit_btn" type="submit" value="Save"  onclick='return chk_name();' >
+		          	  <a class="btn black_bg" onclick="parent.jQuery.colorbox.close();" style="padding: 16px 20px;" >Cancel</a>
+	             </div> 
+	             
+	              <div class="clear"></div>
+		             
+		      </div>  
+    <% end %>
+   </div>

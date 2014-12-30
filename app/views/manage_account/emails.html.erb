@@ -1,0 +1,130 @@
+<script type="text/javascript">
+function set_auto_check(ele, type){
+	
+	if(type=='attend' && ele.checked==true){
+		document.getElementById('attendee_update').checked=false;
+		document.getElementById('attendee_picks').checked=false;	
+	}
+	
+	if(type=='org' && ele.checked==true){
+		document.getElementById('org_update').checked=false;
+		document.getElementById('org_picks').checked=false;	
+	}
+}
+</script>
+
+<section>
+	 <%= render(:partial => "account_top" , :object => :collection) %> 
+	<div class="main marTB40">
+    	<% if flash[:notice1] -%>
+		      <div class="notice" >
+		      	<p><%= flash[:notice1] %></p>
+		      </div>
+		
+		<% end -%>
+		   
+    	<div class="leftcol">      	
+            <%= form_tag({:controller => 'manage_account', :action => 'emails'}, :id => 'emailsform') do %>
+				<div class="mtitle">
+				<h1><%= I18n.t 'action.email'%> <span><%= I18n.t 'account_sidebar.preferences'%></span></h1>
+				<br />
+				<br />
+	            	<h3><%= I18n.t 'manage_account_emails.attendings'%> <span><%= I18n.t 'event_title.events'%></span></h3>
+	                <p><%= I18n.t 'manage_account_emails.news_and_update_event_created_event_organizers'%></p>
+	                <div class="clear"></div>
+	            </div>
+	            <div class="shadow marT10 pad20">
+	            	<div class="form multi_user">
+	                	<div class="mtitle">
+	                        <h3><%= I18n.t 'manage_account_emails.buyer_info'%></h3>
+	                    </div>
+	                        <div class="marT15">
+	                            <label class="email_preferences_label"><%= I18n.t 'user.email'%></label>                    
+	                            <div class="email_preferences">                    	
+	                                <input type="hidden" name="email_preference[attendee_update]" value="0" />
+		          				  	<input type="checkbox" name="email_preference[attendee_update]" onclick="if($('#attendee_unsubscribe').is(':checked')){ this.checked=false; }" id="attendee_update" value="1" <% if(@emails[:attendee_update]==1) %> checked="checked" <% end %> />
+		          				  	&nbsp;&nbsp;<%= I18n.t 'manage_account_emails.updates_about_new'%> <%= @site[:site_name] %> <%= I18n.t 'manage_account_emails.features_and_announcements'%><br />
+	                                
+	                                <input type="hidden" name="email_preference[attendee_picks]" value="0" />
+		          				  	<input type="checkbox" name="email_preference[attendee_picks]" id="attendee_picks"  onclick="if($('#attendee_unsubscribe').is(':checked')){ this.checked=false; }"  value="1" <% if(@emails[:attendee_picks]==1) %> checked="checked" <% end %> />
+	                            	&nbsp;&nbsp;<%= I18n.t 'manage_account_emails.a_digest_of_personalized_event_recommendations'%> (<%= @site[:site_name] %> <%= I18n.t 'manage_account_emails.picks'%>)<br />
+	                                
+	                               <!-- <div class="brdr">				
+	                                	<input type="hidden" name="email_preference[attendee_unsubscribe]" value="0" />
+				          			    <input type="checkbox" name="email_preference[attendee_unsubscribe]" id="attendee_unsubscribe" value="1" <% if(@emails[:attendee_unsubscribe]==1) %> checked="checked" <% end %> onclick="set_auto_check(this,'attend')" />
+			                            &nbsp;&nbsp;<%= I18n.t 'manage_account_emails.unsubscribe_from_all'%> <%= @site[:site_name] %> <%= I18n.t 'manage_account_emails.newsletters_and_updates_for_attendees'%><br />
+	                                </div>	-->
+	                                	
+	                            </div>
+	                        </div>
+	                        <div class="clear"></div> 
+	                    	<div class="marT20">
+	                            <label class="email_preferences_label"><%= I18n.t 'manage_account_emails.notifications'%></label>                    
+	                            <div class="email_preferences">                    	
+	                                <input type="hidden" name="email_preference[attendee_buy_ticket]" value="0" />
+		          			  		<input type="checkbox" name="email_preference[attendee_buy_ticket]" id="attendee_buy_ticket" value="1" <% if(@emails[:attendee_buy_ticket]==1) %> checked="checked" <% end %> />
+	                                &nbsp;&nbsp;<%= I18n.t 'manage_account_emails.when_friends_buy_tickets_or_register_events_near_me'%><br />		
+	                            </div>
+	                        </div>                   
+	                </div>
+	                <div class="clear"></div>
+	            </div>     	
+	            <div class="mtitle marT40">
+	            	<h3><%= I18n.t 'manage_account_emails.organizing'%> <span><%= I18n.t 'event_title.events'%></span></h3>
+	                <p><%= I18n.t 'manage_account_emails.helpful_update_and_tips_org_events'%><%= @site[:site_name]%><%= I18n.t 'manage_account_emails.account_clone'%></p>
+	                <div class="clear"></div>
+	            </div>
+	            <div class="shadow marT10 pad20">
+            	<div class="form multi_user">
+                	<div class="mtitle">
+                        <h3><%= I18n.t 'event.view.from'%> <%= @site[:site_name] %></h3>
+                    </div>
+                        <div class="marT15">
+                            <label class="email_preferences_label"><%= I18n.t 'user.email'%></label>                    
+                            <div class="email_preferences">                    	
+                                  <input type="hidden" name="email_preference[org_update]" value="0" />
+			          			  <input type="checkbox" name="email_preference[org_update]" id="org_update" onclick="if($('#org_unsubscribe').is(':checked')){ this.checked=false; }"  value="1" <% if(@emails[:org_update]==1) %> checked="checked" <% end %> />
+		                          &nbsp;&nbsp;<%= I18n.t 'manage_account_emails.updates_about_new'%> <%= @site[:site_name] %> <%= I18n.t 'manage_account_emails.features_and_announcements'%><br />
+                                
+                                  <input type="hidden" name="email_preference[org_picks]" value="0" />
+			          			  <input type="checkbox" name="email_preference[org_picks]" id="org_picks" onclick="if($('#org_unsubscribe').is(':checked')){ this.checked=false; }"  value="1" <% if(@emails[:org_picks]==1) %> checked="checked" <% end %> />
+		                          &nbsp;&nbsp;<%= I18n.t 'manage_account_emails.a_digest_of_personalized_event_recommendations'%> (<%= @site[:site_name] %> <%= I18n.t 'manage_account_emails.picks'%>)<br />
+                                
+                                <!--  <div class="brdr">				
+                                	 <input type="hidden" name="email_preference[org_unsubscribe]" value="0" />
+				          			  <input type="checkbox" name="email_preference[org_unsubscribe]" id="org_unsubscribe" value="1" <% if(@emails[:org_unsubscribe]==1) %> checked="checked" <% end %>  onclick="set_auto_check(this,'org')" />
+			                          &nbsp;&nbsp;<%= I18n.t 'manage_account_emails.unsubscribe_from_all'%> <%= @site[:site_name] %> <%= I18n.t 'manage_account_emails.newsletters_and_updates_for_attendees'%><br />
+                                  </div> -->
+                            </div>
+                        </div>
+                        <div class="clear"></div> 
+                    	<div class="marT20">
+                            <label class="email_preferences_label"><%= I18n.t 'manage_account_emails.notifications'%></label>                    
+                            <div class="email_preferences">                    	
+                                <input type="hidden" name="email_preference[org_next_event]" value="0" />
+		          			    <input type="checkbox" name="email_preference[org_next_event]" id="org_next_event" value="1" <% if(@emails[:org_next_event]==1) %> checked="checked" <% end %> />
+	                            &nbsp;&nbsp;<%= I18n.t 'manage_account_emails.important_reminders_for_my_next_event'%><br />                    	
+                                
+                                <input type="hidden" name="email_preference[org_order_confirm]" value="0" />
+		          			    <input type="checkbox" name="email_preference[org_order_confirm]" id="org_order_confirm" value="1" <% if(@emails[:org_order_confirm]==1) %> checked="checked" <% end %> />
+	                            &nbsp;&nbsp;<%= I18n.t 'manage_account_emails.order_confirmation_from_my_attendees'%><br />		
+                            </div>
+                        </div>                   
+                </div>
+                <div class="clear"></div>
+            </div>  
+            
+            <div class="marT20" align="right">
+            	<input type="hidden" name="email_preference[user_id]" id="user_id" value="<%= @user[:id] %>" />   
+            	<%= submit_tag (I18n.t 'manage_account_emails.save_preferences'), :class => 'submit_btn' %>
+            </div>
+               
+        	<% end %>
+        </div>
+        
+         <% @act_class = 'Email Preferences' %>         	
+		 <%= render(:partial => "account_sidebar" , :object => :collection) %>    
+		   
+        <div class="clear"></div>
+    </div>    
+</section>

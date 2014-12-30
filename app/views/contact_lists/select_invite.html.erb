@@ -1,0 +1,65 @@
+<script type="text/javascript">
+
+	function validate_select_invite(){
+		//alert('hi');
+		var id = $('#invitation_id').val();
+		$('#select_invitation_id').val(id);
+		$('#contactForm').submit();
+		parent.jQuery.colorbox.close();
+		return false;
+	}
+
+</script>
+
+<style>
+	.error1, .success{
+		margin-left:30%;
+		height:12px;
+		display:block;
+	}
+</style>
+
+<div class="popup_Content">
+
+		<h2><%= I18n.t 'select_invite.select_invitation'%></h2>  
+		 
+		   <div class="eventregister form">
+		        <% 
+			        avai = 0
+			        if @live_events.count > 0 
+			        	if @invites.count > 0
+		        		avai = 1
+		        %>
+		        	<label><%= I18n.t 'select_invite.select_invitation'%> </label>
+		        	<select name="invitation_id" id="invitation_id" class="selectbox">
+		        		<% for inv in @invites
+		        				%>
+		        					<option value="<%= inv[:id] %>"><%= inv[:subject] %></option>
+		        				<%
+		        			end  
+		        		%>
+		        		
+		        	</select>
+		        	
+		        	<div class="marT10" align="right">
+			        	<a class="btn" href="javascript://" onclick="return validate_select_invite();"><%= I18n.t 'button.send' %></a>
+			            <a href="javascript:" onclick="parent.jQuery.colorbox.close();" class="btn black_bg" ><%= I18n.t 'button.cancel' %></a>
+			        </div>
+		      
+		        <% 		end
+		        	end %>
+		        
+		       <% if avai==0 %>
+		       		<div class="pad10">
+		       			<p><%= I18n.t 'select_invite.you_have_not_scheduled_any_invitation'%></p>
+		       			<div class="marT10" align="right">
+				        	<a href="javascript:" onclick="parent.jQuery.colorbox.close();" class="btn black_bg" ><%= I18n.t 'manage_account_close_account.close' %> </a>
+				        </div>
+		       		</div> 
+		       <% end %> 
+		   
+		     
+		    
+		  </div>
+				  
+</div>

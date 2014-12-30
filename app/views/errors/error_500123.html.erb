@@ -1,0 +1,26 @@
+		</div>
+    </div>
+</header>
+
+<section>
+	
+	<div class="main marTB60" style="min-height: 400px;">
+    	
+        	<div class="mtitle">
+            	<h1>Exception <span><%= @status.to_s %></span></h1>
+            </div>
+            <div class="shadow marT20 pad20">            	
+        	        <p class="font_size14">Tried to access - "<%= APP_CONFIG['development']['site_url']+request.fullpath %>"</p>  
+        	        <br />
+        	        <p class="font_size14"><span class="font_size17"><%= @exception.class %></span> - error was raised for path. </p>   
+        	        <br />
+        	        <h3 class="font_size17"><strong>ERROR : </strong>Page does not exists on site with this URL </h3>
+        	        
+        	        <div class="marT25 textcenter">
+        	        	<a href="<%= APP_CONFIG['development']['site_url'] %>" class="btn">Back To Home</a>
+        	        </div>       
+             </div>
+       
+        <div class="clear"></div>
+    </div>    
+</section>

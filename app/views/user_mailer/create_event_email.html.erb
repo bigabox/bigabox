@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+  </head>
+  <body>
+   
+    <h1>Hello <%= @user.first_name %>,</h1>
+    <p>
+      You have successfully created new event to <%= @url %>.<br/>
+      Event title is: <%= @event.event_title %>.
+    </p>
+    <p>
+      To see the event to the site, just follow this link: <%= @url %>.
+    </p><br/>
+    <p>Thanks for joining and have a great day!</p>
+   
+  </body>
+</html>

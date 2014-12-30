@@ -1,0 +1,396 @@
+<style>
+	@media (max-width: 768px) {
+		.contact_list_records td:nth-of-type(1):before { content: "<%= I18n.t 'edit_contact.new_select' %>"; }
+		.contact_list_records td:nth-of-type(2):before { content: "<%= I18n.t 'action.email'%>"; }
+		.contact_list_records td:nth-of-type(3):before { content: "<%= I18n.t 'edit_contact.last_emailed' %>"; }
+		.contact_list_records td:nth-of-type(4):before { content: "<%= I18n.t 'action.first_name'%>"; }
+		.contact_list_records td:nth-of-type(5):before { content: "<%= I18n.t 'action.last_name'%>"; }
+		.contact_list_records td:nth-of-type(6):before { content: "<%= I18n.t 'new.table.create' %>"; }
+		.contact_list_records td:nth-of-type(7):before { content: "<%= I18n.t 'new.table.ql' %>"; }
+	}	
+</style>
+<script src="<%= APP_CONFIG['development']['js_url'] %>js/jquery.colorbox.js" type="text/javascript"></script>    
+<link href="<%= APP_CONFIG['development']['css_url'] %>colorbox.css" media="all" rel="stylesheet" type="text/css" />
+
+<script>
+ 	function trim(el) {
+    el.value = el.value.
+    replace(/(^\s*)|(\s*$)/gi, ""). // removes leading and trailing spaces
+    replace(/[ ]{2,}/gi, " "). // replaces multiple spaces with one space 
+    replace(/\n +/, "\n"); // Removes spaces after newlines
+    return;
+}
+ </script>
+
+<script type="text/javascript">
+
+$(document).ready(function() {
+/**** pop up *****/
+	 $(".rr").colorbox();
+	 $("#add_new_link").colorbox({height:"85%"});
+	 $(".inline").colorbox({inline:true});	
+	// $('.bs-docs-tooltip-examples li a').tooltip()
+});
+
+function close_colorbox(){
+	parent.jQuery.colorbox.close();
+}
+	
+
+
+function set_name(){
+						
+		$("#namerr").html('');
+        var page_path = '/contacts/rename/';
+        var list_id = '<%= @contact_list[:id] %>';
+        var name = $('#contact_list_name').val();
+        
+        if(name==''){
+        	$("#namerr").html('<%= I18n.t 'list_script.list_js'%>');
+        }
+        else{
+        
+	        $.ajax({
+	            type: "GET",
+	            data: {list_id: list_id, name: name}, 
+	            url: page_path+list_id,
+	            success: function(data) {
+	               if(data.msg.name==''){
+	               		$("#namerr").html(data.msg.error);
+	               }else{
+	               		$("#list_name").html(data.msg.name);
+	               		close_colorbox();
+	               }
+	                
+	            }
+	        });
+	        
+        }
+   
+}
+
+
+
+function set_record(id){
+
+		$("#namerr"+id).html('');
+        var page_path = '/contacts/edit/';
+
+
+        var first_name = $('#first_name'+id).val();
+        var last_name = $('#last_name'+id).val();
+        var email = $('#email'+id).val();
+		var email_reg_exp= /^[a-zA-Z0-9]+[a-zA-Z0-9_.-]+[a-zA-Z0-9_-]+@[a-zA-Z0-9]+[a-zA-Z0-9.-]+[a-zA-Z0-9]+.[a-z]{2,4}$/;
+		
+		//if it's valid email
+				//alert(a);
+				if(email==''){
+					$("#namerr"+id).text("<%= I18n.t 'list_script.please_valid_email'%>");
+					return false;
+				}
+				else if(email_reg_exp.test(email)){
+						
+						 $.ajax({
+				            type: "GET",
+				            data: {id: id, first_name: first_name, last_name: last_name, email:email}, 
+				            url: page_path+id,
+				            success: function(data) {
+				               $("#first_val"+id).html(first_name);
+				               $("#last_val"+id).html(last_name);
+				               $("#email_val"+id).html(email);
+								close_colorbox();
+				            }
+				        });
+				}
+				//if it's NOT valid
+				else{
+					
+					$("#namerr"+id).text("<%= I18n.t 'list_script.please_valid_email'%>");
+					return false;
+				}
+				
+       
+
+}
+
+
+function confirm_delete(){
+	var con = confirm('<%= I18n.t 'list_script.delete_confirm'%>');
+	if(con){
+		return true;
+	}
+	return false;	
+}
+
+function confirm_unsubscribe(){
+	var con = confirm('<%= I18n.t 'list_script.unsubscribe_confirm'%>');
+	if(con){
+		return true;
+	}
+	return false;	
+}
+</script> 
+<!-- pop ups -->
+<div style="display: none;">
+	<div id="repeat_div_pop2" class="form popup_Content" >
+              <h2><%= I18n.t 'list_script.rn_contact'%></h2>
+        	<br />
+	
+			 <div id="namerr" class="error1"></div>  
+        	 <div class="eventregister">
+		         <label ><%= I18n.t 'copy_contact.enter_name' %> :</label>
+		         <input type="text" name="contact_list[name]" id="contact_list_name" onchange="return trim(this)" class="textbox" value="<%= @contact_list[:name] %>" />   
+            <div class="clear"></div><br />
+            
+            <div class="marT10" align="right">
+            	<a class="btn" href="javascript://"  onclick="set_name();"><%= I18n.t 'button.save' %></a>
+          		<a class="btn black_bg" href="javascript://" type="button" onclick="parent.jQuery.colorbox.close();" ><%= I18n.t 'validation.common.can' %></a>
+            </div>  
+        	
+        <div class="clear"></div>
+             
+      </div>  
+    
+   </div>
+   <% if @contacts.count > 0 %>
+   		<% for ls in @contacts %>
+   			<div id="listdiv<%= ls[:id] %>" class="form">
+   				  <h2><%= I18n.t 'edit_contact.edit_cont' %></h2>
+			        	<br />
+						  ,
+						 <div class="eventregister">
+					         <label><%= I18n.t 'action.first_name'%> :</label>
+					         <input type="text" name="first_name" id="first_name<%= ls[:id] %>" class="textbox" onchange="return trim(this)" value="<%= ls[:first_name] %>" />   
+			             <div class="clr"></div><br />
+			             
+			             <label><%= I18n.t 'action.last_name'%> :</label>
+					         <input type="text" name="last_name" id="last_name<%= ls[:id] %>" class="textbox" onchange="return trim(this)" value="<%= ls[:last_name] %>" />   
+			             <div class="clr"></div><br />
+			             
+			             <label><%= I18n.t 'action.email'%> :</label>
+					         <input type="text" name="email" id="email<%= ls[:id] %>" class="textbox" onchange="return trim(this)" value="<%= ls[:email] %>" />   
+			             <div class="clr"></div><br />
+			            <div id="namerr<%= ls[:id] %>" class="error1"></div> 
+			            
+			            <div class="marT10" align="right">
+			            	<a class="btn" href="javascript://" onclick="set_record('<%= ls[:id] %>');"><%= I18n.t 'button.save' %></a>
+			          		<a class="btn black_bg" href="javascript://"  onclick="parent.jQuery.colorbox.close();" ><%= I18n.t 'validation.common.can' %></a>
+			            </div>  
+			        	  
+			        <div class="clear"></div>
+			             
+			      </div>  
+			    
+   			</div>
+   		<% end %>	
+   <% end %>
+</div> 
+
+<!-- pop ups ends -->
+<section>
+	<div class="main marT40 shadow pad15">
+    	<div class="mtitle fl">
+           	<h1 id="list_name"><%= @contact_list[:name] %></h1>
+            <a href="#repeat_div_pop2" class="inline">[<%= I18n.t 'edit_contact.re_name' %>]</a>
+          
+        </div>
+        <div class="since"><a href="<%= APP_CONFIG['development']['site_url'] %>contacts/add_new/<%= @contact_list[:id] %>" class="btn rr"><%= I18n.t 'list_script.new_contact' %></a></div>
+        <div class="clear"></div>	
+    </div>	
+     	
+     	<div class="main marT25">
+     		  <% if flash[:notice1] %>
+			      <div class="notice" >
+			      	<p><%= flash[:notice1] %></p>
+			      </div>
+			   <% end %>
+		</div>	   
+            
+	<% if @contacts.count > 0 %>
+        	<%= form_tag({:controller => 'contacts', :action => 'action'}, :id => 'contactForm', :name => 'contactForm') do %> 
+	<div class="main marT40 shadow pad3">    	
+        
+		        <table class="contact_list_records table">
+		            <thead>
+			            <tr>
+			                <th><%= I18n.t 'edit_contact.new_select' %></th>
+			                <th><%= I18n.t 'action.email'%></th>
+			                <th><%= I18n.t 'edit_contact.last_emailed' %></th>
+			                <th><%= I18n.t 'action.first_name'%></th>
+			                <th><%= I18n.t 'action.last_name'%></th>
+			                <th><%= I18n.t 'new.table.create' %></th>
+			                <th><%= I18n.t 'new.table.ql' %></th>
+			            </tr>
+		            </thead>
+		            <tbody>
+		            <% for cl in @contacts %>
+		            		 <tr>
+				                <td><input name="id[]" type="checkbox" value="<%= cl[:id] %>" /></td>
+				                <td id="email_val<%= cl[:id] %>" <% if cl[:unsubscribe]==1 %>style="text-decoration: line-through;"<% end %>><%= cl[:email] %></td>
+				                <td><% 
+			                    		if cl[:unsubscribe]==1 %>
+			                    			<%= I18n.t 'list_script.unsubscribed' %>
+			                    	    <% else	
+				                    		if cl[:last_mailed]!=nil && cl[:last_mailed]!='' %>
+				                    			<%= cl[:last_mailed].strftime(@site[:date_time_format]) %>
+				                    		<% 
+				                    		else %>
+				                    			<%= I18n.t 'list_script.never_emailed' %>
+				                    		<% end
+			                    		end %></td>
+				                <td id="first_val<%= cl[:id] %>" <% if cl[:unsubscribe]==1 %>style="text-decoration: line-through;"<% end %>><%= cl[:first_name] %>&nbsp;</td>
+		                        <td id="last_val<%= cl[:id] %>" <% if cl[:unsubscribe]==1 %>style="text-decoration: line-through;"<% end %>><%= cl[:last_name] %>&nbsp;</td>
+		                        <td><%= cl[:created_at].strftime(@site[:date_time_format]) %> </td>
+		                        
+				                <td class="action_icon TW150">
+				                    <a href="#listdiv<%= cl[:id] %>" class="hint--bottom inline" data-hint=<%= I18n.t 'create_data_hint.data_hint_edit'%>>
+				                    	<img src="<%= APP_CONFIG['development']['app_url'] %>icon-edit.png" />
+				                    </a>
+				                    <a href="<%= APP_CONFIG['development']['site_url'] %>contacts/delete/<%= cl[:id] %>" onclick="return confirm_delete(); " class="hint--bottom" data-hint=<%= I18n.t 'create_data_hint.data_hint_delete'%>>
+				                    	<img src="<%= APP_CONFIG['development']['app_url'] %>icon-delete.png" />
+				                    </a>
+				                    <% if cl[:unsubscribe]==0 %>
+				                    <a href="<%= APP_CONFIG['development']['site_url'] %>contacts/unsubscribe/<%= cl[:id] %>" class="hint--bottom" data-hint=<%= I18n.t 'create_data_hint.data_hint_Unsubscribe'%>>
+				                    	<img src="<%= APP_CONFIG['development']['app_url'] %>icon-invite-red.png" />
+				                    </a>
+				                    <% end %>
+				                </td>
+				            </tr> 
+				            
+		            <% end %>
+		                            
+		            </tbody>
+		        </table> 
+		    
+		  
+    </div>
+		        <div class="main marT20" align="right">
+		        	<%= will_paginate @contacts %>
+		        	<div class="clear"></div>
+		        </div>	
+    
+     <script type="text/javascript">
+	function set_check(act){
+		$('#action_form').val(act);
+		$('#selecterr').text('');
+		
+		document.getElementById("various1").href = 'javascript://';
+		document.getElementById("various2").href = 'javascript://';
+		
+		var chks = document.getElementsByName('id[]');
+		var fl = true;
+		
+		if(act=='select')
+		{
+			for (var i = 0; i < chks.length; i++)
+	        {
+	            chks[i].checked=true;
+	        }
+	         fl = false;
+		}
+		
+		else if(act=='clear')
+		{
+			for (var i = 0; i < chks.length; i++)
+	        {
+	            chks[i].checked=false;
+	        }
+	         fl = false;
+		}
+		
+		else {
+			
+			for (var i = 0; i < chks.length; i++)
+	        {
+	        	
+	            if (chks[i].checked==true)
+	            {
+	            	
+	                   fl = false;
+	            }
+	         }
+	         
+	         if(fl==true){
+	         	$('#selecterr').text('<%= I18n.t 'list_script.atleast_one_record'%>');
+	         	$('#selecterr').addClass("error1");
+				return false;
+	         }else{
+	         	
+	         	if(act=='export'){
+	         		 var page_path = '/contacts/index/<%= @contact_list[:id] %>.csv';
+	         		 var str='';   
+	         		    for (var i = 0; i < chks.length; i++)
+				        {
+				            if (chks[i].checked==true)
+				            {
+				                  if(str=='') str=chks[i].value;
+				                  else str = str+'_'+chks[i].value;
+				            }
+				         }
+				         
+	         		 	document.getElementById("various1").href=page_path+'?list_id='+str;
+	         		 	
+						//$('#various1').trigger('click');
+						return false;
+	         	}
+	         	else if(act=='copy'){
+	         		    var page_path = '/contacts/copy';
+	         		    var str='';   
+	         		   
+						for (var i = 0; i < chks.length; i++)
+				        {
+				            if (chks[i].checked==true)
+				            {
+				                  if(str=='') str=chks[i].value;
+				                  else str = str+'_'+chks[i].value;
+				            }
+				         }
+				        document.getElementById("various2").href=page_path+'?list_id='+str;
+	         		 	$('#various2').click();
+						return false;
+	         	}else{
+					 if(act=='delete'){
+					 	if(confirm('<%= I18n.t 'list_script.are_delete_record'%>')){
+					 		document.contactForm.submit();
+					 	}
+					 	else{ return false; }
+					 		
+					 }	
+					if(act=='invite'){
+						$('#send_invite_click').click();
+					}
+					
+	         	}
+	         	
+	         }
+			
+		}
+         
+         
+	}
+	</script>
+	
+	<input type="hidden" value="" name="action_form" id="action_form" />
+    <input type="hidden" value="<%= @contact_list[:id] %>" name="contact_list_id" id="contact_list_id" />
+    <input type="hidden" name="select_invitation_id" id="select_invitation_id" value="" />
+	<a href="<%= APP_CONFIG['development']['site_url'] %>contact_lists/select_invite" class="rr" id="send_invite_click" style="display: none;">&nbsp;</a>
+    <a href="javascript:" class="rr" id="various2" style="display:none;">&nbsp;</a> 
+    
+    <div class="main marT20">
+    	<div id="selecterr" ></div>
+	    <strong>
+	    	<a href="javascript:" onclick="set_check('select');"><%= I18n.t 'contact_link.select_all'%></a> &nbsp;|&nbsp; 
+	    	<a href="javascript:" onclick="set_check('clear');"><%= I18n.t 'contact_link.clear_selected'%></a> &nbsp;|&nbsp; 
+	    	<a href="javascript:" onclick="set_check('export');" id="various1"><%= I18n.t 'contact_link.export_selected'%></a> &nbsp;|&nbsp; 
+	    	<a href="javascript:" onclick="set_check('delete');"><%= I18n.t 'contact_link.delete_selected'%></a> &nbsp;|&nbsp; 
+	    	<a href="javascript:" onclick="set_check('invite');"><%= I18n.t 'contact_link.send_invitation_selected'%></a> &nbsp;|&nbsp; 
+	    	<a href="javascript:" onclick="set_check('copy');" ><%= I18n.t 'contact_link.copy_selected_another_list'%></a> 
+	    </strong>
+    </div> 
+    
+      <% end %>
+					
+<% else %>
+	<div class="main marT40 shadow pad20">  	<p><%= I18n.t 'contact_link.no_contact_record_available'%></p> </div>
+<% end %> 
+</section>

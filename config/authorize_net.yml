@@ -1,0 +1,8 @@
+default:
+  api_login_id: 9R6J2pbY
+  api_transaction_key: 7sbQz792J8YNfR5T
+  merchant_hash_value:  9R6J2pbY
+
+development: 
+test: 
+production: 

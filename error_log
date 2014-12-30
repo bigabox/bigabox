@@ -1,0 +1,8 @@
+[02-Dec-2013 22:40:57 America/Chicago] PHP Fatal error:  Uncaught exception 'Exception' with message 'File is not a valid image: /home/swapclon/rails3test/public/halfevent.com/eventdemo/public/data/orig//' in /home/swapclon/rails3test/public/halfevent.com/eventdemo/thumbgenerator/ThumbBase.inc.php:193
+Stack trace:
+#0 /home/swapclon/rails3test/public/halfevent.com/eventdemo/thumbgenerator/GdThumb.inc.php(1484): ThumbBase->triggerError('File is not a v...')
+#1 /home/swapclon/rails3test/public/halfevent.com/eventdemo/thumbgenerator/GdThumb.inc.php(98): GdThumb->determineFormat()
+#2 /home/swapclon/rails3test/public/halfevent.com/eventdemo/thumbgenerator/ThumbLib.inc.php(127): GdThumb->__construct('/home/swapclon/...', Array, false)
+#3 /home/swapclon/rails3test/public/halfevent.com/eventdemo/thumb.php(25): PhpThumbFactory::create('/home/swapclon/...')
+#4 {main}
+  thrown in /home/swapclon/rails3test/public/halfevent.com/eventdemo/thumbgenerator/ThumbBase.inc.php on line 193

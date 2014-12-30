@@ -1,0 +1,568 @@
+<style>
+	.posrel{
+		width: 100%;
+	}
+	.selectbox .TW97p{
+		width: 100%!important;
+	}
+</style>
+
+		
+			 
+	
+	
+
+<div id="orderInfo"  class="marT60"></div>
+
+<div class="shadow marT20 pad20">
+
+	<%= form_tag({:controller => 'purchases', :action => 'edit_attendee'}, :id => 'place_orderform', :name => 'place_orderform') do %>
+		<div class="login_signup">
+            		<h3><%= I18n.t 'event.purchase.ticket_buyer' %></h3>
+            		
+					<% if ((@order[:prefix]=='10' || @order[:prefix]=='11' || @order[:prefix]=='1' ) && @order[:ctype]==1) %>
+						<div class="marT20">
+	                        <label><%= I18n.t 'user.prefix' %> : <% if @order[:prefix]=='11' %><span class="red">*</span><% end %></label>
+	                        <input type="text" name="purchases[prefix]" id="buyer_prefix" value="<%= @my_ticket[:prefix] %>" class="textbox TW97p make_readonly" placeholder="<%= I18n.t 'place.prefix' %>" />
+	                    </div>
+                    <% end %>
+                    
+                    	<div class="marT20">
+	                        <label><%= I18n.t 'user.fname' %> : <span class="red">*</span></label>
+	                        <input type="text" name="purchases[first_name]" id="buyer_first_name" value="<%= @my_ticket[:first_name] %>" class="textbox TW97p make_readonly" placeholder="<%= I18n.t 'place.fname' %>" />
+	                    </div>
+	                    
+	                    <div class="marT20">
+	                        <label><%= I18n.t 'user.lname' %> : <span class="red">*</span></label>
+	                        <input type="text" name="purchases[last_name]" id="buyer_last_name" value="<%= @my_ticket[:last_name] %>" class="textbox TW97p make_readonly" placeholder="<%= I18n.t 'place.lname' %>" />
+	                    </div>
+	                
+	                <% if ((@order[:suffix]=='10' || @order[:suffix]=='11' || @order[:suffix]=='1') && @order[:ctype]==1) %>
+						<div class="marT20">
+	                        <label><%= I18n.t 'user.suffix' %> : <% if @order[:suffix]=='11' %><span class="red">*</span><% end %></label>
+	                        <input type="text" name="purchases[suffix]" id="buyer_suffix" value="<%= @my_ticket[:suffix] %>" class="textbox TW97p make_readonly" placeholder="<%= I18n.t 'place.suffix' %>" />
+	                    </div>
+                    <% end %> 
+                    
+                    	<div class="marT20">
+	                        <label><%= I18n.t 'user.email' %> : <span class="red">*</span></label>
+	                        <input type="text" name="purchases[email]" id="buyer_email" value="<%= @my_ticket[:email] %>" class="textbox TW97p make_readonly" placeholder="<%= I18n.t 'place.email' %>" />
+	                    </div>  
+
+			
+			<div>
+      					<% if @order[:home_phone]=='10' || @order[:home_phone]=='11' || @order[:home_phone]=='1' %>
+	      					<div class="marT20">
+		                        <label><%= I18n.t 'user.home_phone' %> : <% if @order[:home_phone]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="purchases[home_phone]" id="buyer_home_phone" value="<%= @my_ticket[:home_phone] %>" class="textbox TW97p make_readonly" placeholder="<%= I18n.t 'place.home_phone' %>" />
+		                    </div>
+		                <% end %>     
+      					
+      					<% if @order[:cell_phone]=='10' || @order[:cell_phone]=='11' || @order[:cell_phone]=='1' %>
+          					<div class="marT20">
+		                        <label><%= I18n.t 'user.cell_phone' %> : <% if @order[:cell_phone]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="purchases[cell_phone]" id="buyer_cell_phone" value="<%= @my_ticket[:cell_phone] %>" class="textbox TW97p make_readonly" placeholder="<%= I18n.t 'place.cell_phone' %>" />
+		                    </div>
+          				<% end %>
+      			
+      			
+      					
+				<% if @order[:billing_address]=='10' || @order[:billing_address]=='11' || @order[:billing_address]=='1' %>
+  					<br /><h3><%= I18n.t 'user.bill_add' %></h3>
+					
+							<div class="marT20">
+		                        <label><%= I18n.t 'user.country' %> : <% if @order[:billing_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <% if @country.count > 0 %>
+		                        <div class="posrel">
+                                    <select name="purchases[bill_country]" id="user_address_bill_country" class="selectbox TW97p make_readonly W50P_T" onchange="set_state(this.value, 'bill')">
+                                       	  <option value="">-- <%= I18n.t 'user.select_country' %> --</option>
+										  <% for ct in @country %>
+										    	<option value="<%= ct[:country_name] %>" <% if(ct[:country_name] == @my_ticket[:bill_country]) %> selected="selected" <% end %>><%= ct[:country_name] %></option>
+										  <% end %> 
+                                    </select><div class="clear"></div>
+				        		</div>
+				        		<% else %>
+			                    	<input type="text" name="purchases[bill_country]" id="user_address_bill_country" value="<%= @my_ticket[:bill_country] %>" class="textbox TW97p make_readonly" placeholder="<%= I18n.t 'place.bill_country' %>" />
+			                    <% end %> 
+		                    </div>
+          				
+          					<div class="marT20">
+		                        <label><%= I18n.t 'user.add' %> : <% if @order[:billing_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="purchases[bill_add1]" id="user_address_bill_add1"  value="<%= @my_ticket[:bill_add1] %>" class="textbox TW97p make_readonly" placeholder="<%= I18n.t 'place.bill_add' %>" />
+		                    </div>
+		                    
+		                    <div class="marT20">
+		                        <label><%= I18n.t 'user.add2' %> : <% if @order[:billing_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="purchases[bill_add2]" id="user_address_bill_add2"  value="<%= @my_ticket[:bill_add2] %>" class="textbox TW97p make_readonly" placeholder="<%= I18n.t 'place.bill_add2' %>" />
+		                    </div>
+		                    
+		                    <div class="marT20">
+		                        <label><%= I18n.t 'user.city' %> : <% if @order[:billing_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="purchases[bill_city]" id="user_address_bill_city"  value="<%= @my_ticket[:bill_city] %>" class="textbox TW97p make_readonly" placeholder="<%= I18n.t 'place.bill_city' %> " />
+		                    </div>
+          				
+          				 <%
+	                        if @my_ticket[:bill_country] == 0 || @my_ticket[:bill_country] == nil || @my_ticket[:bill_country] == ''
+			
+								@state = State.find_all_state()
+						    else
+								
+								@state = State.find_state_by_country(@my_ticket[:bill_country])
+						    end	
+							
+	                      %>
+	                      
+	                      <div class="marT20">
+		                        <label><%= I18n.t 'user.state' %> : <% if @order[:billing_address]=='11' %><span class="red">*</span><% end %></label>
+		                       <% if @state.count > 0 %>
+		                        <div class="posrel">
+	                                <div id="bill_state_list">
+	                                <select class="selectbox TW97p make_disabled W50P_T" name="purchases[bill_state]" id="user_address_bill_state">
+	                                   	  <option value="">-- <%= I18n.t 'user.select_state' %> --</option>
+										   <% for st in @state %>
+												    <option value="<%= st[:state_name] %>" <% if(st[:state_name] == @my_ticket[:bill_state]) %> selected="selected" <% end %>><%= st[:state_name] %></option>
+										   <% end %>
+	                                </select>
+	                                </div><div class="clear"></div>
+				        		</div>
+				        		<% else %>
+			                    	<%= text_field_tag :bill_state, @my_ticket[:bill_state], :class => 'textbox TW97p make_readonly', :name => 'bill_state[]', :id => 'bill_state', :placeholder =>  (I18n.t 'place.bill_state') %>
+			                    <% end %> 
+		                 </div>
+		                    
+          				
+          				 <div class="marT20">
+	                        <label><%= I18n.t 'user.zip' %> : <% if @order[:billing_address]=='11' %><span class="red">*</span><% end %></label>
+	                        <input type="text" name="purchases[bill_zip]" id="user_address_bill_zip"  value="<%= @my_ticket[:bill_zip] %>" class="textbox TW97p make_readonly" placeholder="<%= I18n.t 'place.bill_zip' %> " />
+		                 </div>
+          				
+				<% end %>
+				<div class="clear"></div>
+				
+				
+				<% if @order[:home_address]=='10' || @order[:home_address]=='11' || @order[:home_address]=='1' %>
+  					<br /><h3><%= I18n.t 'user.home_add' %></h3>
+					
+							<div class="marT20">
+		                        <label><%= I18n.t 'user.country' %> : <% if @order[:home_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <% if @country.count > 0 %>
+		                        <div class="posrel">
+                                    <select name="purchases[home_country]" id="user_address_home_country" class="selectbox TW97p make_disabled W50P_T" onchange="set_state(this.value, 'home')">
+                                       	  <option value="">-- <%= I18n.t 'user.select_country' %> --</option>
+										  <% for ct in @country %>
+										    	<option value="<%= ct[:country_name] %>" <% if(ct[:country_name] == @my_ticket[:home_country]) %> selected="selected" <% end %>><%= ct[:country_name] %></option>
+										  <% end %> 
+                                    </select><div class="clear"></div>
+				        		</div>
+				        		<% else %>
+			                    	<input type="text" name="purchases[home_country]" id="user_address_home_country" value="<%= @my_ticket[:home_country] %>" class="textbox TW97p make_readonly" placeholder="<%= I18n.t 'place.home_country' %>" />
+			                    <% end %> 
+		                    </div>
+          				
+          					<div class="marT20">
+		                        <label><%= I18n.t 'user.add' %> : <% if @order[:home_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="purchases[home_add1]" id="user_address_home_add1"  value="<%= @my_ticket[:home_add1] %>" class="textbox TW97p make_readonly" placeholder="<%= I18n.t 'place.home_add' %>" />
+		                    </div>
+		                    
+		                    <div class="marT20">
+		                        <label><%= I18n.t 'user.add2' %> : <% if @order[:home_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="purchases[home_add2]" id="user_address_home_add2"  value="<%= @my_ticket[:home_add2] %>" class="textbox TW97p make_readonly" placeholder="<%= I18n.t 'place.home_add2' %> " />
+		                    </div>
+		                    
+		                    <div class="marT20">
+		                        <label><%= I18n.t 'user.city' %> : <% if @order[:home_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="purchases[home_city]" id="user_address_home_city"  value="<%= @my_ticket[:home_city] %>" class="textbox TW97p make_readonly" placeholder="<%= I18n.t 'place.home_city' %> " />
+		                    </div>
+          				
+          				 <%
+	                        if @my_ticket[:home_country] == 0 || @my_ticket[:home_country] == nil || @my_ticket[:home_country] == ''
+			
+								@state = State.find_all_state()
+						    else
+								
+								@state = State.find_state_by_country(@my_ticket[:home_country])
+						    end	
+							
+	                      %>
+	                      
+	                      <div class="marT20">
+		                        <label><%= I18n.t 'user.state' %> : <% if @order[:home_address]=='11' %><span class="red">*</span><% end %></label>
+		                       <% if @state.count > 0 %>
+		                        <div class="posrel">
+	                                <div id="home_state_list">
+	                                <select class="selectbox TW97p make_disabled W50P_T" name="purchases[home_state]" id="user_address_home_state">
+	                                   	  <option value="">-- <%= I18n.t 'user.select_state' %> --</option>
+										   <% for st in @state %>
+												    <option value="<%= st[:state_name] %>" <% if(st[:state_name] == @my_ticket[:home_state]) %> selected="selected" <% end %>><%= st[:state_name] %></option>
+										   <% end %>
+	                                </select>
+	                                </div><div class="clear"></div>
+				        		</div>
+				        		<% else %>
+			                    	<%= text_field_tag :home_state, @my_ticket[:home_state], :class => "textbox TW97p make_readonly", :name => "home_state[]", :id => "home_state", :placeholder => (I18n.t 'place.home_state') %>
+			                    <% end %> 
+		                 </div>
+		                    
+          				
+          				 <div class="marT20">
+	                        <label><%= I18n.t 'user.zip' %> : <% if @order[:home_address]=='11' %><span class="red">*</span><% end %></label>
+	                        <input type="text" name="purchases[home_zip]" id="user_address_home_zip"  value="<%= @my_ticket[:home_zip] %>" class="textbox TW97p make_readonly" placeholder="<%= I18n.t 'place.home_zip' %> " />
+		                 </div>
+				<% end %>
+				<div class="clear"></div>
+				
+  			
+  			
+  			
+				
+				<% if @order[:shipping_address]=='10' || @order[:shipping_address]=='11' || @order[:shipping_address]=='1' %>
+  					<br /><h3><%= I18n.t 'user.ship_add' %></h3>
+					
+							<div class="marT20">
+		                        <label><%= I18n.t 'user.country' %> : <% if @order[:shipping_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <% if @country.count > 0 %>
+		                        <div class="posrel">
+                                    <select name="purchases[ship_country]" id="user_address_ship_country" class="selectbox TW97p make_disabled W50P_T" onchange="set_state(this.value, 'ship')">
+                                       	  <option value="">-- <%= I18n.t 'user.select_country' %> --</option>
+										  <% for ct in @country %>
+										    	<option value="<%= ct[:country_name] %>" <% if(ct[:country_name] == @my_ticket[:ship_country]) %> selected="selected" <% end %>><%= ct[:country_name] %></option>
+										  <% end %> 
+                                    </select><div class="clear"></div>
+				        		</div>
+				        		<% else %>
+			                    	<input type="text" name="purchases[ship_country]" id="user_address_ship_country" value="<%= @my_ticket[:ship_country] %>" class="textbox TW97p make_readonly" placeholder="<%= I18n.t 'place.ship_country' %>" />
+			                    <% end %> 
+		                    </div>
+          				
+          					<div class="marT20">
+		                        <label><%= I18n.t 'user.add' %> : <% if @order[:shipping_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="purchases[ship_add1]" id="user_address_ship_add1"  value="<%= @my_ticket[:ship_add1] %>" class="textbox TW97p make_readonly" placeholder="<%= I18n.t 'place.ship_add' %>" />
+		                    </div>
+		                    
+		                    <div class="marT20">
+		                        <label><%= I18n.t 'user.add2' %> : <% if @order[:shipping_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="purchases[ship_add2]" id="user_address_ship_add2"  value="<%= @my_ticket[:ship_add2] %>" class="textbox TW97p make_readonly" placeholder="<%= I18n.t 'place.ship_add2' %> " />
+		                    </div>
+		                    
+		                    <div class="marT20">
+		                        <label><%= I18n.t 'user.city' %> : <% if @order[:shipping_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="purchases[ship_city]" id="user_address_ship_city"  value="<%= @my_ticket[:ship_city] %>" class="textbox TW97p make_readonly" placeholder="<%= I18n.t 'place.ship_city' %> " />
+		                    </div>
+          				
+          				 <%
+	                        if @my_ticket[:ship_country] == 0 || @my_ticket[:ship_country] == nil || @my_ticket[:ship_country] == ''
+			
+								@state = State.find_all_state()
+						    else
+								
+								@state = State.find_state_by_country(@my_ticket[:ship_country])
+						    end	
+							
+	                      %>
+	                      
+	                      <div class="marT20">
+		                        <label><%= I18n.t 'user.state' %> : <% if @order[:shipping_address]=='11' %><span class="red">*</span><% end %></label>
+		                       <% if @state.count > 0 %>
+		                        <div class="posrel">
+	                                <div id="ship_state_list">
+	                                <select class="selectbox TW97p make_disabled W50P_T" name="purchases[ship_state]" id="user_address_ship_state">
+	                                   	  <option value="">-- <%= I18n.t 'user.select_state' %> --</option>
+										   <% for st in @state %>
+												    <option value="<%= st[:state_name] %>" <% if(st[:state_name] == @my_ticket[:ship_state]) %> selected="selected" <% end %>><%= st[:state_name] %></option>
+										   <% end %>
+	                                </select>
+	                                </div><div class="clear"></div>
+				        		</div>
+				        		<% else %>
+			                    	<%= text_field_tag :ship_state, @my_ticket[:ship_state], :class => "textbox TW97p make_readonly", :name => "ship_state[]", :id => "ship_state", :placeholder => (I18n.t 'place.ship_state') %>
+			                    <% end %> 
+		                 </div>
+		                    
+          				
+          				 <div class="marT20">
+	                        <label><%= I18n.t 'user.zip' %> : <% if @order[:shipping_address]=='11' %><span class="red">*</span><% end %></label>
+	                        <input type="text" name="purchases[ship_zip]" id="user_address_ship_zip"  value="<%= @my_ticket[:ship_zip] %>" class="textbox TW97p make_readonly" placeholder="<%= I18n.t 'place.ship_zip' %> " />
+		                 </div>
+				<% end %>
+				<div class="clear"></div>
+				
+				
+				<% if @order[:work_address]=='10' || @order[:work_address]=='11' || @order[:work_address]=='1' %>
+  					<br /><h3><%= I18n.t 'user.work_add' %></h3>
+					
+							<div class="marT20">
+		                        <label><%= I18n.t 'user.country' %> : <% if @order[:working_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <% if @country.count > 0 %>
+		                        <div class="posrel">
+                                    <select name="purchases[work_country]" id="user_address_work_country" class="selectbox TW97p make_disabled W50P_T" onchange="set_state(this.value, 'work')">
+                                       	  <option value="">-- <%= I18n.t 'user.select_country' %> --</option>
+										  <% for ct in @country %>
+										    	<option value="<%= ct[:country_name] %>" <% if(ct[:country_name] == @my_ticket[:work_country]) %> selected="selected" <% end %>><%= ct[:country_name] %></option>
+										  <% end %> 
+                                    </select><div class="clear"></div>
+				        		</div>
+				        		<% else %>
+			                    	<input type="text" name="purchases[work_country]" id="user_address_work_country" value="<%= @my_ticket[:work_country] %>" class="textbox TW97p make_readonly" placeholder="<%= I18n.t 'place.work_country' %>" />
+			                    <% end %> 
+		                    </div>
+          				
+          					<div class="marT20">
+		                        <label><%= I18n.t 'user.add' %> : <% if @order[:working_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="purchases[work_add1]" id="user_address_work_add1"  value="<%= @my_ticket[:work_add1] %>" class="textbox TW97p make_readonly" placeholder="<%= I18n.t 'place.work_add' %>" />
+		                    </div>
+		                    
+		                    <div class="marT20">
+		                        <label><%= I18n.t 'user.add2' %> : <% if @order[:working_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="purchases[work_add2]" id="user_address_work_add2"  value="<%= @my_ticket[:work_add2] %>" class="textbox TW97p make_readonly" placeholder="<%= I18n.t 'place.work_add2' %> " />
+		                    </div>
+		                    
+		                    <div class="marT20">
+		                        <label><%= I18n.t 'user.city' %> : <% if @order[:working_address]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="purchases[work_city]" id="user_address_work_city"  value="<%= @my_ticket[:work_city] %>" class="textbox TW97p make_readonly" placeholder="<%= I18n.t 'place.work_city' %> " />
+		                    </div>
+          				
+          				 <%
+	                        if @my_ticket[:work_country] == 0 || @my_ticket[:work_country] == nil || @my_ticket[:work_country] == ''
+			
+								@state = State.find_all_state()
+						    else
+								
+								@state = State.find_state_by_country(@my_ticket[:work_country])
+						    end	
+							
+	                      %>
+	                      
+	                      <div class="marT20">
+		                        <label><%= I18n.t 'user.state' %> : <% if @order[:working_address]=='11' %><span class="red">*</span><% end %></label>
+		                       <div class="posrel">
+	                                <div id="work_state_list">
+		                       <% if @state.count > 0 %>
+		                        
+	                                <select class="selectbox TW97p make_disabled W50P_T" name="purchases[work_state]" id="user_address_work_state">
+	                                   	  <option value="">-- <%= I18n.t 'user.select_state' %> --</option>
+										   <% for st in @state %>
+												    <option value="<%= st[:state_name] %>" <% if(st[:state_name] == @my_ticket[:work_state]) %> selected="selected" <% end %>><%= st[:state_name] %></option>
+										   <% end %>
+	                                </select>
+	                                
+				        		<% else %>
+			                    	<%= text_field_tag :work_state, @my_ticket[:work_state], :class => 'textbox TW97p make_readonly', :name => 'purchases[work_state]', :id => 'work_state', :placeholder => (I18n.t 'place.work_state') %>
+			                    <% end %>
+			                    </div><div class="clear"></div>
+				        		</div> 
+		                 </div>
+		                    
+          				
+          				 <div class="marT20">
+	                        <label><%= I18n.t 'user.zip' %> : <% if @order[:working_address]=='11' %><span class="red">*</span><% end %></label>
+	                        <input type="text" name="purchases[work_zip]" id="user_address_work_zip"  value="<%= @my_ticket[:work_zip] %>" class="textbox TW97p make_readonly" placeholder="<%= I18n.t 'place.work_zip' %> " />
+		                 </div>
+      					
+      			<% if @order[:job_title]=='10' || @order[:job_title]=='11' || @order[:job_title]=='1' %>
+  						 <div class="marT20">
+	                        <label><%= I18n.t 'user.job' %> : <% if @order[:job_title]=='11' %><span class="red">*</span><% end %></label>
+	                        <input type="text" name="purchases[work_job_title]" id="user_address_work_job_title"  value="<%= @my_ticket[:work_job_title] %>" class="textbox TW97p make_readonly" placeholder="<%= I18n.t 'place.work_job' %> " />
+		                 </div>
+  				<% end %>
+  				
+  				
+  				<% if @order[:company]=='10' || @order[:company]=='11' || @order[:company]=='1' %>
+  						<div class="marT20">
+	                        <label><%= I18n.t 'user.company' %> : <% if @order[:company]=='11' %><span class="red">*</span><% end %></label>
+	                        <input type="text" name="purchases[work_company]" id="user_address_work_company"  value="<%= @my_ticket[:work_company] %>" class="textbox TW97p make_readonly" placeholder="<%= I18n.t 'place.company' %>" />
+		            	</div>
+  				<% end %>
+  				
+  				
+  				<% if @order[:work_phone]=='10' || @order[:work_phone]=='11' || @order[:work_phone]=='1' %>
+  						<div class="marT20">
+	                        <label><%= I18n.t 'user.work_phone' %> : <% if @order[:work_phone]=='11' %><span class="red">*</span><% end %></label>
+	                        <input type="text" name="purchases[work_phone]" id="user_address_work_phone"  value="<%= @my_ticket[:work_phone] %>" class="textbox TW97p make_readonly" placeholder="<%= I18n.t 'place.work_phone' %> " />
+		            	</div>
+		        <% end %>
+  				
+  				
+  				<% if @order[:blog]=='10' || @order[:blog]=='11' || @order[:blog]=='1' %>
+  						<div class="marT20">
+	                        <label><%= I18n.t 'user.blog' %> : <% if @order[:blog]=='11' %><span class="red">*</span><% end %></label>
+	                        <input type="text" name="purchases[work_blog]" id="user_address_work_blog"  value="<%= @my_ticket[:work_blog] %>" class="textbox TW97p make_readonly" placeholder="<%= I18n.t 'place.blog' %> " />
+		            	</div>
+		       <% end %>
+  				
+  				
+  				<% if @order[:website]=='10' || @order[:website]=='11' || @order[:website]=='1' %>
+  						<div class="marT20">
+	                        <label><%= I18n.t 'user.website' %> : <% if @order[:website]=='11' %><span class="red">*</span><% end %></label>
+	                        <input type="text" name="purchases[work_website]" id="user_address_work_website"  value="<%= @my_ticket[:work_website] %>" class="textbox TW97p make_readonly" placeholder="<%= I18n.t 'place.website' %> " />
+		            	</div>
+  				<% end %>
+  				
+			<% end %>
+			<div class="clear"></div>
+  				
+  				
+  				<% if @order[:gender]=='10' || @order[:gender]=='11' || @order[:gender]=='1' || @order[:birth_date]=='10' || @order[:birth_date]=='11' || @order[:birth_date]=='1' || @order[:age]=='10' || @order[:age]=='11' || @order[:age]=='1' %>
+  					<br /><h3><%= I18n.t 'user.other' %></h3>
+					<% if @order[:gender]=='10' || @order[:gender]=='11' || @order[:gender]=='1' %>
+						<div class="marT20">
+		                        <label><%= I18n.t 'user.gender' %> : <% if @order[:gender]=='11' %><span class="red">*</span><% end %></label>
+				                       
+								<div class="posrel">
+			                        <%= select_tag :gender, options_for_select(User::GENDER,@my_ticket[:gender]), :name => 'gender[]', :id => 'purchase_addresse_gender', :class => 'selectbox TW97p make_disabled W50P_T' %>
+			                       <div class="clear"></div>
+				        		</div>
+				        </div>		
+		        	<% end %>	
+  				
+  					<% if @order[:birth_date]=='10' || @order[:birth_date]=='11' || @order[:birth_date]=='1' %>
+	  						<div class="marT20">
+		                        <label><%= I18n.t 'user.bdate' %> : <% if @order[:birth_date]=='11' %><span class="red">*</span><% end %></label>
+		                        <%= text_field_tag :birth_date, @my_ticket[:birth_date], :class => 'textbox TW25p date_only', :name => 'birth_date[]' %>
+		                    </div>
+	  				<% end %>
+	  				
+  				
+  				
+  					<% if @order[:age]=='10' || @order[:age]=='11' || @order[:age]=='1' %>
+  							<div class="marT20">
+		                        <label><%= I18n.t 'user.age' %> : <% if @order[:age]=='11' %><span class="red">*</span><% end %></label>
+		                        <input type="text" name="age[]" id="age"  class="textbox TW97p make_readonly" placeholder="<%= I18n.t 'place.age' %> " />
+		                    </div>
+  					<% end %>
+  				
+  				
+  				<% end %><div class="clear"></div>
+  				
+  				<% @answers = Answer.find(:first, :conditions => ['event_id=? && purchase_id=?', @event[:id] , @my_ticket[:id]]) 
+  				%>
+  				
+  				<% if @answers!=nil && @answers!='' %>
+  				
+  				<% if @questions.count > 0 %>
+      				<br /><br /><h3><%= I18n.t 'user.que' %></h3>
+  						
+      				<%
+      				@ticks = params[:ticket_qty] 
+      				for q in @questions
+      					@ask = 1
+      					if (q[:rules]=='11' || q[:rules]=='1') 
+      						
+      						if q[:spec_ticket]==1
+          						@ask = 0
+          						@que_ticks = q[:tickets].split(',')
+          						@que_ticks.each do |ticks|
+          							if(@ticks.include?(ticks))
+          								 @ask = 1
+          							end	
+          						end	
+      						end	
+      						
+      					if(@ask==1) %>
+      					
+      						<div class="marT20">
+		                        <label><%= q[:que] %> : <% if q[:rules]=='11' %><span class="red">*</span><% end %></label>
+		                         <% if q[:que_type]=='text' %>
+		                        	<input type="text" name="que[<%= q[:id] %>][]" id="que_<%= q[:id] %>"  class="textbox TW97p make_readonly"  />
+		                         <% elsif q[:que_type]=='para' %>
+		                         	<textarea name="que[<%= q[:id] %>][]" id="que_<%= q[:id] %>" class="TW97p make_readonly" ></textarea>
+		                         <% else
+          						 	%>
+          						 	<br />	
+          						 	<%
+          						 	@que_options = QuestionOption.find(:all, :conditions => ['que_id=?', q[:id]])
+              						 i=0
+              						 if q[:que_type]=='select'
+              						 	%>
+              						 		<div class="posrel">
+				                                <select class="selectbox TW97p make_disabled W50P_T" name="que[<%= q[:id] %>][]" id="que_<%= q[:id] %>">
+              						 	<%
+              						 end	
+              						 for opt in @que_options
+                  						 if q[:que_type]=='radio' %>
+                  						 		<input type="radio" class="regular-radio" name="que[<%= q[:id] %>][]" id="que_<%= q[:id] %><%= opt[:id] %>" value="<%= opt[:value] %>" <% if @answers[:answer].to_s == opt[:value].to_s %> checked="checked" <% end %> />
+                  						 		<label class="mar0" for="que_<%= q[:id] %><%= opt[:id] %>"></label>
+												<label class="font_size14" style="margin: 0 3%;"><%= opt[:value] %></label>
+                  						 <% elsif q[:que_type]=='check' %>
+                  						 		<input type="checkbox" class="regular-checkbox" name="que[<%= q[:id] %>][]" id="que_<%= q[:id] %><%= opt[:id] %>"  value="<%= opt[:value] %>" <% if i==0 %> checked="checked" <% end %> />
+                  						 		<label class="mar0" for="que_<%= q[:id] %><%= opt[:id] %>"></label>
+												<label class="font_size14" style="margin: 0 3%;"><%= opt[:value] %></label>
+                  						 		
+                  						 <% else %>
+                  						 		<option value="<%= opt[:value] %>" ><%= opt[:value] %></option>
+                  						 <% end 
+                  					 	i+=1
+                  					 end
+                  					 if q[:que_type]=='select'
+              						 	%>
+              						 		</select></div>
+              						 	<%
+              						 end		 
+                  					%>
+          						 	
+          						 <% end %>
+          						 	
+          						<div class="clear"></div>
+          						
+		                    </div>
+		            	<% 
+      						end
+      					end
+      				end %>
+      				
+  				<% end %>
+  				
+  				
+  				<% if @waivers.count > 0 %>
+      				<br /><br /><h3><%= I18n.t 'user.wiever' %></h3>
+  						
+      				<%
+      				@ticks = params[:ticket_qty] 
+      				for q in @waivers
+      					@ask = 1
+      					if (q[:rules]=='11' || q[:rules]=='1') 
+      						
+      						if q[:spec_ticket]==1
+          						@ask = 0
+          						@que_ticks = q[:tickets].split(',')
+          						@que_ticks.each do |ticks|
+          							if(@ticks.include?(ticks))
+          								 @ask = 1
+          							end	
+          						end	
+      						end	
+      						
+      					if(@ask==1) 
+      					@que_options = QuestionOption.find(:first, :conditions => ['que_id=?', q[:id]])
+      					%>
+      						<div class="marT20">
+		                        <label><%= q[:que] %> : <% if q[:rules]=='11' %><span class="red">*</span><% end %></label>
+		                        <textarea readonly="readonly" class="TW97p make_readonly"><%= @que_options[:value] %></textarea>
+		                        <br/><br/><input type="checkbox" name="que[<%= q[:id] %>][]" id="que_<%= q[:id] %><%= @que_options[:id] %>" value="1" class="regular-checkbox" />
+          						<label class="mar0" for="que_<%= q[:id] %><%= @que_options[:id] %>"></label>
+								<label class="font_size14" style="margin: 0 3%;"> <%= I18n.t 'user.agree_wiever' %> </label>
+          						
+		                    </div>
+		                <% 
+      						end
+      					end
+      				end %>
+      				
+  				<% end %>
+  				
+  			<% end %>		
+  			
+  			
+			 <input type="hidden" name="purchases[id]" value="<%= @my_ticket[:id] %>"  />
+			
+</div>
+		</div>
+		
+		<div class="clear"></div>
+	        
+	        
+</div>		
+
+<div class="marT20"><a id="stop_dclick" href="javascript:" class="btn fr make_hide" onclick="submit_check_form();"><%= I18n.t 'event.purchase.pay_now' %></a></div>
+			<div class="clear"></div>
+	        
+	        <% end %>

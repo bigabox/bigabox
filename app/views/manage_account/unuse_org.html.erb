@@ -1,0 +1,55 @@
+<script>
+	function confirm_org_delete(){
+		var con = confirm('<%= I18n.t 'unuse_org.want_to_delete_org' %>');
+		if(con){
+			return true;
+		}else{
+			return false;
+		}
+	}
+</script>
+<section>
+	<%= render(:partial => "account_top" , :object => :collection) %>
+	<div class="main marTB40">
+    					
+			             <% if flash[:notice1] -%>
+					      <div class="notice">
+					      	<p><%= flash[:notice1] %></p>
+					      </div>
+						<% end -%>
+						
+    	<div class="leftcol">      	
+            <div class="mtitle">
+            	<h3><%= I18n.t 'unuse_org.unused' %> <span><%= I18n.t 'unuse_org.organizers' %></span></h3>
+            </div>
+            <div class="shadow marT10 pad20">
+            	<% if @organizers.count > 0 %>
+            	<div class="event_name_list marT15">
+            		<p><%= I18n.t 'unuse_org.followings_org_created_not_use_any_events_if_planning_to_use_them' %> 
+							<%= I18n.t 'unuse_org.you_may_want_delete_them_your_account' %></p>
+			
+                    <ul>
+                        <% for org in @organizers %>
+							<li><%= org[:name] %>
+								<span class="action_icon fr">
+									<a href="<%= APP_CONFIG['development']['site_url'] %>manage_account/delete_unused/<%= org[:id] %>" onclick="return confirm_org_delete();" class="hint--bottom" data-hint=<%= I18n.t 'create_data_hint.data_hint_delete'%>>
+										<img src="<%= APP_CONFIG['development']['app_url'] %>icon-delete.png" />
+								</a></span>
+							</li>
+						<% end %>
+						
+                    </ul> 
+                                   
+                </div>
+                <% else %>
+					<p><%= I18n.t 'unuse_org.no_unused_org_available' %></p>
+				<% end %>
+            </div>                         
+        </div>
+        
+        <% @act_class = 'Unused Organizers' %>         	
+		<%= render(:partial => "account_sidebar" , :object => :collection) %>    
+		   
+        <div class="clear"></div>
+    </div>    
+</section>

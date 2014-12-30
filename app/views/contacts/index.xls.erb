@@ -1,0 +1,31 @@
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+  xmlns:o="urn:schemas-microsoft-com:office:office"
+  xmlns:x="urn:schemas-microsoft-com:office:excel"
+  xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
+  xmlns:html="http://www.w3.org/TR/REC-html40">
+  <Worksheet ss:Name="Sheet1">
+    <table border="1">
+      <tr>
+        <tr><Data ss:Type="String"><%= I18n.t 'action.num'%></Data></td>
+        <tr><Data ss:Type="String"><%= I18n.t 'action.email'%></Data></td>
+        <tr><Data ss:Type="String"><%= I18n.t 'action.first_name'%></Data></td>
+        <tr><Data ss:Type="String"><%= I18n.t 'action.last_name'%></Data></td>
+        
+      </tr>
+    <% 
+    i=1
+    for c in @contacts %>
+      <tr>
+        <td><Data ss:Type="Number"><%= i %></Data></td>
+        <td><Data ss:Type="String"><%= c[:email] %></Data></td>
+        <td><Data ss:Type="String"><%= c[:first_name] %></Data></td>
+        <td><Data ss:Type="String"><%= c[:last_name] %></Data></td>
+        
+      </tr>
+    <% 
+    i+=1
+    end %>
+    </table>
+  </Worksheet>
+</Workbook>
+

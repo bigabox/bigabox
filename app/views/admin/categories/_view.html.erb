@@ -1,0 +1,62 @@
+ <%  
+ 	 @show = Category.find(params[:id]) 
+  	 if @show
+  	 else
+  	 	@show = Category.new	
+  	 end		 
+  	 @site = SiteSetting.find(:first)
+ %>
+ <style>
+ 	.columns .column{
+ 		width: 47%;
+ 	}
+ </style>
+
+<div class="panel">
+      <h3>Category Details</h3>
+	  <div class="panel_contents">
+	    <div class="attributes_table site_setting" id="attributes_table_site_setting_1">
+	      <table border="0" cellspacing="0" cellpadding="0">
+	            <tr class="row">
+	              <th>Category Name</th>
+	              <td><%= @show[:category_name] %></td>
+	            </tr>
+	            
+	            <tr class="row">
+	              <th>Status</th>
+	              <td>
+	              	<% if @show[:category_status] == 1 %>Active 
+	              		<% elsif @show[:category_status] == 0 %> Inactive 
+	              	<% else 
+	              		end %></td>
+	            </tr>
+	            
+	            <tr class="row">
+	              <th>Description</th>
+	              <td><%= render :inline => @show[:category_description] %></td>
+	            </tr>
+	            
+	            <tr class="row">
+	              <th>Image</th>
+	              <td>
+      					<% img_full_path = check_img(@show[:category_image],'category','orig')	
+				         	if img_full_path!='0' && img_full_path!='' 
+							  image_check = 1
+							  %>
+							  <img src="<%= APP_CONFIG['development']['upload_url'] %><%= img_full_path %>" alt=" " height="150" width="150"/>
+							  <%
+							else
+								%>
+								<img src="<%= APP_CONFIG['development']['app_url'] %>demo_image.png" alt=" " height="150" width="150" />
+								<%
+							end		
+						%>			
+				</td>
+	            </tr>
+	            
+	      </table>
+    	</div>
+  	  </div>
+</div>
+           
+

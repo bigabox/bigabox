@@ -1,0 +1,108 @@
+<% @lang = Language.find(:all, :conditions => ['language_active=?',1]) %>
+ <%
+	 @one_theme = EventTheme.one_theme(@event[:id])
+	if @one_theme
+       theme_id = @one_theme[:theme_id]
+       else @one_theme = Theme.find(:first)
+       theme_id = @one_theme[:id]
+       end
+       
+ %>
+<% @act_class = 'Event Type &amp; Language' %>  
+<%= render(:partial => "common_banner" , :object => :collection) %> 
+
+<script>
+		
+  $(document).ready(function() {
+  	setTimeout(function() {
+	      // Do something after 5 seconds
+	      set_theme_ajax(<%= theme_id %>);
+	}, 1000);
+  	 
+ });
+       
+ 
+ function set_theme_ajax(theme_id){
+ 	 var page_path = '/events/event_theme_page/';
+        var event_id = '<%= @event[:id] %>';
+        $.ajax({
+            type: "GET",
+            data: {event_id: event_id, theme_id: theme_id}, 
+            url: page_path+event_id,
+            success: function(data) {
+             //  alert(data);
+                $("#event_theme_page").html(data);
+                $('#progressbar').hide();
+            }
+        });
+ }
+	
+</script>
+<section>
+	<div class="main">
+			            
+		         
+    	<div class="left_columm">
+            <div class="marT60">
+            	
+            <%= form_tag({:controller => 'manage_event', :action => 'type_and_language'}, :id => 'edit_order_confirmation', :name => 'edit_order_confirmation') do %> 
+			
+                <div class="mtitle">
+                    <h1><%= I18n.t 'type_and_language.set_event_type'%> &amp; <span><%= I18n.t 'manage_event_sidebar.language'%></span></h1>
+					<span><%= I18n.t 'type_and_language.attendees_will_see_settings_select'%></span>          
+                </div>            
+                <div class="shadow marT20 pad3P">
+                    <label class="font_size15"><strong><%= I18n.t 'manage_event_sidebar.event_type'%></strong></label>
+                    <div class="type_language marT20">
+                        <input type="radio" name="event[event_type]" <% if @event[:event_type]==0 %> checked="checked" <% end %> value="0" />
+                        <span><%= I18n.t 'type_and_language.ticketed_event'%></span>
+                        <p><%= I18n.t 'type_and_language.choose_option_ticket_eg_example'%></p>
+                        <div class="clear"></div>                    
+                        
+                        <input type="radio"  name="event[event_type]" <% if @event[:event_type]==1 %> checked="checked" <% end %>  value="1" >
+                        <span><%= I18n.t 'type_and_language.registration_event'%></span>
+                        <p><%= I18n.t 'type_and_language.choose_option_registration_event_eg'%>
+									<%= I18n.t 'type_and_language.example_registration_info_type'%></p>
+                        <div class="clear"></div> 
+                    </div>
+                    <div class="marT25">
+                    	<label class="font_size15"><strong><%= I18n.t 'type_and_language.language_regional_settings'%></strong></label><br />
+                        <select class="selectbox marT10 TW150" id="" name="event[language_id]">
+							<% for lang in @lang %>
+								<option value="<%= lang[:id] %>" <% if lang[:id]==@event[:language_id] %> selected="selected" <% end %>><%= lang[:language_name] %></option>
+							<% end %>
+						</select>	
+							  
+                        <p class="marT10"><%= I18n.t 'type_and_language.your_event_display_date_time_language'%></p>
+                    </div>
+                </div>
+                <div class="marT25">
+                	<input type="hidden" name="id" id="id" value="<%= @event[:id] %>" />
+                	<input type="submit"  class="btn fr" value="<%= I18n.t 'type_and_language.save_changes'%>">
+                </div>
+                <div class="clear"></div>
+                <% end %>
+            </div>        
+    	</div>  
+    	<%= render(:partial => "manage_event_sidebar" , :object => :collection) %>
+		<div class="clear"></div>
+    </div>
+           <div class="clear"></div>
+   
+    <div class="main">
+    	<div class="mtitle marT25">
+          <h1><%= I18n.t 'button.preview' %></h1>            
+        </div>
+         <br />
+    	<div id="event_theme_page">   
+			<div class="min_height"><div class="pad15 textcenter" >
+				<img src="<%= APP_CONFIG['development']['app_url'] %>loader1.gif" alt="" />
+			</div> </div>    
+			
+		</div>
+    </div>
+   
+</section>
+<% @edit_menu_class = 'Manage' %>
+<%= render(:partial => "edit_menu" , :object => :collection) %> 
+<div class="clear "></div>

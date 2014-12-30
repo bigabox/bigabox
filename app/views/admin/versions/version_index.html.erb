@@ -1,0 +1,25 @@
+<% @sitesetting = SiteSetting.find(:first) %>
+<% 
+	form_act = 'update/'+ @sitesetting[:id].to_s		 
+%>
+
+<%= form_tag({:action => form_act }, :novalidate => 'novalidate') do %> 
+
+
+<% if @flag == 1 || @notice %>
+	<h1> Version is up-to-date !! </h1>
+<%end %>	
+<% if @flag == 0 %>
+
+<h1> A new version is available !! </h1>
+<p> Click "Add Version" to update Version.</p>
+	<fieldset class="actions">
+		<ol>
+			<li class="action input_action " id="page_submit_action">
+				<input name="commit" type="submit" value="Add Version" />
+			</li>
+		</ol>
+	</fieldset>
+<% end %><!-- End if >
+	
+<% end %> <!-- End form -->

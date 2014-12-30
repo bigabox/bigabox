@@ -1,0 +1,208 @@
+<style>
+	a.btn{
+		padding: 5px 10px;
+		font-size: 14px;
+	}
+</style>
+<% @fb = FacebookSetting.find(:first) %>	
+<div id="fb-root"></div>
+<script>
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '<%= @fb[:facebook_application_id] %>', // App ID
+      channelUrl : 'http://hayageek.com/examples/oauth/facebook/oauth-javascript/channel.html', // Channel File
+      status     : true, // check login status
+      cookie     : true, // enable cookies to allow the server to access the session
+      xfbml      : true  // parse XFBML
+    });
+	
+	var accessToken;
+    
+    
+     FB.getLoginStatus(function(response) {
+		  
+		  if (response.status === 'connected') {
+		    
+			$('#connect_with_facebook_friends').hide();
+			$('#share_it').show();
+			
+			FB.api('/me', function(response) {
+				  $('#img_div').html("<img src='http://graph.facebook.com/"+response.id+"/picture?type=square' alt=''/>");
+			      var str="<b>Name</b> : "+response.name+"<br>";
+			  	  str +="<b>Username:</b> "+response.username+"<br>";
+			  	  str +="<a href='javascript://' class='btn' onclick='Logout();'><%= I18n.t 'application.logout'%></a>";
+			  	  $('#data_div').html(str);
+			});
+			//console.log(accessToken);
+			
+		  } else {
+		    // the user isn't logged in to Facebook.
+		    $('#connect_with_facebook_friends').show();
+			$('#share_it').hide();
+		  }
+	 });
+	/*FB.Event.subscribe('auth.authResponseChange', function(response) 
+	{
+ 	 if (response.status === 'connected') 
+  	{
+  		document.getElementById("message").innerHTML +=  "<br>Connected to Facebook";
+  		//SUCCESS
+  		
+  	}	 
+	else if (response.status === 'not_authorized') 
+    {
+    	document.getElementById("message").innerHTML +=  "<br>Failed to Connect";
+
+		//FAILED
+    } else 
+    {
+    	document.getElementById("message").innerHTML +=  "<br>Logged Out";
+
+    	//UNKNOWN ERROR
+    }
+	});	*/
+	
+    };
+    
+   	function Login()
+	{
+	
+		FB.login(function(response) {
+		   if (response.authResponse) 
+		   {
+		    	getUserInfo();
+		    	 $('#connect_with_facebook_friends').hide();
+				 $('#share_it').show();
+  			} else 
+  			{
+  	    	 console.log('<%= I18n.t 'side_bar.user_not_login' %>');
+   			}
+		 },{scope: 'email,user_photos,user_videos,create_event'});
+	
+	
+	}
+
+  function getUserInfo() {
+	    FB.api('/me', function(response) {
+
+	   $('#img_div').html("<img src='http://graph.facebook.com/"+response.id+"/picture?type=square' alt=''/>");
+			      var str="<b>Name</b> : "+response.name+"<br>";
+			  	  str +="<b>Username:</b> "+response.username+"<br>";
+			  	  str +="<a href='javascript://' class='btn' onclick='Logout();'>Logout</a>";
+			  	  $('#data_div').html(str);
+	  	  //console.log(response);	    
+    });
+	 
+	FB.getLoginStatus(function(response) {
+  if (response.status === 'connected') {
+    // the user is logged in and has authenticated your
+    // app, and response.authResponse supplies
+    // the user's ID, a valid access token, a signed
+    // request, and the time the access token 
+    // and signed request each expire
+    var uid = response.authResponse.userID;
+    var accessToken = response.authResponse.accessToken;
+	 $('#connect_with_facebook_friends').hide();
+			$('#share_it').show();
+	//console.log(accessToken);
+	
+  } else if (response.status === 'not_authorized') {
+    // the user is logged in to Facebook, 
+    // but has not authenticated your app
+     $('#connect_with_facebook_friends').show();
+			$('#share_it').hide();
+  } else {
+    // the user isn't logged in to Facebook.
+     $('#connect_with_facebook_friends').show();
+			$('#share_it').hide();
+  }
+ });
+	
+	 var accessToken =   FB.getAuthResponse()['accessToken'];
+	
+	 
+    var name = "My Event";
+    var startTime = "2013-08-20T12:47:13.637Z";
+    var endTime = "2013-08-20T16:47:13.637Z";
+    var location = "India";
+    var description = "description";
+
+    var eventData = {
+        "access_token": accessToken,
+        "start_time" : startTime,
+        "end_time":endTime,
+        "location" : location,
+        "name" : name,
+        "description":description,
+        "privacy":"OPEN"
+    };
+  /*  FB.api("/me/events",'post',eventData,function(response2){
+        console.log(response2);
+        alert(response2);
+    });*/
+	
+    }
+	function getPhoto()
+	{
+	  FB.api('/me/picture?type=normal', function(response) {
+
+		  var str="<br/><b>Pic</b> : <img src='"+response.data.url+"'/>";
+	  	  document.getElementById("status").innerHTML+=str;
+	  	  	    
+    });
+	
+	}
+	function Logout()
+	{
+		FB.logout(function(){document.location.reload();});
+	}
+
+  // Load the SDK asynchronously
+  (function(d){
+     var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement('script'); js.id = id; js.async = true;
+     js.src = "//connect.facebook.net/en_US/all.js";
+     ref.parentNode.insertBefore(js, ref);
+   }(document));
+/*
+function test(){
+	var att = ['2','3','4','5','6'];
+	var chk = ['0','0','0','0','0'];
+	
+	var subcategory_path = '/mobile_logins/update_attendee_pull/';
+        
+        $.ajax({
+            type: "POST",
+            data: {attendee_id: att, checkin_status: chk}, 
+            url: subcategory_path,
+            success: function(data) {
+               alert(data);
+               
+            }
+        });
+}*/
+</script>
+
+ 
+
+<div class="rightcol">
+	<div class="mtitle">
+    	<h1><%= I18n.t 'side_bar.social' %> <span><%= I18n.t 'ticket_part.settings' %></span></h1>
+    </div>
+    <div class="shadow marT20 social_setting pad20">
+    	<div id="connect_with_facebook_friends">
+    	<%= I18n.t 'side_bar.connect_to_see_attending' %><br /><br />
+    	<a href="javascript://" class="cfacebook" onClick="Login()">
+			<img src="<%= APP_CONFIG['development']['app_url'] %>icon-facebook.png" /> <span><%= I18n.t 'event.view.connect_with_facebook' %></span>
+		</a>
+		</div><div class="clear"></div><br />
+		<div id="share_it">
+			<div id="img_div" class="fl"></div>
+			<div id="data_div" class="fl marL10"></div>
+			<div class="clear"></div>
+		</div>
+		<a href="#all_recommand"> <%= I18n.t 'side_bar.all_recommendations' %></a>
+    </div>        	
+    
+</div>

@@ -1,0 +1,462 @@
+<% @act_class = 'Orders' %> 
+<%= render(:partial => "common_banner" , :object => :collection) %> 
+
+ <%  @country = Country.find_all_country() %>
+<style>
+	.error1{
+		margin-left: 30%;
+	}
+</style>   
+
+
+	
+ <script type="text/javascript">
+						
+	function set_state(val, type){
+		
+		
+	        var state_path = '/manage_account/state_selection/';
+	        var country_id = val;
+	        $.ajax({
+	            type: "GET",
+	            data: {country_id: country_id, add_type: type, page_type: 'order'}, 
+	            url: state_path+country_id,
+	            success: function(data) {
+	             //  alert(data);
+	                $("#"+type+"_state_list").html(data);
+	            }
+	        });
+	   
+	}
+
+
+function validate_order_edit(){
+	var email_reg_exp= /^[a-zA-Z0-9]+[a-zA-Z0-9_.-]+[a-zA-Z0-9_-]+@[a-zA-Z0-9]+[a-zA-Z0-9.-]+[a-zA-Z0-9]+.[a-z]{2,4}$/;
+	
+	$('#first_nameInfo').text("");
+	$('#last_nameInfo').text("");
+	$('#emailInfo').text("");
+	
+	if($('#first_name').val()==''){
+		$('#first_name').focus();
+		$('#first_nameInfo').text("<%= I18n.t 'tickets_order.fname_field_required'%>");
+		return false;
+	}
+	
+	if($('#last_name').val()==''){
+		$('#last_name').focus();
+		$('#last_nameInfo').text("<%= I18n.t 'tickets_order.lname_field_required'%>");
+		return false;
+	}
+	
+	if($('#email').val()==''){
+		$('#email').focus();
+		$('#emailInfo').text("<%= I18n.t 'validation.common.email_req'%>");
+		return false;
+	}
+	
+	
+				//testing regular expression
+				var a = $('#email').val();
+				var filter = email_reg_exp;
+				//if it's valid email
+				//alert(a);
+				if(!filter.test(a)){
+						
+					$('#email').focus();
+					$('#emailInfo').text("<%= I18n.t 'validation.common.valid_email'%>");
+					return false;
+				}
+				
+	return true;		
+			
+}
+</script>  
+
+
+
+<section>
+	<div class="main">
+		 <% if flash[:notice] -%>
+		      <div class="errors" style="margin: 0px;">
+		      	<p><%= flash[:notice] %></p>
+		      </div>
+		
+		   <% end -%>                   
+		
+    	<div class="leftcol">
+        	          	
+       
+  <%= form_tag({:controller => 'manage_event', :action => 'edit_order'}, :id => 'account_frm', :name => 'account_frm') do %>          
+            <div class="mtitle marT40">
+            	<h3><%= I18n.t 'event.view.contact'%> <span><%= I18n.t 'event.view.information'%></span></h3>
+            </div>
+            <div class="shadow marT10 pad20">
+            	<div class="form">
+                	<label><%= I18n.t 'user.prefix'%></label>
+                	<%= text_field_tag :prefix, @order[:prefix], :class => 'textbox W150', :name => 'order[prefix]', :id => 'prefix' %>
+                    <div class="clear"></div>
+                    
+                	<label><%= I18n.t 'user.fname'%> <span class="red">*</span></label>
+	                <%= text_field_tag :first_name, @order[:first_name], :class => 'textbox', :name => 'order[first_name]', :id => 'first_name' %>
+	                <div id="first_nameInfo" class="error1"></div>
+                    
+                	<label><%= I18n.t 'user.lname'%> <span class="red">*</span></label>
+	                <%= text_field_tag :last_name, @order[:last_name], :class => 'textbox', :name => 'order[last_name]', :id => 'last_name' %>
+	                <div id="last_nameInfo" class="error1"></div>
+	                
+	                <label><%= I18n.t 'user.suffix'%></label>
+	                <%= text_field_tag :suffix, @order[:suffix], :class => 'textbox W150', :name => 'order[suffix]', :id => 'suffix' %>
+	               <div class="clear"></div>
+	                
+	                <label><%= I18n.t 'user.email'%> <span class="red">*</span></label>
+	                <%= text_field_tag :email, @order[:email], :class => 'textbox', :name => 'order[email]', :id => 'email' %>
+	                <div id="emailInfo" class="error1"></div>
+	                
+	                <label><%= I18n.t 'user.home_phone'%></label>
+	                <%= text_field_tag :home_phone, @order[:home_phone], :class => 'textbox', :name => 'order[home_phone]', :id => 'home_phone' %>
+	                
+	                
+	                <label><%= I18n.t 'user.cell_phone'%></label>
+	                <%= text_field_tag :cell_phone, @order[:cell_phone], :class => 'textbox', :name => 'order[cell_phone]', :id => 'cell_phone' %>
+	                
+                </div>
+                <div class="clear"></div>
+            </div>
+            
+                      
+
+            <div class="mtitle marT40">
+            	<h3><%= I18n.t 'user.add'%></h3>
+            </div>
+            <div class="shadow marT10">
+            	<div class="responsive-tabs">
+                    <h2><%= I18n.t 'user.home_add'%></h2>
+                    <div>                    	
+                    	<div class="form">
+		                	
+		                	  <label><%= I18n.t 'user.add'%></label>
+		                      <%= text_field_tag :home_add1, @order[:home_add1], :class => 'textbox', :name => 'order[home_add1]', :id => 'home_add1' %>
+		                      
+		                      
+		                      <label><%= I18n.t 'user.add2'%></label>
+		                      <%= text_field_tag :home_add2, @order[:home_add2], :class => 'textbox', :name => 'order[home_add2]', :id => 'home_add2' %>
+		                      
+		                      
+		                      <label><%= I18n.t 'user.country'%></label>
+		                      <% if @country.count > 0 %>
+		                      		<select class="selectbox" name="order[home_country]" id="order_home_country" onchange="set_state(this.value, 'home')">
+										  <option value="">-- <%= I18n.t 'user.select_country'%> --</option>
+										  <% for ct in @country %>
+										    <option value="<%= ct[:country_name] %>" <% if(ct[:country_name] == @order[:home_country]) %> selected="selected" <% end %>><%= ct[:country_name] %></option>
+										  <% end %>
+									  </select>
+							  <% else %>
+		                      			<%= text_field_tag :home_country, @order[:home_country], :class => 'textbox', :name => 'order[home_country]', :id => 'home_country' %> 
+		                      <% end %>
+		                      
+		                      
+		                      <%
+		                        if @order[:home_country] == 0 || @order[:home_country] == nil || @order[:home_country] == ''
+				
+									@state = State.find_all_state()
+							    else
+									
+									@state = State.find_state_by_country(@order[:home_country])
+							    end	
+								
+		                      %>
+		                      <label class="fl marT25"><%= I18n.t 'user.state'%> </label>
+		                      <div id="home_state_list" class="fl">
+			                      <% if @state.count > 0 %>
+			                      		<select class="selectbox" name="order[home_state]" id="order_home_state">
+											  <option value="">-- <%= I18n.t 'user.select_state'%> --</option>
+											  <% for st in @state %>
+											    <option value="<%= st[:state_name] %>" <% if(st[:state_name] == @order[:home_state]) %> selected="selected" <% end %>><%= st[:state_name] %></option>
+											  <% end %>
+										  </select>
+								  <% else %>
+			                      			<%= text_field_tag :home_state, @order[:home_state], :class => 'textbox', :name => 'order[home_state]', :id => 'home_state' %> 
+			                      <% end %>
+		                      </div>
+		                      <div class="clear"></div>
+		                   		
+		                   	  <label><%= I18n.t 'user.city'%></label>
+		                      <%= text_field_tag :home_city, @order[:home_city], :class => 'textbox', :name => 'order[home_city]', :id => 'home_city' %>
+		                     
+		                      
+		                      <label><%= I18n.t 'user.zip'%></label>
+		                      <%= text_field_tag :home_zip, @order[:home_zip], :class => 'textbox', :name => 'order[home_zip]', :id => 'home_zip' %>
+		                     
+		                </div> 
+                    	<div class="clear"></div>                          
+                    </div>
+                            
+                    <h2><%= I18n.t 'user.bill_add'%></h2>
+                    <div>
+                    	<div class="form">
+		                	  <label><%= I18n.t 'user.add'%></label>
+		                      <%= text_field_tag :bill_add1, @order[:bill_add1], :class => 'textbox', :name => 'order[bill_add1]', :id => 'bill_add1' %>
+		                      
+		                      
+		                      <label><%= I18n.t 'user.add2'%></label>
+		                      <%= text_field_tag :bill_add2, @order[:bill_add2], :class => 'textbox', :name => 'order[bill_add2]', :id => 'bill_add2' %>
+		                      
+		                      
+		                      <label><%= I18n.t 'user.country'%></label>
+		                      <% if @country.count > 0 %>
+		                      		<select class="selectbox" name="order[bill_country]" id="order_bill_country" onchange="set_state(this.value, 'bill')">
+										  <option value="">-- <%= I18n.t 'user.select_country'%> --</option>
+										  <% for ct in @country %>
+										    <option value="<%= ct[:country_name] %>" <% if(ct[:country_name] == @order[:bill_country]) %> selected="selected" <% end %>><%= ct[:country_name] %></option>
+										  <% end %>
+									  </select>
+							  <% else %>
+		                      			<%= text_field_tag :bill_country, @order[:bill_country], :class => 'textbox', :name => 'order[bill_country]', :id => 'bill_country' %> 
+		                      <% end %>
+		                      
+		                      
+		                     
+		                      <%
+		                        if @order[:bill_country] == 0 || @order[:bill_country] == nil || @order[:bill_country] == ''
+				
+									@state = State.find_all_state()
+							    else
+									
+									@state = State.find_state_by_country(@order[:bill_country])
+							    end	
+								
+		                      %>
+		                      <label class="fl marT25"><%= I18n.t 'user.state'%></label>
+		                      <div id="bill_state_list" class="fl">
+			                      <% if @state.count > 0 %>
+			                      		<select class="selectbox" name="order[bill_state]" id="order_bill_state">
+											  <option value="">-- <%= I18n.t 'user.select_state'%> --</option>
+											  <% for st in @state %>
+											    <option value="<%= st[:state_name] %>" <% if(st[:state_name] == @order[:bill_state]) %> selected="selected" <% end %>><%= st[:state_name] %></option>
+											  <% end %>
+										  </select>
+								  <% else %>
+			                      			<%= text_field_tag :bill_state, @order[:bill_state], :class => 'textbox', :name => 'order[bill_state]', :id => 'bill_state' %> 
+			                      <% end %>
+		                      </div>
+		                     <div class="clear"></div>
+		                   	
+		                   	  <label><%= I18n.t 'user.city'%></label>
+		                      <%= text_field_tag :bill_city, @order[:bill_city], :class => 'textbox', :name => 'order[bill_city]', :id => 'bill_city' %>
+		                      
+		                      
+		                      <label><%= I18n.t 'user.zip'%></label>
+		                      <%= text_field_tag :bill_zip, @order[:bill_zip], :class => 'textbox', :name => 'order[bill_zip]', :id => 'bill_zip' %>
+		                      
+		                      
+		                </div> 
+                    	<div class="clear"></div>   
+                    </div>         
+                    
+                    <h2><%= I18n.t 'user.ship_add'%></h2>
+                    <div>
+                    	<div class="form">
+		                	  <label><%= I18n.t 'user.add'%></label>
+		                      <%= text_field_tag :ship_add1, @order[:ship_add1], :class => 'textbox', :name => 'order[ship_add1]', :id => 'ship_add1' %>
+		                      
+		                      
+		                      <label><%= I18n.t 'user.add2'%></label>
+		                      <%= text_field_tag :ship_add2, @order[:ship_add2], :class => 'textbox', :name => 'order[ship_add2]', :id => 'ship_add2' %>
+		                      
+		                      
+		                      <label><%= I18n.t 'user.country'%></label>
+		                      <% if @country.count > 0 %>
+		                      		<select class="selectbox" name="order[ship_country]" id="order_ship_country" onchange="set_state(this.value, 'ship')">
+										  <option value="">-- <%= I18n.t 'user.select_country'%> --</option>
+										  <% for ct in @country %>
+										    <option value="<%= ct[:country_name] %>" <% if(ct[:country_name] == @order[:ship_country]) %> selected="selected" <% end %>><%= ct[:country_name] %></option>
+										  <% end %>
+									  </select>
+							  <% else %>
+		                      			<%= text_field_tag :ship_country, @order[:ship_country], :class => 'textbox', :name => 'order[ship_country]', :id => 'ship_country' %> 
+		                      <% end %>
+		                      
+		                     
+		                      <%
+		                        if @order[:ship_country] == 0 || @order[:ship_country] == nil || @order[:ship_country] == ''
+				
+									@state = State.find_all_state()
+							    else
+									
+									@state = State.find_state_by_country(@order[:ship_country])
+							    end	
+								
+		                      %>
+		                      <label class="fl marT25"><%= I18n.t 'user.state'%> </label>
+		                      <div id="ship_state_list" class="fl">
+			                      <% if @state.count > 0 %>
+			                      		<select class="selectbox" name="order[ship_state]" id="order_ship_state">
+											  <option value="">-- <%= I18n.t 'user.select_state'%> --</option>
+											  <% for st in @state %>
+											    <option value="<%= st[:state_name] %>" <% if(st[:state_name] == @order[:ship_state]) %> selected="selected" <% end %>><%= st[:state_name] %></option>
+											  <% end %>
+										  </select>
+								  <% else %>
+			                      			<%= text_field_tag :ship_state, @order[:ship_state], :class => 'textbox', :name => 'order[ship_state]', :id => 'ship_state' %> 
+			                      <% end %>
+		                      </div>
+		                      <div class="clear"></div>
+		                   
+		                   	  <label><%= I18n.t 'user.city'%></label>
+		                      <%= text_field_tag :ship_city, @order[:ship_city], :class => 'textbox', :name => 'order[ship_city]', :id => 'ship_city' %>
+		                      
+		                      
+		                      <label><%= I18n.t 'user.zip'%></label>
+		                      <%= text_field_tag :ship_zip, @order[:ship_zip], :class => 'textbox', :name => 'order[ship_zip]', :id => 'ship_zip' %>
+		                      
+		                           
+		                       
+		                </div>   
+                    	<div class="clear"></div> 
+                    </div>
+                           
+                </div>
+            </div>
+            
+                     
+            <div class="mtitle marT40">
+            	<h3><%= I18n.t 'event.view.information'%></h3>
+            </div>
+            <div class="shadow marT10">
+            	<div class="responsive-tabs">
+                    <h2><%= I18n.t 'purchases_show.work_info'%></h2>
+                    <div>                    	
+                    	<div class="form">
+                            
+                              <label><%= I18n.t 'user.job'%></label>
+		                       <%= text_field_tag :work_job_title, @order[:work_job_title], :class => 'textbox', :name => 'order[work_job_title]', :id => 'work_job_title' %>
+		                      
+		                      
+		                      <label><%= I18n.t 'user.company'%></label>
+		                       <%= text_field_tag :work_company, @order[:work_company], :class => 'textbox', :name => 'order[work_company]', :id => 'work_company' %>
+		                      
+		                      
+		                       <label><%= I18n.t 'user.add'%></label>
+		                      <%= text_field_tag :work_add1, @order[:work_add1], :class => 'textbox', :name => 'order[work_add1]', :id => 'work_add1' %>
+		                      
+		                      
+		                      <label><%= I18n.t 'user.add2'%></label>
+		                      <%= text_field_tag :work_add2, @order[:work_add2], :class => 'textbox', :name => 'order[work_add2]', :id => 'work_add2' %>
+		                      
+		                      
+		                      <label><%= I18n.t 'user.country'%></label>
+		                      <% if @country.count > 0 %>
+		                      		<select class="selectbox" name="order[work_country]" id="order_work_country" onchange="set_state(this.value, 'work')">
+										  <option value="">-- <%= I18n.t 'user.select_country'%> --</option>
+										  <% for ct in @country %>
+										    <option value="<%= ct[:country_name] %>" <% if(ct[:country_name] == @order[:work_country]) %> selected="selected" <% end %>><%= ct[:country_name] %></option>
+										  <% end %>
+									  </select>
+							  <% else %>
+		                      			<%= text_field_tag :work_country, @order[:work_country], :class => 'textbox', :name => 'order[work_country]', :id => 'work_country' %> 
+		                      <% end %>
+		                      
+		                      
+		                      <%
+		                        if @order[:work_country] == 0 || @order[:work_country] == nil || @order[:work_country] == ''
+				
+									@state = State.find_all_state()
+							    else
+									
+									@state = State.find_state_by_country(@order[:work_country])
+							    end	
+								
+		                      %>
+		                      <label class="fl marT25"><%= I18n.t 'user.state'%> </label>
+		                      <div id="work_state_list" class="fl">
+			                      <% if @state.count > 0 %>
+			                      		<select class="selectbox" name="order[work_state]" id="order_work_state">
+											  <option value="">-- <%= I18n.t 'user.select_state'%> --</option>
+											  <% for st in @state %>
+											    <option value="<%= st[:state_name] %>" <% if(st[:state_name] == @order[:work_state]) %> selected="selected" <% end %>><%= st[:state_name] %></option>
+											  <% end %>
+										  </select>
+								  <% else %>
+			                      			<%= text_field_tag :work_state, @order[:work_state], :class => 'textbox', :name => 'order[work_state]', :id => 'work_state' %> 
+			                      <% end %>
+		                      </div>
+		                      <div class="clear"></div>
+		                   
+		                      <label><%= I18n.t 'user.city'%></label>
+		                      <%= text_field_tag :work_city, @order[:work_city], :class => 'textbox', :name => 'order[work_city]', :id => 'work_city' %>
+		                      
+		                      
+		                      <label><%= I18n.t 'user.zip'%></label>
+		                      <%= text_field_tag :work_zip, @order[:work_zip], :class => 'textbox', :name => 'order[work_zip]', :id => 'work_zip' %>
+		                      
+		                      
+		                      
+		                      <label><%= I18n.t 'purchases_show.phone'%></label>
+		                      <%= text_field_tag :work_phone, @order[:work_phone], :class => 'textbox', :name => 'order[work_phone]', :id => 'work_phone' %>
+		                      
+		                      
+		                      <label><%= I18n.t 'user.blog'%></label>
+		                      <%= text_field_tag :work_blog, @order[:work_blog], :class => 'textbox', :name => 'order[work_blog]', :id => 'work_blog' %>
+		                      
+		                      
+		                      <label><%= I18n.t 'user.website'%></label>
+		                      <%= text_field_tag :work_website, @order[:work_website], :class => 'textbox', :name => 'order[work_website]', :id => 'work_website' %>
+		                      		                      
+		                      
+		                      
+                            
+                            
+                        </div> 
+                    	<div class="clear"></div>                          
+                    </div>        
+                    
+                    <h2><%= I18n.t 'user.other'%></h2>
+                    <div>
+                    	<div class="form">
+                            <label><%= I18n.t 'user.gender'%></label>
+                      		<%= select_tag :gender, options_for_select(User::GENDER,@order[:gender]), :name => 'order[gender]', :id => 'user_gender', :class => 'selectbox' %>
+	                        
+	                        
+		                     <label><%= I18n.t 'user.bdate'%></label> 
+			                  <% sy = Time.now.year - 100
+							   ey = Time.now.year %>
+						
+					         <%= text_field_tag :birth_date, @order[:birth_date], :class => 'date_only textbox TW25p ', :name => 'order[birth_date]', :id => 'birth_date' %>
+					         
+					     <script>
+							$(function() {
+								$('#birth_date').datepicker({
+									ampm: false,dateFormat:'yy-mm-dd',
+									changeMonth: true,changeYear: true,yearRange: '<%= sy %>:<%= ey %>', dateFormat: "yy-mm-dd",
+									maxDate: 0
+								});
+								$('#ui-datepicker-div').hide();
+							});
+						</script>     
+					               
+							       
+                        </div> 
+                    	<div class="clear"></div>   
+                    </div>      
+                    </div>
+            </div>
+            <div class="marT20" align="right">
+            	<input type="hidden" name="id" id="id" value="<%= @order[:id] %>" />    
+ 				<input class="submit_btn" type="submit" onclick="return validate_order_edit();" value="Save">
+ 				<a class="btn black_bg marL10" href="<%= APP_CONFIG['development']['site_url'] %>manage_event/orders/<%= @order[:event_id] %>" style=" padding: 16px 20px;">Cancel</a>
+ 					
+            </div>
+    <% end %>    
+        </div>
+  
+    	
+    	<%= render(:partial => "manage_event_sidebar" , :object => :collection) %>
+		<div class="clear"></div>
+        </div>
+           <div class="clear"></div>
+   
+</section>
+<% @edit_menu_class = 'Manage' %>
+<%= render(:partial => "edit_menu" , :object => :collection) %> 
+<div class="clear "></div>

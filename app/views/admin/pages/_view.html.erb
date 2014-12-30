@@ -1,0 +1,30 @@
+ <%  @show = Page.find(params[:id]) 	 %>
+	
+		<div class="panel">
+              <h3>Details</h3>
+              <div class="panel_contents">
+                <div class="attributes_table site_setting" id="attributes_table_site_setting_1">
+                  <table border="0" cellspacing="0" cellpadding="0">
+	                    
+	                    <tr class="row">
+	                      <th>Title</th>
+	                      <td><%= @show[:pages_title] %></td>
+	                    </tr>
+	                    
+	                    <tr class="row">
+	                      <th>Page Link </th>
+	                      <td><%= APP_CONFIG['development']['site_url']+'content/'+@show[:slug] %></td>
+	                    </tr>
+	                    
+	                    <tr class="row">
+	                      <th>Content</th>
+	                      <td><%=  render(:inline => @show[:description]) %></td>
+	                    </tr>
+	                    
+                  </table>
+                </div>
+              </div>
+            </div>
+            
+            
+          

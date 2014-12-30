@@ -1,0 +1,205 @@
+<%  @user_bank = UserBankDetail.find(:first, :conditions => ['user_id=?', @user[:id]]) %>
+
+<script type="text/javascript">
+function show_event_div(){
+	$('#show_event_div').slideDown();
+	$('#show_events').html('<span onclick="hide_event_div()"><%= I18n.t 'event.view.hide' %></span>');
+}
+
+function hide_event_div(){
+	$('#show_event_div').hide();
+	$('#show_events').html('<span onclick="show_event_div()"><%= I18n.t 'payaccounts.show' %></span>');
+}
+
+function validateNameEmail(){
+	var email_reg_exp = /^[a-zA-Z0-9]+[a-zA-Z0-9_.-]+[a-zA-Z0-9_-]+@[a-zA-Z0-9]+[a-zA-Z0-9.-]+[a-zA-Z0-9]+.[a-z]{2,4}$/;
+	var name_reg_exp = /^[a-z A-Z]+$/;	
+	var LetNumSpaceSpec=/^[0-9a-z A-Z_-]+$/;
+	
+	var a = $("#payacc").val();
+	var b = $('#refacc').val();
+	var bankname = $("#bank_name").val();
+	var branchname = $('#bank_branch').val();
+	var ifsc = $('#ifsc_code').val();
+	
+	var filter = email_reg_exp;
+	var filter1 = name_reg_exp; 
+	var filter2 = LetNumSpaceSpec;
+		
+	var forgetEmailInfo = $("#payerr");
+	var forgetRefInfo = $("#referr");
+	var banknameerr = $("#banknameerr");
+	var brancherr = $('#brancherr');
+	var ifscerr = $('#ifscerr');
+	
+	
+	// Validations for Paypal and Referrer email
+	if(filter.test(a) && filter.test(b) && filter1.test(bankname) && filter2.test(branchname) && filter2.test(ifsc)){				
+		forgetEmailInfo.text('<%= I18n.t 'add_user_form.email_address_valid'%>');
+		forgetEmailInfo.removeClass("error1");
+		forgetEmailInfo.addClass("success");
+		
+		forgetRefInfo.text('<%= I18n.t 'add_user_form.email_address_valid'%>');
+		forgetRefInfo.removeClass("error1");
+		forgetRefInfo.addClass("success");
+		
+		banknameerr.text('Name is valid');
+		banknameerr.removeClass("error1");
+		banknameerr.addClass("success");
+		
+		brancherr.removeClass("error1");
+		ifscerr.removeClass("error1");		
+		
+		return true;
+	}		
+		
+	else if(!filter.test(a)){
+		
+		forgetEmailInfo.text('<%= I18n.t 'list_script.please_valid_email'%>');
+		forgetEmailInfo.removeClass("success");
+		forgetEmailInfo.addClass("error1");		
+		return false;
+	}
+	else if(!filter.test(b)){
+		
+		forgetRefInfo.text('<%= I18n.t 'list_script.please_valid_email'%>');
+		forgetRefInfo.removeClass("success");
+		forgetRefInfo.addClass("error1");		
+		return false;
+	}
+	
+	// Validations for Bank information	
+	
+	else if(!filter1.test(bankname)) {
+				
+		banknameerr.text('Type a valid name please');
+		banknameerr.removeClass("success");
+		banknameerr.addClass("error1");
+		return false;
+	}
+	
+	else if(!filter2.test(branchname)) {
+				
+		brancherr.text('Type a valid name please');
+		brancherr.removeClass("success");
+		brancherr.addClass("error1");
+		return false;
+	}	
+	else if(!filter2.test(ifsc)) {
+				
+		ifscerr.text('Type a valid code please');
+		ifscerr.removeClass("success");
+		ifscerr.addClass("error1");
+		return false;
+	}	
+			
+}
+
+
+</script>
+<section>
+	<%= render(:partial => "account_top" , :object => :collection) %> 
+	
+	<div class="main marTB40">
+    	<% if flash[:notice] -%>
+	      <div class="errors" >
+	      	<p><%= flash[:notice] %></p>
+	      </div>
+		<% end -%>
+	   
+         <% if flash[:notice1] -%>
+	      <div class="notice" >
+	      	<p><%= flash[:notice1] %></p>
+	      </div>
+		<% end -%>
+	   
+	   
+    	<div class="leftcol">   
+    	<%= form_tag({:controller => 'manage_account', :action => 'payaccounts'}, :id => 'payform') do %>  
+    	
+    	<!-- Paypal Information for all events -->
+ 	
+            <div class="mtitle">
+            	<h3><%= I18n.t 'payaccounts.paypal_email_address_used_your_events'%></h3>
+            </div>
+            <div class="shadow marT10 pad20">
+            	<div class="payment_accounts form">
+                      <%= text_field_tag :event_pay_account, @user[:event_pay_account], :class => 'textbox', :id => 'payacc' %>
+	                  <input type="hidden" name="event" value="event"  />               
+	                  <div id="payerr" ></div>
+                      <br />
+                      <% if @event.count > 0 %>
+	                 	<%= I18n.t 'payaccounts.used_in'%> <%= @event.count %> <%= I18n.t 'payaccounts.small_events'%> <strong> <a href="javascript:" class="link_show"><%= I18n.t 'payaccounts.show' %></a></strong></small>
+	              	  <% end  %>	
+                    
+                    <div class="div_show">
+                    	<div class="event_name_list marT15">
+                            <% if @event.count > 0 %>
+		                    <ul>
+		                      <% for e in @event 
+		                      		if e[:event_url_link]=='' || e[:event_url_link]==nil 
+					             		page_url = APP_CONFIG['development']['site_url']+'events/view/'+e[:id].to_s 
+					             	else
+					             		page_url = APP_CONFIG['development']['site_url']+'event/'+e[:event_url_link]
+					             	end
+		                      %>
+		                      		<li><a href="<%= page_url %>"><%= e[:event_title] %></a></li>
+		                      <% end %>
+		                    </ul>
+		                    <% end  %>             
+                        </div>
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </div>
+           
+           <!-- End Paypal -->
+            <!-- For Bank Account Details -->
+            <div class="mtitle marT40">
+            	<h3>Bank Account used for payouts.</h3>
+            </div>
+             <div class="shadow marT10 pad20">             	            	
+            	<div class="payment_accounts form">
+            		<%= label_tag 'Bank Name:' %>
+            		<input type ="text" id = "bank_name" name="bank_name" class = "textbox" <%if @user_bank && @user_bank!=''%>value=<%= @user_bank[:bank_name]%><%else%>value=""<%end%>>
+                      <div id="banknameerr"></div>
+                      
+                      <%= label_tag 'Branch:' %>
+                      <input type ="text" id = "bank_branch" name="bank_branch" class = "textbox" <%if @user_bank && @user_bank!=''%>value=<%= @user_bank[:bank_branch]%><%else%>value=""<%end%>>
+                       <div id="brancherr"></div>
+                       
+                      <%= label_tag 'IFSC Code:' %>
+                      <input type ="text" id = "ifsc_code" name="bank_ifsc_code" class = "textbox" <%if @user_bank && @user_bank!=''%>value=<%= @user_bank[:bank_ifsc_code]%><%else%>value=""<%end%>>                      
+                       <div id="ifscerr"></div>
+	                 
+			    </div>
+                <div class="clear"></div>
+            </div>    
+            <!-- end bank -->
+            <!-- For Referrer -->
+
+            <div class="mtitle marT40">
+            	<h3><%= I18n.t 'payaccounts.paypal_account_used_for'%> <%= @site[:site_name]%> <%= I18n.t 'payaccounts.referral payouts'%></h3>
+            </div>
+            <div class="shadow marT10 pad20">
+            	
+            	<div class="payment_accounts form">
+                      <%= text_field_tag :ref_pay_account, @user[:ref_pay_account], :class => 'textbox' , :id =>'refacc' %>
+	                  <input type="hidden" name="ref" value="ref"  />
+	                 <div id="referr" ></div>
+			    </div>
+                <div class="clear"></div>
+            </div>   
+            <!-- end referrer -->
+                     
+        <%= submit_tag (I18n.t 'button.save'), :class => 'submit_btn', :onclick => 'return validateNameEmail();' %>
+
+        <% end %>
+        </div>
+        
+		<% @act_class = 'Payment Accounts' %>         	
+		<%= render(:partial => "account_sidebar" , :object => :collection) %>    
+		   
+        <div class="clear"></div>
+    </div>    
+</section>

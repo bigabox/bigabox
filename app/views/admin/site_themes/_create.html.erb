@@ -1,0 +1,177 @@
+ <style>
+ 	
+.clr_size{	
+	width: 50px;
+	height: 20px;	
+	display: block;
+} 
+
+.hash_font {
+	font-size: 20px!important;
+}
+
+.error1 , .error2 {
+	color: #FF0000;
+}
+.error1{
+	margin-left: 20% !important;
+}	
+.error2 {
+	text-align: center;
+} 	
+ </style>
+ 
+ <script>
+ 	
+$(document).ready(function(e) {
+	
+	
+	$('#site_theme_color').change(function(){
+		var color = $(this).val();
+		check_valid_color(color,1);
+		$('#color').css( "background-color", color );
+ 	});
+ 	
+ 	$('#site_theme_color1').change(function(){
+		var color = $(this).val();
+		check_valid_color(color,2);
+		$('#color1').css( "background-color", color );
+ 	});
+ 	
+ 	$('#site_theme_color2').change(function(){
+		var color = $(this).val();
+		check_valid_color(color,3);
+		$('#color2').css( "background-color", color );
+ 	});
+	
+	$('#site_theme_color3').change(function(){
+		var color = $(this).val();
+		check_valid_color(color,4);
+		$('#color3').css( "background-color", color );
+ 	});
+	
+	$('#site_theme_colordark').change(function(){
+		var color = $(this).val();
+		check_valid_color(color,5);
+		$('#colordark').css( "background-color", color );
+ 	});
+	
+	
+	
+}); 
+
+function check_valid_color(color,id){
+		
+		//var flag = /(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i.test(color);
+		
+		var err_id="#errInfo"+id;
+			$(err_id).text('');
+		if(!(/(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i.test(color)))
+		{ 
+			var err_id="#errInfo"+id;
+			$(err_id).text('Please Enter Valid Color Code..!!');
+			return false;
+		}
+	
+		
+}
+
+
+function check_valid_color_all()
+{
+	var	p=0;
+		check_valid_color($('#site_theme_color').val(),1);
+		check_valid_color($('#site_theme_color1').val(),2);
+		check_valid_color($('#site_theme_color2').val(),3);
+		check_valid_color($('#site_theme_color3').val(),4);
+		check_valid_color($('#site_theme_colordark').val(),5);
+		
+		 $('.error1' ).each(function( index ) {
+		 	
+	    	if($(this).html()!=''){
+			      
+			    $('#errInfoAll').text('All color sholud be Valid Color Code..!!');
+				//return false;
+				p=1;
+		    }
+ 
+		});
+
+ 		if(p==1){return false;}
+		else{return true;} 
+		
+}	
+ 	
+ </script>
+ 
+      
+<% 
+	if params[:id]
+		form_id = 'edit_page'
+		form_act = 'update/'+params[:id].to_s
+	
+	end	
+	@site = SiteSetting.find(:first)
+	@site_themes = SiteTheme.find(params[:id])
+	#@customer = Customer.find(params[:id])
+%>
+<%= form_tag({:action => form_act}, :id => form_id, :novalidate => 'novalidate') do %> 
+	
+	<fieldset class="inputs">
+		<div id="errInfoAll" class="error2"  ></div>
+			
+		<ol>
+			<li class="string input required stringish" id="page_pages_title_input">
+				<label class=" label" for="page_pages_title">Color<abbr title="required">*</abbr></label>
+				<input id="site_theme_color"  maxlength="255" name="site_theme[color]" class="color_check" type="text" value="<%= @site_themes[:color] %>" />
+				<p class="inline-hints"><span id="color" class="clr_size" style="background-color:<%=  @site_themes[:color] %> " ></span></p>
+				<div id="errInfo1" class="error1"></div>										
+			</li>
+			
+			<li class="string input required stringish" id="page_pages_title_input">
+				<label class=" label" for="page_pages_title">Color1<abbr title="required">*</abbr></label>
+				<input id="site_theme_color1" maxlength="255" name="site_theme[color1]" class="color_check" type="text" value="<%= @site_themes[:color1] %>" />
+				<p class="inline-hints"><span id="color1" class="clr_size" style="background-color:<%=  @site_themes[:color1] %> " >
+				</span></p><div id="errInfo2" class="error1" ></div>
+
+			</li>
+			<li class="string input required stringish" id="page_pages_title_input">
+				<label class=" label" for="page_pages_title">Color2<abbr title="required">*</abbr></label>
+				<input id="site_theme_color2" maxlength="255" name="site_theme[color2]" class="color_check" type="text" value="<%= @site_themes[:color2] %>" />
+				<p class="inline-hints"><span id="color2" class="clr_size" style="background-color:<%=  @site_themes[:color2] %> " >
+				</span></p><div id="errInfo3" class="error1" ></div>
+
+			</li>
+			<li class="string input required stringish" id="page_pages_title_input">
+				<label class=" label" for="page_pages_title">Color3<abbr title="required">*</abbr></label>
+				<input id="site_theme_color3" maxlength="255" name="site_theme[color3]" class="color_check" type="text" value="<%= @site_themes[:color3] %>" />
+				<p class="inline-hints"><span id="color3" class="clr_size" style="background-color:<%=  @site_themes[:color3] %> " >
+				</span></p><div id="errInfo4" class="error1" ></div>
+			</li>
+			<li class="string input required stringish" id="page_pages_title_input">
+				<label class=" label" for="page_pages_title">Color Dark<abbr title="required">*</abbr></label>
+				<input id="site_theme_colordark" maxlength="255" name="site_theme[colordark]" class="color_check" type="text" value="<%= @site_themes[:colordark] %>" />
+				<p class="inline-hints"><span id="colordark" class="clr_size" style="background-color:<%=  @site_themes[:colordark] %> " >
+				</span></p>	<div id="errInfo5" class="error1" ></div>			
+			</li>
+			
+			
+			
+		</ol>
+	</fieldset>
+	
+	
+	
+	<fieldset class="actions">
+		<ol>
+			<li class="action input_action " id="page_submit_action">
+				<input name="commit" type="submit" onclick="return check_valid_color_all();" value="<% if params[:id] %>Update <% else %> Create<% end %> Page"   />
+			</li>
+		</ol>
+	</fieldset>
+<% end %>
+
+
+
+
+<script src="<%= APP_CONFIG['development']['js_url'] %>js/ckeditor/ckeditor.js"></script>

@@ -1,0 +1,85 @@
+<script src="<%= APP_CONFIG['development']['js_url'] %>datetimepicker_css.js"></script>
+
+<% 
+	if params[:id]
+		form_id = 'edit_page'
+		form_act = 'update/'+params[:id].to_s
+	else
+		form_id = 'new_page'
+		form_act = 'create'
+		
+	end	
+%>
+<%
+@user=NewsletterTemplate.all()
+%>
+
+<%= form_tag({:action => form_act}, :id => form_id, :novalidate => 'novalidate') do %>
+<% if (@newsletter_job.errors) then -%>
+<% if (@newsletter_job.errors.full_messages != []) then -%>
+     <ul class="errors">
+      <% @newsletter_job.errors.full_messages.each do |t| %>
+  		<li><%= t %></li>
+	  <% end %>
+    </ul><% end %>
+    <% end %>
+    
+    
+<fieldset class="inputs">
+	<ol>
+		<li class="string input required stringish" id="news_news_newsletter_id_input">
+			<label class=" label" for="news_news_newsletter_id">Newsletter subject<abbr title="required">*</abbr></label>
+			<select id="news_news_newsletter_id" name="newsletter_job[newsletter_id]" style="width:50%; height:30px;">
+				<option value=""></option>
+				<% @user.each do |jobs| %>
+						  <option value="<%= jobs[:id]%>" <% if(jobs[:id] == @newsletter_job[:newsletter_id]) %> selected="selected" <% end %>><%= jobs[:subject] %></option>
+				<% end %>
+			</select>
+		</li>
+	
+		<li class="string input required stringish" id="news_news_send_total_input">
+		<label class=" label" for="news_news_type">Newsletter type<abbr title="required">*</abbr></label>
+			<select id="news_news_type" name="newsletter_job[newstype]" style="width:23%; height:30px;">
+				<option value=""></option>
+				<option value="updateA" <% if(@newsletter_job[:newstype]=="updateA") %> selected="selected" <% end %>>Attending announcements and update</option>
+				<option value="updateO" <% if(@newsletter_job[:newstype]=="updateO") %> selected="selected" <% end %>>Organizing announcements and update</option>
+			</select>
+		</li>
+		<% 
+		if @newsletter_job[:job_start_date] !=nil
+		     @date= @newsletter_job[:job_start_date]
+		else
+		     @date = @now_date = DateTime.now.strftime('%d-%m-%Y %H:%M')
+		end
+		%>
+		
+		<li class="string input required stringish" id="news_news_job_start_date_input">
+			<label class=" label" for="news_news_job_start_date">Job schedule date<abbr title="required">*</abbr></label>
+			<input id="news_news_job_start_date" style="width:150px;" name="newsletter_job[job_start_date]" readonly="readonly" value="<%= @date %>" type="text"/>
+			<img src="<%= APP_CONFIG['development']['app_url'] %>cal.gif" onclick="javascript:NewCssCal ('news_news_job_start_date','ddMMyyyy','dropdown',true,'24',true,'future')" style="cursor:pointer;"/>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b style="color:#B31B18;"></b> 
+			<b>( 
+			<script type="text/javascript">
+			var x= new Date()
+			var y= x.getFullYear()
+			var m= x.getMonth()+1 // added +1 because javascript counts month from 0
+			var d= x.getDate()
+			var h= x.getHours()
+			var mi= x.getMinutes()
+			var s= x.getSeconds()
+			document.write("Local System Date is :  ")
+			document.write(d+'/'+m+'/'+y+' '+h+':'+mi)
+			
+			</script>
+			)</b>
+		</li>
+	</ol>
+</fieldset>
+<fieldset class="actions">
+		<ol>
+			<li class="action input_action " id="event_submit_action">
+				<input name="commit" type="submit" value="<% if params[:id] %>Update <% else %> Create<% end %> Newsletter Job" />
+			</li>
+		</ol>
+</fieldset>
+<%end%> 

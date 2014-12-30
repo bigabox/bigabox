@@ -1,0 +1,7 @@
+<div class="popup_Content">
+	<h2><%= @tip[:title] %></h2><br />
+	<% if @tip[:desc]!='' && @tip[:desc]!=nil %><%= render :inline => @tip[:desc] %><% else %>
+		<p><%= I18n.t 'tip.no_tips_available'%></p>
+	<% end %>
+</div>
+

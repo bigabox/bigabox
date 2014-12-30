@@ -1,0 +1,35 @@
+<%  @show = NewsletterTemplate.find(params[:id]) 
+ 	 @site = SiteSetting.find(:first)
+ %>
+<div class="panel">
+	<div class="panel_contents">
+		<div class="attributes_table site_setting" id="attributes_table_site_setting_1">
+			<table border="0" cellspacing="0" cellpadding="0">
+				<tr class="row">
+	               <th>From Name</th>
+	               <td><%= @show[:from_name] %></td>
+	           </tr>
+	           <tr class="row">
+	               <th>From Address</th>
+	               <td><%= @show[:from_address] %></td>
+	           </tr>
+	           <tr class="row">
+	               <th>From Reply</th>
+	               <td><%= @show[:reply_address] %></td>
+	           </tr>
+	           <tr class="row">
+	               <th>Subject</th>
+	               <td><%= @show[:subject] %></td>
+	           </tr>
+	           <tr class="row">
+	               <th>Template Content</th>
+	               <td><%= render :inline => @show[:template_content] %></td>
+	           </tr>
+	          <!-- <tr class="row">
+	               <th>Allow Unsubscribe Link</th>
+	               <td><%= @show[:allow_unsubscribe_link] %></td>
+	           </tr>-->
+		    </table>
+	    </div>
+    </div>
+</div>

@@ -1,0 +1,82 @@
+<style>
+	@media (max-width: 768px) {
+		.affiliates td:nth-of-type(1):before { content: "<%= I18n.t 'affiliates.event' %>"; }
+		.affiliates td:nth-of-type(2):before { content: "<%= I18n.t 'affiliates.referral Fee' %>"; }
+		.affiliates td:nth-of-type(3):before { content: "<%= I18n.t 'affiliates.join' %>"; }
+
+	}	
+</style>
+<section>	
+	<div class="main marTB40">
+       <% if flash[:notice1] -%>
+	      <div class="notice marT60" >
+	      	<p><%= flash[:notice1] %></p>
+	      </div>
+	
+	   <% end -%>
+	   
+    	<div class="leftcol">
+        	<div class="mtitle">
+        		
+            	<h1><%= I18n.t 'affiliates.affi' %></h1>
+            </div>
+            <div class="shadow event pad3 marT20">
+            	<% if @aff.count > 0 %>
+                <table class="affiliates table">
+                    <thead>
+                    <tr>
+                        <th><%= I18n.t 'affiliates.event' %></th>
+                        <th><%= I18n.t 'affiliates.referral Fee' %></th>
+                        <th><%= I18n.t 'affiliates.join' %></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    
+                    	<% for aff in @aff 
+					    	@event = Event.find(aff[:event_id])
+					    	
+					    	if @event[:event_url_link]=='' || @event[:event_url_link]==nil 
+			             		page_url = APP_CONFIG['development']['site_url']+'events/view/'+@event[:id].to_s 
+			             	else
+			             		page_url = APP_CONFIG['development']['site_url']+'event/'+@event[:event_url_link]
+			             	end
+					    %>
+					          <tr>
+			                    	<td><a href="<%= page_url %>"><%= @event[:event_title] %></a></td>
+			                    	<td><% if aff[:fee_amt]!='' && aff[:fee_amt]!=nil %><%= set_currency(aff[:fee_amt]) %><% else %><%= aff[:fee_perc] %>%<% end %></td>
+			                    	<td class="action_icon TW100">
+			                    		<a class="btn" href="<%= APP_CONFIG['development']['site_url'] %>affiliates/join/<%= aff[:name] %>"><%= I18n.t 'affiliates.join' %></a>
+			                    	</td>
+			                  </tr>  	          
+					      <% end %> 
+                    
+                    
+                    </tbody>
+                </table>
+                
+                <%= will_paginate @aff %>
+                
+                <% else %>
+						<p><%= I18n.t 'validation.common.no_records_available' %> </p>	
+				<% end %>
+			   <div class="clear"></div>
+            </div>      
+                   
+        </div>
+        <div class="rightcol">
+        	<div class="mtitle">
+            	<h1><%= I18n.t 'affiliates.need' %><span><%= I18n.t 'affiliates.help' %></span></h1>
+            </div>
+            <div class="shadow marT20 latest_update pad3">
+            	<ul>
+            		<li><a target="_blank" href="<%= APP_CONFIG['development']['site_url'] %>content/create_contact"><%= I18n.t 'link.create_contact' %></a></li>
+                    <li><a target="_blank" href="<%= APP_CONFIG['development']['site_url'] %>content/manage_contact"><%= I18n.t 'link.manage_contact' %></a></li>
+                    <li><a target="_blank" href="<%= APP_CONFIG['development']['site_url'] %>content/import_contact"><%= I18n.t 'link.import_contact' %></a></li>
+                	
+                </ul>
+            </div>        	
+            
+        </div>
+        <div class="clear"></div>
+    </div>    
+</section>

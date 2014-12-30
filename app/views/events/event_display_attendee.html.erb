@@ -1,0 +1,103 @@
+<script type="text/javascript">
+	
+function save_event_attendee(){
+	var page_path = '/events/event_display_attendee/';
+
+    $.ajax({
+           type: "POST",
+           url: page_path,
+           data: $("#display_attendee_form").serialize(), // serializes the form's elements.
+           success: function(data)
+           {
+               alert(data); // show response from the php script.
+           }
+         });
+
+   parent.jQuery.colorbox.close();
+}	
+ 	  
+function close_colorbox_attendee(){
+	parent.jQuery.colorbox.close();
+}				
+	
+</script>
+
+<div class="popup_Content">
+	
+	
+<%= form_tag({:controller => 'events', :action => 'event_display_attendee'}, :id => 'display_attendee_form', :name => 'display_attendee_form') do %> 
+
+  <h2><%= I18n.t 'event_display_attendee.display_attendee_info'%></h2>
+        	<br />
+        	
+        	 <div class="form">
+        	 	<table border="0" cellpadding="5" width="100%">
+        	 		<tr>
+        	 			<td><input type="checkbox" value="1" name="event_attendee[first_name]" id=""  checked="checked" onclick="this.checked=true;"  /> &nbsp;<%= I18n.t 'user.fname' %><span style="color:#f00; font-size: 12px;">*</span></td>
+        	 		
+        	 			<td><input type="checkbox" value="1" name="event_attendee[last_name]" id="" checked="checked" onclick="this.checked=true;"  /> &nbsp;<%= I18n.t 'user.lname' %><span style="color:#f00; font-size: 12px;">*</span></td>
+        	 		
+        	 			<td><input type="checkbox" value="1" name="event_attendee[email]" id=""  checked="checked" onclick="this.checked=true;"  /> &nbsp;<%= I18n.t 'user.email' %><span style="color:#f00; font-size: 12px;">*</span></td>
+        	 		
+        	 		</tr>
+        	 		
+        	 		<tr>
+        	 			<td>
+        	 				<input type="hidden" name="event_attendee[ticket_order]" value="0" />
+        	 				<input type="checkbox" value="1" name="event_attendee[ticket_order]" id="" <% if @event_attendee[:ticket_order] == 1 %> checked="checked" <% end %> /> &nbsp;<%= I18n.t 'event_display_attendee.ticket_ordered'%><span style="color:#f00; font-size: 12px;">*</span></td>
+        	 		
+        	 			<td>
+        	 				<input type="hidden" name="event_attendee[city_home]" value="0" />
+        	 				<input type="checkbox" value="1" name="event_attendee[city_home]" id="" <% if @event_attendee[:city_home] == 1 %> checked="checked" <% end %> /> &nbsp;<%= I18n.t 'event_display_attendee.city_home_add'%><span style="color:#f00; font-size: 12px;">*</span></td>
+        	 			<td>
+        	 				<input type="hidden" name="event_attendee[state_home]" value="0" />
+        	 				<input type="checkbox" value="1" name="event_attendee[state_home]" id="" <% if @event_attendee[:state_home] == 1 %> checked="checked" <% end %> /> &nbsp;<%= I18n.t 'event_display_attendee.state_home_add'%><span style="color:#f00; font-size: 12px;">*</span></td>
+        	 	  </tr>
+        	 		
+        	 		<tr>
+        	 			<td>
+        	 				<input type="hidden" name="event_attendee[city_work]" value="0" />
+        	 				<input type="checkbox" value="1" name="event_attendee[city_work]" id="" <% if @event_attendee[:city_work] == 1 %> checked="checked" <% end %> /> &nbsp;<%= I18n.t 'event_display_attendee.city_work_add'%><span style="color:#f00; font-size: 12px;">*</span></td>
+        	 		
+        	 			<td>
+        	 				<input type="hidden" name="event_attendee[state_work]" value="0" />
+        	 				<input type="checkbox" value="1" name="event_attendee[state_work]" id="" <% if @event_attendee[:state_work] == 1 %> checked="checked" <% end %> /> &nbsp;<%= I18n.t 'event_display_attendee.state_work_add'%><span style="color:#f00; font-size: 12px;">*</span></td>
+        	 			<td>
+        	 				<input type="hidden" name="event_attendee[job_title]" value="0" />
+        	 				<input type="checkbox" value="1" name="event_attendee[job_title]" id="" <% if @event_attendee[:job_title] == 1 %> checked="checked" <% end %> /> &nbsp;<%= I18n.t 'user.job'%><span style="color:#f00; font-size: 12px;">*</span></td>
+        	 			</tr>
+        	 		
+        	 		<tr>
+        	 			<td>
+        	 				<input type="hidden" name="event_attendee[company]" value="0" />
+        	 				<input type="checkbox" value="1" name="event_attendee[company]" id="" <% if @event_attendee[:company] == 1 %> checked="checked" <% end %> /> &nbsp;<%= I18n.t 'user.company'%><span style="color:#f00; font-size: 12px;">*</span></td>
+        	 		
+        	 			<td>
+        	 				<input type="hidden" name="event_attendee[website]" value="0" />
+        	 				<input type="checkbox" value="1" name="event_attendee[website]" id="" <% if @event_attendee[:website] == 1 %> checked="checked" <% end %> /> &nbsp;<%= I18n.t 'user.website'%><span style="color:#f00; font-size: 12px;">*</span></td>
+        	 			<td>
+        	 				<input type="hidden" name="event_attendee[blog]" value="0" />
+        	 				<input type="checkbox" value="1" name="event_attendee[blog]" id="" <% if @event_attendee[:blog] == 1 %> checked="checked" <% end %> /> &nbsp;<%= I18n.t 'user.blog'%><span style="color:#f00; font-size: 12px;">*</span></td>
+        	 			</tr>
+        	 		<!--<tr>
+        	 			<td>
+        	 				<input type="hidden" name="event_attendee[no_question]" value="0" />
+        	 				<input type="checkbox" value="1" name="event_attendee[no_question]" id="" <% if @event_attendee[:no_question] == 1 %> checked="checked" <% end %> /> &nbsp;No Question<span style="color:#f00; font-size: 12px;">*</span></td>
+        	 		
+        	 			<td>
+        	 				<input type="hidden" name="event_attendee[no_que]" value="0" />
+        	 				<input type="checkbox" value="1" name="event_attendee[no_que]" id="" <% if @event_attendee[:no_que] == 1 %> checked="checked" <% end %> /> &nbsp;No Que<span style="color:#f00; font-size: 12px;">*</span></td>
+        	 			<td>&nbsp;</td>
+        	 			
+        	 		</tr>-->
+        	 	</table>
+			</div>
+<div class="clr"></div><br />
+<p style="font-size: 12px;"><span style="color:#f00;">*</span> <%= I18n.t 'event_display_attendee.these_field_require'%></p>
+ 			<input type="hidden" name="id" id="id" value="<%= @event[:id] %>" />
+ 			<a href="javascript://" class="btn" onclick="save_event_attendee();"><%= I18n.t 'button.save'%></a>
+ 			<a href="javascript://" class="btn black_bg" onclick="close_colorbox_attendee();" ><%= I18n.t 'button.cancel'%></a>
+ 			<div class="clr"></div>
+<% end %>        	
+</div>
+

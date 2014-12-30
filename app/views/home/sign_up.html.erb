@@ -1,0 +1,65 @@
+<% @site = SiteSetting.find(:first) %>
+<script src="<%= APP_CONFIG['development']['js_url'] %>js/validation.js" type="text/javascript"></script>    
+
+
+	<div id="page_we">
+    <div class="login">
+    	<div class="login_top">
+        	<div style="border-bottom:1px solid #c8cdcf; width:100%">        	
+            <h2 class="signuph2"><%= I18n.t 'home_signup.start_now_free_easy'%></h2>  </div>
+            <table align="center"><tr><td>
+            <p><%= I18n.t 'home_signup.sign_up_using'%><a href="<%= APP_CONFIG['development']['site_url'] %>auth/facebook" class="facebook"><%= I18n.t 'event.view.connect_with_facebook'%></a></p>
+            
+            <p><p style="font-size:24px; margin-top:11px; width:260px;">or<a href="<%= APP_CONFIG['development']['site_url'] %>auth/twitter" class="twitter"><%= I18n.t 'forgot_pwd.connect_with_twitter'%></a>&nbsp;<%= I18n.t 'set_new_password.or'%></p>
+            </p></td></tr>
+            </table>
+        
+        </div>
+    <div class="login_cont">
+    	<div class="login_cont_left">
+      
+      <%= form_tag({:controller => 'home', :action => 'sign_up'}, :id => 'loginForm') do %> 
+     
+    <% if (@user.errors.full_messages != []) then -%>
+     <ul class="errors">
+      <% @user.errors.full_messages.each do |t| %>
+  		<li><%= t %></li>
+	  <% end %>
+    </ul>
+    <% end -%>   
+        <label for="email"><%= I18n.t 'user.email'%>:</label>
+		<%= text_field_tag :email, @user[:email], :class => 'ltxt', :id => 'user_email', :name => 'user[email]' %>
+		<div id="useremailInfo" style="margin-left: 85px;"></div>
+       	<div class="clr"></div>
+       	
+        <label for="password"><%= I18n.t 'facebook_login.pwd'%>:</label>
+		<%= password_field_tag :password, @user[:password], :class => 'ltxt', :id => 'user_password', :name => 'user[password]' %>
+		<div id="userPasswordInfo" style="margin-left: 85px;"></div>
+       	<div class="clr"></div>
+       	
+   <div style="margin:15px 0 0 0;"> 
+           <input type="checkbox" name="remember" id="remember" value="1" <% if(params[:remember] == '1') then -%> checked="checked" <% end  -%> class="styled" style="float:left;margin-left:83px;"  />
+           <p> <%= I18n.t 'home_login.remember_me'%></p></div>
+           <%= submit_tag "Sign up", :class => "anchorlink3", :id => 'loginbtn' %>
+ 
+           <div class="clr"></div>
+      <% @terms = Page.find('26') 
+      	 @policy = Page.find('27')
+      	 @how = Page.find('29')
+      %>
+           <p style="font-size:13px; margin:10px 0 0 80px;"><%= I18n.t 'home_login.by_clickin_sign_up'%> 
+ <a href="<%= APP_CONFIG['development']['site_url'] %>content/<%= @terms[:slug] %>"><%= I18n.t 'home_login.term_service'%></a> and <a href="<%= APP_CONFIG['development']['site_url'] %>content/<%= @policy[:slug] %>"><%= I18n.t 'home_footer.privacy_policy'%></a>.</p>
+			<p style="font-size:13px; margin:10px 0 0 80px;"><%= I18n.t 'home_login.attending_event'%> <a href="<%= APP_CONFIG['development']['site_url'] %>my_tickets"><%= I18n.t 'home_login.login_click_here'%></a> <%= I18n.t 'home_login.to_access_your_order'%></p>
+          
+      
+        </div>
+        <div class="login_cont_right">
+        	<p><%= I18n.t 'home_signup.already_registered'%> <%= link_to 'Log In', :controller => 'home', :action => 'login' %>. </p><div class="clr"></div>
+            <a href="#" class="directlink"><%= I18n.t 'home_signup.want_to_know_more'%> </a><br />
+            <p><%= I18n.t 'home_signup.find_out_how'%><%= @site[:site_name]%><%= I18n.t 'home_signup.home_can'%><br /><%= I18n.t 'home_signup.help_you'%> <a href="<%= APP_CONFIG['development']['site_url'] %>content/<%= @how[:slug] %>"><%= I18n.t 'home_signup.sell_out_your_event'%></a></p><div class="clr"></div>
+            
+            <p><%= I18n.t 'home_signup.give_us_call'%><br /><%= @site[:admin_phone] %></p>
+        </div>  <% end %>
+    </div>
+    </div>
+    </div>

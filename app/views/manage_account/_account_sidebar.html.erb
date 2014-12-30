@@ -1,0 +1,45 @@
+<%
+      @user_multi = User.find(session[:user_id]) 
+	 if @user_multi[:ref_id]!=nil && @user_multi[:ref_id]!="" 
+		  @multi = 1
+		  @ses_user = @user_multi[:ref_id]
+	  else
+		  @multi = 0
+		  @ses_user = session[:user_id]
+	  end
+%>
+
+<div class="rightcol"> 
+	<div class="right_account1">
+	    <div class="mtitle">
+	        <h3><%= I18n.t 'myticket_index.myticket_my' %> <span><%= I18n.t 'account_sidebar.account' %></span></h3>
+	    </div>
+	    <div class="shadow marT10 latest_update pad3 font">
+	        <ul>
+	            <li><a href="<%= APP_CONFIG['development']['site_url'] %>manage_account" <% if @act_class=='Contact Info' %> class="selected" <% end %>><%= I18n.t 'account_sidebar.contact_info' %></a></li>
+	            <li><a href="<%= APP_CONFIG['development']['site_url'] %>manage_account/password" <% if @act_class=='Password' %> class="selected" <% end %>><%= I18n.t 'account_sidebar.change_pwd' %> </a></li>
+	            <li><a href="<%= APP_CONFIG['development']['site_url'] %>manage_account/emails"  <% if @act_class=='Email Preferences' %> class="selected" <% end %>><%= I18n.t 'account_sidebar.email_preferences' %></a></li>
+	            <li><a href="<%= APP_CONFIG['development']['site_url'] %>manage_account/payaccounts" <% if @act_class=='Payment Accounts' %> class="selected" <% end %>><%= I18n.t 'account_sidebar.payment_account' %></a></li>
+	            
+	            <% if @multi == 0 %>
+	            <li><a href="<%= APP_CONFIG['development']['site_url'] %>manage_account/multi_users" <% if @act_class=='Multi-User Access' %> class="selected" <% end %>><%= I18n.t 'account_sidebar.multi_user_access' %></a></li>
+	            <% end %>
+	            
+	            <li><a href="<%= APP_CONFIG['development']['site_url'] %>manage_account/unuse_org" <% if @act_class=='Unused Organizers' %> class="selected" <% end %>><%= I18n.t 'account_sidebar.unused_org' %></a></li>
+	            <!--<li><a href="<%= APP_CONFIG['development']['site_url'] %>manage_account/referral_program" <% if @act_class=='Referral Program' %> class="selected" <% end %>><%= I18n.t 'account_sidebar.referral_program' %></a></li>
+	            <li><a href="<%= APP_CONFIG['development']['site_url'] %>manage_account/affiliates" <% if @act_class=='Affiliate Program' %> class="selected" <% end %>><%= I18n.t 'account_sidebar.affiliate_program' %></a></li>-->
+	            <li><a href="<%= APP_CONFIG['development']['site_url'] %>wallet" <% if @act_class=='My Earnings' %> class="selected" <% end %>><%= I18n.t 'account_sidebar.my_earnings' %></a></li>
+	            
+	            <li><a href="<%= APP_CONFIG['development']['site_url'] %>cancel_orders" <% if @act_class=='Cancelled Orders' %> class="selected" <% end %>><%= I18n.t 'account_sidebar.account_cancelled_orders' %></a></li>
+	            
+	            <% if @multi == 0 %><!--  # if multi user, they are not allowed to delete the acccount -->
+		            <% @live_session_event = Event.find_live_events(session[:user_id]) 
+		           		if @live_session_event.count==0
+		           %>
+		            	<li><a href="<%= APP_CONFIG['development']['site_url'] %>manage_account/close_account" <% if @act_class=='Close Account' %> class="selected" <% end %>><%= I18n.t 'account_sidebar.close_account' %></a></li>
+		           <% end %>
+	           <% end %>
+	        </ul>                
+	    </div>        	
+    </div>
+</div>

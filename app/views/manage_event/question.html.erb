@@ -1,0 +1,334 @@
+ 
+<script type="text/javascript">
+		
+function chk_valid_question(){
+	//alert('hi');
+	$('#queerrInfo').text('');
+	$('#que_waiverrInfo').text('');
+	$('#optionerrInfo').text('');
+	$('#ticketerrInfo').text('');
+	
+	if($('#que').val()==''){
+		$('#que').focus();
+		$('#queerrInfo').text('<%= I18n.t 'manage_event_question.question_field_required'%>');
+		return false;
+	}
+	
+	var qtype = $('#que_type').val();
+	if(qtype=='check' || qtype=='radio' || qtype=='select'){
+		var chks = document.getElementsByName('que_value[]');
+		var len = chks.length - 1;
+		for (var i = 0; i < len; i++)
+		{
+			value = chks[i].value;
+			if(value==''){
+				
+				alert('<%= I18n.t 'manage_event_question.all_options_fields_required_if_you_want_fill'%>');
+				return false;
+			}
+		}
+	
+	}
+	
+	if(qtype=='waiver'){
+		if($('#que_waiv').val()==''){
+			$('#que_waiv').focus();
+			$('#que_waiverrInfo').text('<%= I18n.t 'manage_event_question.waiver_field_required'%>');
+			return false;
+		}
+	}
+	
+	
+	if($('#spec_ticket').val()==1 && $('#spec_ticket').is(':checked')==true){
+		var chks = document.getElementsByName('tickets[]');
+		var len = chks.length;
+		var value = 1;
+		for (var i = 0; i < len; i++)
+		{
+			if(chks[i].checked==true){
+				value=0
+			}
+		}
+		if(value==1){
+		    $('#ticketerrInfo').text('<%= I18n.t 'manage_event_question.select_atleast_1_ticket'%>');
+		    return false;
+		}
+	}
+	return true;
+}
+
+
+function add_another_option()
+{
+	
+	document.getElementById('chk_options_div').style.display='block';
+	var tmp_div2 = document.createElement("div");
+
+	tmp_div2.className = "inner_content_two";
+
+
+	var option_cnt=document.getElementById('option_cnt').value;
+	document.getElementById('option_cnt').value=parseInt(option_cnt)+1;
+	var num=parseInt(option_cnt)+1;
+
+	tmp_div2.id='option_cnt_div'+num;
+
+	content=document.getElementById('more1').innerHTML;	
+
+	$("body").append('<div style="display:none;" id="metemp"></div>');
+					
+	$("#metemp").html(content);
+
+	content = $("#metemp").html();
+	content = content.replace('remove_option_div(1);','remove_option_div('+num+');');	
+	//content = content.replace('remove_paid_ticket_div(1);','remove_paid_ticket_div('+num+');');	
+	
+	//alert(content +str);
+	$("body #metemp").remove();
+	tmp_div2.innerHTML = content;
+
+	document.getElementById('chk_options_div').appendChild(tmp_div2);
+
+}
+
+
+	function remove_option_div(id)
+	{						
+		var chks = document.getElementsByName('que_value[]');
+		//alert(chks.length);
+		if(chks.length==2){
+			alert('<%= I18n.t 'manage_event_question.you_must_aleast_one_choice'%>');
+		}else{
+			var element = document.getElementById('option_cnt_div'+id);	
+			var add_more = parent.document.getElementById('chk_options_div');
+			
+			var add_parent=add_more.parentNode.offsetHeight;
+			
+			
+			var remove_height=parseInt(element.offsetHeight);
+			var final_height=add_parent - remove_height;
+			
+			element.parentNode.removeChild(element);
+		}
+	
+	
+	}
+
+function choise_limt(type){
+	//alert(type);
+	if(type=='add'){
+		
+		$('#dis_choice').show();
+		$('#add_choice').hide();
+		$('.choice').show();
+	}
+	
+	if(type=='remove'){
+		$('#dis_choice').hide();
+		$('#add_choice').show();
+		$('.choice').hide();
+	}
+}
+
+function show_options_div(div){
+	//alert(div);
+	var qtype = div;
+	if(qtype=='check' || qtype=='radio' || qtype=='select'){
+		$('#options_div').show();
+		$('#waiver_div').hide();
+		
+		$('#dis_choice').show();
+		$('#add_choice').hide();
+	}
+	else if(qtype=='waiver'){
+		$('#options_div').hide();
+		$('#waiver_div').show();
+		
+		$('#dis_choice').hide();
+		$('#add_choice').hide();
+	}
+	else{
+		$('#options_div').hide();
+		$('#waiver_div').hide();
+		$('#dis_choice').hide();
+		$('#add_choice').hide();
+	}	
+}
+</script> 
+<style>
+	.small{
+		width: 100px;
+		margin-left:4px;
+	}
+	
+	.error1{
+		margin-left: 30%;
+	}
+</style>
+   <!--section Start-->
+   
+   <% @act_class = 'Customize Order Form' %>         	
+ <%= render(:partial => "common_banner" , :object => :collection) %>  
+ 
+<section>
+	<div class="main">
+		
+	
+    	   
+			        	
+		    
+		     
+		     <div class="left_columm">
+				<%= form_tag({:controller => 'manage_event', :action => 'question'}, :id => 'questionForm', :name => 'questionForm') do %>
+							
+				<div class="marT60">
+		        	<div class="mtitle">
+		            	<h1><% if @que[:id] !=nil %><%= I18n.t 'manage_event_question.edit_a'%><% else %><%= I18n.t 'manage_event_question.create_new'%><% end %> 
+		            		<span><%= I18n.t 'manage_event_question.Question'%></span></h1>             
+		            </div>
+              
+					<div class="shadow marT25 pad3P">		
+								<table width="100%" border="0" cellspacing="0" cellpadding="0" class="e_tab2sty">
+								  <tr>
+								    <td width="25%" valign="middle"><div class="lab1"><%= I18n.t 'manage_event_question.Question'%> :  </div></td>
+								    <td valign="top">
+								    	<input type="text" class="create_select" value="<%= @que[:que] %>" name="que[que]" id="que" style="width:307px; height: 25px;">
+								    	<div id="queerrInfo" class="error1" ></div>
+								    </td>
+								  </tr>
+								  
+								 <tr>
+								    <td width="25%" valign="middle"><div class="lab1"><%= I18n.t 'manage_event_question.question_type'%> :  </div></td>
+								    <td valign="top">
+								    	 <%= select_tag :que_type, options_for_select(Question::QUE_TYPES,@que[:que_type]), :name => 'que[que_type]', :id => 'que_type', :onchange => 'show_options_div(this.value);', :onblur => 'show_options_div(this.value);', :class => 'create_select' %>
+								    	 <a href="javascript:" onclick="choise_limt('add');" id="add_choice" style="display: none;" >+ <%= I18n.t 'manage_event_question.add_choice_limit'%></a>
+								    	 <a href="javascript:" onclick="choise_limt('remove');" id="dis_choice" style="display: <% if @que[:que_type]=='check' || @que[:que_type]=='radio' || @que[:que_type]=='select' %> block; <% else %> none; <% end %>"> <%= I18n.t 'manage_event_question.disable_choice_limit'%></a>
+								    	 <div id="quetypeerrInfo" class="error1" ></div>
+								    </td>
+								  </tr>
+								  
+								  
+								  <tr><td colspan="2">
+								  		<div id="options_div" style="display: <% if @que[:que_type]=='check' || @que[:que_type]=='radio' || @que[:que_type]=='select' %> block; <% else %> none; <% end %>">
+									  		<label style="margin-left: 165px;" class="choice"><%= I18n.t 'event.view.qty' %></label><label style="margin-left: 60px;" class="choice">Orders</label>
+									  		<br/><div style="width: 175px; float: left;"><%= I18n.t 'manage_event_question.options_available'%>:</div>
+									  		<div id="chk_options_div" style="float: left; margin-left:-34px;">
+									  			<% i=1	
+									  			@options = QuestionOption.find(:all, :conditions => ['que_id=?', @que[:id]])
+									  			if ((@que[:que_type]=='check' || @que[:que_type]=='radio' || @que[:que_type]=='select') && @options.count > 0)
+									  				
+									  				for opt in @options
+									  			%> 
+													<div id="option_cnt_div<%= opt[:id] %>">
+														<input type="text" name="que_value[]" class="small" value="<%= opt[:value] %>" />
+											    	 	<input type="text" name="que_qty[]" class="small choice"  value="<%= opt[:qty] %>" />
+											    	 	<label style="margin-left: 10px;" class="choice"><%= opt[:qty] %>/<%= opt[:used] %></label>
+											    	 	<a style="margin-left: 10px;" onclick="remove_option_div('<%= opt[:id] %>');">
+											    	 		<img src="<%= APP_CONFIG['development']['app_url'] %>themes/icon-delete.png" alt="" style="position: relative; top: 8px; cursor: pointer;" />
+											    	 	</a>
+											    	 	<input type="hidden" name="que_opt_id[]" value="<%= opt[:id] %>" />
+										    	 	<br /></div>
+												<% 		i = opt[:id]+1
+													end
+												else %>  
+													<input type="text" name="que_value[]" class="small" value="" />
+										    	 	<input type="text" name="que_qty[]" class="small choice"  value="0" />
+										    	 	<label style="margin-left: 10px;" class="choice">0/0</label>
+										    	 	<a style="margin-left: 10px;" onclick="remove_option_div(1);">
+										    	 		<img src="<%= APP_CONFIG['development']['app_url'] %>themes/icon-delete.png" alt="" style="position: relative; top: 8px; cursor: pointer;" />
+										    	 	</a><input type="hidden" name="que_opt_id[]" value="0" />
+										    	 	<br />
+												<% end %>
+									  			
+									  		</div><div class="clr"></div>
+									  		<input type="hidden" name="option_cnt" id="option_cnt" value="<%= i %>" />
+									  		<br /><a href="javascript:" onclick="add_another_option();" style="margin-left: 10px;">+ <%= I18n.t 'manage_event_question.add_another_option'%></a>
+									  		<div id="optionerrInfo" class="error1"></div>
+									  	</div>	
+									  	<% if @que[:que_type]=='waiver'
+									  			@woptions = QuestionOption.find(:first, :conditions => ['que_id=?', @que[:id]])
+									  			@waiv = @woptions[:value] 
+									  			@waiv_id =  @woptions[:id] 
+									  		else
+									  			@waiv = '' 
+									  			@waiv_id = 0 
+									  		end
+									  	%> 
+									  	<div id="waiver_div" style="display: <% if @que[:que_type]=='waiver' %> block; <% else %> none; <% end %>">
+									  		<div style="width: 175px; float: left;"><%= I18n.t 'manage_event_question.options_available'%>:</div>
+									  		<div id="waiv_options_div" style="float: left; margin-left: -30px;">
+									  			<textarea name="que_waiv" id="que_waiv" style="width: 305px; height: 100px;"><%= @waiv %></textarea>
+									  			<div id="que_waiverrInfo" class="error1"></div>
+									  			<input type="hidden" name="waiv_id" value="<%= @waiv_id %>" />
+									  			
+									  		</div><div class="clr"></div>
+									  	</div>	
+								  </td></tr>
+								  <tr><td colspan="2">&nbsp;</td></tr>
+								  
+								  <tr>
+								    <td width="25%" valign="top" style="padding-top: 1px;"><div class="lab1"><%= I18n.t 'customize_order_form.optional_setting'%> :  </div></td>
+								    <td valign="top">
+								    <!--	  <% @tics = Ticket.find(:all, :conditions => ['event_id=?', @event[:id]])
+								    	 	 if @tics.count > 0 
+								    	  %>
+								    	    <% if(@que[:tickets] !=nil && @que[:tickets]='')
+			                  					@tic_arr = @que[:tickets].split(",")	
+			                  				else
+			                  					@tic_arr = []
+			                  				end %>
+			                  				
+								    	 <input type="checkbox" name="que[spec_ticket]" id="spec_ticket" value="1" <% if @que[:spec_ticket]==1 %> checked="checked" <% end %> onclick="if(this.checked){ $('#ticket_div').show(); }else {  $('#ticket_div').hide(); }" />
+								    	 <label><%= I18n.t 'manage_event_question.show_que_for_specific_ticket_types'%></label>
+								    	 <br />
+								    	
+								    	 <div class="pad10" style=" margin-left: 10px; display: <% if @que[:spec_ticket]==1 %> block; <% else %> none;<% end %>" id="ticket_div">
+								    	 	<% 	for t in @tics	%>
+							    	 				<input type="checkbox" name="tickets[]" value="<%= t[:id] %>" <% if(@tic_arr.include?(t[:id])) %> checked="checked" <% end %>  />
+							    	 				<label><% if t[:free]==1 %><%= t[:free_ticket_name] %><% elsif t[:paid]==1 %><%= t[:paid_ticket_name] %><% else %><%= t[:donation_ticket_name] %><% end %></label>
+								    	 	<% end 	%>
+								    	 </div>	
+								    	 <% else %>
+								    	 	<input type="checkbox" name="que[spec_ticket]" id="spec_ticket" value="0"  />
+								    	 <% end %>
+								    	 <div id="ticketerrInfo" class="error1"></div>  -->
+								    	 <input type="hidden" name="que[show_attendee]" value="0" />
+								    	 <input type="checkbox" name="que[show_attendee]" value="1" <% if @que[:show_attendee]==1 %> checked="checked" <% end %> />
+								    	 <label><%= I18n.t 'manage_event_question.show_attendee_answer_this_que_order_confirmation'%></label>
+								    </td>
+								  </tr>
+								  
+								    
+								</table>
+								<input type="hidden" name="id" value="<%= @event[:id] %>" />
+								<input type="hidden" name="que[event_id]" value="<%= @event[:id] %>" />
+								<input type="hidden" name="que_id" value="<%= @que[:id] %>" />
+								<input type="hidden" name="que[id]" value="<%= @que[:id] %>" />
+					</div>			
+							                
+               	</div>		
+				 <div class="marT25" align="right">
+		        	 <input type="submit" value="<%= I18n.t 'button.save'%>" class="btn" onclick="return chk_valid_question();" />
+					 <a href="<%= APP_CONFIG['development']['site_url'] %>manage_event/customize_order_form/<%= @event[:id] %>"  class="btn black_bg"><%= I18n.t 'button.cancel'%></a>
+					 <div class="clear"></div>
+				</div>
+		        <div class="clear"></div>
+				
+				<% end %>     
+              </div>
+               
+            
+       		 <%= render(:partial => "manage_event_sidebar" , :object => :collection) %>    
+    		<div class="clear"></div>
+    </div>
+    
+<div id="more1" style="display: none;">
+	<input type="text" name="que_value[]" class="small" value="" />
+ 	<input type="text" name="que_qty[]" class="small choice"  value="0" />
+ 	<label style="margin-left: 10px;" class="choice">0/0</label>
+ 	<a style="margin-left: 10px;" onclick="remove_option_div(1);">
+ 		<img src="<%= APP_CONFIG['development']['app_url'] %>themes/icon-delete.png" alt="" style="position: relative; top: 8px; cursor: pointer;" />
+ 	</a><br /><input type="hidden" name="que_opt_id[]" value="0" />
+</div>
+
+</section>

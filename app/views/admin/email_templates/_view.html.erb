@@ -1,0 +1,41 @@
+ <%  @show = EmailTemplate.find(params[:id]) 
+ 	 @site = SiteSetting.find(:first)
+     
+     @logo_link = APP_CONFIG['development']['upload_url']+'data/orig/other/'+@site[:site_logo]
+ 	 @show[:message] = @show[:message].gsub('{logo_link}',@logo_link)
+ %>
+ 
+ <div class="panel">
+              <h3><%= @show[:subject] %></h3>
+              <div class="panel_contents">
+                <div class="attributes_table site_setting" id="attributes_table_site_setting_1">
+                  <table border="0" cellspacing="0" cellpadding="0">
+	                    
+	                    <tr class="row">
+	                      <th>From Name</th>
+	                      <td><%= @show[:from_name] %></td>
+	                    </tr>
+	                    
+	                    <tr class="row">
+	                      <th>From Address</th>
+	                      <td><%= @show[:from_address] %></td>
+	                    </tr>
+	                    
+	                     <tr class="row">
+	                      <th>Reply Address</th>
+	                      <td><%= @show[:reply_address] %></td>
+	                    </tr>
+	                    
+	                    <tr class="row">
+	                      <th>Message</th>
+	                      <td><%= render :inline => @show[:message] %></td>
+	                    </tr>
+	                    
+	                   
+	                    
+                    
+                  </table>
+                </div>
+              </div>
+            </div>
+           

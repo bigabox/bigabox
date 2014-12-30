@@ -1,0 +1,262 @@
+			   
+<section>
+	
+	<div class="main">
+		
+		 <% if flash[:notice1] -%>
+	      <div class="notice marT60">
+	      	<p><%= flash[:notice1] %></p>
+	      </div>
+	
+	   <% end -%>
+	   
+		 <!--Content Left-->
+		 
+    	<div class="left_columm">
+	    	
+	    	<div class="marT60">
+	        	<div class="mtitle fl">
+	            	<h1 class="fl" style="line-height: 33px;"><%= I18n.t 'event.purchase.you_are_going' %><span><%= @event[:event_title] %></span></h1>
+	            </div> <div class="clear"></div>
+	            
+	            <div class="event_detail pad15 marT20">
+		           <br /> <h2><%= I18n.t 'event.purchase.order_saved' %></h2><br />
+                               
+                   
+                   	<%  
+                   	@all_pur = Purchase.find(:all, :conditions => ['transaction_key=?', params[:id]])
+                   		tk=0
+                   		if @all_pur.count > 0
+                   			for ti in @all_pur
+                   				%>
+                   					<p><img src="<%= APP_CONFIG['development']['app_url'] %>select_img.png" alt="" /> 
+                   						<a href="<%= APP_CONFIG['development']['site_url'] %>my_tickets/view/<%= ti[:id] %>"> <%= I18n.t 'event.purchase.order' %>#<%= ti[:id] %> </a>: <%= ti[:ticket_qty] %> <%= I18n.t 'event.purchase.tickets' %></p>
+                   				<%
+                   				tk+=1
+                   			end
+                   		end	
+                   	%>
+                   	
+                   <p><img src="<%= APP_CONFIG['development']['app_url'] %>select_img.png" alt="" /> 
+                   	&nbsp;&nbsp;<%= I18n.t 'event.purchase.mail_sent_to' %> <%= @pur[:email] %></p>	 
+                   <br />
+                   
+	            	<a href="<%= APP_CONFIG['development']['site_url'] %>my_tickets" class="btn" ><%= I18n.t 'event.purchase.go_to' %></a><div class="clear"></div>
+                    <div class="clr"></div><br />
+                    <div class="event_detail pad15 marT20">
+                    	<table >
+                    		<tr>
+                    			<td valign="center"><img src="<%= APP_CONFIG['development']['app_url'] %>themes/bl3.png" alt="" /></td>
+                    			<td width="90%">
+                    				<h3><%= I18n.t 'event.purchase.you_can_use' %> <%= @site[:site_name] %> <%= I18n.t 'event.purchase.all_kind' %></h3>
+                    				<p style="font-size: 13px;"><%= I18n.t 'event.purchase.from_local' %> <%= @site[:site_name] %> <%= I18n.t 'event.purchase.make_easy' %></p>
+                    				
+                    			</td>
+                    		</tr>
+                    	</table>
+                    </div> 
+	            	<div class="clear"></div>
+				</div><div class="clear"></div>
+	        </div>
+	        
+	        <div class="marT45">
+	        	<div class="mtitle fl">
+	            	
+	            </div><div class="clear"></div>
+	        </div>
+
+
+
+           
+             
+             <% if @question != nil && @question !=""  %>
+              
+	              <div class="event_detail pad15 marT20">
+	              
+	               <h2>Registration Information</h2>
+	              <br>
+	              
+	              <% if @order[:ctype]==1 %>
+	              
+	                  
+	                 <!---  start questin loop  --> 
+	                  <% for que in @question  %>
+	                  	 <% if que[:show_attendee] == 1 %>
+	                  	                      
+	                      <% @answer = Answer.find(:first, :conditions => ['purchase_id=? && que_id=? ', @pur[:id],que[:id] ]) %>
+	                  	                      
+	                  	                      
+	                      Question : <%= que[:que] %> <br>
+	                      Answer :  <%= @answer[:answer] %>
+	                      
+	                        <br><br>
+	                     <% end %>
+	                  <% end %>
+	                  <!---  end questin loop  -->
+	                  
+	              <% elsif @order[:ctype]==2 %>
+	              
+	              <%   @all_pur = Purchase.find(:all, :conditions => ['transaction_key=?', @pur[:id]]) %>
+	             
+	              <!---  start loop for all attendee  -->
+	                 <% for all_pur in @all_pur  %> 
+	                 
+	                  
+	                 <span> For :  <%= all_pur[:first_name] %>  <%= all_pur[:last_name] %> </span>
+	                    <br>
+		                 <!---  start questin loop  --> 
+		                  <% for que in @question  %>
+		                  	 <% if que[:show_attendee] == 1 %>
+
+		                      <% @answer = Answer.find(:first, :conditions => ['purchase_id=? AND que_id=? ', all_pur[:id],que[:id]]) %>
+		                  	 <% if @answer!= nil && @answer!="" %>                     
+		                  	                      
+		                        Question : <%= que[:que] %> <br>
+	   				Answer :  <%= @answer[:answer] %>
+					<% end %>
+		                        <br>
+		                     <% end %>
+		                  <% end %>
+		                 <!---  end questin loop  -->
+		                 <br>
+	                <% end %>
+	              <!---  end loop for all attendee  -->
+	              
+	              
+	             <% end %> 
+	                  
+	                  
+	             </div>
+             
+             <% end %> 	        
+	   
+
+
+			<div class="clear"></div>
+	        
+	        
+	        <div class="clear"></div>
+        </div>
+        
+        <!--Content Right-->
+       
+		<div class="right_columm marT60">
+		        	
+					<div class="mtitle marT45">
+		            	<h1><%= I18n.t 'event.purchase.hi' %> <span><%= @pur[:first_name] %>,</span></h1>
+		              
+		            </div>
+					<div class="shadow address pad7 marT20" >
+				   
+	                	<% if @order[:confirm_msg]!='' && @order[:confirm_msg]!=nil %>
+	                		<p><%= @order[:confirm_msg] %></p> 
+	                	<% else %>
+	                	<p>See you at the event!</p>
+	                	<% end 
+	                	@org = Organizer.find(@event[:organizer_id])
+	                	%>
+	                	
+	                	<table border="0" cellpadding="3" cellspacing="0">
+	                		<tr>
+	                			<td valign="top">
+	                				 <%
+								       if(@org[:featured_id]!=nil && @org[:featured_id]!=0) 
+         									@orgevent = Event.find(@org[:featured_id])
+         									
+									       	image_check = 0
+									       	
+									       	 if(@orgevent[:event_logo]!=nil)
+									             img_full_path = check_img(@orgevent[:event_logo],'event','thumb')	
+									         	if img_full_path!='0' && img_full_path!='' 
+												  image_check = 1
+												  %>
+												  <img src="<%= APP_CONFIG['development']['upload_url'] %><%= img_full_path %>" alt="" width="50" height="50" />
+												  <%
+												end
+											end
+										end	
+											
+										if image_check==0
+											%>
+											<img src="<%= APP_CONFIG['development']['app_url'] %>demo_image.png" alt="" width="50" height="50" />
+											<%
+										end		
+												
+											
+								     %>
+	                			</td>
+	                			<td><%= I18n.t 'event.purchase.thanks' %><br />
+	                				<% if @org[:name]!='' && @org[:name]!=nil %>
+	                					<% @org[:name] %>
+	                				<% else %><%= I18n.t 'event.purchase.unnamed_orga' %><% end %></td>	
+	                		</tr>
+	                	</table>
+	                	
+			        </div>
+					 <div class="clear"></div>
+					
+					<%
+		                    if @event[:organizer_id]!=nil
+		                    	@org = Organizer.find(@event[:organizer_id])
+		                    
+		                    	
+		                    if @org	
+		                 		if @org[:page_url]=='' || @org[:page_url]==nil 
+				             		page_url = APP_CONFIG['development']['site_url']+'organizers/show/'+@org[:id].to_s 
+				             	else
+				             		page_url = APP_CONFIG['development']['site_url']+'org/'+@org[:page_url]
+				             	end
+		                    %>
+		                    
+					
+					<div class="mtitle marT45">
+		            	<h1 style="line-height: 33px;"><%= I18n.t 'event.purchase.que_abt' %> <span><%= I18n.t 'event.purchase.orga' %></span></h1>
+		              
+		            </div>
+					<div class="shadow organizer pad5 marT20" >
+					<a href="<%= APP_CONFIG['development']['site_url'] %>organizers/contact/<%= @org[:id] %>" class="btn rr" ><%= I18n.t 'event.purchase.contact' %></a><div class="clear"></div>
+                                <br />
+                                <a href="<%= APP_CONFIG['development']['site_url'] %>organizers/show/<%= @org[:id] %>">
+                                	<img src="<%= APP_CONFIG['development']['app_url'] %>select_img.png" alt="" /> 
+                                	&nbsp;&nbsp;<%= I18n.t 'event.purchase.view_profile' %></a>
+                                 
+
+                                <% if @org[:add_twitter]==1 && @org[:add_username]==1 && @org[:twitter_link]!=nil && @org[:twitter_link]!='' %>
+	                                
+	                               <br /><a href="https://twitter.com/<%= @org[:twitter_link] %>">
+										<img src="<%= APP_CONFIG['development']['app_url'] %>themes/twitterconnect.jpg" style="top:4px; position: relative;" /> <%= @org[:twitter_link] %>
+									</a>
+                                <% end %>
+                                
+                                 <% if @org[:add_twitter]==1 && @org[:add_search]==1 && @org[:search_link]!=nil && @org[:search_link]!='' %>
+	                               <br /> <a href="https://twitter.com/<%= @org[:search_link] %>">
+	                                	<img src="<%= APP_CONFIG['development']['app_url'] %>themes/twitterconnect.jpg" alt="" style="top:4px; position: relative;"/> <%= @org[:search_link] %>
+	                                </a>
+                                <% end %>
+                                
+                                 <% if @org[:add_facebook]==1 && @org[:facebook_link]!=nil && @org[:facebook_link]!='' %>
+	                              <br />  <a href="https://www.facebook.com/<%= @org[:facebook_link] %>">
+	                                	<img src="<%= APP_CONFIG['development']['app_url'] %>themes/facebook.jpg" alt="" style="top:3px; position: relative;"/> <%= @org[:facebook_link] %>
+	                                </a>
+                                <% end %>
+                               
+					<div class="clear"></div>
+					</div>
+					
+							<% 
+								end 
+							end
+					%>
+		            
+		            
+		            
+		          </div><div class="clear"></div>      
+		</div>
+		
+
+           <div class="clear"></div>
+    </div>
+    
+    
+    
+</section>

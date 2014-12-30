@@ -1,0 +1,64 @@
+   <% 
+  		if params[:page_type]=='order'
+  			@field = 'order'
+  		else
+  			@field = 'user_address'
+  		end		
+    %>
+  <% if @state.count > 0 %>
+ 		
+  		<% if params[:add_type]=='home' %>
+	  		<select class="selectbox TW97p W50P_T" name="<%= @field %>[home_state]" id="<%= @field %>_home_state">
+				  <option value="">-- <%= I18n.t 'user.select_state'%> --</option>
+				  <% for st in @state %>
+				    <option value="<%= st[:state_name] %>"><%= st[:state_name] %></option>
+				  <% end %>
+			  </select>
+		<% end %>
+		
+		<% if params[:add_type]=='bill' %>
+	  		<select class="selectbox TW97p W50P_T" name="<%= @field %>[bill_state]" id="<%= @field %>_bill_state">
+				  <option value="">-- <%= I18n.t 'user.select_state'%> --</option>
+				  <% for st in @state %>
+				    <option value="<%= st[:state_name] %>"><%= st[:state_name] %></option>
+				  <% end %>
+			  </select>
+		<% end %>
+		
+		<% if params[:add_type]=='ship' %>
+	  		<select class="selectbox TW97p W50P_T" name="<%= @field %>[ship_state]" id="<%= @field %>_ship_state">
+				  <option value="">-- <%= I18n.t 'user.select_state'%> --</option>
+				  <% for st in @state %>
+				    <option value="<%= st[:state_name] %>"><%= st[:state_name] %></option>
+				  <% end %>
+			  </select>
+		<% end %>
+		
+		<% if params[:add_type]=='work' %>
+	  		<select class="selectbox TW97p W50P_T" name="<%= @field %>[work_state]" id="<%= @field %>_work_state">
+				  <option value="">-- <%= I18n.t 'user.select_state'%> --</option>
+				  <% for st in @state %>
+				    <option value="<%= st[:state_name] %>"><%= st[:state_name] %></option>
+				  <% end %>
+			  </select>
+		<% end %>	  
+  
+  <% else %>
+  			
+  			<% if params[:add_type]=='home' %>
+		  		<%= text_field_tag :home_state, '', :class => 'textbox TW97p', :name => @field+'[home_state]', :id => 'home_state', :placeholder => (I18n.t 'place.enter_your_home_state') %>
+			<% end %>
+			
+			<% if params[:add_type]=='bill' %>
+		  		<%= text_field_tag :bill_state, '', :class => 'textbox TW97p', :name => @field+'[bill_state]', :id => 'bill_state', :placeholder => (I18n.t 'place.enter_billing_state') %>
+			<% end %>
+			
+			<% if params[:add_type]=='ship' %>
+		  		<%= text_field_tag :ship_state, '', :class => 'textbox TW97p', :name => @field+'[ship_state]', :id => 'ship_state', :placeholder => (I18n.t 'place.enter_your_shipping_state') %>
+			<% end %>
+			
+			<% if params[:add_type]=='work' %>
+		  		<%= text_field_tag :work_state, '', :class => 'textbox TW97p', :name => @field+'[work_state]', :id => 'work_state', :placeholder => (I18n.t 'place.enter_your_working_state') %>
+			<% end %>	
+  
+  <% end %>

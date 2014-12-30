@@ -1,0 +1,38 @@
+
+<script src="<%= APP_CONFIG['development']['js_url'] %>js/validation.js" type="text/javascript"></script>    
+
+<div id="closedd">
+
+	 <div id="page_we">
+	<div id="content">
+     
+	<% @act_class = 'API User Key' %>         	
+    <%= render(:partial => "account_sidebar" , :object => :collection) %>    
+            
+           
+                <div class="content_right invoice">
+	           		<h2><%= I18n.t 'manage_account_apikey.your_api_user_key'%></h2>
+	                <h4><%= @user[:user_api_key] %></h4>
+                </div>
+            
+              	<div class="content_right invoice marT10">
+	           		<h2><%= I18n.t 'manage_account_apikey.what_is_api_user_key'%></h2>
+	                <p><%= I18n.t 'manage_account_apikey.user_key_unique_assigned'%><%= @site[:site_name]%><%= I18n.t 'manage_account_apikey.which_identifies_user_API_call'%> </p>
+	                <p><%= I18n.t 'manage_account_apikey.only_this'%> <strong><%= I18n.t 'manage_account_apikey.replaces'%></strong> <%= I18n.t 'manage_account_apikey.basic_user_pwd_authentication'%></p>
+	                <p><%= I18n.t 'manage_account_apikey.a_valid_user_key_recommended_user_authentication'%><%= @site[:site_name]%><%= I18n.t 'manage_account_apikey.API'%></p>
+				</div>
+            
+             	<div class="content_right invoice marT10">
+	           		<h2><%= I18n.t 'manage_account_apikey.how_different_application_key'%></h2>
+	                <p><%= I18n.t 'manage_account_apikey.the_application_key_string_assigned_by'%> <%= @site[:site_name] %> <%= I18n.t 'manage_account_apikey.which_identifies_application_making_method_call'%> </p>
+	                <p><%= I18n.t 'manage_account_apikey.you_might_have_many_keys_only_have_one_user_key'%></p>
+	                <p><a href="#"><%= I18n.t 'manage_account_apikey.more_details_on_the'%> <%= @site[:site_name] %> <%= I18n.t 'manage_account_apikey.only_api'%></a></p>
+	                <p><a href="<%= APP_CONFIG['development']['site_url'] %>manage_account/requestapi"><%= I18n.t 'manage_account_apikey.request_application_key'%>s</a></p>
+              	</div> 
+           
+           
+        </div>
+    </div>
+</div>
+	
+

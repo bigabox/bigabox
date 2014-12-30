@@ -1,0 +1,267 @@
+<script type="text/javascript">
+	function validateEmailCommon(form,id,errid){
+		//testing regular expression
+		$("#succ_msg").hide();
+		var email_reg_exp= /^[a-zA-Z0-9]+[a-zA-Z0-9_.-]+[a-zA-Z0-9_-]+@[a-zA-Z0-9]+[a-zA-Z0-9.-]+[a-zA-Z0-9]+.[a-z]{2,4}$/;
+		var form = $("#"+form+"");	
+		
+	
+		var forget_email = $("#"+id);
+		var forgetEmailInfo = $("#"+errid);
+	
+		
+	
+		
+		//On click		
+		forget_email.focus(function() {  
+			
+			
+		
+		} );
+		
+		
+		
+		//On blur
+		
+		forget_email.blur(validateEmail);
+		
+	
+	
+		forget_email.keyup(validateEmail);
+		
+		
+		//On Submitting
+		
+			if(validateEmail()){
+				
+				 	var page_path = '/manage_account/save_ref_pay_account/';
+			        var ref_pay_account = $('#ref_pay_account').val();
+			        $.ajax({
+			            type: "GET",
+			            data: {ref_pay_account: ref_pay_account}, 
+			            url: page_path+ref_pay_account,
+			            success: function(data) {
+			             //  alert(data);
+			                $("#succ_msg").html(data);
+			                $("#succ_msg").show();
+			            }
+			        });
+				
+			}
+				
+				
+				return false;
+				
+				
+				
+				//validation functions
+			function validateEmail(){
+				
+				//testing regular expression
+				var a = $("#"+id).val();
+				var filter = email_reg_exp;
+				//if it's valid email
+				
+				if(filter.test(a)){
+						
+					forgetEmailInfo.text("");
+					forgetEmailInfo.removeClass("error1");
+					
+					return true;
+				}
+				//if it's NOT valid
+				else{
+					
+					forgetEmailInfo.text('<%= I18n.t 'list_script.please_valid_email'%>');
+					forgetEmailInfo.addClass("error1");
+					return false;
+				}
+			}	
+		
+		}
+	
+	function ref_code_validate(){
+		 $("#code_suc").hide();
+		var alphanum=/^[a-zA-Z0-9]+$/;
+		var a = $("#unique_no").val();
+				var filter = alphanum;
+				//if it's valid email
+		
+		if(a==''){
+			
+			$("#coderr").text('<%= I18n.t 'manage_account_referral_program.enter_valid_alpha_numeric_referral_code'%>');
+			$("#coderr").addClass("error1");
+			return false;
+		}
+		else if(filter.test(a)){
+				
+			$("#coderr").text("");
+			$("#coderr").removeClass("error1");
+			
+				var page_path = '/manage_account/save_ref_unique_no/';
+		        var unique_no = a;
+		        $.ajax({
+		            type: "GET",
+		            data: {unique_no: unique_no}, 
+		            url: page_path+unique_no,
+		            success: function(data) {
+		             //  alert(data);
+		             	if(data=='success')
+		             	{
+		             		 
+		             		 $("#code_suc").removeClass("errors");
+		             		 $("#code_suc").addClass("notice");
+		             		 $("#code_suc").html('<%= I18n.t 'manage_account_referral_program.your_referral_link_created_successfully'%>');
+		                	 $("#code_suc").show();
+		                	 
+		                	window.setTimeout('location.reload()', 3000);
+		             		
+		             	}else{
+		             		$("#code_suc").removeClass("notice");
+		             		$("#code_suc").addClass("errors");
+		             		$("#code_suc").html(data);
+		                	$("#code_suc").show();
+		             	}
+		               
+		            }
+		        });
+		}
+		//if it's NOT valid
+		else{
+			
+			$("#coderr").text('<%= I18n.t 'manage_account_referral_program.type_valid_alpha_numeric_referral_code'%>');
+			$("#coderr").addClass("error1");
+			return false;
+		}
+	}	
+</script>
+
+<script>
+	function selectall(link_name)
+		{ 
+		
+			var text_val=document.getElementById(link_name);
+			
+			text_val.focus();
+			
+			text_val.select();
+			
+			if (!document.all) return; // IE only
+			
+			r= text_val.createTextRange();
+			
+			r.execCommand('Copy');
+			
+			
+		}
+	
+	
+</script>
+
+<style>
+	@media (max-width: 768px) {
+		.affiliate_program td:nth-of-type(1):before { content: "<%= I18n.t 'manage_account_affiliates.site_visits'%>";  }
+		.affiliate_program td:nth-of-type(2):before { content: "<%= I18n.t 'manage_account_referral_program.account_signups'%>";  }
+		.affiliate_program td:nth-of-type(3):before { content: "<%= I18n.t 'manage_account_affiliates.capital_sales'%>"; }
+		.affiliate_program td:nth-of-type(4):before { content: "<%= I18n.t 'manage_account_affiliates.your_share'%>"; }
+		.affiliate_program td:nth-of-type(5):before { content: "<%= I18n.t 'wallet_index.capital_paid'%>"; }
+		.affiliate_program td:nth-of-type(6):before { content: "<%= I18n.t 'wallet_index.capital_due'%>"; }
+
+	}	
+</style>
+<section>
+	<%= render(:partial => "account_top" , :object => :collection) %>    
+	<div class="main marTB40">
+    	<div id="code_suc" style="display:none;"></div>
+    	<div class="leftcol">         
+            <div class="mtitle">
+            	<h3><%= @site[:site_name] %> <span><%= I18n.t 'account_sidebar.referral_program'%></span></h3>
+            </div>
+            <div class="shadow marT10 pad20">
+            	
+                	<div class="referral_program">
+                    	<label><strong><em>1</em><%= I18n.t 'manage_account_referral_program.create_unique_link'%>:</strong><br />
+ 							<span><%= APP_CONFIG['development']['site_url'] %>referrer/</span></label>
+	                         <%= text_field_tag :unique_no, params[:unique_no], :class => 'textbox' %>
+					         <%= submit_tag (I18n.t 'button.save'), :class => 'submit_btn efl', :onclick => ' return ref_code_validate(); ' %>
+				             <div id="coderr" style="margin-left: 38%;"></div>       
+                        <div class="clear"></div>
+                        <label class="marT20 TW97p"><strong><em>2</em><%= I18n.t 'manage_account_referral_program.promote_your_link'%>:</strong><br />
+ 							<span><%= I18n.t 'manage_account_referral_program.examples'%>:<br />
+                            <%= I18n.t 'manage_account_referral_program.post_on_your_website'%><br />
+							<%= I18n.t 'manage_account_referral_program.email_to_prospective_event_holders'%>
+							</span></label>
+                    </div><br />
+                
+                
+                 <% if @referrals.count > 0 %>
+					 		<% for r in @referrals %>
+					 			 <br/> <div class="form" style="position:relative;">
+					                	<label><%= I18n.t 'manage_account_affiliates.refferal_link'%></label>
+					                    <input type="text" id="select_link<%= r[:id] %>" class="textbox" value="<%= APP_CONFIG['development']['site_url'] %>referrer/<%= r[:code] %>" placeholder="" readonly="readonly"/>
+										<a href="javascript:" onclick="selectall('select_link<%= r[:id] %>')" class="copy hint--bottom" data-hint="<%= I18n.t 'create_data_hint.data_hint_copy'%>"></a>
+					              </div>
+					 			<div class="clear"></div>
+				                <div class="shadow affiliate_program pad3 marT25">
+				                    <table class="table">
+				                        <thead>
+				                        <tr>
+				                            <th><%= I18n.t 'manage_account_affiliates.site_visits'%></th>
+						 					<th><%= I18n.t 'manage_account_referral_program.account_signups'%></th>
+						 					<th><%= I18n.t 'manage_account_affiliates.capital_sales'%></th>
+						 					<th><%= I18n.t 'manage_account_affiliates.your_share'%></th>
+						 					<th><%= I18n.t 'wallet_index.capital_paid'%></th>
+						 					<th><%= I18n.t 'wallet_index.capital_due'%></th>
+				                        </tr>
+				                        </thead>
+				                        <tbody>                               
+				                        <tr>
+				                            <td class="textcenter"><%= r[:site_count] %></td>
+						 					<td class="textcenter"><%= r[:sign_up] %></td>
+						 					<td><%= set_currency(r[:revenue_generated]) %></td>
+						 					<td><%= set_currency(r[:your_share]) %></td>
+						 					<td><%= set_currency(r[:paid]) %></td>
+						 					<td><%= set_currency(r[:due]) %></td>
+				                        </tr>                             
+				                        </tbody>
+				                    </table>
+				                </div>
+					 			
+					 		<% end %>	
+					 <% end %>	
+					 
+               
+            </div>           
+            <div class="mtitle marT40">
+            	<h3><%= I18n.t 'manage_account_referral_program.paypal'%> <span><%= I18n.t 'manage_account_referral_program.small_account'%></span></h3>
+            </div>
+            <div class="shadow marT10 pad20">
+            	<div class="withdraw_amount form">
+                <%= I18n.t 'manage_account_referral_program.pleace_specify_the_paypal_account_which_like_referral_bonuses_if_you_have_account'%> <a href="https://www.paypal.com/us/mrb/pal=W9QW5TKUA246E" target="_blank"><strong><%= I18n.t 'manage_account_referral_program.create_one_now'%></strong></a><br />
+<br />
+                	 <div id="succ_msg" class="notice" style="display: none;"></div> 
+					 <%= form_tag({:controller => 'manage_account', :action => 'password'}, :id => 'eventpayform', :name => 'eventpayform') do %>
+					 	 <label><%= I18n.t 'manage_account_referral_program.paypal_email_address'%></label>
+					 	 
+						 <%= text_field_tag :ref_pay_account, @user[:ref_pay_account], :class => 'textbox', :name => 'user[ref_pay_account]' %>
+		                 <%= submit_tag (I18n.t 'button.save'), :class => 'submit_btn', :onclick => ' return validateEmailCommon("eventpayform","ref_pay_account","payerr")' %>
+		                 <div id="payerr" style="margin-left: 30%;"></div>
+					 
+					 <% end %>  
+					
+                </div>
+                <div class="clear"></div>
+            </div>           
+            <div class="mtitle marT40">
+            	<h3><%= I18n.t 'account_sidebar.referral_program'%> <span><%= I18n.t 'manage_account_affiliates.faq_s'%></span></h3>
+            </div>
+            <div class="shadow marT10 pad20">
+            	<% @ref_page = Page.find(30) %>
+            	<%= render :inline => @ref_page[:description] %>
+            </div> 
+        </div>
+         <% @act_class = 'Referral Program' %>         	
+		 <%= render(:partial => "account_sidebar" , :object => :collection) %>    
+        <div class="clear"></div>
+    </div>    
+</section>

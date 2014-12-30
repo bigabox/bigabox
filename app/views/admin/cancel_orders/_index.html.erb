@@ -1,0 +1,107 @@
+<script>
+ $(document).ready(function() {	
+	$('.breadcrumb').html('');
+	$('#index_footer').html('');
+	
+});	
+</script> 
+<%  #@tickets = Purchase.where(:user_id => params[:user_id]).paginate(:page => params[:id], :per_page => 2).order('id DESC')
+	@can = CancelOrder.where(:with_con => 0).order('id DESC')#.paginate(:page => params[:id], :per_page => 1).order('id DESC')
+	@site = SiteSetting.find(:first)
+ %>
+
+<script>
+	function check_with_submit(){
+		$('#witherror').text('');
+		var chks = document.getElementsByName('all_id[]');
+		var fl = true;
+		for (var i = 0; i < chks.length; i++)
+        {
+            if (chks[i].checked==true)
+            {
+                   fl = false;
+            }
+         }
+         
+         if(fl==true){
+         	$('#witherror').text('Select atleast one record to confirm..!!');
+         	return false;
+         }else{
+         	$('#withdrawForm').submit();
+         }
+	}
+</script>
+<div class="paginated_collection">
+              <div class="paginated_collection_contents">
+                <div class="index_content">
+                  <div class="index_as_table">
+                    <%= form_tag({:action => 'confirm_cancel'}, :id => 'withdrawForm', :name => 'withdrawForm') do %> 
+                    <% if @can.count > 0 %>
+                    <div id="witherror" style="text-align: center; color: #f00;"></div>
+                    <div align="right">
+                    	<a href="javascript://"  onclick="return check_with_submit();"><img src="<%= APP_CONFIG['development']['app_url'] %>tick1.png" alt="" /> Confirm All</a>
+                    </div>
+                    <% end %>
+                    <table border="0" cellspacing="0" cellpadding="0"  class="index_table index" paginator="true">
+                      
+							<thead>
+								<tr>
+								 <!-- <th class="sortable first_name"><a href="/admin/purchases?user_id=4&amp;order=first_name_desc">First Name</a></th>
+								  <th class="sortable last_name"><a href="/admin/purchases?user_id=4&amp;order=last_name_desc">Last Name</a></th> -->
+								  <th>&nbsp;</th>
+								  <th>First Name</th>
+								  <th>Last Name</th>
+								  <th>Email</th>
+								  <th>Event Title</th>
+								  <th>Ticket Name</th>
+								  <th>Ticket Qty</th>
+								  <th>Amount</th>
+								  <th class="">&nbsp;</th>
+								</tr>
+							</thead>
+							<tbody>
+								
+								<% 
+								i=1
+								  if @can.count > 0
+									  for c in @can
+								%>
+								
+									<tr class="<% if i%2==0 %> even <% else %>odd <% end %>">
+										<td><input type="checkbox" name="all_id[]" value="<%= c[:id] %>" /></td>
+										<td><%= c[:first_name] %></td>
+										<td><%= c[:last_name] %></td>
+										<td><%= c[:email] %></td>
+										<td><%= event_title(c[:event_id]) %></td>
+										<td><%= ticket_name(c[:ticket_id]) %></td>
+										<td><%= c[:ticket_qty] %></td>
+										<td><%= set_currency(c[:total]) %></td>
+										<td>
+											<%= link_to image_tag('tick1.png', :title => 'Confirm') + ' Confirm ', {:action => 'confirm_cancel/'+c[:id].to_s} %>
+										</td>
+									</tr>
+								<%
+											i+=1
+										
+									end
+								 else
+									%>
+									<tr class="odd">
+										<td colspan="9" style="text-align: center;">No Records Available</td>
+									</tr>
+									 <%	
+								end %>
+							
+							
+								 
+							                        
+							</tbody>
+ 
+                    </table>
+                    <% end %>
+                     
+                  </div>
+                </div>
+              </div>
+              
+            </div>

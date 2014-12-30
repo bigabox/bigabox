@@ -1,0 +1,66 @@
+<%
+      @user_multi = User.find(session[:user_id]) 
+	 if @user_multi[:ref_id]!=nil && @user_multi[:ref_id]!="" 
+		  @multi = 1
+		  @ses_user = @user_multi[:ref_id]
+	  else
+		  @multi = 0
+		  @ses_user = session[:user_id]
+	  end
+%>
+
+
+<script type="text/javascript">
+	function chk_name_list(){
+		var name = $('#contact_list_name_copy').val();
+       $("#namerr1").text('');
+        if(name==''){
+        	$('#contact_list_name_copy').focus();
+        	$("#namerr1").text('<%= I18n.t 'copy_contact.copy_js' %>');
+        	return false;
+        }
+         var page_path = '/contacts/copy';
+        $.ajax({
+            type: "POST",
+            data: $("#copycontactForm1").serialize(),
+            url: page_path,
+            success: function(data) {
+              if(data.msg=='error'){
+              		$("#namerr1").removeClass('success');
+              		$("#namerr1").addClass('error1');
+              		$("#namerr1").text(data.err);
+              }else{
+              		
+              		$("#namerr1").removeClass('error1');
+              		$("#namerr1").addClass('success');
+              		$("#namerr1").text(data.suc);
+              		setTimeout(function() { close_colorbox(); }, 1000);
+              }
+              //close_colorbox();
+            }
+        });
+        return false;
+	}
+</script>
+<div id="repeat_div_pop2" class="popup_Content">
+              <h2><%= I18n.t 'copy_contact.contact_list' %></h2>
+        	<br />
+        	<% @ses_user %>
+	<%= form_tag({:controller => 'contacts', :action => 'copy'}, :id => 'copycontactForm1', :name => 'copycontactForm1') do %> 		
+			 <div id="namerr1" class="error1" style="margin-left: 30%; height: 12px; display: block;">  </div>  
+        	 
+        	 <div class="form">
+		         <label><%= I18n.t 'copy_contact.enter_name' %>:</label>
+		         <input type="text" name="contact_list[name]" id="contact_list_name_copy" class="textbox" value="" />   
+          
+            <div class="marT20" align="right">
+              <input type="hidden" name="list_id" id="list_id" value="<%= params[:list_id] %>"/>
+              <input type="hidden" name="contact_list[user_id]" id="contact_list_user_id" value="<%= @ses_user %>"/>
+              <input class="submit_btn" type="submit" value="<%= I18n.t 'button.save' %>"  onclick='return chk_name_list();' />
+          	  <a class="btn black_bg" onclick="parent.jQuery.colorbox.close();" style="padding: 16px 20px;"><%= I18n.t 'validation.common.can' %></a>
+          	</div>  
+        <div class="clear"></div>
+             
+      </div>  
+    <% end %>
+   </div>

@@ -1,0 +1,3452 @@
+<script>
+ 	function trim(el) {
+    el.value = el.value.
+    replace(/(^\s*)|(\s*$)/gi, ""). // removes leading and trailing spaces
+    replace(/[ ]{2,}/gi, " "). // replaces multiple spaces with one space 
+    replace(/\n +/, "\n"); // Removes spaces after newlines
+    return;
+}
+ </script>
+
+<script type="text/javascript">
+	
+function limitText(limitField, limitCount, limitNum) {
+
+	if (limitField.value.length > limitNum) {
+		limitField.value = limitField.value.substring(0, limitNum);
+	} else {
+		limitCount.value = limitNum - limitField.value.length;
+	}
+	name = limitField.value; //alert(name);
+	name = name.replace(/[^a-zA-Z 0-9-]+/g,'').toLowerCase().replace(/\s/g,'-');
+	//alert(name);
+    $('#event_event_url_link').val(name); //alert(name);
+}
+</script>
+        
+           
+<style>
+	.error1,.success{
+		margin-left: 22%;
+	}
+	.your_date_text{
+		padding: 5px;
+	}
+	.p_tab{
+		margin-left: 21%;
+		margin-top: 5px;
+	}
+	#event_facebook_link_err ,#event_twitter_link_err{
+		margin-left: 0 !important;
+	}
+	.is-disabled { 
+	    opacity: .5;
+	    pointer-events: none;
+	}
+</style>
+<style>
+	@media (max-width: 768px) {
+		.create_event_table td:nth-of-type(1):before { content: "<%= I18n.t 'ticket_part.ticket_name'%>"; }
+		.create_event_table td:nth-of-type(2):before { content: "<%= I18n.t 'ticket_part.ticket_quantity'%>"; }
+		.create_event_table td:nth-of-type(3):before { content: "<%= I18n.t 'ticket_part.ticket_price'%>"; }
+		.create_event_table td:nth-of-type(4):before { content: "<%= I18n.t 'ticket_part.fee'%>"; }
+		.create_event_table td:nth-of-type(5):before { content: "<%= I18n.t 'ticket_part.buyer_total'%>"; }
+		.create_event_table td:nth-of-type(6):before { content: "<%= I18n.t 'ticket_part.sales_status'%>"; }
+		.create_event_table td:nth-of-type(7):before { content: "<%= I18n.t 'ticket_part.setting'%>"; }
+		.create_event_table td:nth-of-type(8):before { content: "<%= I18n.t 'ticket_part.action'%>"; }
+	}	
+</style> 
+<% 
+	@site = SiteSetting.find(:first)
+	@sales = TicketStatus.find(:all)
+	@timezone = Timezone.find(:all)
+%>
+<% tooltip = '<b>'+(I18n.t 'create_event.ticket_sales')+':</b><br /> <span>'+(I18n.t 'create_event.start_sales')+':</span>'+(I18n.t 'create_event.now')+':<br /> <span>'+(I18n.t 'create_event.end_sales')+':</span>'+(I18n.t 'create_event.before_event')+'<br /> <span>'+(I18n.t 'create_event.min_purchase_permitted')+':</span>'+@site[:min_purchase_allowed].to_s+'<br /><span>'+(I18n.t 'create_event.max_purchase_permitted')+':</span>' +@site[:max_purchase_allowed].to_s %>
+ <% 
+	timezone = @site[:site_timezone]	
+	if(@event[:event_time_zone] != '' && @event[:event_time_zone] != nil && @event[:event_time_zone] != 0) then 
+		timezone = @event[:event_time_zone] 
+	end	 		
+ %>
+<% 
+ 	strt_date = (Time.now + @site[:event_start_day].days).strftime("%Y-%m-%d %H:%M")
+ 	end_date = (Time.now + @site[:event_start_day].days).strftime("%Y-%m-%d %H:%M")
+ 	
+ 	strt_date_only = (Time.now + @site[:event_start_day].days).strftime("%Y-%m-%d")
+ 	end_date_only = (Time.now + @site[:event_start_day].days).strftime("%Y-%m-%d")
+ 	
+%>
+
+
+<% 
+   		if(@event[:organizer_id]==nil || @event[:organizer_id]=='' || @event[:organizer_id]==0) then
+   			@org = Organizer.find(:last, :conditions => ['user_id=? ', @ses_user])
+   			
+   		else
+   			@org = Organizer.find(@event[:organizer_id])	
+   		end
+   		
+   		if @org
+   			
+   			@event[:organizer_host] = @org[:name]
+   			@event[:host_description] = @org[:description]
+   			@event[:organizer_id] = @org[:id]
+   		else
+   			@org = Organizer.new
+   			@org[:name] = ''
+   			@org[:description] = ''
+   			@org[:id] = 0
+   		end	
+   		
+   		
+   		if(@event[:id]==nil || @event[:id]=='') then
+   			@event_repeat = EventRepeat.new
+   			
+   		else
+   			@event_repeat = EventRepeat.find(:first, :conditions =>  ["event_id = ?", @event[:id]] )
+   			
+   		end	
+   		
+   		if @event_repeat
+   		else
+   			@event_repeat = EventRepeat.new
+   		end		
+%>
+
+<link href="<%= APP_CONFIG['development']['css_url'] %>colorbox.css" media="all" rel="stylesheet" type="text/css" />
+<script src="<%= APP_CONFIG['development']['js_url'] %>js/jquery.colorbox.js" type="text/javascript"></script>
+<script type="text/javascript" src="<%= APP_CONFIG['development']['js_url'] %>js/jquery.tipsy.js"></script>
+		
+<script type="text/javascript">
+
+
+$(window).load(function() {
+ // executes when complete page is fully loaded, including all frames, objects and images
+  if (!$("#event_password_protect").prop("checked")) {
+   		$("#event_password_value").attr( "readonly", "readonly" );
+      }
+      
+     if(!$('#event_add_facebook').prop("checked")){
+     	$('#event_facebook_link').attr( 'readonly', 'readonly' ); 
+	 }
+	 
+	 if(!$('#event_add_twitter').prop("checked")){ 
+	 	$('#event_twitter_link').attr( 'readonly', 'readonly' ); 
+	 }
+ 
+});
+
+
+        $(document).ready(function() {
+         
+   			
+			var ur_date_inner_content = '',ur_date_color_content = '', spec_cnter='<%= @event_repeat[:spec_cnt] %>';
+			
+				
+			
+			var myDate = new Date();
+			var nowDate = new Date(myDate.getTime() + 1*24*60*60*1000);
+			
+		
+			$('.date_time').datetimepicker({
+				ampm: false,dateFormat:'yy-mm-dd',timeFormat: 'HH:mm',
+				minDate: 0
+			});
+			
+				  
+          $('.date_only').datepicker({
+				ampm: false,dateFormat:'yy-mm-dd',minDate: 0
+		  });
+	//	$('.onlydatepicker').val(' strt_date_only  %>');
+		 	
+			<% if @event[:id]==nil || @event[:id]=='' || @event[:id]==0 %> 
+		 		
+		 		$('#event_event_start_date_time').datetimepicker("option", "setDate", 0+<%=  @site[:event_start_day] %>); 
+				$('#event_event_end_date_time').datetimepicker("option", "setDate", 0+<%=  @site[:event_end_day] %>); 
+				
+				var myDate = new Date();
+				var nowDate = new Date(myDate.getTime() + <%=  @site[:event_start_day] %> *24*60*60*1000);
+				//alert(nowDate)
+				
+				$("#event_event_end_date_time").datetimepicker("option", "minDate", '<%=  strt_date %>'); 
+				
+				
+				$("#event_event_start_date_time").datetimepicker("option", "minDate", '<%=  strt_date %>'); 
+				
+			<% else %>
+				$('#event_event_start_date_time').val('<%=  @event[:event_start_date_time].strftime('%Y-%m-%d %H:%M')  %>'); 
+				$('#event_event_end_date_time').val('<%= @event[:event_end_date_time].strftime('%Y-%m-%d %H:%M')   %>'); 
+				
+			<% end  %>
+			
+	
+			/**** pop up *****/
+		
+		 $(".rr").colorbox();     
+		 $(".inline").colorbox({inline:true});	
+		 
+		
+	/************ pop up end ************/
+		$('#ui-datepicker-div').hide();
+		
+		$('#tool_tip a').tipsy({gravity: 'w'});	
+		$('#social_link a').tipsy({gravity: 'w'});	
+		//$('.bs-docs-tooltip-examples li a').tipsy({gravity: 'n'});
+		
+		if($('#event_category').val()==""){
+			$("#event_subcategory").hide();
+		}			
+		else
+		{
+			$("#event_subcategory").show();
+			//alert('hi');
+		}
+						
+		});	
+		//$('.bs-docs-tooltip-examples li a').tooltip();
+	
+    </script>
+    
+    
+
+    <!--[if lt IE 9]>
+   		<script type="text/javascript" src="js/html5.js"></script>
+    	<link rel="stylesheet" type="text/css" media="screen" href="css/ie.css">
+	<![endif]-->
+
+<script src="<%= APP_CONFIG['development']['js_url'] %>js/map/gmap3.min.js" type="text/javascript"></script>
+<script src="<%= APP_CONFIG['development']['js_url'] %>js/map/jquery-autocomplete.min.js" type="text/javascript"></script>
+
+
+<link href="<%= APP_CONFIG['development']['js_url'] %>js/map/jquery-autocomplete.css" media="all" rel="stylesheet" type="text/css" />
+
+    <script type="text/javascript">
+   
+   
+	
+	$(function() {
+		
+          $('#event_street_address1').autocomplete({
+            source: function() {
+              $("#test1").gmap3({
+                action:'getAddress',
+                address: $(this).val(),
+                callback:function(results){
+                  if (!results) return;
+                 // alert(results);
+                 // console.log(results);	
+                  $('#event_street_address1').autocomplete(
+                    'display', 
+                    results,
+                    false
+                  );
+                }
+              });
+            },
+            cb:{
+              cast: function(item){
+			  
+                return item.formatted_address;
+              },
+              select: function(item) {
+                set_map_center(item.formatted_address);
+              }
+            }
+         
+          });
+		  
+		                                     
+											
+	});  
+   
+   var glob_submit=false;    
+      
+      
+/* This submits the primary baseball picture form when the file upload name changes */
+$(function() {
+  $('.user_picture').live('change', function(event) {//alert("hi");
+ 
+if(glob_submit==false)
+{  
+  glob_submit=true;    
+  var chks = document.getElementById('upload_datafile');
+  
+  
+                if (chks.value=='')
+                {
+                        check=false;
+						var dv = document.getElementById('err1');
+						dv.style.clear = "both";
+						dv.style.minWidth = "110px";
+						dv.style.margin = "5px";
+						dv.innerHTML = 'Event Logo is required.';
+						dv.style.display='block';
+						dv.style.color='#f00';
+					  	hasChecked = true;
+                        glob_submit=false;
+						return false;
+                }
+				else 
+				{
+						
+						value = chks.value;
+						
+						t1 = value.substring(value.lastIndexOf('.') + 1,value.length);
+						
+						if( t1=='jpg' || t1=='jpeg' || t1=='gif' || t1=='png' || t1=='JPEG' || t1=='JPG'  ||  t1=='PNG' || t1=='GIF')
+						{
+							document.getElementById('err1').style.display='none';
+							check=true;
+						}
+						else
+						{						
+							
+							
+							check=false;
+							i=0;
+							var dv = document.getElementById('err1');
+
+							dv.style.clear = "both";
+							dv.style.minWidth = "110px";
+							dv.style.margin = "5px";
+							dv.innerHTML = 'Event Logo type is not valid.';
+							dv.style.display='block';
+							dv.style.color='#f00';
+							hasChecked = true;
+							glob_submit=false;
+							return false;
+							
+						}
+				
+				
+						
+				}
+				
+   var chk = filename();
+   // jQuery('#next_action').val('');
+   // startSpinner($('#picture_file_field_display'),$('#campaign_summary_picture_saving'));
+ 	if(chk==true){
+		$('#progressbar').show();
+		$('#picture_file_field_display1').hide();
+		$('#edit_user_picture_file').children().remove();
+		$(this).prependTo('#edit_user_picture_file').addClass('hidden-file-field');
+		
+		$('#user_picture').submit();
+		$(this).clone(true).appendTo("#picture_file_field_display").removeClass('hidden-file-field');
+		
+	}
+	}//main if for true/false	
+  });
+  
+});
+
+function filename(name)
+{
+return true;
+
+}
+$(document).ready(function() 
+{
+// alert("hi");
+  // bind form id and provide a simple callback function
+ 	
+ if ((pic = jQuery('#user_picture')).length )
+    pic.ajaxForm({dataType: 'json',
+      success: onSuccess1,
+      error: onError1,
+      complete: onComplete1,
+    });
+	
+	
+	
+  // bind form id and provide a simple callback function
+ 
+
+ });
+
+function onError1(jqXHR, textStatus, errorThrown) {
+ 
+ glob_submit=false;
+}
+function onComplete1(jqXHR, textStatus) {
+ 
+  glob_submit=false;
+}
+ var new_img='';
+function onSuccess1(data, textStatus, jqXHR)
+{
+	glob_submit=false;
+	 var subcategory_path = "<%= APP_CONFIG['development']['site_url'] %><%= APP_CONFIG['development']['folder'] %>/thumb.php";
+        var upload_url = "<%= APP_CONFIG['development']['upload_url'] %>";
+        var folder = "event";
+        
+         new_img = data.msg.image;
+
+			 
+				
+	$("#picture_file_field_display1").html('<img src="<%= APP_CONFIG['development']['upload_url'] %>data/thumb/event/'+new_img+'" alt="" width="77" height="74" id="img_thumb" /><br /><a href="javascript:" name="remove" id="remove" onclick="remove_image();" style=" text-decoration: underline;"> Remove </a> ');
+			  document.getElementById('event_event_logo').value=new_img;
+			  $("#edit_user_picture_file").html('');
+			  $('#progressbar').hide();
+			  $('#picture_file_field_display1').show();
+			  $('#picture_file_field_display1 img').show(); 
+			  
+			  
+	
+}
+ 
+function remove_image(){
+	var con = confirm('<%= I18n.t'create_event.rm_logo' %>');
+	if(con){
+		document.getElementById('upload_datafile').value = '';
+	 	$("#picture_file_field_display1").html('<img src="<%= APP_CONFIG['development']['app_url'] %>no_img.png" alt="" />');
+		document.getElementById('err1').style.display='none';
+		document.getElementById('event_event_logo').value='';
+	}	
+} 
+
+
+function set_address_value(){
+//	event_street_address1
+	var address = '';
+	$('#address1errInfo').text("");
+	
+	if($('#address_1').val()==''){
+		$('#address1errInfo').text('<%= I18n.t'create_event.address_required' %>')
+	}else{
+		if(document.getElementById('address_1').value!=''){
+			address = document.getElementById('address_1').value;
+		}
+		
+		if(document.getElementById('address_2').value!=''){
+			if(address==''){
+				address = document.getElementById('address_2').value;
+			}else{
+				address += ', '+document.getElementById('address_2').value;
+			}	
+		}
+		
+		if(document.getElementById('address_3').value!=''){
+			if(address==''){
+				address = document.getElementById('address_3').value;
+			}else{
+				address += ', '+document.getElementById('address_3').value;
+			}	
+		}
+		
+		if(document.getElementById('address_city').value!=''){
+			if(address==''){
+				address = document.getElementById('address_city').value;
+			}else{
+				address += ', '+document.getElementById('address_city').value;
+			}	
+		}
+		if(document.getElementById('address_zip').value!=''){
+			if(address==''){
+				address = document.getElementById('address_zip').value;
+			}else{
+				address += ', '+document.getElementById('address_zip').value;
+			}	
+		}
+		document.getElementById('event_street_address1').value = address;
+		set_map_center(address);
+		close_colorbox();
+	}	
+}
+   
+function close_colorbox(){
+	
+	
+	document.getElementById('event_repeat1').value = document.getElementById('event_event_repeat').value;
+	
+	parent.jQuery.colorbox.close();
+}
+
+function close_colorbox4(){
+	document.getElementById('event_repeat1').value = document.getElementById('event_event_repeat').value;
+	
+	
+	document.getElementById('your_date_content').innerHTML = document.getElementById('your_date_content_old').innerHTML;
+	
+	
+	document.getElementById('your_date').innerHTML = document.getElementById('your_date_old').innerHTML;
+	
+	
+	document.getElementById('show_repeat_info').innerHTML = document.getElementById('your_date_content_old').innerHTML;
+	document.getElementById('spec_cnt').value  = '<%= @event_repeat[:spec_cnt] %>';
+	/*document.getElementById('your_date_content').innerHTML = ur_date_inner_content;
+	
+	if(ur_date_color_content!=''){
+		document.getElementById('your_date').innerHTML = ur_date_color_content;
+		document.getElementById('your_date_display').style.display = 'block';
+		document.getElementById('spec_cnt').value  = spec_cnter;
+	}*/
+	parent.jQuery.colorbox.close();
+}
+
+function set_time_zone(){
+	
+	var tzval = document.getElementById('event_time_zone').value;
+	document.getElementById('event_event_time_zone').value = tzval;
+	
+	document.getElementById('time_zone_event').innerHTML = $("#event_time_zone option:selected").text();
+	//time_zone_event
+	close_colorbox();
+}  
+
+function save_event_repeat(val){
+	document.getElementById('event_event_repeat').value = val;
+	var ret=false;
+	
+	var sdate = document.getElementById('event_event_start_date_time').value;
+	var endate = document.getElementById('event_event_end_date_time').value;
+		
+	document.getElementById('manual_date_div').style.display = 'inline-block';
+	document.getElementById('cust_date_div').style.display = 'none';
+	
+	var dayarr = { 1: '<%= I18n.t 'day.monday'%>',    2: '<%= I18n.t 'day.tuesday'%>',   3: '<%= I18n.t 'day.wednesday'%>',   4: '<%= I18n.t 'day.thursday'%>',   5: '<%= I18n.t 'day.friday'%>',   6: '<%= I18n.t 'day.saturday' %>',   7: '<%= I18n.t 'day.sunday' %>'};			
+	if(val==1){
+		var eday = document.getElementById('event_repeat_daily_repeat_day').value;
+		var edate = document.getElementById('event_repeat_daily_end_date').value;
+		
+		var strtime = sdate.split(' ');
+		var endtime = endate.split(' ');
+		
+		if(edate > strtime[0] || edate == strtime[0]){
+			document.getElementById('daily_date_error').innerHTML = '';
+			
+			document.getElementById('show_repeat_info').innerHTML = '<%= I18n.t 'create_event.every'%> '+eday+' <%= I18n.t 'create_event.day_s'%>: '+strtime[1]+' <%= I18n.t 'create_event.to'%> '+endtime[1]+' <%= I18n.t 'create_event.until'%> '+edate+' [<a href="javascript:" onclick="set_new_repeat(1);"><%= I18n.t 'validation.common.edit' %></a>]';
+			document.getElementById('daily').value=1;
+			document.getElementById('weekly').value=0;
+			document.getElementById('monthly').value=0;
+			document.getElementById('other_specific').value=0;
+			document.getElementById('event_event_repeat_text').value = document.getElementById('show_repeat_info').innerHTML;
+			ret = true;
+		}else{
+			
+			document.getElementById('daily_date_error').innerHTML = '<%= I18n.t'create_event.date_not_proper' %>';
+		}
+	}
+	
+	if(val==2){
+		var wday = document.getElementById('event_repeat_weekly_repeat_week').value;
+		var dayname = document.getElementsByName('event_repeat[weekly_repeat_day]');
+		var edate = document.getElementById('event_repeat_weekly_end_date').value;
+		
+		
+		 var chk = 0, daysn='';
+		 for (var i = 0; i < dayname.length; i++)
+         {
+         	 if(dayname[i].checked==true){
+         	 	chk=1;
+         	 	if(daysn=='') daysn=dayarr[dayname[i].value];
+         	 	else daysn+=' &'+dayarr[dayname[i].value];
+         	 }
+         }
+         
+		var strtime = sdate.split(' ');
+		var endtime = endate.split(' ');
+		
+		document.getElementById('weekly_day_error').innerHTML = '';
+		document.getElementById('weekly_date_error').innerHTML = '';
+		
+		if(chk==0){
+			document.getElementById('weekly_day_error').innerHTML = '<%= I18n.t'create_event.choose_atleast_one' %>';
+		}
+		else if(edate < strtime[0]){
+	
+			document.getElementById('weekly_date_error').innerHTML = '<%= I18n.t'create_event.date_not_proper' %>';
+		}else{
+			
+			document.getElementById('show_repeat_info').innerHTML = ' <%= I18n.t 'create_event.every'%> ' + wday + ' <%= I18n.t 'create_event.msg_weeks'%> - '+daysn+': '+strtime[1]+' <%= I18n.t 'create_event.to'%>'+endtime[0]+' <%= I18n.t 'create_event.until'%> '+edate+' [<a href="javascript:" onclick="set_new_repeat(2);"><%= I18n.t 'validation.common.edit' %></a>]';
+				
+			document.getElementById('daily').value=0;
+			document.getElementById('weekly').value=1;
+			document.getElementById('monthly').value=0;
+			document.getElementById('other_specific').value=0;
+			document.getElementById('event_event_repeat_text').value = document.getElementById('show_repeat_info').innerHTML;
+			ret = true;
+			
+		}
+	}
+	
+	if(val==3){
+		var mday = document.getElementById('event_repeat_monthly_repeat_day').value;
+		var mdaynum = document.getElementById('event_repeat_monthly_repeat_day_num').value;
+		var mnum = document.getElementById('event_repeat_monthly_repeat_months').value;
+		var edate = document.getElementById('event_repeat_monthly_end_date').value;
+		
+		var strtime = sdate.split(' ');
+		var endtime = endate.split(' ');
+				
+        var cntarr = { 1: '<%= I18n.t 'number.first'%>',    2: '<%= I18n.t 'number.second'%>',   3: '<%= I18n.t 'number.third'%>',   4: '<%= I18n.t 'number.fourth'%>',   5: '<%= I18n.t 'number.fifth'%>',   6: '<%= I18n.t 'number.last'%>' };		
+            	
+		if(edate < strtime[0]){
+			
+			document.getElementById('monthly_date_error').innerHTML = '<%= I18n.t'create_event.date_not_proper' %>';
+			
+		}else{
+			var type = document.getElementById('event_repeat_monthly_repeat_on').value;
+			document.getElementById('monthly_date_error').innerHTML = '';
+			if(type==0){
+				document.getElementById('show_repeat_info').innerHTML = '<%= I18n.t 'create_event.every'%>'+mnum+' <%= I18n.t 'create_event.months'%>, <%= I18n.t 'create_event.day'%> '+mdaynum+' <%= I18n.t 'create_event.msg_of_the_month'%>: '+strtime[1]+' <%= I18n.t 'create_event.to'%> '+endtime[0]+'  <%= I18n.t 'create_event.until'%> '+edate+' [<a href="javascript:" onclick="set_new_repeat(3);"><%= I18n.t 'validation.common.edit'%></a>]';
+			}else{
+				document.getElementById('show_repeat_info').innerHTML = '<%= I18n.t 'create_event.every'%> '+mnum+' <%= I18n.t 'create_event.months'%>, '+cntarr[type]+' '+dayarr[mday]+' <%= I18n.t 'create_event.of_every_month'%>: '+strtime[1]+' <%= I18n.t 'create_event.to'%> '+endtime[0]+' <%= I18n.t 'create_event.until'%> '+edate+' [<a href="javascript:" onclick="set_new_repeat(3);"><%= I18n.t 'validation.common.edit'%></a>]';
+			}
+			
+			
+			document.getElementById('daily').value=0;
+			document.getElementById('weekly').value=0;
+			document.getElementById('monthly').value=1;
+			document.getElementById('other_specific').value=0;
+			document.getElementById('event_event_repeat_text').value = document.getElementById('show_repeat_info').innerHTML;
+			ret = true;
+		}
+	}
+	
+	if(val==4){
+		var spec_cnt = document.getElementById('spec_cnt').value;
+		if(spec_cnt > 0){
+			document.getElementById('spec_your_date_error').innerHTML ='';
+			
+			var date_content = document.getElementById('your_date_content').innerHTML; //alert(date_content);
+			date_content = date_content.replace('on the following days: [<a href="javascript:" onclick="set_new_repeat(4);">Edit</a>]<br>','');
+			//alert(date_content);
+			document.getElementById('show_repeat_info').innerHTML = 'on the following days: [<a href="javascript:" onclick="set_new_repeat(4);"><%= I18n.t 'validation.common.edit'%></a>]<br />'+date_content;
+			
+			document.getElementById('manual_date_div').style.display = 'none';
+			document.getElementById('cust_date_div').style.display = 'inline-block';
+			
+			document.getElementById('daily').value=0;
+			document.getElementById('weekly').value=0;
+			document.getElementById('monthly').value=0;
+			document.getElementById('other_specific').value=1;
+			document.getElementById('event_event_repeat_text').value = document.getElementById('show_repeat_info').innerHTML;
+			document.getElementById('event_repeat_your_date_text').value = document.getElementById('your_date').innerHTML;
+			ret = true;
+		}else{
+				document.getElementById('spec_your_date_error').innerHTML = '<%= I18n.t 'create_event.please_custom_date' %>';
+		}
+		//
+	} 
+	if(ret==true){
+		close_colorbox();
+	}
+} 
+
+function select_by_day_of_week(showd,hided,val){
+	document.getElementById(showd).style.display = 'block';
+	document.getElementById(hided).style.display = 'none';
+	
+	if(val=='0'){
+		
+		document.getElementById('event_repeat_monthly_repeat_on').value = val;
+	}else{
+		
+		document.getElementById('event_repeat_monthly_repeat_on').value = document.getElementById('monthly_repeat_on').value;
+	}
+}
+
+function monthly_repeat_on(val){
+	document.getElementById('event_repeat_monthly_repeat_on').value = val;
+}
+
+function show_your_date(){
+ 		
+ 		var spstdate = document.getElementById('event_repeat_spec_start_date').value;
+ 		var spendate = document.getElementById('event_repeat_spec_end_date').value;
+ 		
+ 		if(spendate < spstdate){
+ 				document.getElementById('spec_end_date_error').innerHTML = '<%= I18n.t 'create_event.repeat_date' %>';
+ 		}else{
+	 		
+	 		document.getElementById('your_date_display').style.display = 'block';
+	 		document.getElementById('spec_end_date_error').innerHTML = '';
+	 		var spec_cnt = document.getElementById('spec_cnt').value;
+	 		spec_cnt++;
+	 		document.getElementById('spec_cnt').value = spec_cnt;	
+	 		var content = document.getElementById('your_date').innerHTML;
+	 		var date_content = document.getElementById('your_date_content').innerHTML;
+	 		
+	 		var strtime = spstdate.split(' ');
+	 		var endtime = spendate.split(' ');
+	 		
+	 		var content = content +'<div  id="your_date_text'+spec_cnt+'"class="your_date_text"><span><%= I18n.t 'event.view.from'%> '+strtime[0]+' '+strtime[1]+' <%= I18n.t 'event.view.to'%> '+endtime[0]+' '+endtime[1]+'</span><img src="/assets/eb_close.png" onclick="remove_your_date('+spec_cnt+')" style="margin-left:20%;" /><div class="clear"></div></div>';
+
+	 		var date_content = date_content + '<div class="your_date_text_con'+spec_cnt+' cust_date_mar_20"> <%= I18n.t 'event.view.from'%> '+strtime[0]+' '+strtime[1]+' <%= I18n.t 'event.view.to'%> '+endtime[0]+' '+strtime[1]+'</div>';
+	 		
+	 		
+	 		document.getElementById('your_date').innerHTML = content;
+	 		document.getElementById('your_date_content').innerHTML = date_content;
+	 	}	
+}
+
+function remove_your_date(id){
+	$('#your_date_text'+id).remove();
+	//alert(id);
+	
+	//document.getElementById('your_date_text_con'+id).innerHTML = '';
+	//var cusid_ele = document.getElementsByClassName('your_date_text_con'+id);
+	var e = document.getElementById('your_date_content');
+
+	var cusid_ele = document.getElementsByClassName('your_date_text_con'+id)
+	
+	for (var i = 0; i < 2; ++i) {
+	    var item = cusid_ele[i];  
+	   $('#your_date_content .your_date_text_con'+id).remove();
+	}
+
+	//$('#your_date_text_con'+id).remove();
+	
+	var spec_cnt = document.getElementById('spec_cnt').value;
+	spec_cnt--;
+	document.getElementById('spec_cnt').value = spec_cnt;
+
+	if(spec_cnt==0 || spec_cnt=='0'){
+		document.getElementById('your_date_display').style.display = 'none';
+	}	
+}
+
+
+function set_submit_type(type)
+{
+  	
+	document.getElementById('submit_type').value = type;	
+}
+
+    </script>
+
+  
+ 
+         
+      
+ <script>
+function set_online(disp_div,hide_div,val){
+
+	document.getElementById('event_online_event_option').value = val;
+	document.getElementById(hide_div).style.display='none';
+	document.getElementById(disp_div).style.display='block';
+}
+
+function show_repeat_div(chk,div){
+	
+		var event_start_date_time = $("#event_event_start_date_time");
+		var eventstartdatetimeInfo = $("#eventstartdatetimeInfo");
+	
+		var event_end_date_time = $("#event_event_end_date_time");
+		var eventenddatetimeInfo = $("#eventenddatetimeInfo");
+		
+		if(div!='social_link'){
+			if(event_start_date_time.val()==''){
+					
+				document.getElementById(chk).checked=false;
+				event_start_date_time.focus();
+				eventstartdatetimeInfo.text("<%= I18n.t 'create_event.event_start_date' %>");
+				eventstartdatetimeInfo.addClass("error1");
+				return false;
+			}
+			
+			if(event_end_date_time.val()==''){
+				document.getElementById(chk).checked=false;
+				event_end_date_time.focus();
+				eventenddatetimeInfo.text("<%= I18n.t 'create_event.event_end_date' %>");
+				eventenddatetimeInfo.addClass("error1");
+				return false;
+			}
+		}
+			eventstartdatetimeInfo.text("");
+			eventenddatetimeInfo.text("");
+			if(document.getElementById(chk).checked==true){
+				document.getElementById(div).style.display='block';
+			}else{
+				document.getElementById(div).style.display='none';
+			}
+		
+}
+
+
+function show_organization(disp_div,hide_div,id,type){
+	if(id=='org'){
+		id = document.getElementById('org_event_id').value;
+	}
+	if(type=='can'){
+		
+		document.getElementById('event_organizer_id').value = id;
+		
+		document.getElementById(hide_div+id).style.display='none';
+		document.getElementById(disp_div).style.display='block';
+	}
+	else if(type=='add'){
+		document.getElementById('event_organizer_id').value = id;
+		document.getElementById('event_organizer_host').value = '';
+		document.getElementById('event_host_description').value = '';
+		
+		document.getElementById(hide_div).style.display='none';
+		document.getElementById(disp_div).style.display='block';
+	}
+	else if(type=='edit'){
+		
+		document.getElementById('event_organizer_id').value = document.getElementById('org_event_id').value;
+		
+		document.getElementById(hide_div).style.display='none';
+		document.getElementById(disp_div+id).style.display='block';
+	}
+	else{
+		document.getElementById(hide_div).style.display='none';
+		document.getElementById(disp_div).style.display='block';
+	}
+}
+
+function set_new_repeat(val){
+	
+	if(val==4){
+		/*ur_date_inner_content = document.getElementById('your_date_content').innerHTML;
+		ur_date_color_content = document.getElementById('your_date').innerHTML;
+		spec_cnter =document.getElementById('spec_cnt').value; 
+		
+		document.getElementById('show_repeat_info').innerHTML ='';*/
+		
+	}
+	$('#event_event_repeat').val(val);
+	if(val > 0){
+		document.getElementById("repeat_anchor_tag").href='#repeat_div_pop'+val;
+		
+		$('#repeat_anchor_tag').trigger('click');
+	}else{
+		document.getElementById('show_repeat_info').innerHTML ='';
+		document.getElementById('manual_date_div').style.display = 'inline-block';
+		document.getElementById('cust_date_div').style.display = 'none';
+		$('#event_event_repeat_text').val('');
+	}
+	
+	$("#event_repeat1").find('option:selected').bind('click', function() {
+	     //alert($(this).find('option:selected').text());
+	     set_new_repeat($(this).val());
+	});
+	
+}
+
+function set_end_date_equal_start(){
+	var dateval = $("#event_event_start_date_time").val();
+	//$("#event_event_end_date_time").datetimepicker("option","setDate", dateval);
+	var date1 = dateval.split(' ');
+	//new Date(date1[0], date1[1], date1[2], time[0], time[1])
+	
+	$("#event_event_end_date_time").datetimepicker("option","minDate", dateval);
+	$(".date_time").val(dateval);
+	$(".date_only").val(date1[0]);
+	
+	
+	$("#event_repeat_daily_end_date").datetimepicker("option","minDate", date1[0]);
+	$("#event_repeat_weekly_end_date").datetimepicker("option","minDate", date1[0]);
+	$("#event_repeat_monthly_end_date").datetimepicker("option","minDate", date1[0]);
+	
+	$("#event_repeat_spec_start_date").datetimepicker("option","minDate", dateval);
+	$("#event_repeat_spec_end_date").datetimepicker("option","minDate", dateval);
+	
+	$("#event_repeat_spec_start_date").val(dateval);
+	$("#event_repeat_spec_end_date").val(dateval);
+	
+	/// set ticket max date
+	$("#main_ticket_head .date_time").datetimepicker("option","maxDate", dateval);
+	$("#main_ticket_head [name='ticket[paid_end_sale][]']").val(dateval);
+	$("#main_ticket_head [name='ticket[free_end_sale][]']").val(dateval);
+	$("#main_ticket_head [name='ticket[donation_end_sale][]']").val(dateval);
+	
+	$("#add_mor_divs .date_time").datetimepicker("option","maxDate", dateval);
+	$("#add_mor_divs [name='ticket[paid_end_sale][]']").val(dateval);
+	$("#add_mor_divs [name='ticket[free_end_sale][]']").val(dateval);
+	$("#add_mor_divs [name='ticket[donation_end_sale][]']").val(dateval);
+}
+
+function set_end_date_equal_ticket_date(){
+	var dateval = $("#event_event_end_date_time").val();
+	//$("#event_event_end_date_time").datetimepicker("option","setDate", dateval);
+	var date1 = dateval.split(' ');
+	//new Date(date1[0], date1[1], date1[2], time[0], time[1])
+	
+	$("#main_ticket_head .date_time").datetimepicker("option","maxDate", dateval);
+	$("#main_ticket_head .date_time").datetimepicker("option","minDate", 0);
+	$("#main_ticket_head [name='ticket[paid_end_sale][]']").val(dateval);
+	$("#main_ticket_head [name='ticket[free_end_sale][]']").val(dateval);
+	$("#main_ticket_head [name='ticket[donation_end_sale][]']").val(dateval);
+	
+	
+	$("#add_mor_divs .date_time").datetimepicker("option","maxDate", dateval);
+	$("#add_mor_divs [name='ticket[paid_end_sale][]']").val(dateval);
+	$("#add_mor_divs [name='ticket[free_end_sale][]']").val(dateval);
+	$("#add_mor_divs [name='ticket[donation_end_sale][]']").val(dateval);
+}
+
+/* Added 11 july */
+
+function set_desc(val, id){
+	if(val == ""){
+		$('#paid_hide_description').attr("disabled", "true");     
+	}
+	else{
+		$('#paid_hide_description').removeAttr ( "disabled" );    
+	}
+}
+/* end */
+
+
+	</script>
+   
+
+
+<%= form_tag({:controller => 'events', :action => 'uploading'}, :id => 'user_picture', :name => 'user_picture', :html => {:multipart => true}) do %> 
+
+  <div class="input-item-file" id="edit_user_picture_file" style="display:none">
+  </div>
+<% end %>
+
+<%= form_tag({:controller => 'events', :action => 'create_event'}, :id => 'create_event_form', :name => 'create_event_form') do %> 
+
+
+<section>
+	<div class="main marT40">
+		<% if flash[:notice1] -%>
+			  <div class="notice">
+				<p><%= flash[:notice1] %></p>
+			  </div>
+		<% end -%>
+		
+		
+		<% 
+	    if @event.errors
+		    if (@event.errors.full_messages != []) then -%>
+			    <ul class="errors ">
+			      <% @event.errors.full_messages.each do |t| %>
+			  		<li><%= t %></li>
+				  <% end %>
+			    </ul>
+		   <% end 
+	   end -%> 
+    	<div class="mtitle fl">
+           	<h1> <span> 1. </span><%= I18n.t 'create_event.add_event_details' %></h1>
+        </div>
+        <div class="marT20 fr">
+        	<%= link_to (I18n.t 'create_event.expert_tips'),{:controller => 'tips', :action => 'expert'}, :class =>'rr' %>
+        </div>
+        <div class="clear"></div>	
+    </div>
+    
+    
+    <!-- Multiuser session[:user_id] assign   -->
+ 
+	<%
+	
+	@user_multi = User.find(session[:user_id]) 
+		 if @user_multi[:ref_id]!=nil && @user_multi[:ref_id]!="" 
+			  @multi = 1
+			  @ses_user = @user_multi[:ref_id] %>
+			  <input type="hidden" name="event[user_id]" value="<%= @ses_user %>" />
+	<%	  else
+			  @multi = 0
+			  @ses_user = session[:user_id]  %>
+			  <input type="hidden" name="event[user_id]" value="<%= @ses_user %>" />
+	<%	  end
+	
+	 
+	%>	
+	
+	
+	<!-- Multiuser session[:user_id] assign end   -->
+    
+    
+	<div class="main marT20">
+    	<div class="shadow marT10 pad20">
+            	<div class="create_event">
+                	<% @countdown=75
+                		if(@event[:event_title]!='' && @event[:event_title]!=nil && @event[:event_title].length > 0 && @event[:event_title]!=' ')
+                			@countdown = 75 - @event[:event_title].length
+                		end	 
+                	%>
+                	<label><%= I18n.t 'create_event.your_event_title' %> <span class="red">*</span></label>
+                    <%= text_field_tag :event_title, @event[:event_title], :class => 'textbox', :placeholder => (I18n.t 'place.event_title'), :name => 'event[event_title]', :id => 'event_event_title',:onchange =>'return trim(this)',:onKeyDown => 'limitText(this.form.event_event_title,this.form.countdown,75);', :onKeyUp => 'limitText(this.form.event_event_title,this.form.countdown,75);'  %>
+                    <div class="clear"></div>
+			        <div class="max_character"><%= I18n.t 'create_event.max_character' %> : <input type="text" class="title_ch" style="width:24px !important; border:none; padding-top:1px; background: none;" name="countdown" disabled="disabled" value="<%= @countdown %>"> <%= I18n.t 'create_event.character_left' %> </div>
+			        <div id="eventtitleInfo"></div>
+         			
+         			<div id="add_div" style="display: <% if(@event[:online_event_option] == 1) then %> none <% else %> block <% end %>;">  
+	                	<label><%= I18n.t 'create_event.venue_name' %> <span class="red">*</span></label>
+	                     <%= text_field_tag :vanue_name, @event[:vanue_name], :class => 'textbox', :placeholder => ( I18n.t 'place.venue_name'), :name => 'event[vanue_name]', :id => 'event_vanue_name',:onchange =>'return trim(this)' %>
+	                    <p class="p_tab" > <%= I18n.t 'create_event.running_an' %> <a href="javascript://" onclick="set_online('online_event','add_div','1');" class="fontbold"> <%= I18n.t 'create_event.online_event' %></a> ? </p>
+	                     <div id="vanuenameInfo"></div>
+	                	
+	                	<label class="fl"><%= I18n.t 'create_event.street_address' %> <span class="red">*</span></label>
+	                    <div class="pr">
+	                    <%= text_field_tag :street_address1, @event[:street_address], :class => 'textbox', :placeholder => ( I18n.t 'place.street_address'), :name => 'street_address1', :id => 'event_street_address1' %>
+	                   <p class="p_tab" > <a href="#login-box1" class="inline"><%= I18n.t 'create_event.not_find_location' %> </a> </p> </div>
+	                	<div class="clear"></div>
+	                	
+	                	<div id="streetaddressInfo"></div>
+	                	<div class="checkbox">  
+	                         <label class="mar0">&nbsp;</label>
+	                         <input type="hidden" name="event[show_on_map]" value="0" />
+	                         <input type="checkbox" name="event[show_on_map]" id="show_on_map" value="1" <% if(@event[:show_on_map]==1) %> checked="checked"  <%  end %>  /> 
+	                         <p class="font_size14 pad0 TW62p" style="margin-bottom: 3px;" ><%= I18n.t 'create_event.show_map_event' %> </p>
+	                         <div class="clear"></div>
+                       </div>
+                       
+	                	<div class="marT15 TW62p" id="map_div">
+	                		<div id='test' style='width: 100%; height: 200px;'> </div>
+	                		</div> 
+         				 
+         				 
+         				 
+                    </div>
+                    
+                    <div id="online_event" style="display: <% if(@event[:online_event_option] == 1) then %> block; <% else %> none; <% end %>">
+			        	 <label><%= I18n.t'create_event.location' %> </label>
+			             <%= text_field_tag :street_address2, (I18n.t 'create_event.your_event_map_not_appear'), :readonly => 'true', :class => 'textbox', :name => 'street_address2', :id =>'event_street_address2', :style => 'background:#eee;' %>
+			             <p><a href="javascript:" onclick="set_online('add_div','online_event','0');">+ <%= I18n.t 'create_event.add_an_address' %></a></p><br />
+			             
+			             <div class="clear"></div>
+			             
+			        </div>
+			        <input type="hidden" name="event[online_event_option]" id="event_online_event_option" value="<%= @event[:online_event_option] %>" />
+			        
+                     
+	                     <label class="fl"><%= I18n.t 'create_event.date' %> &amp; <%= I18n.t 'create_event.time' %><span class="red">*</span></label>
+	                 <div id="manual_date_div" class="fl" style="display: <% if(@event_repeat[:other_specific]==1) %> none; <% else %> block; <% end %>">
+	                     <%= text_field_tag :event_start_date_time, @event[:event_start_date_time], :name => 'event[event_start_date_time]', :id => 'event_event_start_date_time', :readonly => 'true', :class => 'textbox TW25p_date date_time', :style => 'cursor:pointer;', :onchange => 'set_end_date_equal_start();' %>
+			           
+	                    <span class="font_size17 fontbold " > - </span>                    
+	                    
+	                     <%= text_field_tag :event_end_date_time, @event[:event_end_date_time], :name => 'event[event_end_date_time]', :id => 'event_event_end_date_time', :readonly => 'true', :class => 'textbox TW25p_date date_time', :style => 'cursor:pointer;', :onchange => 'set_end_date_equal_ticket_date();' %>
+	                      <p> <a href="#login-box2" class="inline" id="time_zone_event" style="margin:0px;"><% tz_name = Timezone.find(timezone) %><%= tz_name[:tz] %></a> </p>
+	                  </div>
+                     
+                      
+                      <div id="cust_date_div" class="fl" style="margin-top:30px; display:<% if(@event_repeat[:other_specific]==1) %> block; <% else %> none; <% end %>"><%= I18n.t 'create_event.customer_date_time' %> </div>  
+                      
+                      <div class="clear"></div>
+				      <div id="eventstartdatetimeInfo"></div> 
+				      <div id="eventenddatetimeInfo"></div> 
+          
+                       <div class="checkbox">  
+	                         <label class="mar0">&nbsp;</label>
+	                         <input type="hidden" name="event_repeat_set" value="0" />
+	         				 <input type="checkbox" name="event_repeat_set" id="event_repeat_set" value="1" onclick="show_repeat_div('event_repeat_set','repeat_div');"  <% if(@event[:event_repeat]!=0 && @event[:event_repeat]!='' && @event[:event_repeat]!=nil) %> checked="checked" <%  end %> /> 
+	                         <p class="font_size14 pad0 marB10" style="margin-bottom: 3px;"><%= I18n.t 'create_event.this_event_repeats' %> </p>
+	                         <div class="clear"></div>
+                       </div>
+                         
+                        
+                         <div id="repeat_div" style="display: <% if(@event[:event_repeat]!=0 && @event[:event_repeat]!=nil) then %> block <% else %> none <% end %>;">
+				             
+				             <label><%= I18n.t 'create_event.event_repeats' %>  <span class="red">*</span></label>
+                                
+				              <%= select_tag :event_repeat1, options_for_select(Event::EVENT_REPEATS,@event[:event_repeat]), :name => 'event_repeat1', :id => 'event_repeat1', :onchange => 'set_new_repeat(this.value);', :onkeyup => 'set_new_repeat(this.value);', :class => 'selectbox_date marR10' %>   
+				            	<div class="clear"></div>
+				            	<label class="fl">&nbsp;</label>
+				            	<div id="show_repeat_info">
+				            		<% if(@event[:event_repeat_text]!='' && @event[:event_repeat_text]!=nil)  %> <%= render :inline => @event[:event_repeat_text] %> <% end %>
+				            	</div>	
+				          		<a href="javascript:" class="inline" id="repeat_anchor_tag" style="display:none;">&nbsp;</a>
+				            <div class="clear"></div>
+				         </div> 
+                         
+                     
+                    
+                    <!--  ALL coloboxes -->
+                          
+					    <div style='display:none'>   
+					      <div id="test1"></div>  
+					    <!-- Address pop up -->
+					    
+					     <div id="login-box1" class="popup_Content" >
+					              <h2><%= I18n.t 'create_event.event_location' %></h2><br />
+					        	
+					         <div class="create_event">
+					         <label style="margin: 0px;"><%= I18n.t 'create_event.address' %> </label>
+					         <input type="text" class="textbox" name="address_1" id="address_1" placeholder="<%= I18n.t 'user.address_line_1'%>" /><div class="clr"></div>
+					         <div class="error1" id="address1errInfo"></div>
+					         <br />
+					          <label class="mar0">&nbsp; </label>
+					          <input type="text" class="textbox" name="address_2" id="address_2" placeholder="<%= I18n.t 'user.address_line_2'%>" /><div class="clr"></div>
+					         <br /> 
+					          <label class="mar0">&nbsp; </label>
+					          <input type="text" class="textbox" name="address_3" id="address_3" placeholder="<%= I18n.t 'user.address_line_3'%>" /><div class="clr"></div>
+					         <br /> 
+					          <label class="mar0">&nbsp; </label>
+					          <input type="text" class="textbox TW25p" name="address_city" placeholder= "<%= I18n.t 'user.city'%>" id="address_city" style="width: 31% !important;"/>
+					          <input type="text" class="textbox TW25p" name="address_zip" placeholder="<%= I18n.t 'tickets_order.zip_code'%>" onkeyup="return validateZipcode(this,'addresszipInfo');" id="address_zip" />
+					          <div id="addresszipInfo" style="height: 12px; display: block; margin-left: 52%;"></div>
+					          </div><div class="clear"></div>
+					          
+					          <div class="marT10 fr">
+					          	<a href="javascript://" class="btn" onclick="set_address_value();"><%= I18n.t 'button.save' %></a>
+					          	<a href="javascript://" class="btn black_bg" onclick="close_colorbox();"><%= I18n.t 'button.cancel' %></a>
+					           </div><div class="clear"></div>	
+					          	
+					         </div>    
+					       
+					    <!-- Timezone pop up -->
+					     <div id="login-box2" class="popup_Content">
+					              <h2><%= I18n.t 'create_event.date' %>&amp; <%= I18n.t 'create_event.time_setting' %></h2>
+					        	<br />
+					        	
+					        	 <div class="create_event">
+							         <label><%= I18n.t 'create_event.more_time_zone' %> :</label>
+							         <select class="selectbox" name="event_event_time_zone" id="event_time_zone" >
+										  <option value="">-- <%= I18n.t 'create_event.select_time_zone' %> --</option>
+										  <% for tz in @timezone %>
+										    <option value="<%= tz[:id] %>" <% if(timezone==tz[:id]) then %> selected="selected" <% end %> ><%= tz[:tz] %></option>
+										  <% end %>
+									  </select>
+							        <div class="clear"></div> 
+					        	     
+					        	     <label><%= I18n.t 'create_event.event_page_setting' %> :</label>
+							          <input type="hidden" name="event[display_start_time]" value="0" /> 
+					                  <input type="checkbox" name="event[display_start_time]" id="event_display_start_time" value="1" <% if(@event[:display_start_time] == 1) %> checked="checked" <% end %>  />
+					                  <span class="check">  <%= I18n.t 'create_event.display_start_time_event_page' %></span><div class="clear"></div>
+					      
+							          <label class="mar0"> &nbsp;</label>
+					          		  <input type="hidden" name="event[display_end_time]" value="0" /> 
+					                  <input type="checkbox" name="event[display_end_time]" id="event_display_end_time" value="1" <% if(@event[:display_end_time] == 1) %> checked="checked" <% end %>  />
+					                  <span class="check"> <%= I18n.t 'create_event.display_end_time_event_page' %></span><div class="clear"></div>
+					      
+							          <label class="mar0">&nbsp;</label>
+					        		  <input type="hidden" name="event[display_time_zone]" value="0" /> 
+					                  <input type="checkbox" name="event[display_time_zone]" id="event_display_time_zone" value="1" <% if(@event[:display_time_zone] == 1) %> checked="checked" <% end %>  />
+					                  <span class="check"> <%= I18n.t 'create_event.display_time_zone_event_page' %></span><div class="clear"></div>
+					      
+					        
+					        	 </div><div class="clear"></div>
+					        	 
+					        	<input type="hidden" name="event[event_time_zone]" value="<%= timezone %>" id="event_event_time_zone" /> 
+					        	<div class="marT10 fr">
+						        	<a href="javascript://" onclick="set_time_zone();"  class="btn"><%= I18n.t 'button.save' %></a> 
+						        	<a href="javascript://" onclick="close_colorbox();" class="btn black_bg"><%= I18n.t 'button.cancel' %></a>
+					        	 </div><div class="clear"></div>
+					       
+					             
+					      </div>      
+					    
+					     <!-- Event repeat pop up  -->
+					     <!-- daily pop up -->
+					     <div id="repeat_div_pop1" class="popup_Content">
+					              <h2><%= I18n.t 'create_event.when_event_repeat' %></h2>
+					        	<br />
+					        	
+					        	 <div class="create_event">
+							         <label ><%= I18n.t 'create_event.repeat_every' %> :</label>
+							         <%= select_tag :daily_repeat_day,options_for_select(Event::DAYS_NUMBER,@event_repeat[:daily_repeat_day]), :name => 'event_repeat[daily_repeat_day]', :selected => @event_repeat[:daily_repeat_day] , :id => 'event_repeat_daily_repeat_day', :class => 'selectbox TW100' %>   
+					            	 <span><%= I18n.t 'create_event.day_s' %></span>
+					            		
+							        <div class="clr"></div> <br />
+					        	      <label><%= I18n.t 'create_event.ends_after' %> :</label>
+					        	     
+							          <%= text_field_tag :daily_end_date, @event_repeat[:daily_end_date], :name => 'event_repeat[daily_end_date]', :id => 'event_repeat_daily_end_date', :readonly => 'true', :class => 'textbox TW25p date_only' %>
+					         		
+					        	 </div><div class="clear"></div>
+					        	 <div id="daily_date_error" class="red"></div>
+					
+					        <div class="marT10 fr">  
+					        	<a href="javascript://" onclick="save_event_repeat('1');" class="btn" ><%= I18n.t 'button.save' %></a>
+					        	<a href="javascript://"onclick="close_colorbox();" class="btn black_bg"><%= I18n.t 'button.cancel' %></a>
+					       </div> 	
+					        <div class="clear"></div>
+					             
+					      </div>  
+					      
+					      
+					       <!-- weekly pop up -->
+					     <div id="repeat_div_pop2" class="popup_Content">
+					              <h2><%= I18n.t 'create_event.when_event_repeat' %></h2>
+					        	<br />
+					        	<%= @event_repeat[:weekly_repeat_day] %>
+					        	 <div class="create_event">
+							         <label><%= I18n.t 'create_event.repeat_every' %> :</label>
+							         <%= select_tag :weekly_repeat_week,options_for_select(Event::WEEK_NUMBER,@event_repeat[:weekly_repeat_week]), :selected => @event_repeat[:weekly_repeat_week], :name => 'event_repeat[weekly_repeat_week]', :id => 'event_repeat_weekly_repeat_week', :class => 'selectbox TW100' %>   
+					            	 <span><%= I18n.t 'create_event.week_s' %></span>
+					            <div class="clear"></div><br />
+					            
+					            	<label><%= I18n.t 'create_event.repeat_on' %>:</label>
+					            		<input type="hidden" name="event_repeat[weekly_repeat_day]" value="0"  />
+					            		<input type="checkbox" name="event_repeat[weekly_repeat_day]" id="event_repeat_weekly_repeat_day1" value="1" <% if(@event_repeat[:weekly_repeat_day] ==1 ) then %> checked="checked" <%  end %> /> 
+					         			<span><%= I18n.t 'event_day.mon' %></span>
+					         			
+					         			<input type="checkbox" style="margin-left: 3%;" name="event_repeat[weekly_repeat_day]" id="event_repeat_weekly_repeat_day2" value="2" <% if(@event_repeat[:weekly_repeat_day] == 2 ) then %> checked="checked" <%  end %> /> 
+					         			<span><%= I18n.t 'event_day.tue' %></span>
+					         			
+					         			<input type="checkbox" style="margin-left: 3%;" name="event_repeat[weekly_repeat_day]" id="event_repeat_weekly_repeat_day3" value="3" <% if(@event_repeat[:weekly_repeat_day] == 3 ) then %> checked="checked" <%  end %> /> 
+					         			<span><%= I18n.t 'event_day.wed' %></span>
+					         			
+					         			<input type="checkbox" style="margin-left: 3%;" name="event_repeat[weekly_repeat_day]" id="event_repeat_weekly_repeat_day4" value="4" <% if(@event_repeat[:weekly_repeat_day] == 4) then %> checked="checked" <%  end %> /> 
+					         			<span><%= I18n.t 'event_day.thu' %></span>
+					         			
+					         			<input type="checkbox" style="margin-left: 3%;" name="event_repeat[weekly_repeat_day]" id="event_repeat_weekly_repeat_day5" value="5" <% if(@event_repeat[:weekly_repeat_day] == 5 ) then %> checked="checked" <%  end %> /> 
+					         			<span><%= I18n.t 'event_day.fri' %></span>
+					         			
+					         			<input type="checkbox" style="margin-left: 3%;" name="event_repeat[weekly_repeat_day]" id="event_repeat_weekly_repeat_day6" value="6" <% if(@event_repeat[:weekly_repeat_day] ==  6 ) then %> checked="checked" <%  end %> /> 
+					         			<span><%= I18n.t 'event_day.sat' %></span>
+					         			
+					         			<input type="checkbox" style="margin-left: 3%;" name="event_repeat[weekly_repeat_day]" id="event_repeat_weekly_repeat_day7" value="7" <% if(@event_repeat[:weekly_repeat_day] == 7) then %> checked="checked" <%  end %> /> 
+					         			<span><%= I18n.t 'event_day.sun' %></span>
+					         			
+							        <div class="clear"></div>
+							        <div id="weekly_day_error" class="red"></div> <br />
+					        	      <label><%= I18n.t 'create_event.ends_after' %> :</label>
+					        	       
+							          <%= text_field_tag :weekly_end_date, @event_repeat[:weekly_end_date], :name => 'event_repeat[weekly_end_date]', :id => 'event_repeat_weekly_end_date', :readonly => 'true', :class => 'textbox TW25p date_only' %>
+						        	 </div><div class="clr"></div>
+						 			 <div id="weekly_date_error" class="red"></div>         	 
+					        	<div class="marT10 fr">
+						        	<a href="javascript://" class="btn" onclick="save_event_repeat('2');"><%= I18n.t 'button.save' %></a>  
+						        	<a href="javascript://" onclick="close_colorbox();" class="btn black_bg"><%= I18n.t 'button.cancel' %></a>
+					        	</div>
+					        <div class="clear"></div>
+					             
+					      </div>  
+					      
+					      
+					       
+					       <!-- monthly pop up -->
+					     <div id="repeat_div_pop3" class="popup_Content">
+					              <h2><%= I18n.t 'create_event.when_event_repeat' %></h2>
+					        	<br />
+					        	
+					        	 <div class="create_event">
+							        <div id="select_by_date" style="display: <% if(@event_repeat[:monthly_repeat_on] == 0) then %> none; <% else %> block; <% end %>">
+							         <label><%= I18n.t 'create_event.repaat_on_the' %> :</label>
+							         <%= select_tag :monthly_repeat_on ,options_for_select(Event::MONTH_REPEAT_NUM,@event_repeat[:monthly_repeat_on]), :selected => @event_repeat[:monthly_repeat_on], :name => 'monthly_repeat_on', :id => 'monthly_repeat_on', :onchange => 'monthly_repeat_on(this.value)', :class => 'selectbox TW25p' %>   
+					            	 <%= select_tag :monthly_repeat_day ,options_for_select(Event::MONTH_REPEAT_DAY,@event_repeat[:monthly_repeat_day]), :selected => @event_repeat[:monthly_repeat_day], :name => 'event_repeat[monthly_repeat_day]', :id => 'event_repeat_monthly_repeat_day', :class => 'selectbox TW25p' %>   
+					            	 <span><%= I18n.t 'create_event.of_the_month' %> - <a href="javascript:" onclick="select_by_day_of_week('select_by_day_of_week','select_by_date','0')"><%= I18n.t 'create_event.select_by_date'%></a></span>
+					            	</div>
+					            
+					            	<div id="select_by_day_of_week" style="display: <% if(@event_repeat[:monthly_repeat_on] == 0) then %> block; <% else %> none; <% end %>">
+							         <label><%= I18n.t 'create_event.repaat_on_the' %> :</label>
+							         <%= select_tag :monthly_repeat_day_num ,options_for_select(Event::DAYS_NUMBER,@event_repeat[:monthly_repeat_day_num]), :selected => @event_repeat[:monthly_repeat_day_num], :name => 'event_repeat[monthly_repeat_day_num]', :id => 'event_repeat_monthly_repeat_day_num', :class => 'selectbox TW25p' %>   
+					            	 <span><%= I18n.t 'create_event.day_of_the_month' %> - <a href="javascript:" onclick="select_by_day_of_week('select_by_date','select_by_day_of_week','1')"><%= I18n.t 'create_event.select_by_day_of_week'%></a></span>
+					            	</div>
+					            	
+					            	<input type="hidden" name="event_repeat[monthly_repeat_on]" id="event_repeat_monthly_repeat_on" value="<%= @event_repeat[:monthly_repeat_on] %>" />
+							        <div class="clear"></div> <br />
+							        
+							         <label><%= I18n.t 'create_event.repeat_every' %> :</label>
+							         <%= select_tag :monthly_repeat_months ,options_for_select(Event::WEEK_NUMBER,@event_repeat[:monthly_repeat_months]), :selected => @event_repeat[:monthly_repeat_months], :name => 'event_repeat[monthly_repeat_months]', :id => 'event_repeat_monthly_repeat_months', :class => 'selectbox TW25p' %>   
+					            	 <span><%= I18n.t 'create_event.month_s' %></span>
+					            
+					            
+					            
+							        <div class="clear"></div> <br />
+					        	      <label><%= I18n.t 'create_event.ends_after' %> :</label>
+							          
+							          <%= text_field_tag :monthly_end_date, @event_repeat[:monthly_end_date], :name => 'event_repeat[monthly_end_date]', :id => 'event_repeat_monthly_end_date', :readonly => 'true', :class => 'textbox TW25p date_only' %>
+					                  </div><div class="clear"></div>
+					                  <div id="monthly_date_error" class="red"></div>
+					        	 
+					        	  <div class="marT10 fr">
+						        	  <a href="javascript://" onclick="save_event_repeat('3');" class="btn"><%= I18n.t 'button.save' %></a>
+						        	  <a href="javascript://" onclick="close_colorbox();" class="btn black_bg" ><%= I18n.t 'button.cancel' %></a>
+					        	  </div>
+					        <div class="clear"></div>
+					             
+					      </div>  
+					      
+					        <!-- be specific pop up -->
+					     <div id="repeat_div_pop4" class="popup_Content">
+					              <h2><%= I18n.t 'create_event.when_event_repeat' %></h2>
+					        	<br />
+					        	
+					        	 <div class="create_event">
+							          <label><%= I18n.t 'create_event.event_starts' %> :</label>
+							           <% if @event_repeat[:spec_start_date]!='' && @event_repeat[:spec_start_date]!=nil 
+					        	      		@event_repeat[:spec_start_date] = @event_repeat[:spec_start_date].strftime('%Y-%m-%d %H:%M')
+					        	      	end %>	
+							          <%= text_field_tag :spec_start_date, @event_repeat[:spec_start_date], :name => 'event_repeat[spec_start_date]', :id => 'event_repeat_spec_start_date', :readonly => 'true', :class => 'textbox TW45p date_time' %>
+					         
+					            		
+							        <div class="clear"></div><br /> 
+					        	      <label><%= I18n.t 'create_event.event_ends' %> :</label>
+							           <% if @event_repeat[:spec_end_date]!='' && @event_repeat[:spec_end_date]!=nil 
+					        	      		@event_repeat[:spec_end_date] = @event_repeat[:spec_end_date].strftime('%Y-%m-%d %H:%M')
+					        	      	end %>	
+							          <%= text_field_tag :spec_end_date, @event_repeat[:spec_end_date], :name => 'event_repeat[spec_end_date]', :id => 'event_repeat_spec_end_date', :readonly => 'true', :class => 'textbox TW45p date_time' %>
+					         
+									  <div class="clear"></div> 
+									  <div id="spec_end_date_error" class="red"></div>
+									  <br />
+					        	      <label>&nbsp;</label>
+							          <input type="hidden" name="event_repeat[spec_display_end_date]" value="0" />
+							          <input type="checkbox" name="event_repeat[spec_display_end_date]" id="event_repeat_spec_display_end_date" value="1" <% if(@event_repeat[:spec_display_end_date]==1) %> checked="checked" <% end %> />
+							          <span> <%= I18n.t 'create_event.display_end_date_on_regi_page' %></span>
+					        
+					        		  
+					        		  <div class="clear"></div><br /> 
+					        	      <a href="javascript://" class="btn" style="margin-left: 30%;" onclick="show_your_date();"><%= I18n.t 'create_event.add_date' %></a>
+							          <div class="clear"></div><br />
+							          
+					        	     <div style="display:<% if(@event_repeat[:your_date_text]!='' && @event_repeat[:your_date_text]!=nil)  %> block; <% else %> none; <% end %>" id="your_date_display">
+						        	     <!-- <label class="fl mar0">Your Date</label>-->
+								          <div  id="your_date" class="fl pad3 TW97p" style="background: #eee;">
+									          <% if(@event_repeat[:your_date_text]!='' && @event_repeat[:your_date_text]!=nil)  %> <%= render :inline => @event_repeat[:your_date_text] %> <% end %>
+									      </div> <div class="clear"></div>
+									      
+									      <div  id="your_date_old" style="display: none;">
+									          <% if(@event_repeat[:your_date_text]!='' && @event_repeat[:your_date_text]!=nil)  %> <%= render :inline => @event_repeat[:your_date_text] %> <% end %>
+									      </div> <div class="clear"></div>
+									     
+									     <br /><div><%= I18n.t 'create_event.note' %></div>   
+							          	 <div id="your_date_content" style="display:none;">
+							          	 	<% if(@event[:event_repeat_text]!='' && @event[:event_repeat_text]!=nil && @event_repeat[:other_specific]==1)  %> <%= render :inline => @event[:event_repeat_text] %> <% end %>
+							          	 </div>	
+							          	 
+							          	 <div id="your_date_content_old" style="display:none;">
+							          	 	<% if(@event[:event_repeat_text]!='' && @event[:event_repeat_text]!=nil && @event_repeat[:other_specific]==1)  %> <%= render :inline => @event[:event_repeat_text] %> <% end %>
+							          	 </div>	
+							          	 	
+									     <input type="hidden" name="event_repeat[spec_cnt]" id="spec_cnt" value="<%= @event_repeat[:spec_cnt] %>"> 
+									  </div>  
+									   <div id="spec_your_date_error" class="red"></div>      
+					        	 </div><div class="clear"></div>
+					        	
+					        	  <input type="hidden" name="event_repeat[your_date_text]" id="event_repeat_your_date_text" value="<%= @event_repeat[:your_date_text] %>" />
+					        	
+					        	<div class="marT10" align="right">
+					        		<a href="javascript://" onclick="save_event_repeat('4');" class="btn" ><%= I18n.t 'button.save' %></a>
+					        		<a href="javascript://" onclick="close_colorbox4();" class="btn black_bg"><%= I18n.t 'button.cancel' %></a>
+					          	</div>
+					        	
+					        <div class="clear"></div>
+					             
+					      </div>  
+					      
+					   	  <input type="hidden" name="event[event_repeat_text]" id="event_event_repeat_text" value="<%= @event[:event_repeat_text] %>" />
+					      <input type="hidden" name="event[event_repeat]" id="event_event_repeat" value="<%= @event[:event_repeat] %>" />
+					      <input type="hidden" name="event_repeat[daily]" id="daily" value="<%= @event_repeat[:daily] %>" />
+					      <input type="hidden" name="event_repeat[weekly]" id="weekly" value="<%= @event_repeat[:weekly] %>" />
+					      <input type="hidden" name="event_repeat[monthly]" id="monthly" value="<%= @event_repeat[:monthly] %>" />
+					      <input type="hidden" name="event_repeat[other_specific]" id="other_specific" value="<%= @event_repeat[:other_specific] %>" />
+					      <!-- repeat pop ups ends -->  
+						</div>
+						
+						
+					       
+                    <!-- colorboxes ends  -->
+                            
+                      <div class="marT20">      
+                        <label class=" fl"><%= I18n.t 'create_event.upload_logo' %> <span class="red">*</span></label>  
+                        <div class="fl marR10 textcenter" id="picture_file_field_display1">   
+                        	<%
+						        # @event[:event_logo]= 'logo_052713ccaa_Desert.jpg'
+						       	#image_check = image_tag('demo_image.png')
+						       	image_check = 0
+						       	
+						       	 if(@event[:event_logo]!=nil)
+						            img_full_path = check_img(@event[:event_logo],'event','thumb')	
+						         	if img_full_path!='0' && img_full_path!='' 
+									  image_check = 1
+									  %>
+									  <img src="<%= APP_CONFIG['development']['upload_url'] %><%= img_full_path %>" alt="" width="77" height="74"  />
+									  <%
+									end
+								end
+									if image_check==0
+										%>
+										<img src="<%= APP_CONFIG['development']['app_url'] %>no_img.png" alt="" />
+										<%
+									end		
+										
+									
+						         %>
+                         </div>
+                         <div id="progressbar" class="fl marR10" style="display: none;"><img src="<%= APP_CONFIG['development']['app_url'] %>fancybox_loading.gif" alt="" /></div>
+                        <div class="fl upload_img">
+                           <span> <%= I18n.t 'create_event.your_jpg_gif_png_not_exceed_2mb' %> </span>  <br />
+                           
+		                      <div class="file_upload">
+				                     <input type="text" placeholder="<%= I18n.t 'create_event.upload_logo' %>" id="file_name" onClick="jQuery('#upload_datafile').click()" readonly="readonly" name="file_name" class="browse"/>
+				                     <div class="upload" id="picture_file_field_display">
+				                     	<span> <%= I18n.t 'create.browse' %> </span>
+				                        <%= file_field 'upload', 'datafile', :class => 'uploads user_picture' %>
+				                     </div>
+					               <div id="err1" ></div>
+		  						   <input type="hidden" name="event[event_logo]" id="event_event_logo" value="<%=  @event[:event_logo] %>" />
+				             </div>
+		             	</div>
+                         <div class="clear"></div>
+                         </div><div class="clear"></div><br />    
+                         
+                     <div id="eventdetailInfo"></div>
+                     <label class="fl"> <%= I18n.t 'create_event.event_description' %> <span class="red">*</span><br /> <!--<a href="" >+Add FAQs </a>-->  </label>
+                     <div class="TW62p fl ck_max_width"><%= text_area_tag :event_detail, @event[:event_detail], :name => 'event[event_detail]', :id => 'evet_event_detail', :class => 'ckeditor' %></div>
+                     
+    				 <div class="clear"></div>
+                     
+                     
+                     <div id="organization_unnamed">
+				     <label style="margin-top:25px;"><%= I18n.t 'create_event.org_host' %> <span class="red">*</span> </label>
+				     <% @organisers = Organizer.find(:all, :conditions => ['user_id=? ', @ses_user]) 
+				     	if(@organisers.count > 0)
+				     %>
+				     <select class="selectbox_date"  name="organiser_id_event" onchange="$('#org_event_id').val(this.value); $('#event_organizer_id').val(this.value);">
+						  <option value="">-- <%= I18n.t 'create_event.select_org' %> --</option>
+						  <% for orga in @organisers %>
+						    <option value="<%= orga[:id] %>" <% if(@event[:organizer_id] == orga[:id]) %> selected="selected" <% end %>>
+						    	<% if orga[:name]=='' || orga[:name]==nil %> <%= I18n.t 'event.view.unnamed_orga' %> <% else %> <%= orga[:name] %> <% end %> 
+						    </option>
+						  <% end %>
+					  </select>
+				    
+				    
+				     	<span>
+				        	<a href="javascript:" onclick="show_organization('organization_div','organization_unnamed','0','add');" >+ <%= I18n.t 'create_event.add_new' %></a> | 
+				            <a href="javascript:" onclick="show_organization('organization_div','organization_unnamed','org','edit');" ><%= I18n.t 'button.edit' %></a>
+				        </span>
+				          <% else %> 
+				            <span >
+				        		<a href="javascript:" onclick="show_organization('organization_div','organization_unnamed','0','add');" >+ <%= I18n.t 'create_event.add_new' %></a>
+				            </span>
+				        <% end %>	
+				        <div class="clear"></div>
+				    
+				   </div>
+				   <input type="hidden" id="org_event_id" name="org_event_id" value="<%= @org[:id] %>" />
+				   <input type="hidden" name="event[organizer_id]" id="event_organizer_id" value="<%= @event[:organizer_id] %>" />
+				   
+            <%
+			  if(@organisers.count > 0) 
+			     %> 
+			     <% for orga in @organisers %>
+				   <div id="organization_div<%= orga[:id] %>" style="display:none;">  
+				      <div class="create_event">
+				         <label><%= I18n.t 'create_event.org_host' %> </label>
+				        
+				         <input type="text" title="<%= orga[:name] %>" name="org[organizer_host][<%= orga[:id] %>]" value="<%= orga[:name] %>" id="event_organizer_host<%= orga[:id] %>" class="textbox" placeholder="<%= I18n.t 'create_event.org_host' %>" style="margin-left: 0px;"  />
+				         <span><a href="javascript:" onclick="show_organization('organization_unnamed','organization_div','<%= orga[:id] %>','can');"><%= I18n.t 'button.cancel' %></a></span><br />
+				          <div class="clear"></div>  
+				     
+				     
+				      	<label class="fl"><%= I18n.t 'create_event.org_host_descri' %></label>
+				        <div class="marT20 fl TW62p">
+				            <div id="eventdetailInfo"></div>
+				            	
+				            	<textarea class="ckeditor"  title="<%= orga[:description] %>" id="event_host_description<%= orga[:id] %>" name="org[host_description][<%= orga[:id] %>]"   cols="50" rows="4"><%= orga[:description] %></textarea>
+				            	<input type="hidden" name="org[id][<%= orga[:id] %>]" value="<%= orga[:id] %>" />
+				            </div>
+				       <div class="clear"></div>
+					 </div>
+				  
+				  </div>
+			     <div class="clr"></div>
+			     <% end %>
+			  <% end %>  
+			   
+			   <div id="organization_div" style="display:none;">  
+			      <div class="create_event">
+			         <label><%= I18n.t 'create_event.org_host' %> <span class="red">*</span></label>
+			         <%= text_field_tag :organizer_host, @event[:organizer_host], :class => 'textbox', :placeholder => (I18n.t 'create_event.org_host'), :name => 'event[organizer_host]', :id => 'event_organizer_host' %>
+			         <span><a href="javascript:" onclick="show_organization('organization_unnamed','organization_div','','can');"><%= I18n.t 'button.cancel' %></a></span><br />
+			          <div class="clear"></div>  
+			     
+			     
+			      	<label class="fl"><%= I18n.t 'create_event.org_host_descri' %></label>
+			        <div class="marT20 fl TW62p">
+			            <div id="eventdetailInfo"></div>
+			            	<textarea class="ckeditor" name="event[host_description]" id="event_host_description"  ><%= @event[:host_description] %></textarea>
+			            </div>
+			       <div class="clear"></div>
+				 </div>
+			  
+			  </div>
+			  <div id="organizererrorInfo"></div>
+			  <input type="hidden" name="organizers_count" id="organizers_count" value="<%= @organisers.count %>" />
+			          
+                     <div class="clear"></div>
+               	
+                    <div class="checkbox marT20">  
+                        <label class="mar0"> &nbsp; </label>
+                        <input type="hidden" name="event[add_social_link]" value="0" /> 
+      					<input type="checkbox" name="event[add_social_link]" id="event_add_social_link" value="1" <% if(@event[:add_social_link] == 1) %> checked="checked" <% end %>  onclick="show_repeat_div('event_add_social_link','social_link');"  />
+                        <span class="font_size14"><%= I18n.t 'create_event.include_link_social_page' %> </span>
+                        <div class="clear"></div>
+                        	</div>
+                            
+                            
+                   <div class="checkbox" id="social_link" style="display: <% if(@event[:add_social_link] == 1) then %> block <% else %> none <% end %>;">  
+                         <label class="mar0"> </label>
+                         <div class="textcenter">
+	                          <input type="hidden" name="event[add_facebook]" value="0" /> 
+           					 <input type="checkbox" name="event[add_facebook]" id="event_add_facebook" value="1" <% if(@event[:add_facebook] == 1) %> checked="checked" <% end %> onclick="if(this.checked){ $('#event_facebook_link').removeAttr( 'readonly', 'readonly' ); }else{ $('#event_facebook_link').attr( 'readonly', 'readonly' );}" />
+                             <img src="<%= APP_CONFIG['development']['app_url'] %>icon-fb-small.png" alt="" class="pr" style="margin: 0 5px; bottom:2px;" /><span class="font_size15 fontbold"><%= I18n.t 'create_event.facebook_com' %></span>
+	                         
+	                         <%= text_field_tag :facebook_link, @event[:facebook_link], :name => 'event[facebook_link]', :id => 'event_facebook_link', :class => 'textbox TW200 marL10'  %>
+	                         <a href="#" title="<%= I18n.t 'tooltip_title.enter_fb_address_link_fbpage'%>" class="tool_tip_class"></a>
+	                        <div id="event_facebook_link_err"></div>
+	                         <div class="clear"></div>
+                        </div>
+                         <div class="textcenter">
+	                         <input type="hidden" name="event[add_twitter]" value="0" /> 
+           					 <input type="checkbox" name="event[add_twitter]" id="event_add_twitter" value="1" <% if(@event[:add_twitter] == 1) %> checked="checked" <% end %>  onclick="if(this.checked){ $('#event_twitter_link').removeAttr( 'readonly', 'readonly' ); }else{ $('#event_twitter_link').attr( 'readonly', 'readonly' );}" />
+                             <img src="<%= APP_CONFIG['development']['app_url'] %>icon_twitter-small.png" alt="" class="pr" style="margin: 0 5px; bottom:2px;" /><span class="font_size15 fontbold"><%= I18n.t 'create_event.twitter_com' %></span></span>
+	                         
+	                         <%= text_field_tag :twitter_link, @event[:twitter_link], :name => 'event[twitter_link]', :id => 'event_twitter_link', :class => 'textbox TW200 marL10'  %>
+	                         <a href="#" title="<%= I18n.t 'tooltip_title.enter_twitter_address_include_link_twitter_page'%>" class="tool_tip_class"></a>
+	                        <div id="event_twitter_link_err"></div>
+	                         <div class="clear"></div>
+                        </div>
+                         <div class="clear"></div>
+                 </div>
+                 
+                
+                            
+                <div class="clear"></div>
+            </div>
+             <div class="clear"></div>
+        </div>
+        <div class="clear"></div>
+       
+        <div class="main marT40">
+        <div class="mtitle fl">
+           	<h1> <span> 2. </span><%= I18n.t 'ticket_part.create_tickets' %></h1>
+        </div>
+        <div class="marT20 fr"><%= link_to (I18n.t 'ticket_part.ticket_tips'),{:controller => 'tips', :action => 'ticket'}, :class =>'rr' %></div>
+        <div class="clear"></div>	
+    </div>
+    
+    
+<%        @has =1
+       eact = 'edit_ticket'
+  	 @has = Event.has_rights(@user, @event, eact) %> 
+  	
+  	 
+        <div class="shadow marT10 pad20 <% if @has==0 && @multi ==1 %> is-disabled <% end %>">
+        
+        
+            	<div class="create_event"> 
+                	 <label class="fl"><%= I18n.t 'ticket_part.add_ticket' %></label>  
+                     <div class="fl marT20 add_ticket">
+                     	<a href="javascript://" onclick="append_div2();" class="btn "> <%= I18n.t 'ticket_part.ticket_free' %> </a>
+                        <a href="javascript://" onclick="append_div1();" class="btn "> <%= I18n.t 'ticket_part.ticket_paid' %> </a>
+                        <a href="javascript://" onclick="append_div3();" class="btn black_bg"> <%= I18n.t 'ticket_part.ticket_donation' %> </a>
+                        <div class="clear"></div>
+                     </div>
+                     <div class="clear"></div>
+    				<div class="error1" id="ticket_req_fields"></div>
+<script type="text/javascript">
+
+/********* paid ticket div ***********/
+
+function set_paid_service_fee(val,id){
+
+	document.getElementById(id).value = val;
+	var tid = id.replace('paid_service_fee','');
+	var price = $("#paid_ticket"+tid+" [name='ticket[paid_price][]']").val();
+	var paid_fee = $("#paid_ticket"+tid+" [name='ticket[paid_fee][]']").val();
+			
+	if(val==1){
+		
+		if (paid_fee != ''){
+			
+			var fee = paid_fee;
+			var total = (parseFloat(price) + parseFloat(fee)).toFixed(2);
+		
+		}else{
+			
+			var fee = <%= @site[:paid_ticket_fee] %>.toFixed(2);
+			var amt = (parseFloat(price) * parseFloat(fee) / 100 ).toFixed(2);
+			var total = (parseFloat(price) + parseFloat(amt)).toFixed(2);
+		}
+		
+		document.getElementById('paid_total'+tid).innerHTML = '<%= @site[:currency_symbol] %>'+total;
+		document.getElementById('paid_total_val'+tid).value = total;
+		
+	}else{
+		document.getElementById('paid_total'+tid).innerHTML = '<%= @site[:currency_symbol] %>'+price;
+		document.getElementById('paid_total_val'+tid).value = price;
+	}
+}
+
+
+function append_div1()
+{
+	$('#when_no_tic').hide();
+	document.getElementById('main_ticket_head').style.display='block';
+	var tmp_div2 = document.createElement("tbody");
+	
+	tmp_div2.className = "inner_content_two";
+	
+	
+	var paid_ticket_cnt=document.getElementById('paid_ticket_cnt').value;
+	document.getElementById('paid_ticket_cnt').value=parseInt(paid_ticket_cnt)+1;
+	var num=parseInt(paid_ticket_cnt)+1;
+	
+	tmp_div2.id='paid_ticket'+num;
+	
+	content=document.getElementById('more1').innerHTML;							
+
+	
+	$("body").append('<div style="display:none;" id="metemp"></div>');
+							
+	$("#metemp").html(content);
+	$("#metemp .dp1 input").remove();
+	$("#metemp .dp2 input").remove();
+	
+	$("#metemp .dp1").html('<input type="text" name="ticket[paid_start_sale][]" value="" class="textbox TW97p date_time tal" readonly="readonly" />');
+	$("#metemp .dp2").html('<input type="text" name="ticket[paid_end_sale][]" value="" class="textbox TW97p date_time tal" readonly="readonly" />');
+	
+	
+	content = $("#metemp").html();
+	
+	content = content.replace('remove_paid_ticket_div(1);','remove_paid_ticket_div('+num+');');	
+	content = content.replace('paid_ticket_info_1','paid_ticket_info'+num);
+	content = content.replace('paid_ticket_info_1','paid_ticket_info'+num);
+	content = content.replace('paid_ticket_info_1','paid_ticket_info'+num);//alert(content);paid_service_fee1
+	
+	content = content.replace('paid_service_fee_1','paid_service_fee'+num);
+	content = content.replace('paid_service_fee_1','paid_service_fee'+num);
+	content = content.replace('paid_service_fee_1','paid_service_fee'+num);
+	
+	content = content.replace('paid_service_fee1[]','paid_service_fee'+num+'[]');
+	content = content.replace('paid_service_fee1[]','paid_service_fee'+num+'[]');
+	
+	
+	content = content.replace("set_fee_and_total('1',this)","set_fee_and_total('"+num+"',this)");
+	content = content.replace('paid_fee_1','paid_fee'+num);
+	content = content.replace('paid_total_1','paid_total'+num);
+	content = content.replace('paid_fee_val_1','paid_fee_val'+num);
+	content = content.replace('paid_total_val_1','paid_total_val'+num);
+	
+	content = content.replace('paid_qty_1','paid_qty_'+num);
+	content = content.replace('paid_price_1','paid_price_'+num);
+	
+	content = content.replace("set_hide_description(this,'paid','1')","set_hide_description(this,'paid','"+num+"')");	
+	content = content.replace('paid_hide_description_1','paid_hide_description_'+num);
+	content = content.replace('paid_hide_description_1','paid_hide_description_'+num);
+	content = content.replace('paid_hide_description_1','paid_hide_description_'+num);
+	content = content.replace('paid_hide_description_1','paid_hide_description_'+num);
+	content = content.replace("set_sales_status(this,'paid','1')","set_sales_status(this,'paid','"+num+"')");	
+	content = content.replace('paid_sales_1','paid_sales'+num);
+	
+	content = content.replace("set_event_capacity(this,'1','paid')","set_event_capacity(this,'"+num+"','paid')");	
+	content = content.replace('paid_ticket_name_1','paid_ticket_name'+num);
+	
+	
+	//alert(content +str);
+	$("body #metemp").remove();
+	tmp_div2.innerHTML = content;
+	
+	var total_ticket_cnt = $("#total_ticket_cnt").val();
+	total_ticket_cnt++;
+	$("#total_ticket_cnt").val(total_ticket_cnt);
+	//alert(content +str);
+	
+
+	document.getElementById('add_more_div_1').appendChild(tmp_div2);
+	var myDate = new Date();
+	var nowDate = myDate; //new Date(myDate.getTime() + 1*24*60*60*1000);
+	
+	
+	/*new Picker.Date($$('#paid_ticket'+num+' .date_time'), {
+		timePicker: true,
+		positionOffset: {x: 5, y: 0},
+		pickerClass: 'datepicker_bootstrap',
+		useFadeInOut: !Browser.ie
+	});*/
+	
+	$('#paid_ticket'+num+' .date_time').datetimepicker({
+		ampm: false,dateFormat:'yy-mm-dd',timeFormat: 'HH:mm', minDate: 0
+	});
+	
+	
+	//$('#paid_ticket'+num+' .datepicker').datepicker('setDate', nowDate); 
+	//$('.bs-docs-tooltip-examples li a').tooltip()
+	
+	
+	$('#paid_ticket'+num+' .date_time').datetimepicker("option","maxDate", $('#event_event_end_date_time').val());
+	$('#paid_ticket'+num+' [name="ticket[paid_end_sale][]"]').val($('#event_event_end_date_time').val());
+	$('#paid_ticket'+num+' [name="ticket[paid_start_sale][]"]').val('<%= Time.now.strftime('%Y-%m-%d %H:%M')%>');
+	
+	
+}
+
+
+	function remove_paid_ticket_div(id)
+	{						
+		var con= confirm('<%= I18n.t 'ticket_part.delete_ticket' %>');
+		if(con){
+			
+				if(id=='1'){
+					var element = document.getElementById('more1');
+				}
+				else{
+					var element = document.getElementById('paid_ticket'+id);
+				}
+				var add_more = parent.document.getElementById('add_more1');
+				
+				var add_parent=add_more.parentNode.offsetHeight;
+				
+				
+				var remove_height=parseInt(element.offsetHeight);
+				var final_height=add_parent - remove_height;
+				
+				
+				var old = document.getElementById('event_event_capacity').value;
+				var cap = document.getElementById('paid_qty_'+id).value;
+				if(cap!='' && cap!=0){
+					document.getElementById('event_event_capacity').value = parseInt(old) - parseInt(cap);
+				}
+				element.parentNode.removeChild(element);
+				if(id=='1'){
+					document.getElementById('add_more1').innerHTML = '<input type="hidden" name="paid_ticket_cnt" id="paid_ticket_cnt" value="1" />';
+				}	
+				var total_ticket_cnt = $("#total_ticket_cnt").val();
+				total_ticket_cnt--;
+				$("#total_ticket_cnt").val(total_ticket_cnt);
+				 
+				 var chks1 = document.getElementsByName('ticket[free_qty][]');
+			 	 var chks2 = document.getElementsByName('ticket[paid_qty][]');
+			     var chks3 = document.getElementsByName('ticket[donation_qty][]');
+	 
+				if(chks1.length==1 && chks2.length==1 && chks3.length==1){
+					$('#main_ticket_head').hide();
+					$('#when_no_tic').show();
+				}
+				//add_more.parentNode.style.height = final_height+'px';
+				
+			
+			
+		}
+		
+		
+	
+	}
+
+function set_paid_ticket_info(id,disp){
+	if(disp=='show'){
+		var vis = $('#'+id).toggle().is(":visible");
+		//console.log($('#'+id).toggle());	
+		var div_id = id.replace('paid_ticket_info','');
+		if(vis){
+			$('#paid_ticket'+div_id+' li a').removeClass('setting');
+			$('#paid_ticket'+div_id+' li a').addClass('setting_close');
+		}else{
+			$('#paid_ticket'+div_id+' li a').removeClass('setting_close');
+			$('#paid_ticket'+div_id+' li a').addClass('setting');
+		}
+	}
+	if(disp=='hide'){
+		//document.getElementById(id).style.display='none';
+			chks_start = $('#'+id+' [name="ticket[paid_start_sale][]"]');
+			chks_end = $('#'+id+' [name="ticket[paid_end_sale][]"]');
+			
+			event_end_date_time = $('#event_event_end_date_time');
+			
+			ticket_req_fields = $('#'+id+' .chks_start_chks_end');
+			ticket_req_fields.text('');
+			
+			
+			
+			if(chks_start.val() > chks_end.val()) {      
+				chks_start.focus();
+				ticket_req_fields.text('<%= I18n.t 'ticket_part.strat_date_not_greater_end_date'%>');
+				
+		    }
+		    
+			else if(chks_end.val() > event_end_date_time.val()) {  
+				chks_end.focus();    
+				ticket_req_fields.text('<%= I18n.t 'ticket_part.end_date_not_greater_end_date'%>');
+		    }
+		    else{
+				$('#'+id).hide();
+			}
+			var div_id = id.replace('paid_ticket_info','');
+			$('#paid_ticket'+div_id+' li a').removeClass('setting_close');
+			$('#paid_ticket'+div_id+' li a').addClass('setting');
+	}
+		
+}
+
+
+/********* free ticket div **********/
+function append_div2()
+{
+	$('#when_no_tic').hide();
+	document.getElementById('main_ticket_head').style.display='block';
+	var tmp_div2 = document.createElement("tbody");
+	
+	tmp_div2.className = "inner_content_two";
+	
+	
+	var ticket_cnt=document.getElementById('free_ticket_cnt').value;
+	document.getElementById('free_ticket_cnt').value=parseInt(ticket_cnt)+1;
+	var num=parseInt(ticket_cnt)+1;
+	
+	tmp_div2.id='ticket'+num;
+	
+	content=document.getElementById('more2').innerHTML;							
+
+	$("body").append('<div style="display:none;" id="metemp"></div>');
+							
+	$("#metemp").html(content);
+	
+	$("#metemp .dp1 input").remove();
+	$("#metemp .dp2 input").remove();
+	
+	$("#metemp .dp1").html('<input type="text" name="ticket[free_start_sale][]" value="" class="textbox TW97p date_time tal" readonly="readonly" />');
+	$("#metemp .dp2").html('<input type="text" name="ticket[free_end_sale][]" value="" class="textbox TW97p date_time tal" readonly="readonly" />');
+	
+	
+	content = $("#metemp").html();
+	
+	
+	
+	//var str = '<div onclick="remove_ticket_div('+num+')" style="text-align:right;font-weight:bold;cursor:pointer;color:#990000;"><?php echo 'Delete';?></div>';
+	content = content.replace('remove_ticket_div(1);','remove_ticket_div('+num+');');	
+	content = content.replace('free_ticket_info_1','free_ticket_info'+num);
+	content = content.replace('free_ticket_info_1','free_ticket_info'+num);
+	content = content.replace('free_ticket_info_1','free_ticket_info'+num);//alert(content);
+	
+	content = content.replace("set_hide_description(this,'free','1')","set_hide_description(this,'free','"+num+"')");	
+	content = content.replace('free_hide_description_1','free_hide_description'+num);
+	content = content.replace('free_hide_description_1','free_hide_description'+num);
+	content = content.replace('free_hide_description_1','free_hide_description'+num);
+	content = content.replace('free_hide_description_1','free_hide_description'+num);
+	
+	content = content.replace("set_sales_status(this,'free','1')","set_sales_status(this,'free','"+num+"')");	
+	content = content.replace('free_sales_1','free_sales'+num);
+	
+	
+	content = content.replace("set_event_capacity(this,'1','free')","set_event_capacity(this,'"+num+"','free')");	
+	content = content.replace('free_ticket_name_1','free_ticket_name'+num);
+	
+	
+	content = content.replace('free_qty_1','free_qty'+num);
+	/*content = content.replace('paid_service_fee_1','paid_service_fee'+num);
+	content = content.replace('paid_service_fee_1','paid_service_fee'+num);
+	content = content.replace('paid_service_fee_1','paid_service_fee'+num);
+	content = content.replace('paid_service_fee_1','paid_service_fee'+num);*/
+	
+	$("body #metemp").remove();
+	tmp_div2.innerHTML = content;
+	
+	
+	//alert(content +str);
+	
+
+	document.getElementById('add_more_div_1').appendChild(tmp_div2);
+	var myDate = new Date();
+	var nowDate = myDate//new Date(myDate.getTime() + 1*24*60*60*1000);
+	
+	
+	/*new Picker.Date($$('#ticket'+num+' .date_time'), {
+		timePicker: true,
+		positionOffset: {x: 5, y: 0},
+		pickerClass: 'datepicker_bootstrap',
+		useFadeInOut: !Browser.ie
+	});*/
+	
+	$('#ticket'+num+' .date_time').datetimepicker({
+		ampm: false,dateFormat:'yy-mm-dd',timeFormat: 'HH:mm',minDate: 0
+		// minDate: new Date(nowDate.getFullYear(), nowDate.getMonth(), nowDate.getDate(), nowDate.getHours(), nowDate.getMinutes(), 0, 0)
+		
+	});
+	
+	
+		var total_ticket_cnt = $("#total_ticket_cnt").val();
+		total_ticket_cnt++;
+		$("#total_ticket_cnt").val(total_ticket_cnt);
+	//$('#ticket'+num+' .datepicker').datepicker('setDate', nowDate); 							
+	//$('.bs-docs-tooltip-examples li a').tooltip();
+	
+	
+	$('#ticket'+num+'  .date_time').datetimepicker("option","maxDate", $('#event_event_end_date_time').val());
+	$('#ticket'+num+' [name="ticket[free_end_sale][]"]').val($('#event_event_end_date_time').val());
+	
+	$('#ticket'+num+' [name="ticket[free_start_sale][]"]').val('<%= Time.now.strftime('%Y-%m-%d %H:%M')%>');
+	
+	//var myVerticalSlide2 = new Fx.Slide('add_more2');
+	//myVerticalSlide2.slideIn();
+}
+
+
+	function remove_ticket_div(id)
+	{		
+		var con= confirm('<%= I18n.t 'ticket_part.delete_ticket'%>');
+		
+		if(con){
+			
+			if(id=='1'){
+				var element = document.getElementById('more2');
+			}
+			else{
+				var element = document.getElementById('ticket'+id);
+			}
+			var add_more = parent.document.getElementById('add_more2');
+			
+			var add_parent=add_more.parentNode.offsetHeight;
+			
+			
+			var remove_height=parseInt(element.offsetHeight);
+			
+			var final_height=add_parent - remove_height;
+			
+			
+			var old = document.getElementById('event_event_capacity').value;
+			var cap = document.getElementById('free_qty'+id).value;
+			if(cap!='' && cap!=0){
+				document.getElementById('event_event_capacity').value = parseInt(old) - parseInt(cap);
+			}
+			
+			element.parentNode.removeChild(element);
+			if(id=='1'){
+				document.getElementById('add_more2').innerHTML = '<input type="hidden" name="free_ticket_cnt" id="free_ticket_cnt" value="1" />';
+			}	
+			//add_more.parentNode.style.height = final_height+'px';
+			
+			var total_ticket_cnt = $("#total_ticket_cnt").val();
+			total_ticket_cnt--;
+			$("#total_ticket_cnt").val(total_ticket_cnt);
+							
+		 var chks1 = document.getElementsByName('ticket[free_qty][]');
+	 	 var chks2 = document.getElementsByName('ticket[paid_qty][]');
+	     var chks3 = document.getElementsByName('ticket[donation_qty][]');
+	 
+			if(chks1.length==1 && chks2.length==1 && chks3.length==1){
+				$('#main_ticket_head').hide();
+				$('#when_no_tic').show();
+			}
+		}
+	}
+
+function set_free_ticket_info(id,disp){
+	
+		if(disp=='show'){
+			var vis = $('#'+id).toggle().is(":visible");
+			//console.log($('#'+id).toggle());	
+			var div_id = id.replace('free_ticket_info','');
+			if(vis){
+				$('#ticket'+div_id+' li a').removeClass('setting');
+				$('#ticket'+div_id+' li a').addClass('setting_close');
+			}else{
+				$('#ticket'+div_id+' li a').removeClass('setting_close');
+				$('#ticket'+div_id+' li a').addClass('setting');
+			}
+		}
+		if(disp=='hide'){
+			
+			chks_start = $('#'+id+' [name="ticket[free_start_sale][]"]');
+			chks_end = $('#'+id+' [name="ticket[free_end_sale][]"]');
+			
+			event_end_date_time = $('#event_event_end_date_time');
+			
+			ticket_req_fields = $('#'+id+' .chks_start_chks_end');
+			ticket_req_fields.text('');
+			
+			
+			
+			if(chks_start.val() > chks_end.val()) {      
+				chks_start.focus();
+				ticket_req_fields.text('<%= I18n.t 'ticket_part.strat_date_not_greater_end_date'%>');
+				
+		    }
+		    
+			else if(chks_end.val() > event_end_date_time.val()) {  
+				chks_end.focus();    
+				ticket_req_fields.text('<%= I18n.t 'ticket_part.end_date_not_greater_end_date'%>');
+		    }
+		    else{
+				document.getElementById(id).style.display='none';
+			}
+			var div_id = id.replace('free_ticket_info','');
+			$('#ticket'+div_id+' li a').removeClass('setting_close');
+			$('#ticket'+div_id+' li a').addClass('setting');
+		}
+	
+}
+
+/************ donation ticket div *********/
+
+
+function set_donation_service_fee(val,id){
+	document.getElementById(id).value = val;
+}
+
+
+function append_div3()
+{
+	$('#when_no_tic').hide();
+	document.getElementById('main_ticket_head').style.display='block';
+	var tmp_div2 = document.createElement("tbody");
+	
+	tmp_div2.className = "inner_content_two";
+	
+	
+	var paid_ticket_cnt=document.getElementById('donation_ticket_cnt').value;
+	document.getElementById('donation_ticket_cnt').value=parseInt(paid_ticket_cnt)+1;
+	var num=parseInt(paid_ticket_cnt)+1;
+	
+	tmp_div2.id='donation_ticket'+num;
+	
+	content=document.getElementById('more3').innerHTML;							
+
+	$("body").append('<div style="display:none;" id="metemp"></div>');
+							
+	$("#metemp").html(content);
+	$("#metemp .dp1 input").remove();
+	$("#metemp .dp2 input").remove();
+	
+	$("#metemp .dp1").html('<input type="text" name="ticket[donation_start_sale][]" value="" class="textbox TW97p date_time tal" readonly="readonly" />');
+	$("#metemp .dp2").html('<input type="text" name="ticket[donation_end_sale][]" value="" class="textbox TW97p date_time tal" readonly="readonly" />');
+	
+	
+	content = $("#metemp").html();
+	//var str = '<div onclick="remove_ticket_div('+num+')" style="text-align:right;font-weight:bold;cursor:pointer;color:#990000;"><?php echo 'Delete';?></div>';
+	content = content.replace('remove_donation_ticket_div(1);','remove_donation_ticket_div('+num+');');	
+	content = content.replace('donation_ticket_info_1','donation_ticket_info'+num);
+	content = content.replace('donation_ticket_info_1','donation_ticket_info'+num);
+	content = content.replace('donation_ticket_info_1','donation_ticket_info'+num);//alert(content);
+	
+	content = content.replace('donation_service_fee_1','donation_service_fee'+num);
+	content = content.replace('donation_service_fee_1','donation_service_fee'+num);
+	content = content.replace('donation_service_fee_1','donation_service_fee'+num);
+	
+	content = content.replace('donation_qty_1','donation_qty'+num);
+	
+	content = content.replace("set_hide_description(this,'donation','1')","set_hide_description(this,'donation','"+num+"')");	
+	content = content.replace('donation_hide_description_1','donation_hide_description'+num);
+	content = content.replace('donation_hide_description_1','donation_hide_description'+num);
+	content = content.replace('donation_hide_description_1','donation_hide_description'+num);
+	content = content.replace('donation_hide_description_1','donation_hide_description'+num);
+	
+	content = content.replace("set_sales_status(this,'donation','1')","set_sales_status(this,'donation','"+num+"')");	
+	content = content.replace('donation_sales_1','donation_sales'+num);
+	
+	
+	content = content.replace("set_event_capacity(this,'1','donation')","set_event_capacity(this,'"+num+"','donation')");	
+	content = content.replace('donation_ticket_name_1','donation_ticket_name'+num);
+	
+	//alert(content +str);
+	$("body #metemp").remove();
+	tmp_div2.innerHTML = content;
+	
+	
+	//alert(content +str);
+	
+
+	document.getElementById('add_more_div_1').appendChild(tmp_div2);
+	var myDate = new Date();
+	var nowDate = myDate; //new Date(myDate.getTime() + 1*24*60*60*1000);
+	
+	
+	/*new Picker.Date($$('#donation_ticket'+num+' .date_time'), {
+		timePicker: true,
+		positionOffset: {x: 5, y: 0},
+		pickerClass: 'datepicker_bootstrap',
+		useFadeInOut: !Browser.ie
+	});*/
+	
+	$('#donation_ticket'+num+' .date_time').datetimepicker({
+		ampm: false,dateFormat:'yy-mm-dd',timeFormat: 'HH:mm', minDate: 0
+	});
+	
+	
+	var total_ticket_cnt = $("#total_ticket_cnt").val();
+	total_ticket_cnt++;
+	$("#total_ticket_cnt").val(total_ticket_cnt);
+	
+	
+	$('#donation_ticket'+num+'  .date_time').datetimepicker("option","maxDate", $('#event_event_end_date_time').val());
+	$('#donation_ticket'+num+' [name="ticket[donation_end_sale][]"]').val($('#event_event_end_date_time').val());
+	
+	$('#donation_ticket'+num+' [name="ticket[donation_start_sale][]"]').val('<%= Time.now.strftime('%Y-%m-%d %H:%M')%>');
+	//$('#donation_ticket'+num+' .datepicker').datepicker('setDate', nowDate); 
+	//$('.bs-docs-tooltip-examples li a').tooltip()
+	
+	//var myVerticalSlide2 = new Fx.Slide('add_more2');
+	//myVerticalSlide2.slideIn();
+}
+
+
+function remove_donation_ticket_div(id)
+{						
+	var con= confirm('<%= I18n.t 'ticket_part.ticket_confirm'%>');
+		
+		if(con){	
+		
+				if(id=='1'){
+					var element = document.getElementById('more3');
+				}
+				else{
+					var element = document.getElementById('donation_ticket'+id);
+				}
+				var add_more = parent.document.getElementById('add_more3');
+				
+				var add_parent=add_more.parentNode.offsetHeight;
+				
+				
+				var remove_height=parseInt(element.offsetHeight);
+				
+				var final_height=add_parent - remove_height;
+				
+				
+				var old = document.getElementById('event_event_capacity').value;
+				var cap = document.getElementById('donation_qty'+id).value;
+				if(cap!='' && cap!=0){
+					document.getElementById('event_event_capacity').value = parseInt(old) - parseInt(cap);
+				}
+				
+				element.parentNode.removeChild(element);
+				if(id=='1'){
+					document.getElementById('add_more3').innerHTML = '<input type="hidden" name="donation_ticket_cnt" id="donation_ticket_cnt" value="1" />';
+				}
+				//add_more.parentNode.style.height = final_height+'px';
+				var total_ticket_cnt = $("#total_ticket_cnt").val();
+				total_ticket_cnt--;
+				$("#total_ticket_cnt").val(total_ticket_cnt);
+				
+				 var chks1 = document.getElementsByName('ticket[free_qty][]');
+			 	 var chks2 = document.getElementsByName('ticket[paid_qty][]');
+			     var chks3 = document.getElementsByName('ticket[donation_qty][]');
+			 
+				if(chks1.length==1 && chks2.length==1 && chks3.length==1){
+					$('#main_ticket_head').hide();
+					$('#when_no_tic').show();
+				}
+		}
+	
+	}
+
+function set_donation_ticket_info(id,disp){
+	if(disp=='show'){
+		var vis = $('#'+id).toggle().is(":visible");
+		//console.log($('#'+id).toggle());	
+		var div_id = id.replace('donation_ticket_info','');
+		if(vis){
+			$('#donation_ticket'+div_id+' li a').removeClass('setting');
+			$('#donation_ticket'+div_id+' li a').addClass('setting_close');
+		}else{
+			$('#donation_ticket'+div_id+' li a').removeClass('setting_close');
+			$('#donation_ticket'+div_id+' li a').addClass('setting');
+		}
+		
+	}
+	if(disp=='hide'){
+			chks_start = $('#'+id+' [name="ticket[donation_start_sale][]"]');
+			chks_end = $('#'+id+' [name="ticket[donation_end_sale][]"]');
+			
+			event_end_date_time = $('#event_event_end_date_time');
+			
+			ticket_req_fields = $('#'+id+' .chks_start_chks_end');
+			ticket_req_fields.text('');
+			
+			
+			
+			if(chks_start.val() > chks_end.val()) {      
+				chks_start.focus();
+				ticket_req_fields.text('<%= I18n.t 'ticket_part.strat_date_not_greater_end_date'%>');
+				
+		    }
+		    
+			else if(chks_end.val() > event_end_date_time.val()) {  
+				chks_end.focus();    
+				ticket_req_fields.text('<%= I18n.t 'ticket_part.end_date_not_greater_end_date'%>');
+		    }
+		    else{
+				document.getElementById(id).style.display='none';
+			}
+			var div_id = id.replace('donation_ticket_info','');
+			$('#donation_ticket'+div_id+' li a').removeClass('setting_close');
+			$('#donation_ticket'+div_id+' li a').addClass('setting');
+	}
+		
+}
+
+
+function set_event_capacity(ele,id,type){
+	/*var old = document.getElementById('event_event_capacity').value;
+	if(val!=''){
+		
+		if(old!=0 && old!=''){
+			document.getElementById('event_event_capacity').value = parseInt(old) + parseInt(val);
+		}else{
+			document.getElementById('event_event_capacity').value = parseInt(val);
+		}	
+	}*/
+	//alert('hi')
+	  var testPattern=/^[0-9]+$/;
+	  
+		if(testPattern.test(ele.value)==false && ele.value !='')
+		 {
+			document.getElementById(ele.id).value='';
+		}
+	
+	var max_ticket_qnty = <%= @site[:max_ticket_qnty] %>;
+	
+	var tick_limit = document.getElementById(ele.id).value; 	
+		
+	    if(tick_limit > max_ticket_qnty){
+	    	$('#ticket_req_fields').show();
+	    	$('#ticket_req_fields').text("Ticket quantity should be less than or equal to <%= @site[:max_ticket_qnty] %>"); 
+	    	document.getElementById(ele.id).value='';
+	    }else{
+	    	$('#ticket_req_fields').text("");
+	    }
+						
+	  var old = 0;
+	  var chks1 = document.getElementsByName('ticket[free_qty][]');
+	   for (var i = 0; i < chks1.length; i++){
+	   		
+	   		val1 = chks1[i].value;
+	   		
+	   		if(val1!='' && val1!=0){
+	   			
+	   			if(old!=0 && old!=''){
+					old = parseInt(old) + parseInt(val1);
+				}else{
+					old = parseInt(val1);
+				}
+	   		}
+	   			
+			
+	   }
+	   
+	   var chks2 = document.getElementsByName('ticket[paid_qty][]');
+	   for (var i = 0; i < chks2.length; i++){
+	   		val2 = chks2[i].value;
+	   		
+	   		if(val2!='' && val2!=0){
+		   			
+		   		if(old!=0 && old!=''){
+					old = parseInt(old) + parseInt(val2);
+				}else{
+					old = parseInt(val2);
+				}	
+			}
+	   }
+	   
+	   var chks3 = document.getElementsByName('ticket[donation_qty][]');
+	   for (var i = 0; i < chks3.length; i++){
+	   		val3 = chks3[i].value;
+	   		
+	   		if(val3!='' && val3!=0){
+		   		if(old!=0 && old!=''){
+					old = parseInt(old) + parseInt(val3);
+				}else{
+					old = parseInt(val3);
+				}	
+			}
+	   }
+	   
+	   document.getElementById('event_event_capacity').value = old;
+	   
+	   
+	   if(type=='free'){
+			var qty = document.getElementById('free_ticket_name'+id).value;
+			if(ele.value=='0' || ele.value=='' || qty=='' || qty==null)
+			{
+				document.getElementById('free_sales'+id).innerHTML = 'Incomplete <input type="hidden" name="ticket[free_ticket_status][]" value="0" />';
+			
+			}else{
+				
+				document.getElementById('free_sales'+id).innerHTML = '<select name="ticket[free_ticket_status][]"  class="selectbox mar0 TW97p"><% for stat in @sales %><option value="<%= stat[:id] %>"><%= stat[:status_name] %></option><% end %></select>';
+			}	
+	}
+	
+	
+	if(type=='paid'){
+			var qty = document.getElementById('paid_ticket_name'+id).value;
+			if(ele.value=='' || ele.value==0 || qty==null || qty=='')
+			{
+				document.getElementById('paid_sales'+id).innerHTML = '<%= I18n.t 'ticket_part.incomplete'%> <input type="hidden" name="ticket[paid_ticket_status][]" value="0" />';
+			
+			}else{
+				
+				document.getElementById('paid_sales'+id).innerHTML = '<select name="ticket[paid_ticket_status][]"  class="selectbox mar0 TW97p"><% for stat in @sales %><option value="<%= stat[:id] %>"><%= stat[:status_name] %></option><% end %></select>';
+			}	
+	}
+	
+	
+	if(type=='donation'){
+			var qty = document.getElementById('donation_ticket_name'+id).value;
+			if(ele.value=='' || ele.value==0 || qty==null || qty=='')
+			{
+				document.getElementById('donation_sales'+id).innerHTML = '<%= I18n.t 'ticket_part.incomplete'%> <input type="hidden" name="ticket[donation_ticket_status][]" value="0" />';
+			
+			}else{
+				
+				document.getElementById('donation_sales'+id).innerHTML = '<select name="ticket[donation_ticket_status][]"  class="selectbox mar0 TW97p"><% for stat in @sales %><option value="<%= stat[:id] %>"><%= stat[:status_name] %></option><% end %></select>';
+			}	
+	}
+	
+}
+
+
+
+function set_fee_and_total(id,ele){
+	 var val = ele.value;
+	 var testPattern=/^[0-9]*\.?[0-9]*$/;
+	  
+		if(testPattern.test(ele.value)==false && ele.value !='')
+		 {
+			document.getElementById(ele.id).value='';
+		}
+		var max_ticket_price = <%= @site[:max_ticket_price] %>;
+	
+	var tick_limit = document.getElementById(ele.id).value; 	
+		
+	    if(tick_limit > max_ticket_price){
+	           var paid_total = '#paid_total'+id;		
+	    	$('#ticket_req_fields').show();
+	    	$('#ticket_req_fields').text("Ticket price should be less than or equal to <%= @site[:max_ticket_price] %>"); 
+	    	val = 0;
+	    	document.getElementById(ele.id).value='';
+	    	
+	    }else{
+	    	$('#ticket_req_fields').text("");
+	    }
+	
+	if(val!='' && val!=null && val>0){
+		//var fee = '<?php echo $site_setting->paid_ticket_fee; ?>';
+		var fee = <%= @site[:paid_ticket_fee] %>.toFixed(2);
+		var amt = (parseFloat(val) * parseFloat(fee) / 100 ).toFixed(2);
+		var total = (parseFloat(val) + parseFloat(amt)).toFixed(2);
+	
+		document.getElementById('paid_fee'+id).innerHTML = '<%= @site[:currency_symbol] %>'+amt;
+		
+		if($('#event_pass_fees1').attr("checked") || ($('#event_pass_fees3').attr("checked")) && $('#paid_service_fee'+id).val()==1) {
+			document.getElementById('paid_total'+id).innerHTML = '<%= @site[:currency_symbol] %>'+total;
+		}else{
+			document.getElementById('paid_total'+id).innerHTML = '<%= @site[:currency_symbol] %>'+val;
+		}	
+		
+		document.getElementById('paid_fee_val'+id).value = amt;
+		document.getElementById('paid_total_val'+id).value = total;
+	}else{
+		
+		document.getElementById('paid_fee'+id).innerHTML = '<%= @site[:currency_symbol] %>0.00';
+		document.getElementById('paid_total'+id).innerHTML = '<%= @site[:currency_symbol] %>0.00';
+		
+		document.getElementById('paid_fee_val'+id).value = 0;
+		document.getElementById('paid_total_val'+id).value = 0;
+	}	
+}
+
+
+
+function set_subcategory(val){
+	
+	
+        var subcategory_path = '/events/subcategory_selection/';
+        var category_id = val;
+        $.ajax({
+            type: "GET",
+            data: {category: category_id}, 
+            url: subcategory_path+category_id,
+            success: function(data) {
+               //alert(data.length);
+                //$("#subcat_list").html(data);
+                if(data.length==168)  // 168 is empty div
+               {
+                  $("#event_subcategory").hide();
+
+               }
+               else
+               {
+               	 $("#event_subcategory").show();
+                 $("#subcat_list").html(data);
+               }
+
+            }
+        });
+   
+}
+
+
+function set_hide_description(chk, type, id){
+	if(chk.checked==true)
+	{
+		if(type=='free'){
+			document.getElementById('free_hide_description'+id).value = 1;
+		}
+		if(type=='donation'){
+			document.getElementById('donation_hide_description'+id).value = 1;
+		}
+		if(type=='paid'){
+			document.getElementById('paid_hide_description'+id).value = 1;
+		}
+		
+		
+	}else{
+		
+		if(type=='free'){
+			document.getElementById('free_hide_description'+id).value = 0;
+		}
+		if(type=='donation'){
+			document.getElementById('donation_hide_description'+id).value = 0;
+		}
+		if(type=='paid'){
+			document.getElementById('paid_hide_description'+id).value = 0;
+		}
+		
+	}
+}
+
+function set_sales_status(ele,type,id){
+	
+	if(type=='free'){
+			var qty = document.getElementById('free_qty'+id).value;
+			if(ele.value=='' || ele.value==null || qty==0 || qty=='')
+			{
+				document.getElementById('free_sales'+id).innerHTML = '<%= I18n.t 'ticket_part.incomplete'%> <input type="hidden" name="ticket[free_ticket_status][]" value="0" />';
+			
+			}else{
+				
+				document.getElementById('free_sales'+id).innerHTML = '<select name="ticket[free_ticket_status][]" class="selectbox mar0 TW97p"><% for stat in @sales %><option value="<%= stat[:id] %>"><%= stat[:status_name] %></option><% end %></select>';
+			}	
+	}
+	
+	
+	if(type=='paid'){
+			var qty = document.getElementById('paid_qty'+id).value;
+			if(ele.value=='' || ele.value==null || qty==0 || qty=='')
+			{
+				document.getElementById('paid_sales'+id).innerHTML = '<%= I18n.t 'ticket_part.incomplete'%> <input type="hidden" name="ticket[paid_ticket_status][]" value="0" />';
+			
+			}else{
+				
+				document.getElementById('paid_sales'+id).innerHTML = '<select name="ticket[paid_ticket_status][]" class="selectbox mar0 TW97p"><% for stat in @sales %><option value="<%= stat[:id] %>"><%= stat[:status_name] %></option><% end %></select>';
+			}	
+	}
+	
+	
+	if(type=='donation'){
+			var qty = document.getElementById('donation_qty'+id).value;
+			if(ele.value=='' || ele.value==null || qty==0 || qty=='')
+			{
+				document.getElementById('donation_sales'+id).innerHTML = '<%= I18n.t 'ticket_part.incomplete'%> <input type="hidden" name="ticket[donation_ticket_status][]" value="0" />';
+			
+			}else{
+				
+				document.getElementById('donation_sales'+id).innerHTML = '<select name="ticket[donation_ticket_status][]" class="selectbox mar0 TW97p"><% for stat in @sales %><option value="<%= stat[:id] %>"><%= stat[:status_name] %></option><% end %></select>';
+			}	
+	}
+}
+
+function chk_numeric_value(ele){
+	var testPattern=/^[0-9]+$/;
+	 if(testPattern.test(ele.value)==false && ele.value !='')
+	 {
+		var old = 0;
+	  var chks1 = document.getElementsByName('ticket[free_qty][]');
+	   for (var i = 0; i < chks1.length; i++){
+	   		
+	   		val1 = chks1[i].value;
+	   		
+	   		if(val1!='' && val1!=0){
+	   			
+	   			if(old!=0 && old!=''){
+					old = parseInt(old) + parseInt(val1);
+				}else{
+					old = parseInt(val1);
+				}
+	   		}
+	   			
+			
+	   }
+	   
+	   var chks2 = document.getElementsByName('ticket[paid_qty][]');
+	   for (var i = 0; i < chks2.length; i++){
+	   		val2 = chks2[i].value;
+	   		
+	   		if(val2!='' && val2!=0){
+		   			
+		   		if(old!=0 && old!=''){
+					old = parseInt(old) + parseInt(val2);
+				}else{
+					old = parseInt(val2);
+				}	
+			}
+	   }
+	   
+	   var chks3 = document.getElementsByName('ticket[donation_qty][]');
+	   for (var i = 0; i < chks3.length; i++){
+	   		val3 = chks3[i].value;
+	   		
+	   		if(val3!='' && val3!=0){
+		   		if(old!=0 && old!=''){
+					old = parseInt(old) + parseInt(val3);
+				}else{
+					old = parseInt(val3);
+				}	
+			}
+	   }
+	   
+	   document.getElementById('event_event_capacity').value = old;
+	   
+	 }
+
+}
+
+function check_ticket_min_qty(min){
+	var testPattern=/^[0-9]+$/;
+	
+	 if(testPattern.test(min.value)==true && min.value !='')
+	 {
+			if(min.value >= parseInt(<%= @site[:min_purchase_allowed] %>) && min.value <= parseInt(<%= @site[:max_purchase_allowed] %>)){
+				return true;
+			}else{
+				if(min.value < parseInt(<%= @site[:min_purchase_allowed] %>)){
+					min.value = '<%= @site[:min_purchase_allowed] %>';
+				}else{
+					min.value = '<%= @site[:max_purchase_allowed] %>';
+				}	
+				
+				return true;
+				
+			}
+	}else{
+			min.value='';
+			return false;
+	}		
+}
+
+
+
+function check_ticket_max_qty(max){
+	var testPattern=/^[0-9]+$/;
+	 if(testPattern.test(max.value)==true && max.value !='')
+	 {
+			if(max.value < parseInt(<%= @site[:min_purchase_allowed] %>)){
+				max.value = '<%= @site[:min_purchase_allowed] %>';
+				return true;
+				
+			}else if(max.value <= parseInt(<%= @site[:max_purchase_allowed] %>)){
+				return true;
+			
+			}else{
+				max.value = '<%= @site[:max_purchase_allowed] %>';
+				return true;
+				
+			}
+	}else{
+			max.value='';
+			return false;
+	}		
+}
+
+
+ function set_buyer_total(val){
+ 	
+ 	var paid_price = document.getElementsByName('ticket[paid_price][]');//paid_total124
+ 	var paid_fee = document.getElementsByName('ticket[paid_fee][]');
+			
+	for (var i = 0; i < paid_price.length-1; i++) {
+		
+		var div_id = paid_price[i].parentNode.parentNode.parentNode.getAttribute('id');
+		var id = div_id.replace('paid_ticket','');
+		
+		var price = paid_price[i].value;
+		
+		if (paid_fee[i].value != ''){
+			
+			var fee = paid_fee[i].value;
+			var total = (parseFloat(price) + parseFloat(fee)).toFixed(2);
+		
+		}else{
+			
+			var fee = <%= @site[:paid_ticket_fee] %>.toFixed(2);
+			var amt = (parseFloat(price) * parseFloat(fee) / 100 ).toFixed(2);
+		   	var total = (parseFloat(price) + parseFloat(amt)).toFixed(2);
+		}
+		
+		if(val==1 || (val==3 && $('#paid_service_fee'+id).val()==1)) {
+			document.getElementById('paid_total'+id).innerHTML = '<%= @site[:currency_symbol] %>'+total;
+			document.getElementById('paid_total_val'+id).value = total;
+		}else{
+		        
+			document.getElementById('paid_total'+id).innerHTML = '<%= @site[:currency_symbol] %>'+price;
+			document.getElementById('paid_total_val'+id).value = price;
+			
+		}
+	}		 
+ 	
+ 	
+ 	if(val==3) 	$('.paid_fee_div').show();
+ 	else  	$('.paid_fee_div').hide();
+ }       
+ 
+ 
+ function check_less_quantity(ele, used, id, orig){
+ 	$('#ticket_req_fields').text("");
+ 	if(parseInt(ele.value) < used && used>0){
+ 		$('#ticket_req_fields').text("<%= I18n.t 'ticket_part.already_sold'%>");
+ 		ele.value = orig;
+ 		$('html, body').animate({
+        	scrollTop: $("#ticket_req_fields").offset().top
+         }, 200);
+ 		return true;
+ 	}else{
+ 		return true;	
+ 	}
+ 	
+ }  
+   
+</script>
+
+<%
+
+	free_tickets = Ticket.get_free_ticket(@event[:id])
+	paid_tickets = Ticket.get_paid_ticket(@event[:id])
+	donation_tickets = Ticket.get_donation_ticket(@event[:id])
+	
+%>
+
+                     <div id="ticket_error"></div> 
+                     <div class="shadow create_event2 pad3 marT40 ">
+                            
+                            
+						                            
+						<% if free_tickets.count > 0 || paid_tickets.count > 0 || donation_tickets.count > 0 %>
+						  <div class="tab_cont"  id="main_ticket_head">
+						<% else %>
+							 <p id="when_no_tic"><%= I18n.t 'ticket_part.add_ticket_here'%></p>
+							 <div class="tab_cont"  id="main_ticket_head" style="display:none;">
+						<% end %>  	
+						      <table class="create_event_table table" id="add_more_div_1">
+						         <thead><tr>
+						            <th style="width: 138px;"><%= I18n.t 'ticket_part.ticket_name'%> <span class="red">*</span></th>
+                                    <th style="width: 149px;"><%= I18n.t 'ticket_part.ticket_quantity'%> <span class="red">*</span></th>
+                                    <th style="width: 218px;"><%= I18n.t 'ticket_part.ticket_price'%> <span class="red">*</span></th>
+                                    <th style="width: 91px;"><%= I18n.t 'ticket_part.fee'%></th>
+                                    <th style="width: 109px;"><%= I18n.t 'ticket_part.buyer_total'%></th>
+                                    <th style="width: 116px;"><%= I18n.t 'ticket_part.sales_status'%></th>
+                                    <th style="width: 101px;"><%= I18n.t 'ticket_part.setting'%></th>
+                                    <th style="width: 71px;"><%= I18n.t 'ticket_part.action'%></th>
+                               
+						        </tr></thead>
+						     
+						       
+						      <!-- free ticket -->
+						       <tbody id="add_more2">
+						       <% 
+						       	free_ticket_cnt=1
+						       	if(@event[:id]!=nil && @event[:id]!='')	
+						       		
+						       		
+						       		if free_tickets
+						       			 
+						       			 for free in free_tickets 
+						       			 	
+						       			 	free_ticket_cnt = free[:id]
+						       %>
+						      
+						       
+						       <tbody id="ticket<%= free[:id] %>" class="inner_content_two">
+							   
+						       		 
+						        
+						         <tr class="border_td">
+						          <td><input type="text" class="textbox TWT100 mar0 tal" placeholder="<%= I18n.t 'place.general_admission'%>" value="<%= free[:free_ticket_name] %>" name="ticket[free_ticket_name][]" id="free_ticket_name<%= free[:id] %>" onkeyup="set_sales_status(this,'free','<%= free[:id] %>');" /></td>
+						          <td valign="middle">
+						          	<% if free[:used] > 0 %><br /><% end %>
+						          	<input type="text" class="textbox TWT100 mar0" value="<%= free[:free_qty] %>" name="ticket[free_qty][]" id="free_qty<%= free[:id] %>" autocomplete="off" onchange=" if(check_less_quantity(this, '<%= free[:used] %>', '<%= free[:id] %>', '<%= free[:free_qty] %>')){ set_event_capacity(this,'<%= free[:id] %>','free'); } " />
+						          	<br /><% if free[:used] > 0 %> <%= free[:used] %> <%= I18n.t 'ticket_part.sold'%> <% end %>
+						          	
+						          </td>
+						          <td>&nbsp;</td>
+						          <td class="fontbold" ><%= I18n.t 'ticket_part.ticket_free'%></td><td>&nbsp;</td>
+	                              <td ><span id="free_sales<%= free[:id] %>">
+						          	<% if free[:free_ticket_status]==0 %> <%= I18n.t 'ticket_part.incomplete'%>
+						          	<input type="hidden" name="ticket[free_ticket_status][]" value="<%= free[:free_ticket_status] %>" /> 
+						          	<% else %>  
+						          		<select name="ticket[free_ticket_status][]" class="selectbox mar0 TW97p">
+						          			<% for stat in @sales %><option value="<%= stat[:id] %>" <% if free[:free_ticket_status] == stat[:id] %> selected="selected"<% end %>><%= stat[:status_name] %></option><% end %>
+						          		</select>
+						          	<% end %>
+						          	
+						          </span></td>
+						          <td id="example" >
+						          		<div class="bs-docs-example tooltip-demo">
+						                     <ul class="bs-docs-tooltip-examples">
+						                     	 <li><a  href="javascript:" onclick="set_free_ticket_info('free_ticket_info<%= free[:id] %>','show');" class="setting" original-title="<%= tooltip %>"><%= I18n.t 'ticket_part.settings'%></a></li>
+						                     </ul>
+						                 </div>
+						          </td>
+						          <td>
+						           <% if free[:used] ==0 %>
+						          	<div class="delete" onclick="remove_ticket_div(<%= free[:id] %>);">&nbsp;</div>
+						         <% end %>
+						          </td>
+						        </tr>
+						        
+						        
+						        <tr id="free_ticket_info<%= free[:id] %>" style="display: none;">
+						          <td colspan="8" class="setting_td">
+						                 <div class="create_event_ticket">
+                 
+						                 		 <label><%= I18n.t 'ticket_part.ticket_description'%> : </label>
+								                 <input type="text" class="textbox tal" name="ticket[free_description][]" id="free_description_1" value="<%= free[:free_description] %>" onchange="if(this.value=='') { $('#free_hide_description<%= free[:id] %>').prop('disabled',true); }else { $('#free_hide_description<%= free[:id] %>').prop('disabled',false);} " onfocus="if(this.value=='') { $('#free_hide_description<%= free[:id] %>').prop('disabled',true); }else { $('#free_hide_description<%= free[:id] %>').prop('disabled',false);} " />
+								                 <div class="clear"></div>
+							                 
+								                 <div class="checkbox marT10">
+											        <label class="mar0">&nbsp;</label>
+											        <input type="checkbox" name="free_hide_description[]" <% if free[:free_hide_description]==1 %> checked="checked" <% end %> id="free_hide_description<%= free[:id] %>" onclick="set_hide_description(this,'free','<%= free[:id] %>')" disabled    />
+											        <%= I18n.t 'ticket_part.hide_description'%>
+											        <div class="clear"></div>
+											     </div>
+											    
+							                    <label class="fl"><%= I18n.t 'create_event.date'%> &amp; <%= I18n.t 'create_event.time'%> : </label>
+											    <div class="ticket_set_date">
+												    <span class="font_size15" ><%= I18n.t 'ticket_part.sales_starts'%></span>
+												    <div class="dp1"><input type="text" name="ticket[free_start_sale][]" class="textbox TW97p date_time tal" value="<% if free[:free_start_sale]!=nil && free[:free_start_sale]!='' %><%= free[:free_start_sale].strftime('%Y-%m-%d %H:%M') %><% end %>" readonly="readonly" /></div>
+											    </div>
+											    <div class="ticket_set_date marL10">
+												    <span class="font_size15" ><%= I18n.t 'ticket_part.sales_ends'%></span>
+												    <div class="dp2"><input type="text" name="ticket[free_end_sale][]" class="textbox TW97p date_time tal" value="<% if free[:free_start_sale]!=nil && free[:free_start_sale]!='' %><%= free[:free_end_sale].strftime('%Y-%m-%d %H:%M')  %><% end %>" readonly="readonly"/></div>
+										    	</div>
+										    	<div class="clear"></div>
+										    	<div class="chks_start_chks_end error1"></div>
+										    	
+										    	<label class="fl"><%= I18n.t 'ticket_part.ticket_permited_by_order'%> : </label>
+											    <div class="ticket_set_date">
+												    <span class="font_size15" ><%= I18n.t 'ticket_part.min'%></span>
+												    <input type="text" name="ticket[free_min_purchase][]" id="free_min_purchase" onkeyup="return check_ticket_min_qty(this);" class="textbox TW100 tal" value="<%= free[:free_min_purchase] %>"  />
+											    </div>
+											    <div class="ticket_set_date marL10">
+												    <span class="font_size15" ><%= I18n.t 'ticket_part.max'%></span>
+												    <input type="text" name="ticket[free_max_purchase][]" id="free_max_purchase" onkeyup="return check_ticket_max_qty(this);"  class="textbox TW100 tal" value="<%= free[:free_max_purchase] %>"  />
+											    </div>
+											    <div class="clear"></div>
+						    					
+						    					<div class="marT25" align="right">
+						    						<input type="hidden" name="ticket[free_ticket_id][]" id="ticket_id" value="<%= free[:id] %>" />
+						                         	<input type="hidden" name="ticket[free_hide_description][]" id="free_hide_description<%= free[:id] %>" value="<%= free[:free_hide_description] %>" />
+							                        
+							                        <a href="javascript:" onclick="set_free_ticket_info('free_ticket_info<%= free[:id] %>','hide');" class="btn" >Apply</a>
+						    					</div>
+						    					<div class="clear"></div>
+						                 </div>
+						            </td>
+						        </tr>
+						        </tbody>
+						          
+						        		<% end %> 
+						       		<% end %> 
+						       <% end %> 
+						        <input type="hidden" name="free_ticket_cnt" id="free_ticket_cnt" value="<%= free_ticket_cnt %>" /> 
+						        
+						         </tbody>
+						      <!-- free ticket end -->  
+						       
+						       <!-- paid ticket start -->  
+						       <tbody id="add_more1">
+						      
+						    		 <% 
+						       	paid_ticket_cnt=1
+						       	if(@event[:id]!=nil && @event[:id]!='')	
+						       		
+						       		
+						       		if paid_tickets
+						       			 
+						       			 for paid in paid_tickets 
+						       			 	
+						       			 	paid_ticket_cnt = paid[:id]
+						       %>
+						      
+						       
+						           
+						                 
+						<tbody id="paid_ticket<%= paid[:id] %>" class="inner_content_two">
+							
+						        <tr >
+						          <td ><input type="text" class="textbox TWT100 mar0 tal" placeholder="<%= I18n.t 'place.general_admission'%>" name="ticket[paid_ticket_name][]" value="<%= paid[:paid_ticket_name] %>" id="paid_ticket_name<%= paid[:id] %>" onkeyup="set_sales_status(this,'paid','<%= paid[:id] %>');" /></td>
+						          <td >
+						          	
+						          	<% if paid[:used] > 0 %><br /><% end %>
+						          	<input type="text" value="<%= paid[:paid_qty] %>" class="textbox TWT100 mar0" name="ticket[paid_qty][]" id="paid_qty_<%= paid[:id] %>" autocomplete="off" onchange="if(check_less_quantity(this, '<%= paid[:used] %>', '<%= paid[:id] %>', '<%= paid[:paid_qty] %>')){ set_event_capacity(this,'<%= paid[:id] %>','paid'); }"/>
+						          	<br /><% if paid[:used] > 0 %> <%= paid[:used] %> <%= I18n.t 'ticket_part.sold'%> <% end %>
+						          	</td>
+						          <td><input type="text" class="textbox TWT100 mar0" placeholder="$" style="text-align:right;" name="ticket[paid_price][]" value="<%= paid[:paid_price] %>" id="paid_price" autocomplete="off" onchange="set_fee_and_total('<%= paid[:id] %>',this);" /></td>
+						          <td align="center">
+						          	<span  class="fee" id="paid_fee<%= paid[:id] %>"><% if paid[:paid_fee]!='' && paid[:paid_fee]!=nil %><%= set_currency(paid[:paid_fee]) %><% else %><%= set_currency(0) %><% end %></span>
+						          	<input type="hidden" name="ticket[paid_fee][]" id="paid_fee_val<%= paid[:id] %>" value="<%= paid[:paid_fee] %>" />
+						          </td>
+						          <td align="center">
+						          	<span  class="fee" id="paid_total<%= paid[:id] %>">
+						          		<% if paid[:paid_buyer_total]!='' && paid[:paid_buyer_total]!=nil 
+						          				if (@event[:event_pass_fees]==2 || (@event[:event_pass_fees]==3 && paid[:paid_service_fee]==2))
+						          					
+						          		%>
+						          			
+						          			<%= set_currency(paid[:paid_price]) %>
+						          		<% else %>
+						          			<%= set_currency(paid[:paid_buyer_total]) %>
+						          		<% end %>	
+						          		<% else %><%= set_currency(0) %><% end %>
+						          	</span>
+						          	<input type="hidden" name="ticket[paid_buyer_total][]" id="paid_total_val<%= paid[:id] %>" value="<%= paid[:paid_buyer_total] %>" />
+						          </td>
+						          <td><span id="paid_sales<%= paid[:id] %>">
+						          
+						            <% if paid[:paid_ticket_status]==0 %> <%= I18n.t 'ticket_part.incomplete'%> 
+						            <input type="hidden" name="ticket[paid_ticket_status][]" value="<%= paid[:paid_ticket_status] %>" />
+						          	<% else %>  
+						          		<select name="ticket[paid_ticket_status][]"  class="selectbox mar0 TW97p">
+						          			<% for stat in @sales %><option value="<%= stat[:id] %>" <% if paid[:paid_ticket_status] == stat[:id] %> selected="selected"<% end %>><%= stat[:status_name] %></option><% end %>
+						          		</select>
+						          	<% end %>
+						          	
+						          
+						          </span></td>
+						           <td  id="example" >
+						          		<div class="bs-docs-example tooltip-demo">
+						                     <ul class="bs-docs-tooltip-examples">
+						                     	 <li><a  href="javascript:" onclick="set_paid_ticket_info('paid_ticket_info<%= paid[:id] %>','show');" class="setting" original-title="<%= tooltip %>"><%= I18n.t 'ticket_part.settings'%></a></li>
+						                     </ul>
+						                 </div>
+						          </td>
+						          <td class="brdtop" align="center" >
+						           <% if paid[:used] ==0 %>
+						          		<div class="delete" onclick="remove_paid_ticket_div(<%= paid[:id] %>);">&nbsp;</div>
+						         <% end %>
+						          </td>
+						        </tr>
+						    
+						        <tr style=" display:none;" id="paid_ticket_info<%= paid[:id] %>">
+						          <td colspan="8" class="setting_td">
+						                 <div class="create_event_ticket" >
+	                 							 
+	                 							 <label><%= I18n.t 'ticket_part.ticket_description'%> : </label>
+								 					<input type="text" class="textbox tal" value="<%= paid[:paid_description] %>" name="ticket[paid_description][]" id="paid_description_1"  onchange="if(this.value=='') { $('#paid_hide_description_<%= paid[:id] %>').prop('disabled',true); }else { $('#paid_hide_description_<%= paid[:id] %>').prop('disabled',false);} " />
+								                 <div class="clear"></div>
+							                 
+								                 <div class="checkbox marT10">
+											        <label class="mar0">&nbsp;</label>
+											        <input type="checkbox" name="paid_hide_description[]" id="paid_hide_description_<%= paid[:id] %>" <% if paid[:paid_hide_description]==1 %> checked="checked" <% end %>  onclick="set_hide_description(this,'paid','<%= paid[:id] %>')" disabled />
+											        <%= I18n.t 'ticket_part.hide_description'%>
+											        <div class="clear"></div>
+											     </div>
+											    
+							                    <label class="fl"><%= I18n.t 'create_event.date'%> &amp; <%= I18n.t 'create_event.time'%>: </label>
+											    <div class="ticket_set_date">
+												    <span class="font_size15" ><%= I18n.t 'ticket_part.sales_starts'%></span>
+												    <div class="dp1"><input type="text" class="textbox TW97p date_time tal" name="ticket[paid_start_sale][]" value="<% if paid[:paid_start_sale]!=nil && paid[:paid_start_sale]!='' %><%= paid[:paid_start_sale].strftime('%Y-%m-%d %H:%M')  %><% end %>"  readonly="readonly" /></div>
+											    </div>
+											    <div class="ticket_set_date marL10">
+												    <span class="font_size15" ><%= I18n.t 'ticket_part.sales_ends'%></span>
+												    <div class="dp2"><input type="text" class="textbox TW97p date_time tal" name="ticket[paid_end_sale][]" value="<% if paid[:paid_start_sale]!=nil && paid[:paid_start_sale]!='' %><%= paid[:paid_end_sale].strftime('%Y-%m-%d %H:%M')  %><% end %>"  readonly="readonly"/></div>
+										    	</div>
+										    	<div class="clear"></div>
+										    	<div class="chks_start_chks_end error1"></div>
+										    	
+										    	<label class="fl"><%= I18n.t 'ticket_part.ticket_permited_by_order'%> : </label>
+											    <div class="ticket_set_date">
+												    <span class="font_size15" ><%= I18n.t 'ticket_part.min'%></span>
+												    <input type="text"  value="<%= paid[:paid_min_purchase] %>" name="ticket[paid_min_purchase][]"  id="paid_min_purchase" onkeyup="return check_ticket_min_qty(this);" class="textbox TW100 tal"  />
+											    </div>
+											    <div class="ticket_set_date marL10">
+												    <span class="font_size15" ><%= I18n.t 'ticket_part.max'%></span>
+												    <input type="text" value="<%= paid[:paid_max_purchase] %>" name="ticket[paid_max_purchase][]"  id="paid_max_purchase"  onkeyup="return check_ticket_max_qty(this);" class="textbox TW100 tal"   />
+											    </div>
+											    <div class="clear"></div>
+						    					
+						    					<div class="paid_fee_div" style="display: <% if @event[:event_pass_fees]==3 %>block; <% else %>none; <% end %> ">
+							    					<label ><%= I18n.t 'ticket_part.service_fees'%>  </label>
+							                     	<input type="radio" name="paid_service_fee<%= paid[:id] %>[]" id="paid_service_fee" value="1" onclick="set_paid_service_fee(this.value,'paid_service_fee<%= paid[:id] %>');" <% if paid[:paid_service_fee]==1 %> checked <% end %> />&nbsp;<%= I18n.t 'ticket_part.pass_on_the_fees_to_the_ticket_buyer'%><br />
+							                        
+							                        <label class="mar0">&nbsp;</label>
+							                        <input type="radio" name="paid_service_fee<%= paid[:id] %>[]" id="paid_service_fee" value="2"  onclick="set_paid_service_fee(this.value,'paid_service_fee<%= paid[:id] %>');"  <% if paid[:paid_service_fee]==2 %> checked="checked" <% end %> />&nbsp;<%= I18n.t 'ticket_part.absorb_the_fees_into_the_ticket_price'%><br />
+							                         <div class="clear"></div>
+							                         
+							                        <input type="hidden" name="ticket[paid_service_fee][]" id="paid_service_fee<%= paid[:id] %>" value="<%= paid[:paid_service_fee] %>" />
+						                    	</div>
+						    					
+						    					 
+							                    
+							                     <div class="clear"></div>
+							                    
+						
+						    					<div class="marT25">
+						    						<input type="hidden" name="ticket[paid_ticket_id][]" id="ticket_id" value="<%= paid[:id] %>" />
+						                        	 <input type="hidden" name="ticket[paid_hide_description][]" id="paid_hide_description<%= paid[:id] %>" value="<%= paid[:paid_hide_description] %>" />
+							                        <a href="javascript:" onclick="set_paid_ticket_info('paid_ticket_info<%= paid[:id] %>','hide');" class="btn fr">Apply</a>
+						    					</div>
+						    					<div class="clear"></div>
+						    			 </div>
+						            </td>
+						        </tr>
+						        </tbody>
+						            
+						     		     
+						        
+						        		<% end %> 
+						       		<% end %> 
+						       <% end %> 
+						          <input type="hidden" name="paid_ticket_cnt" id="paid_ticket_cnt" value="<%= paid_ticket_cnt %>" /> 
+						       </tbody> 
+						      <!-- paid tickets end --> 
+						       <!-- donation ticket starts --> 
+						        <tbody id="add_more3">
+						       		
+						       		
+						     <% 
+						       	donation_ticket_cnt=1
+						       	if(@event[:id]!=nil && @event[:id]!='')	
+						       		
+						       		
+						       		if donation_tickets
+						       			 
+						       			 for donation in donation_tickets 
+						       			 	
+						       			 	donation_ticket_cnt = donation[:id]
+						       %>
+						 	<tbody id="donation_ticket<%= donation[:id] %>" class="inner_content_two">
+							    
+						        <tr>
+						          <td><input type="text" class="textbox TWT100 mar0 tal" placeholder="<%= I18n.t 'place.general_admission'%>" name="ticket[donation_ticket_name][]" value="<%= donation[:donation_ticket_name] %>" id="donation_ticket_name_1" onkeyup="set_sales_status(this,'donation','<%= donation[:id] %>');" /></td>
+						          <td>						          	
+						          
+						          	<% if donation[:used] > 0 %><br /><% end %>
+						          	<input type="text" class="textbox TWT100 mar0"  name="ticket[donation_qty][]" value="<%= donation[:donation_qty] %>" id="donation_qty<%= donation[:id] %>" autocomplete="off" onchange="if(check_less_quantity(this, '<%= donation[:used] %>', '<%= donation[:id] %>', '<%= donation[:donation_qty] %>')){ set_event_capacity(this,'<%= donation[:id] %>','donation'); }"/>
+						          	<br /><% if donation[:used] > 0 %> <%= donation[:used] %> <%= I18n.t 'ticket_part.sold'%> <% end %>
+						          </td>
+						         <td>&nbsp;</td>
+						          <td  class="fontbold" ><span><%= I18n.t 'ticket_part.donations'%></span></td><td>&nbsp;</td>
+						          
+						    	  <td><span id="donation_sales<%= donation[:id] %>">						          
+					          	
+						          	<% if donation[:donation_ticket_status]==0 %> <%= I18n.t 'ticket_part.incomplete'%> 
+						          	<input type="hidden" name="ticket[donation_ticket_status][]" value="<%= donation[:donation_ticket_status] %>" />
+						          	<% else %>  
+						          		<select name="ticket[donation_ticket_status][]"  class="selectbox mar0 TW97p">
+						          			<% for stat in @sales %><option value="<%= stat[:id] %>" <% if donation[:donation_ticket_status] == stat[:id] %> selected="selected"<% end %>><%= stat[:status_name] %></option><% end %>
+						          		</select>
+						          	<% end %>
+						          	
+						          </span></td>
+						      
+						          <td  id="example" >
+						          		<div class="bs-docs-example tooltip-demo">
+						                     <ul class="bs-docs-tooltip-examples">
+						                     	 <li><a  href="javascript:" onclick="set_donation_ticket_info('donation_ticket_info<%= donation[:id] %>','show');" class="setting" original-title="<%= tooltip %>"><%= I18n.t 'ticket_part.settings'%></a></li>
+						                     </ul>
+						                 </div>
+						          </td>
+						          <td class="brdtop" align="center" >
+						           <% if donation[:used] ==0 %>
+						          	<div class="delete" onclick="remove_donation_ticket_div(<%= donation[:id] %>);">&nbsp;</div>
+						         <% end %>
+						          </td>
+						        </tr>
+						         
+						        <tr style="display:none;" id="donation_ticket_info<%= donation[:id] %>">
+						          <td colspan="8"  class="setting_td">
+						                 
+						                 <div class="create_event_ticket">
+								                 <label><%= I18n.t 'ticket_part.ticket_description'%> : </label>
+								                 <input type="text" class="textbox tal" name="ticket[donation_description][]" id="donation_description" value="<%= donation[:donation_description] %>" onchange="if(this.value=='') { $('#donation_hide_description<%= donation[:id] %>').prop('disabled',true); }else { $('#donation_hide_description<%= donation[:id] %>').prop('disabled',false);} " />
+								                 <div class="clear"></div>
+							                 
+								                 <div class="checkbox marT10">
+											        <label class="mar0">&nbsp;</label>
+											        <input type="checkbox" name="donation_hide_description[]" id="donation_hide_description<%= donation[:id] %>" <% if donation[:donation_hide_description]==1 %> checked="checked" <% end %> onclick="set_hide_description(this,'donation','<%= donation[:id] %>')" disabled />											        <%= I18n.t 'ticket_part.hide_description'%>
+											        <div class="clear"></div>
+											     </div>
+											    
+							                    <label class="fl"><%= I18n.t 'create_event.date'%> &amp; <%= I18n.t 'create_event.time'%> : </label>
+											    <div class="ticket_set_date">
+												    <span class="font_size15" ><%= I18n.t 'ticket_part.sales_starts'%></span>
+												    <div class="dp1"><input type="text" name="ticket[donation_start_sale][]" class="textbox TW97p date_time tal" value="<% if donation[:donation_start_sale]!=nil && donation[:donation_start_sale]!='' %><%= donation[:donation_start_sale].strftime('%Y-%m-%d %H:%M')  %><% end %>"  readonly="readonly" /></div>
+											    </div>
+											    <div class="ticket_set_date marL10">
+												    <span class="font_size15" ><%= I18n.t 'ticket_part.sales_ends'%></span>
+												    <div class="dp2"><input type="text" name="ticket[donation_end_sale][]" class="textbox TW97p date_time tal" value="<% if donation[:donation_end_sale]!=nil && donation[:donation_end_sale]!='' %><%= donation[:donation_end_sale].strftime('%Y-%m-%d %H:%M')  %><% end %>"  readonly="readonly"/></div>
+										    	</div>
+										    	<div class="clear"></div>
+										    	<div class="chks_start_chks_end error1"></div>
+										    	
+										    	
+											    <div class="clear"></div>
+						    					
+						    					<div class="paid_fee_div" style="display: <% if @event[:event_pass_fees]==3 %>block; <% else %>none; <% end %> ">
+							    					<label ><%= I18n.t 'ticket_part.service_fees'%> </label>
+							                     	<input type="radio" name="donation_service_fee1[]" id="donation_service_fee" value="1" onclick="set_paid_service_fee(this.value,'donation_service_fee<%= donation[:id] %>');"  <% if donation[:donation_service_fee]==1 %> checked="checked" <% end %> />&nbsp;<%= I18n.t 'ticket_part.pass_on_the_fees_to_the_ticket_buyer'%><br />
+`							                        <input type="hidden" name="ticket[donation_service_fee][]" id="donation_service_fee<%= donation[:id] %>" value="<%= donation[:donation_service_fee] %>" />
+
+							                        <label class="mar0">&nbsp;</label>
+							                        <input type="radio" name="donation_service_fee2[]" id="donation_service_fee" value="2" onclick="set_paid_service_fee(this.value,'donation_service_fee<%= donation[:id] %>');"  <% if donation[:donation_service_fee]==2 %> checked="checked" <% end %> />&nbsp;<%= I18n.t 'ticket_part.absorb_the_fees_into_the_ticket_price'%><br />
+							                        <input type="hidden" name="ticket[donation_service_fee][]" id="donation_service_fee<%= donation[:id] %>" value="<%= donation[:donation_service_fee] %>" />
+						                        </div>
+						                         <div class="clear"></div>
+						    					<div class="marT25">
+						    						<input type="hidden" name="ticket[donation_ticket_id][]" id="ticket_id" value="<%= donation[:id] %>" />
+						                           <input type="hidden" name="ticket[donation_hide_description][]" id="donation_hide_description<%= donation[:id] %>" value="<%= donation[:id] %>" />
+							                       <a href="javascript:" onclick="set_donation_ticket_info('donation_ticket_info<%= donation[:id] %>','hide');" class="btn fr" ><%= I18n.t 'ticket_part.apply'%></a>
+						    					</div>
+						    					<div class="clear"></div>
+						                        
+						                 </div>
+						            </td>
+						        </tr>
+						        </tbody>
+						       
+						     	     
+						        
+						        		<% end %> 
+						       		<% end %> 
+						       <% end %> 
+						       
+						       		<input type="hidden" name="donation_ticket_cnt" id="donation_ticket_cnt" value="<%= donation_ticket_cnt %>" />
+						       </tbody>
+						      </table>     
+						        <%
+						        	total_ticket_cnt = 0
+						        	 
+						        if free_tickets.count > 0 
+						        	total_ticket_cnt = free[:id]
+						        end
+						        if paid_tickets.count > 0 
+						        	total_ticket_cnt = paid[:id]
+						        end
+						        if donation_tickets.count > 0
+						        	total_ticket_cnt = donation[:id]
+						        end		 
+						        %>
+						        <input type="hidden" name="total_ticket_cnt" id="total_ticket_cnt" value="<%= total_ticket_cnt %>" />  
+						      <!-- donation tickets end -->  
+						      
+						      
+                            
+                            
+                            
+                             <div class="clear"></div>
+                             <div class="TW100p">
+	                            <label><%= I18n.t 'ticket_part.event_capacity'%> </label>
+	                            <%= text_field_tag :event_capacity, @event[:event_capacity], :name => 'event[event_capacity]', :id => 'event_event_capacity', :readonly => 'true', :class => 'textbox TWT100 marB15', :placeholder => '100', :onkeyup => 'chk_numeric_value(this);' %>
+                 			</div>
+                            <div class="clear"></div>
+                        </div>
+                    
+                    
+                    
+                        <div class="clear"></div>
+                        </div>
+                        
+                        
+                 
+                    <label class="fl" style="margin-top: 18px;"> <%= I18n.t 'ticket_part.i_Would_like_to'%>: </label>
+                	<div class="button-holder fl TW70p" id="tool_tip">
+		                    <input type="radio" name="event[event_pass_fees]" onclick="set_buyer_total(this.value);" id="event_pass_fees1" value="1" <% if(@event[:event_pass_fees] != 2 && @event[:event_pass_fees] != 3) then %> checked="checked" <% end %> />
+		                    <span class="width95">  <%= I18n.t 'ticket_part.pass_on_fees_to_the_buyer'%>   </span>
+		                    <a href="#" title="<%= I18n.t 'tooltip_title.admin_fees_transffered_ticket_buy' %>" class="tool_tip_class"></a><br />
+		                   
+		                    <input type="radio" name="event[event_pass_fees]" onclick="set_buyer_total(this.value);" id="event_pass_fees2" value="2" <% if(@event[:event_pass_fees] == 2) then %> checked="checked" <% end %> />
+		                    <span class="width95"> <%= I18n.t 'ticket_part.absorb_the_fees'%></span>
+		                    <a href="#" title="<%= I18n.t 'tooltip_title.admin_fess_will_absorbed_ticket_price_take_event_org' %>" class="tool_tip_class"></a><br />
+		                        
+		                    <input type="radio" name="event[event_pass_fees]" onclick="set_buyer_total(this.value);" id="event_pass_fees3" value="3" <% if(@event[:event_pass_fees] == 3) then %> checked="checked" <% end %> />
+		                    <span class="width95"> <%= I18n.t 'ticket_part.customize_per_ticket_type'%> </span>
+		                    <a href="#" title="<%= I18n.t 'tooltip_title.admin_fees_cutomize_ticket_select_option_particular_ticket' %>" class="tool_tip_class"></a><br />
+		                    <div class="clear"></div><br />
+		            </div>
+             <div class="clear"></div>
+        </div>
+      <div class="clear"></div>
+      </div>
+        
+     
+     <%  @has_reg = 1
+           eact = 'custom_register'
+  	 @has_reg = Event.has_rights(@user, @event, eact) %> 
+
+  	
+        <div class="main marT40">
+        <div class="mtitle fl">
+           	<h1> <span> 3. </span><%= I18n.t 'promote_event_page.promote_your_event_page'%></h1>
+        </div>
+        <div class="marT20 fr"><%= link_to (I18n.t 'promote_event_page.promote_tips'),{:controller => 'tips', :action => 'promote'}, :class =>'rr' %></div>
+         <div class="clear"></div>	
+    </div>
+    	 	<div class="shadow marT10 pad20 <% if @has_reg == 0 && @multi ==1 %> is-disabled <% end %> ">
+            	<div class="create_event">
+                	<label class="fl" style="margin-top: 18px;"> <%= I18n.t 'promote_event_page.publicize_keep_it_private'%></label>
+                   <div class="button-holder fl">
+	                    <input type="radio" name="event[keep_private]" id="keep_private1" value="0"  onclick="show_organization('keep_public_div','keep_private_div');" <% if(@event[:keep_private] != 1) then %> checked="checked" <% end %> />
+	                    <span>  <%= I18n.t 'promote_event_page.public_page'%> </span>
+	                    <div class="clear"></div>
+	                    
+	                    <input type="radio" name="event[keep_private]" id="keep_private2" value="1"  onclick="show_organization('keep_private_div','keep_public_div');" <% if(@event[:keep_private] == 1) then %> checked="checked" <% end %> />
+	                    <span>  <%= I18n.t 'promote_event_page.private_page'%> </span>
+	                    <div class="clear"></div>
+                    </div>
+                    <div class="clear"></div>
+                   
+                   <div  id="keep_private_div" style="display: <% if(@event[:keep_private] == 1) then %> block <% else %> none <% end %>;"> 
+	                    
+	                     <div class="checkbox marT20">  
+	                         <label class="mar0">&nbsp;</label>
+		                     <%= text_field_tag :private_text, (I18n.t 'ticket_part.this_event_private_not_listed_event_directory_search_engine'), :name => 'private_text', :id => 'private_text', :class => 'textbox', :readonly => 'true' %>
+		                    <div class="clear"></div>
+                    	</div>
+                    	
+	                    <div class="checkbox marT20">  
+	                         <label class="mar0">&nbsp;</label>
+	                         <input type="hidden" value=0 name="event[share_on_social]" >
+	                         <input type="checkbox" name="event[share_on_social]" id="event_share_on_social" value="1" <% if(@event[:share_on_social] == 1) then %> checked="checked" <% end %> onclick="if(this.checked){ $('#event_invite_only').removeAttr('checked'); }" />
+	                        <%= I18n.t 'promote_event_page.attendees_facebook_twitter_linkedin'%></span>
+	                        
+	                         <div class="clear"></div>
+                    	</div>
+                     
+	                     <div class="checkbox marT20">  
+	                         <label class="mar0">&nbsp;</label>
+	                          <input type="hidden" value=0 name="event[invite_only]" >
+	                        <input type="checkbox" name="event[invite_only]" id="event_invite_only" value="1" <% if(@event[:invite_only] == 1) then %> checked="checked" <% end %>  onclick="if(this.checked){ $('#event_share_on_social').removeAttr('checked'); }"/>
+	                         <%= I18n.t 'ticket_part.invitation_only_attendees_must_receive'%> <%= @site[:site_name] %> <%= I18n.t 'ticket_part.email_invitation_to_register'%> </span>
+	                        
+	                         <div class="clear"></div>
+                        </div>
+                            
+	                     <div class="checkbox">  
+	                         <label class="mar0">&nbsp;</label>
+	                         <input type="hidden" value=0 name="event[password_protect]" >
+	                        <input type="checkbox" name="event[password_protect]" id="event_password_protect" value="1" onclick="if(this.checked){ $('#event_password_value').removeAttr( 'readonly', 'readonly' ); }else{ $('#event_password_value').attr( 'readonly', 'readonly' );}"  <% if(@event[:password_protect] == 1) then %> checked="checked" <% end %>   />
+	                         <%= I18n.t 'promote_event_page.password_protected'%> </span>
+	                        
+	                        <input type="text" name="event[password_value]" id="event_password_value" class="textbox TW200 marL10"  value="<%= @event[:password_value] %>" />
+	                       <div id="pass_div"></div> 
+	                         <div class="clear"></div>
+                        </div>
+                    </div>
+
+                	<div id="keep_public_div">
+                	<label class="fl"> <%= I18n.t 'promote_event_page.search_categories'%> </label>
+                     
+                     <%
+		                @category = Category.parent_category
+		      			
+		      			if @event[:category] == 0 || @event[:category] == nil || @event[:category] == ''
+		      				
+		      				@subcategory = nil 
+		      			else
+		      				
+		      				@subcategory = Category.sub_category_by_parent(@event[:category])
+		      			end	
+		      			
+		             %>
+		              <select class="selectbox_date TW260 marR10 fl" name="event[category]" id="event_category" onchange="set_subcategory(this.value)">
+						  <option value="">-- <%= I18n.t 'promote_event_page.select_category'%> --</option>
+						  <% for cat in @category %>
+						    <option value="<%= cat[:id] %>" <% if(@event[:category] == cat[:id]) %> selected="selected" <% end %>><%= cat[:category_name] %></option>
+						  <% end %>
+					  </select>
+						
+						<div id="subcat_list">	            
+			              <select class="selectbox_date TW260 marR10" name="event[subcategory]" id="event_subcategory">
+							  <option value="">-- <%= I18n.t 'promote_event_page.select_subcategory'%> --</option>
+							 <% if @subcategory != nil && @subcategory !="" %>
+							  <% for subcat in @subcategory %>
+							    <option value="<%= subcat[:id] %>" <% if(@event[:subcategory] == subcat[:id]) %> selected="selected" <% end %>><%= subcat[:category_name] %></option>
+							  <% end %>
+							 <% end %>
+						  </select>
+						</div>
+						<div class="clear"></div>
+					</div>	
+                     
+                	<div class="checkbox marT20">  
+                         <label class="mar0"><%= I18n.t 'promote_event_page.remaining_ticket'%></label>
+                         
+                         <input type="hidden" name="event[remaining_tickets]" value=0 />
+                        <input type="checkbox" name="event[remaining_tickets]" id="event_remaining_tickets" value="1" class="martop25" <% if(@event[:remaining_tickets] == 1) then %> checked="checked" <% end %> />
+                        <%= I18n.t 'promote_event_page.show_num_of_ticket_remaining'%> </span>
+                         <div class="clear"></div>
+                        	</div>
+                            
+                    	<label> <%= I18n.t 'promote_event_page.customize_web_address'%> </label>
+                        <span class="font_size15 marR10" > <%= APP_CONFIG['development']['site_url'] %>event/</span>        
+                   		<%= text_field_tag :event_url_link, @event[:event_url_link], :class => 'textbox TW200', :name => 'event[event_url_link]', :id => 'event_event_url_link' %>
+                   		<div id="eventurllinkInfo"></div>
+                </div>
+             <div class="clear"></div>
+        </div>
+         <input type="hidden" value="<%= @event[:id] %>" name="event_prev_id" id="event_prev_id">
+    	 <input type="hidden" value="<%= @event_repeat[:id] %>" name="event_repeat_prev_id" id="event_repeat_prev_id">
+    	 <input type="hidden" value="" name="submit_type" id="submit_type">
+ 
+		<div class="fr marT25">
+			 <%= submit_tag (I18n.t 'button.save'), :class => 'btn create_event_submit', :onclick => 'return set_submit_type("save")' %>
+			 <%= submit_tag (I18n.t 'button.preview'), :class => 'btn create_event_submit', :onclick => 'return set_submit_type("view")' %>           
+			 <% if @event[:active]==0 %>
+			 	<%= submit_tag (I18n.t 'button.make_event_live'), :class => 'btn create_event_submit', :onclick => 'return set_submit_type("live")' %>
+			 <% end %>   
+        </div> <div class="clear"></div>
+         
+    </div>    
+</section>
+
+<% end %>
+
+<% if @event[:id]!=nil && @event[:id]!='' && @event[:id]!=0 && @event[:id]!='0' %>
+	<% @edit_menu_class = 'Edit' %>
+	<%= render(:partial => "manage_event/edit_menu" , :object => :collection) %> 
+	<div class="clear "></div>
+<% end %>
+
+
+ <script src="<%= APP_CONFIG['development']['js_url'] %>js/validation.js" type="text/javascript"></script>  
+ 
+ <script src="<%= APP_CONFIG['development']['js_url'] %>js/custom_validation.js" type="text/javascript"></script>    
+<div id="add_mor_divs">	
+<table id="more2" class="inner_content_two" style="display:none;">
+	   
+       		  
+        
+         <tr>
+          <td><input type="text" class="textbox TWT100 mar0 tal" placeholder="<%= I18n.t 'place.general_admission'%>" name="ticket[free_ticket_name][]" id="free_ticket_name_1" onkeyup="set_sales_status(this,'free','1');" /></td>
+          <td><input type="text" class="textbox TWT100 mar0" name="ticket[free_qty][]" id="free_qty_1" autocomplete="off" onchange="set_event_capacity(this,'1','free');" /></td>
+          <td>&nbsp;</td>
+          <td  class="fontbold"><span><%= I18n.t 'event.view.free'%></span></td>
+          <td>&nbsp;</td>
+          <td><span id="free_sales_1"><%= I18n.t 'ticket_part.incomplete'%><input type="hidden" name="ticket[free_ticket_status][]" value="0" /></span></td>
+          <td id="example">
+          		<div class="bs-docs-example tooltip-demo">
+                     <ul class="bs-docs-tooltip-examples">
+                     	 <li><a  href="javascript:" onclick="set_free_ticket_info('free_ticket_info_1','show');" class="setting" original-title="<%= tooltip %>"><%= I18n.t 'ticket_part.settings'%></a></li>
+                     </ul>
+                 </div>
+          </td>
+          <td>
+          	<a href="javascript://" onclick="remove_ticket_div(1);" class="delete">&nbsp;</a>
+          </td>
+        </tr>
+        
+      
+        <tr style="display:none;" id="free_ticket_info_1">
+          <td colspan="8" class="setting_td">
+                 <div class="create_event_ticket">
+                 
+                 		 <label><%= I18n.t 'ticket_part.ticket_description'%> : </label>
+		                 <input type="text" class="textbox tal" name="ticket[free_description][]" id="free_description_1" onchange="if(this.value=='') { $('#free_hide_description_1').prop('disabled',true); }else { $('#free_hide_description_1').prop('disabled',false);} " />
+		                 <div class="clear"></div>
+	                 
+		                 <div class="checkbox marT10">
+					        <label class="mar0">&nbsp;</label>
+					        <input type="checkbox" name="free_hide_description[]" id="free_hide_description_1" onclick="set_hide_description(this,'free','1')" disabled />
+					        <%= I18n.t 'ticket_part.hide_description'%>
+					        <div class="clear"></div>
+					     </div>
+					    
+	                    <label class="fl"><%= I18n.t 'create_event.date'%> &amp; <%= I18n.t 'create_event.time'%>: </label>
+					    <div class="ticket_set_date">
+						    <span class="font_size15" ><%= I18n.t 'ticket_part.sales_starts'%></span>
+						    <div class="dp1"><input type="text" name="ticket[free_start_sale][]" class="textbox TW97p date_time tal" value="" readonly="readonly" /></div>
+					    </div>
+					    <div class="ticket_set_date marL10">
+						    <span class="font_size15" ><%= I18n.t 'ticket_part.sales_ends'%></span>
+						    <div class="dp2"><input type="text" name="ticket[free_end_sale][]" class="textbox TW97p date_time tal" value="" readonly="readonly"/></div>
+				    	</div>
+				    	<div class="clear"></div>
+				    	<div class="chks_start_chks_end error1"></div>
+				    	
+				    	<label class="fl"><%= I18n.t 'ticket_part.ticket_permited_by_order'%> : </label>
+					    <div class="ticket_set_date">
+						    <span class="font_size15" ><%= I18n.t 'ticket_part.min'%></span>
+						    <input type="text" name="ticket[free_min_purchase][]" id="free_min_purchase" onkeyup="return check_ticket_min_qty(this);" class="textbox TW100 tal" value=""  />
+					    </div>
+					    <div class="ticket_set_date marL10">
+						    <span class="font_size15" ><%= I18n.t 'ticket_part.max'%></span>
+						    <input type="text" name="ticket[free_max_purchase][]" id="free_max_purchase" onkeyup="return check_ticket_max_qty(this);"  class="textbox TW100 tal" value=""  />
+					    </div>
+					    <div class="clear"></div>
+    					
+    					<div class="marT25">
+    						<input type="hidden" name="ticket[free_ticket_id][]" id="ticket_id" value="0" />
+                         	<input type="hidden" name="ticket[free_hide_description][]" id="free_hide_description_1" value="0" />
+	                        
+	                        <a href="javascript:" onclick="set_free_ticket_info('free_ticket_info_1','hide');" class="btn fr"><%= I18n.t 'ticket_part.apply'%></a>
+    					</div>
+    					<div class="clear"></div>
+                 </div>
+            </td>
+        </tr>
+      </table>
+            
+            
+<table id="more1" class="inner_content_two" style="display:none;">
+	        	
+        <tr>
+          <td><input type="text" class="textbox TWT100 mar0 tal" placeholder="<%= I18n.t 'place.general_admission'%>" name="ticket[paid_ticket_name][]" id="paid_ticket_name_1" onkeyup="set_sales_status(this,'paid','1');" /></td>
+          <td><input type="text" class="textbox TWT100 mar0" name="ticket[paid_qty][]" id="paid_qty_1" autocomplete="off" onchange="set_event_capacity(this,'1','paid');"/></td>
+          <td><input type="text" class="textbox TWT100 mar0" placeholder="$" style="text-align:right;" name="ticket[paid_price][]" id="paid_price_1"  autocomplete="off" onchange="set_fee_and_total('1',this);" /></td>
+          <td>
+          	<span  class="fee" id="paid_fee_1">$0.00</span>
+          	<input type="hidden" name="ticket[paid_fee][]" id="paid_fee_val_1" value="" />
+          </td>
+          <td>
+          	<span  class="fee" id="paid_total_1">$0.00</span>
+          	<input type="hidden" name="ticket[paid_buyer_total][]" id="paid_total_val_1" value="" />
+          </td>
+          <td><span id="paid_sales_1"><%= I18n.t 'ticket_part.incomplete'%><input type="hidden" name="ticket[paid_ticket_status][]" value="0" /></span></td>
+           <td id="example" >
+          		<div class="bs-docs-example tooltip-demo">
+                     <ul class="bs-docs-tooltip-examples">
+                     	 <li><a  href="javascript:" onclick="set_paid_ticket_info('paid_ticket_info_1','show');" class="setting" original-title="<%= tooltip %>"><%= I18n.t 'ticket_part.settings'%></a></li>
+                     </ul>
+                 </div>
+          </td>
+          <td>
+          		<a href="javascript://" onclick="remove_paid_ticket_div(1);" class="delete">&nbsp;</a>
+          </td>
+        </tr>
+        
+        
+    
+        <tr style=" display:none;" id="paid_ticket_info_1">
+          <td colspan="8"  class="setting_td">
+                 <div class="create_event_ticket" >
+	                 
+	                 
+	                 <label><%= I18n.t 'ticket_part.ticket_description'%> : </label>
+		                <input type="text" class="textbox tal" name="ticket[paid_description][]" id="paid_description_1" onchange="if(this.value=='') { $('#paid_hide_description_1').prop('disabled',true); }else { $('#paid_hide_description_1').prop('disabled',false);} "/>
+		                 <div class="clear"></div>
+	                 
+		                 <div class="checkbox marT10">
+					        <label class="mar0">&nbsp;</label>
+					         <input type="checkbox" name="paid_hide_description[]" id="paid_hide_description_1" onclick="set_hide_description(this,'paid','1')" disabled />
+					        <%= I18n.t 'ticket_part.hide_description'%>
+					        <div class="clear"></div>
+					     </div>
+					    
+	                    <label class="fl"><%= I18n.t 'create_event.date'%> &amp; <%= I18n.t 'create_event.time'%> </label>
+					    <div class="ticket_set_date">
+					    	<span class="font_size15" ><%= I18n.t 'ticket_part.sales_starts'%></span>
+					    	<div class="dp1"><input type="text" name="ticket[paid_start_sale][]"  class="textbox TW97p date_time tal" value="" readonly="readonly" /></div>
+					    </div>
+					    <div class="ticket_set_date marL10">
+					    	<span class="font_size15" ><%= I18n.t 'ticket_part.sales_ends'%></span>
+					    	<div class="dp2"><input type="text" name="ticket[paid_end_sale][]"  class="textbox TW97p date_time tal" value="" readonly="readonly"/></div>
+				    	</div>
+				    	<div class="clear"></div>
+				    	<div class="chks_start_chks_end error1"></div>
+				    	
+				    	<label class="fl"><%= I18n.t 'ticket_part.ticket_permited_by_order'%> : </label>
+					     <div class="ticket_set_date">
+						    <span class="font_size15" ><%= I18n.t 'ticket_part.min'%></span>
+						    <input type="text" name="ticket[paid_min_purchase][]" id="paid_min_purchase" onkeyup="return check_ticket_min_qty(this);" class="textbox TW100 tal" value=""  />
+					    </div>
+					    <div class="ticket_set_date marL10">
+					    	<span class="font_size15" ><%= I18n.t 'ticket_part.max'%></span>
+					    	<input type="text" name="ticket[paid_max_purchase][]" id="paid_max_purchase"  onkeyup="return check_ticket_max_qty(this);" class="textbox TW100 tal" value=""  />
+					    </div>
+					    <div class="clear"></div>
+    					
+    					<div class="paid_fee_div" style="display: none;">
+	    					<label ><%= I18n.t 'ticket_part.service_fees'%> </label>
+	                     
+	                     	<input type="radio" name="paid_service_fee1[]" id="paid_service_fees12" value="1" onclick="set_paid_service_fee(this.value,'paid_service_fee_1');" checked="checked"/>&nbsp;<%= I18n.t 'ticket_part.pass_on_the_fees_to_the_ticket_buyer'%><br />
+	                        
+	                        <label class="mar0">&nbsp;</label>
+	                        <input type="radio" name="paid_service_fee1[]" id="paid_service_fees2" value="2" onclick="set_paid_service_fee(this.value,'paid_service_fee_1');"/>&nbsp;<%= I18n.t 'ticket_part.absorb_the_fees_into_the_ticket_price'%><br />
+	                        
+	                        <input type="hidden" name="ticket[paid_service_fee][]" id="paid_service_fee_1" value="1" />
+	                        <div class="clear"></div>
+                        </div>
+
+    					<div class="marT25">
+    						<input type="hidden" name="ticket[paid_ticket_id][]" id="ticket_id" value="0" />
+                        	 <input type="hidden" name="ticket[paid_hide_description][]" id="paid_hide_description_1" value="0" />
+	                        <a href="javascript:" onclick="set_paid_ticket_info('paid_ticket_info_1','hide');" class="btn fr"><%= I18n.t 'ticket_part.apply'%></a>
+    					</div>
+    					<div class="clear"></div>
+    			 </div>
+            </td>
+         </tr>
+        </table>
+            
+            
+<table id="more3" class="inner_content_two" style="display:none;">
+	   
+        
+        <tr>
+          <td><input type="text" class="textbox TWT100 mar0 tal" placeholder="<%= I18n.t 'place.general_admission'%>" name="ticket[donation_ticket_name][]" id="donation_ticket_name_1" onkeyup="set_sales_status(this,'donation','1');" /></td>
+          <td><input type="text" class="textbox TWT100 mar0"  name="ticket[donation_qty][]" id="donation_qty_1" autocomplete="off" onchange="set_event_capacity(this,'1','donation');"/></td>
+         <td>&nbsp;</td>
+          <td  class="fontbold"><span><%= I18n.t 'ticket_part.donations'%></span></td>
+          <td>&nbsp;</td>
+          <td><span id="donation_sales_1"><%= I18n.t 'ticket_part.incomplete'%><input type="hidden" name="ticket[donation_ticket_status][]" value="0" /></span></td>
+          <td id="example" >
+          		<div class="bs-docs-example tooltip-demo">
+                     <ul class="bs-docs-tooltip-examples">
+                     	 <li><a  href="javascript:" onclick="set_donation_ticket_info('donation_ticket_info_1','show');" class="setting" original-title="<%= tooltip %>"><%= I18n.t 'ticket_part.settings'%></a></li>
+                     </ul>
+                 </div>
+          </td>
+          <td>
+          	<a href="javascript://" class="delete" onclick="remove_donation_ticket_div(1);">&nbsp;</a>
+          </td>
+        </tr>
+        
+        
+       
+        <tr style="display:none;" id="donation_ticket_info_1" >
+          <td colspan="8"  class="setting_td">
+                 <div class="create_event_ticket">
+		                 <label><%= I18n.t 'ticket_part.ticket_description'%>: </label>
+		                 <input type="text" class="textbox tal" name="ticket[donation_description][]" id="donation_description_1" onchange="if(this.value=='') { $('#donation_hide_description_1').prop('disabled',true); }else { $('#donation_hide_description_1').prop('disabled',false);} " />
+		                 <div class="clear"></div>
+	                 
+		                 <div class="checkbox marT10">
+					        <label class="mar0">&nbsp;</label>
+					        <input type="checkbox" name="donation_hide_description[]" id="donation_hide_description_1" onclick="set_hide_description(this,'donation','1')" disabled />					        
+					        <%= I18n.t 'ticket_part.hide_description'%>
+					        <div class="clear"></div>
+					     </div>
+					    
+	                    <label class="fl"><%= I18n.t 'create_event.date'%> &amp; <%= I18n.t 'create_event.time'%>: </label>
+					    <div class="ticket_set_date">
+						    <span class="font_size15" ><%= I18n.t 'ticket_part.sales_starts'%></span>
+						    <div class="dp1"><input type="text" name="ticket[donation_start_sale][]" class="textbox TW97p date_time tal" value="" readonly="readonly" /></div>
+					    </div>
+					    <div class="ticket_set_date marL10">
+						    <span class="font_size15" ><%= I18n.t 'ticket_part.sales_ends'%></span>
+						    <div class="dp2"><input type="text" name="ticket[donation_end_sale][]" class="textbox TW97p date_time tal" value="" readonly="readonly"/></div>
+				    	</div>
+				    	<div class="clear"></div>
+				    	<div class="chks_start_chks_end error1"></div>
+				    	
+				    	
+					    <div class="clear"></div>
+    					
+    					<div class="paid_fee_div" style="display: none;">
+	    					<label ><%= I18n.t 'ticket_part.service_fees'%> </label>
+	                     
+	                     	<input type="radio" name="donation_service_fee[]" id="donation_service_fee1" value="1" onclick="set_paid_service_fee(this.value,'donation_service_fee_1');"/>&nbsp;<%= I18n.t 'ticket_part.pass_on_the_fees_to_the_ticket_buyer'%><br />
+	                        
+	                        <label class="mar0">&nbsp;</label>
+	                        <input type="radio" name="donation_service_fee[]" id="donation_service_fee1" value="2" onclick="set_paid_service_fee(this.value,'donation_service_fee_1');"/>&nbsp;<%= I18n.t 'ticket_part.absorb_the_fees_into_the_ticket_price'%><br />
+	                        <input type="hidden" name="ticket[donation_service_fee][]" id="donation_service_fee_1" value="1" />
+	                        <div class="clear"></div>
+                        </div>
+                     
+                     
+    					<div class="marT25">
+    						<input type="hidden" name="ticket[donation_ticket_id][]" id="ticket_id" value="0" />
+                            <input type="hidden" name="ticket[donation_hide_description][]" id="donation_hide_description_1" value="0" />
+	                        <a href="javascript:" onclick="set_donation_ticket_info('donation_ticket_info_1','hide');" class="btn fr"><%= I18n.t 'ticket_part.apply'%></a>
+	                    </div>
+    					<div class="clear"></div>
+                        
+                 </div>
+         
+             
+            </td>
+            
+            
+            
+        </tr>
+       
+        
+        	</table>
+</div>
+	
+
+
+
+<script src="<%= APP_CONFIG['development']['js_url'] %>js/ckeditor/ckeditor.js"></script>
